@@ -1,5 +1,6 @@
 import type { Doc } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
+import { NOTE_STUDY_CLICK_STORY_DATABASE } from "./notes-study/click-story-units";
 import {
 	EXAMPLES_SCROLL_TITLE,
 	EXAMPLES_SUBMISSION_KEY,
@@ -153,7 +154,10 @@ export async function consolidateExampleScrolls(ctx: MutationCtx) {
 			const related = sentence.segmentedSentenceId.startsWith(
 				"notes-study:related-",
 			);
-			const unit = NOTE_STUDY_DATABASE.find((unit) =>
+			const unit = [
+				...NOTE_STUDY_DATABASE,
+				...NOTE_STUDY_CLICK_STORY_DATABASE,
+			].find((unit) =>
 				unit.occurrences.some(
 					(occurrence) =>
 						occurrence.segmentedSentenceId ===

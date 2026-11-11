@@ -4,6 +4,7 @@ import { ScrollPresentation } from "@/views/scroll-view";
 import { subjectLabel } from "@/views/subject-presentation";
 import { applicationRenderer } from "@/workspace/application-renderer";
 import type {
+	NotePresentationContext,
 	WorkspaceSubject,
 	WorkspaceTarget,
 } from "@/workspace/workspace-subject";
@@ -31,7 +32,7 @@ function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
 }
 
 /** The fake db's key for a Note target, or null for a target that is no Note. */
-function fixtureNoteKey(target: WorkspaceTarget): string | null {
+export function fixtureNoteKey(target: WorkspaceTarget): string | null {
 	const id =
 		target.kind === "Reading"
 			? target.readingId
@@ -56,10 +57,13 @@ export function playgroundParts({
 	target,
 	snapshot,
 	follow,
+	context,
 }: {
 	target: WorkspaceTarget;
 	snapshot: PlaygroundSnapshot;
 	follow: (target: WorkspaceTarget) => void;
+	/** What the click that dealt a Note tells its Presentation. */
+	context?: NotePresentationContext;
 }): StagedParts {
 	const subject = subjectFor(target);
 	const shared = {
@@ -112,11 +116,13 @@ export function playgroundParts({
 		noteData,
 		presentation: "Card",
 		follow,
+		context,
 	});
 	const sheet = renderFixtureNoteParts({
 		noteData,
 		presentation: "Sheet",
 		follow,
+		context,
 	});
 	return {
 		...shared,

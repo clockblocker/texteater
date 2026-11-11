@@ -12,7 +12,7 @@ import {
 	union,
 } from "./geometry";
 import type { TableKnobs } from "./knobs";
-import { type Frame, pileSlots, tableTargets } from "./layout";
+import { closedPileSlots, type Frame, tableTargets } from "./layout";
 import {
 	EASE_DRAWER,
 	follow,
@@ -112,7 +112,7 @@ export function useTableCarry({
 	/** The Deck without `id`, closed up as a hand reflows. */
 	function closedSlots(id: string): Map<string, Slot> {
 		const rest = deck.order.filter((other) => other !== id);
-		const slots = pileSlots(frame, rest.length);
+		const slots = closedPileSlots(frame, rest.length, deck.order.length);
 		return new Map(
 			rest.flatMap((other, index) => {
 				const slot = slots[index];

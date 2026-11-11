@@ -1,5 +1,6 @@
 import { Maximize2Icon, XIcon } from "lucide-react";
 import { type MotionValue, motion, useTransform } from "motion/react";
+import { PAPER_INNER_CORNERS } from "@/presentation/skin";
 import type { Anchor } from "./swipe-collapse";
 import { type Axis, iconAt, type Zone } from "./swipe-gesture";
 import type { CardValues } from "./use-deck";
@@ -191,7 +192,7 @@ export function SwipePanel({
 			data-panel={panel.zone}
 			data-panel-card={panel.id}
 			data-armed={armed || undefined}
-			className="pointer-events-none absolute overflow-hidden rounded-[calc(0.9rem_-_1px)] bg-canvas"
+			className={`pointer-events-none absolute overflow-hidden ${PAPER_INNER_CORNERS} bg-canvas`}
 			style={{
 				insetInlineStart: 0,
 				top: 0,

@@ -3,7 +3,10 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import type { WorkspaceTarget } from "@/workspace/workspace-subject";
+import type {
+	NotePresentationContext,
+	WorkspaceTarget,
+} from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 import { citationFor, registeredBlockMap } from "./renderer-registry";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";
@@ -202,6 +205,11 @@ type FixtureNoteInput = {
 	readonly noteData: NoteData;
 	readonly presentation: "Card" | "Sheet";
 	readonly follow: (target: WorkspaceTarget) => void;
+	/**
+	 * What the click that dealt the Note tells its Presentation: the Segment
+	 * it landed on, the Surface analysis it took, the Reading it led to.
+	 */
+	readonly context?: NotePresentationContext;
 };
 
 /**
@@ -217,6 +225,7 @@ function fixtureInput({
 	noteData,
 	presentation,
 	follow,
+	context,
 }: FixtureNoteInput): RenderNoteInput {
 	// `defaultCapabilities` answers for every kind at once; what it returns
 	// is the capabilities of this Note's own kind.
@@ -224,6 +233,7 @@ function fixtureInput({
 		noteData,
 		capabilities: {
 			...defaultCapabilities(noteData),
+			...context,
 			presentation,
 			follow,
 		},

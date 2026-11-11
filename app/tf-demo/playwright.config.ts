@@ -51,9 +51,12 @@ export default defineConfig({
 	webServer: {
 		command: `bun run vite --host 127.0.0.1 --port ${port} --strictPort`,
 		env: { TF_DEMO_E2E: "1" },
-		url: playgroundUrl,
+		/* the server is ready once it has built the fake db: the Notes
+		   gallery and Deck interactions read it, and a spec's first
+		   assertion should not wait on the build */
+		url: `${playgroundUrl}/__playground/notes`,
 		reuseExistingServer: !process.env.CI,
-		timeout: 30_000,
+		timeout: 60_000,
 		stdout: "pipe",
 		stderr: "pipe",
 	},

@@ -116,3 +116,39 @@ export function presentationMetrics(
 		};
 	});
 }
+
+/** One Card of a pile as it rests: its box as laid out, and as drawn in its frame. */
+export type PileCard = {
+	readonly width: number;
+	readonly height: number;
+	/** The drawn box's top, below the frame's. */
+	readonly top: number;
+	/** The drawn box's middle, across, from the frame's. */
+	readonly middle: number;
+	readonly drawnWidth: number;
+};
+
+/**
+ * A dealt Deck's Cards from the top of the pile down, each measured in
+ * `frame`, which is the Deck's Pane.
+ */
+export function pileCards(frame: Locator, cards: string): Promise<PileCard[]> {
+	return frame.evaluate((root, selector) => {
+		const pane = root.getBoundingClientRect();
+		return [...root.querySelectorAll<HTMLElement>(selector)]
+			.map((card) => {
+				const drawn = card.getBoundingClientRect();
+				return {
+					width: card.offsetWidth,
+					height: card.offsetHeight,
+					top: drawn.top - pane.top - root.clientTop,
+					middle:
+						drawn.left +
+						drawn.width / 2 -
+						(pane.left + root.clientLeft + root.clientWidth / 2),
+					drawnWidth: drawn.width,
+				};
+			})
+			.sort((a, b) => a.top - b.top);
+	}, cards);
+}

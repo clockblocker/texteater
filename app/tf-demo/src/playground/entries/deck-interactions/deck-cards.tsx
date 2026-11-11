@@ -3,19 +3,23 @@ import {
 	memo,
 	type ReactNode,
 	type PointerEvent as ReactPointerEvent,
+	useDeferredValue,
 	useEffect,
 	useRef,
 	useState,
 } from "react";
-import { CardFace, CardView } from "./card-view";
+import { PresentationContent } from "@/presentation/presentation-content";
+import { CardView } from "./card-view";
+import type { DealtCard } from "./dealt-cards";
 import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
 import { type Readouts, useReadout } from "./readouts";
 import type { CardValues, Deck, Mark } from "./use-deck";
-import { cardById } from "./words";
 
 /** What every variant is rendered with. */
 export type VariantProps<K> = {
+	/** The Cards dealt, back to front. */
+	readonly cards: readonly DealtCard[];
 	readonly frame: Frame;
 	readonly rtl: boolean;
 	readonly motion: MotionContext;
@@ -37,12 +41,16 @@ type Handlers = {
 
 /**
  * The Deck's Cards, back to front, each wired to the variant's gesture.
- * Escape or the Cover's × puts an expanded Card back. Each Card is
+ * Escape or the Cover's ← or × puts an expanded Card back. Each Card is
  * memoised and its handlers stay the same across renders, so a render of
  * the Deck re-renders only the Cards whose own props change: a reorder
- * moves their elements and re-renders none of them.
+ * moves their elements and re-renders none of them. That is why every
+ * Card on the Deck is drawn in the open Card's form, whichever is in
+ * front: a Card Tail's form differs only in a Body that does not scroll,
+ * under the Card in front of it.
  */
 export function DeckCards({
+	cards,
 	deck,
 	rtl,
 	held,
@@ -51,6 +59,8 @@ export function DeckCards({
 	onEnter,
 	onLeave,
 }: {
+	/** The Cards the Deck was dealt, by which each id is drawn. */
+	readonly cards: readonly DealtCard[];
 	readonly deck: Deck;
 	readonly rtl: boolean;
 	readonly held: string | null;
@@ -82,24 +92,29 @@ export function DeckCards({
 		close: () => latest.current.closeCover(),
 	}));
 	if (deck.status === "gone") return null;
-	return deck.order.map((id) => (
-		<DeckCard
-			key={id}
-			id={id}
-			values={deck.valuesOf(id)}
-			rtl={rtl}
-			held={held === id}
-			expanded={expanded === id}
-			mark={deck.marks[id] ?? null}
-			highlight={highlight}
-			hovers={onEnter !== undefined || onLeave !== undefined}
-			handlers={handlers}
-		/>
-	));
+	return deck.order
+		.flatMap((id) => {
+			const card = cards.find((dealt) => dealt.id === id);
+			return card ? [card] : [];
+		})
+		.map((card) => (
+			<DeckCard
+				key={card.id}
+				card={card}
+				values={deck.valuesOf(card.id)}
+				rtl={rtl}
+				held={held === card.id}
+				expanded={expanded === card.id}
+				mark={deck.marks[card.id] ?? null}
+				highlight={highlight}
+				hovers={onEnter !== undefined || onLeave !== undefined}
+				handlers={handlers}
+			/>
+		));
 }
 
 const DeckCard = memo(function DeckCard({
-	id,
+	card,
 	values,
 	rtl,
 	held,
@@ -109,7 +124,7 @@ const DeckCard = memo(function DeckCard({
 	hovers,
 	handlers,
 }: {
-	readonly id: string;
+	readonly card: DealtCard;
 	readonly values: CardValues;
 	readonly rtl: boolean;
 	readonly held: boolean;
@@ -119,16 +134,21 @@ const DeckCard = memo(function DeckCard({
 	readonly hovers: boolean;
 	readonly handlers: Handlers;
 }) {
-	const card = cardById(id);
-	if (!card) return null;
+	const { id, parts } = card;
+	const form = expanded ? "cover" : "card";
+	/* the box takes its new form at once, with the move; what it holds is
+	   a whole Note, drawn again for the form, and follows as soon as React
+	   has it, so drawing it never holds a frame of the move */
+	const drawn = useDeferredValue(form);
+	const sheet = drawn === "cover";
 	return (
 		<CardView
 			id={id}
-			label={`${card.title} card`}
+			label={`${parts.label} ${form}`}
+			form={form}
 			values={values}
 			rtl={rtl}
 			held={held}
-			expanded={expanded}
 			mark={mark}
 			highlight={highlight}
 			onPointerDown={(event) => handlers.down(id, event)}
@@ -139,10 +159,23 @@ const DeckCard = memo(function DeckCard({
 				hovers ? (event) => handlers.leave(id, event) : undefined
 			}
 		>
-			<CardFace
-				card={card}
-				expanded={expanded}
-				onClose={handlers.close}
+			<PresentationContent
+				form={drawn}
+				columnRem={parts.columnRem}
+				heading={parts.heading}
+				body={sheet ? parts.body.sheet : parts.body.card}
+				chrome={{
+					back: {
+						label: "Collapse back to card",
+						enabled: true,
+						onPress: handlers.close,
+					},
+					clear: {
+						label: "Close",
+						enabled: true,
+						onPress: handlers.close,
+					},
+				}}
 			/>
 		</CardView>
 	);

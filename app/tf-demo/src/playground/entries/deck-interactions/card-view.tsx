@@ -1,8 +1,9 @@
-import { XIcon } from "lucide-react";
 import { motion, useTransform } from "motion/react";
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
+import type { PresentationForm } from "@/presentation/form";
+import { PresentationBox } from "@/presentation/presentation-box";
+import { paperShadow } from "@/presentation/skin";
 import type { CardValues, Mark } from "./use-deck";
-import type { DummyCard } from "./words";
 
 const TONE_TEXT: Record<Mark["tone"], string> = {
 	dismiss: "border-destructive text-destructive",
@@ -58,41 +59,21 @@ function highlightClass(highlight: boolean | undefined): string {
 }
 
 /**
- * How a Card's box is drawn around its face: its shape and fill, its
- * cursor while it can be picked up, and its shadow for a lift of 0 to 1.
- */
-export type CardSkin = {
-	readonly box: string;
-	readonly grab: string;
-	readonly shadow: (lift: number) => string;
-};
-
-/** tf-demo's Card: paper, the Card border and a shadow that grows with the lift. */
-const PAPER_SKIN: CardSkin = {
-	box: "flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper",
-	grab: "cursor-grab active:cursor-grabbing",
-	shadow: (l) => {
-		const offset = (0.25 + 1.25 * l).toFixed(2);
-		const blur = (0.75 + 2.25 * l).toFixed(2);
-		const alpha = (0.2 + 0.25 * l).toFixed(2);
-		return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
-	},
-};
-
-/**
- * One Card: `children` is its face, `skin` the box around it, tf-demo's
- * paper Card unless a Deck names another. Its box is its motion values; a
- * Card in the Cover takes no grab cursor.
+ * One Card on this engine's values: the Presentation foundation's box,
+ * drawn as the element the Deck's motion values move, with the marks a
+ * gesture stamps on it. `children` is what the box holds. The box is the
+ * app's in every form; its shadow follows the Card's lift.
  */
 export function CardView({
 	id,
 	label,
-	skin = PAPER_SKIN,
+	form,
+	liftable = true,
+	className = "",
 	children,
 	values,
 	rtl,
 	held,
-	expanded,
 	mark,
 	highlight,
 	onPointerDown,
@@ -102,12 +83,15 @@ export function CardView({
 	readonly id: string;
 	/** The Card's accessible name. */
 	readonly label: string;
-	readonly skin?: CardSkin;
+	/** The form it is drawn in: a Card on the Deck or in the hand, a Cover once opened. */
+	readonly form: PresentationForm;
+	/** A hand can pick the Card up; off where a press only opens it. */
+	readonly liftable?: boolean;
+	readonly className?: string;
 	readonly children: ReactNode;
 	readonly values: CardValues;
 	readonly rtl: boolean;
 	readonly held: boolean;
-	readonly expanded: boolean;
 	readonly mark: Mark | null;
 	/** Whether hovering the Card lights its border while its layer is lit; left out, it never does. */
 	readonly highlight?: boolean;
@@ -115,12 +99,18 @@ export function CardView({
 	readonly onPointerEnter?: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerLeave?: (event: ReactPointerEvent<HTMLElement>) => void;
 }) {
+	const expanded = form !== "card";
 	const x = useTransform(values.u, (u) => (rtl ? -u : u));
 	const rotate = useTransform(values.r, (r) => (rtl ? -r : r));
-	const boxShadow = useTransform(values.lift, skin.shadow);
+	const boxShadow = useTransform(values.lift, (lift) =>
+		paperShadow(form, lift),
+	);
 	const glow = mark ? glowStyle(mark, rtl) : null;
 	return (
-		<motion.article
+		<PresentationBox
+			as={motion.article}
+			form={form}
+			liftable={liftable}
 			aria-label={label}
 			data-card-id={id}
 			data-held={held || undefined}
@@ -141,7 +131,7 @@ export function CardView({
 				zIndex: values.z,
 				boxShadow,
 			}}
-			className={`absolute ${skin.box} select-none ${expanded ? "" : `${skin.grab} touch-none`} ${highlightClass(highlight && !expanded)}`}
+			className={`absolute ${highlightClass(highlight && !expanded)} ${className}`}
 		>
 			{children}
 			{mark && glow ? (
@@ -163,77 +153,6 @@ export function CardView({
 					</motion.span>
 				</>
 			) : null}
-		</motion.article>
-	);
-}
-
-/**
- * A dummy Card's face, drawn as tf-demo's Cards are: a serif title and its
- * Caption in the Heading row, with the Cover's × when expanded, then its
- * Source Contexts and lines.
- */
-export function CardFace({
-	card,
-	expanded,
-	onClose,
-}: {
-	readonly card: DummyCard;
-	readonly expanded: boolean;
-	readonly onClose?: () => void;
-}) {
-	return (
-		<>
-			<div className="flex h-12 shrink-0 items-end gap-4 px-4 pb-3">
-				<h2
-					dir="auto"
-					className="min-w-0 flex-1 truncate font-serif text-[1rem] leading-tight font-normal text-ink"
-				>
-					{card.title}
-				</h2>
-				<span className="shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted">
-					{card.caption}
-				</span>
-				{expanded ? (
-					<button
-						type="button"
-						aria-label="Close"
-						onClick={onClose}
-						className="-my-1.5 grid size-8 place-items-center rounded-md text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 [&_svg]:size-4"
-					>
-						<XIcon aria-hidden="true" />
-					</button>
-				) : null}
-			</div>
-			<div
-				className={`relative min-h-0 flex-1 px-4 pb-4 ${expanded ? "overflow-y-auto" : "overflow-hidden"}`}
-			>
-				<div className="flex flex-col gap-1">
-					<div className="flex items-baseline justify-between font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
-						<span>Source contexts</span>
-						<span>{card.contexts.length.toString()}</span>
-					</div>
-					<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
-						{card.contexts.map((context) => (
-							<li key={context} dir="auto">
-								{context}
-							</li>
-						))}
-					</ul>
-				</div>
-				<div className="mt-3 space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft">
-					{card.lines.map((line) => (
-						<p key={line} dir="auto">
-							{line}
-						</p>
-					))}
-				</div>
-				{expanded ? null : (
-					<div
-						aria-hidden="true"
-						className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-paper to-transparent"
-					/>
-				)}
-			</div>
-		</>
+		</PresentationBox>
 	);
 }

@@ -171,16 +171,26 @@ test("B: a fast drop on the pad opens the Card in a straight line, never past th
 	if (!first || !last) throw new Error("Nothing sampled");
 	await expect(lastRelease(page)).toHaveText("expand · pad");
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
-	/* how far an edge strays outside the span from where it was let go to where it opens */
-	const stray = (key: keyof Moment) => {
-		const low = Math.min(first[key], last[key]);
-		const high = Math.max(first[key], last[key]);
+	/* The Card is let go leaning and opens into the app's Cover box, which
+	   spans its Pane: as the lean relaxes and the box grows, a corner of
+	   its drawn box swings, so an edge is no measure of the line. What
+	   goes straight is its middle, and its size only grows. */
+	const paths = {
+		across: (f: Moment) => f.mid,
+		down: (f: Moment) => (f.top + f.bottom) / 2,
+		width: (f: Moment) => f.right - f.x,
+		height: (f: Moment) => f.bottom - f.top,
+	};
+	/* how far a path strays outside the span from where the Card was let go to where it opens */
+	const stray = (of: (moment: Moment) => number) => {
+		const low = Math.min(of(first), of(last));
+		const high = Math.max(of(first), of(last));
 		return Math.max(
-			...moments.map((f) => Math.max(low - f[key], f[key] - high)),
+			...moments.map((f) => Math.max(low - of(f), of(f) - high)),
 		);
 	};
-	for (const key of ["x", "top", "right", "bottom"] as const)
-		expect(stray(key), key).toBeLessThanOrEqual(0.5);
+	for (const [name, of] of Object.entries(paths))
+		expect(stray(of), name).toBeLessThanOrEqual(0.5);
 });
 
 test("B: the lean relaxes once the hand rests", async ({ page }) => {

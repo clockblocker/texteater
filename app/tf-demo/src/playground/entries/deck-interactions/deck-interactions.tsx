@@ -1,7 +1,14 @@
 import { useAtom } from "@effect/atom-react";
+import { useQuery } from "@tanstack/react-query";
 import { MotionConfig, useReducedMotion } from "motion/react";
-import { Fragment, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+	type WorkspaceInteraction,
+	WorkspaceInteractionProvider,
+} from "@/workspace/workspace-controller";
 import { Inspector } from "../inspector";
+import { playgroundNotesQuery } from "../playground-note";
+import { dealtCards } from "./dealt-cards";
 import { ProjectionDot } from "./deck-cards";
 import { InspectorPanel } from "./inspector-panel";
 import { readKnobs } from "./knobs";
@@ -38,14 +45,27 @@ function useFrameSize(element: React.RefObject<HTMLDivElement | null>): Frame {
 	return frame;
 }
 
+/** A link in a Card or its Cover leads nowhere here: only the gesture is under study. */
+const STAYS: WorkspaceInteraction = {
+	follow: () => {},
+	presentCards: () => {},
+};
+
 /**
  * The Deck-of-Cards interaction prototype: the ways to carry, put back,
  * dismiss and open a Card that are still in the running, behind one
- * switch. The frame shows only the Deck and what a variant puts on the
- * table; the copy, the switches, the knobs and the readouts are in the
- * inspector (playground ADR 0001).
+ * switch. The Deck is one click's, dealt from the fake db as the app deals
+ * it, and each Card is the Note the app shows, drawn by the Presentation
+ * foundation. The frame shows only the Deck and what a variant puts on
+ * the table; the copy, the switches, the knobs and the readouts are in
+ * the inspector (playground ADR 0001).
  */
 export function DeckInteractions() {
+	const snapshot = useQuery(playgroundNotesQuery);
+	const cards = useMemo(
+		() => (snapshot.data ? dealtCards(snapshot.data, STAYS.follow) : null),
+		[snapshot.data],
+	);
 	const [stored, setStored] = useAtom(deckInteractionSettingsAtom);
 	const settings = settingsOf(stored);
 	const system = useReducedMotion() ?? false;
@@ -90,12 +110,27 @@ export function DeckInteractions() {
 					data-reduced={reduce || undefined}
 					className="relative min-h-[36rem] flex-1 touch-none overflow-hidden rounded-[0.7rem] border border-line bg-canvas"
 				>
-					{frame.w > 0 ? (
-						<Fragment
+					{snapshot.isError ? (
+						<p
+							className="p-6 text-sm text-destructive"
+							role="alert"
+						>
+							The playground fixtures could not be built. Check
+							the Vite terminal and reload.
+						</p>
+					) : cards?.length === 0 ? (
+						<p className="p-6 text-sm text-ink-soft">
+							The fake db holds no click to deal.
+						</p>
+					) : null}
+					{frame.w > 0 && cards && cards.length > 0 ? (
+						<WorkspaceInteractionProvider
 							key={`${entry.key}-${settings.rtl.toString()}`}
+							interaction={STAYS}
 						>
 							{entry.render(
 								{
+									cards,
 									frame,
 									rtl: settings.rtl,
 									motion,
@@ -104,7 +139,7 @@ export function DeckInteractions() {
 								},
 								storedKnobs,
 							)}
-						</Fragment>
+						</WorkspaceInteractionProvider>
 					) : null}
 					{settings.showProjection ? (
 						<ProjectionDot readouts={readouts} />

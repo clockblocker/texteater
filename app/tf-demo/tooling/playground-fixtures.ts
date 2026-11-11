@@ -1,8 +1,7 @@
 import { v } from "convex/values";
 import { createPendingSemanticRelationRecord } from "dumdict/pending";
 import { makeSurfaceId } from "dumdict/planning";
-import type * as Dumling from "dumling/types";
-import type { Doc, Id } from "../convex/_generated/dataModel";
+import type { Doc } from "../convex/_generated/dataModel";
 import {
 	internalMutation,
 	type MutationCtx,
@@ -15,22 +14,17 @@ import {
 	replaceAccumulatedKnowledge,
 	shadowKeyFor,
 } from "../convex/model/shadows";
-import { ensureVisitorEncounter } from "../convex/model/visitorEncounters";
 import {
 	loadUnitReadingNote,
 	readingNoteValidator,
 } from "../convex/modules/notes/readingNote";
 import { unitReadingEmojiDescription } from "../convex/modules/notes/unitReadingFamilies";
-import { persistSubmittedScroll } from "../convex/modules/scroll/submission";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
 } from "../server/linguisticIdentity";
-import {
-	type StoredUnit,
-	unitsAroundOccurrence,
-} from "../server/storedSegments";
 import { NOTE_STUDY_BREAKDOWN_DATABASE } from "./notes-study/breakdown-units";
+import { NOTE_STUDY_CLICK_STORY_DATABASE } from "./notes-study/click-story-units";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -42,11 +36,11 @@ import {
 	type NoteStudyDatabaseUnit,
 	storedRelation,
 } from "./notes-study/note-study-dummy-database";
-import { evidenceOf } from "./playground-attestation-evidence";
 import {
 	consolidateExampleScrolls,
 	proseSegments,
 } from "./playground-example-collection";
+import { ensureOccurrence } from "./playground-occurrences";
 
 const listItemValidator = v.object({
 	path: v.string(),
@@ -286,116 +280,6 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 	};
 }
 
-/** The unit route a fixture Lemma's occurrence takes; a Morpheme has none. */
-function unitRouteOf(lemma: Dumling.Lemma<"de">): StoredUnit["route"] {
-	return lemma.family === "Morpheme"
-		? "Unresolved"
-		: ({
-				language: "de",
-				family: lemma.family,
-				kind: lemma.kind,
-			} as StoredUnit["route"]);
-}
-
-async function ensureOccurrence(
-	ctx: MutationCtx,
-	unit: NoteStudyDatabaseUnit,
-	ids: {
-		lemmaId: Id<"lemmas">;
-		readingId: Id<"readings">;
-		surfaceId: Id<"surfaces">;
-	},
-	visible: boolean,
-) {
-	for (const [occurrenceIndex, occurrence] of unit.occurrences.entries()) {
-		const sourceText = occurrence.segments.map(({ text }) => text).join("");
-		const existingSentence = await ctx.db
-			.query("sentences")
-			.withIndex("by_segmented_sentence_id", (q) =>
-				q.eq("segmentedSentenceId", occurrence.segmentedSentenceId),
-			)
-			.unique();
-		if (existingSentence?.heading) continue;
-		const persisted = existingSentence
-			? {
-					scrollId: existingSentence.scrollId,
-					sentenceIds: [existingSentence._id],
-				}
-			: await persistSubmittedScroll(ctx, {
-					submissionKey: occurrence.submissionKey,
-					sourceText,
-					sentences: [
-						{
-							segmentedSentenceId: occurrence.segmentedSentenceId,
-							position: 0,
-							paragraph: 0,
-							language: "de",
-							stitchedText: sourceText,
-							segments: [...occurrence.segments],
-							units: unitsAroundOccurrence(
-								occurrence.segments,
-								occurrence.memberSegmentIndices,
-								unitRouteOf(unit.reading.lemma),
-							),
-						},
-					],
-				});
-		const sentenceId = persisted.sentenceIds[0];
-		if (!sentenceId)
-			throw new Error("Notes Study sentence was not persisted.");
-		const memberSegments = await Promise.all(
-			occurrence.memberSegmentIndices.map((index) =>
-				ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", sentenceId).eq("index", index),
-					)
-					.unique(),
-			),
-		);
-		if (memberSegments.some((segment) => !segment)) {
-			throw new Error("Notes Study Attestation member is missing.");
-		}
-		let attestationId =
-			memberSegments[0]?.attestationMembership?.attestationId;
-		if (!attestationId) {
-			const createdAttestationId = await ctx.db.insert("attestations", {
-				surfaceId: ids.surfaceId,
-				readingId: ids.readingId,
-				realizationCoverage: occurrence.attestation.realizationCoverage,
-				...evidenceOf(occurrence.attestation),
-			});
-			await Promise.all(
-				memberSegments.flatMap((segment) =>
-					segment
-						? [
-								ctx.db.patch(segment._id, {
-									attestationMembership: {
-										attestationId: createdAttestationId,
-										orthography: "Standard",
-									},
-								}),
-							]
-						: [],
-				),
-			);
-			attestationId = createdAttestationId;
-		}
-		if (visible) {
-			const clicked = memberSegments[0];
-			if (!clicked) continue;
-			await ensureVisitorEncounter(ctx, {
-				requestId: `${occurrence.submissionKey}:encounter:${occurrenceIndex}`,
-				visitorId: NOTE_STUDY_VISITOR_ID,
-				scrollId: persisted.scrollId,
-				sentenceId,
-				segmentId: clicked._id,
-				attestationId,
-			});
-		}
-	}
-}
-
 export const load = internalMutation({
 	args: {},
 	returns: v.object({
@@ -413,6 +297,7 @@ export const load = internalMutation({
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
 			...NOTE_STUDY_BREAKDOWN_DATABASE,
+			...NOTE_STUDY_CLICK_STORY_DATABASE,
 		]) {
 			const ids = await ensureUnit(ctx, unit);
 			// Breakdown pieces and Sources intern their parts' Shadows.
@@ -427,7 +312,8 @@ export const load = internalMutation({
 				ctx,
 				unit,
 				ids,
-				NOTE_STUDY_DATABASE.includes(unit),
+				NOTE_STUDY_DATABASE.includes(unit) ||
+					NOTE_STUDY_CLICK_STORY_DATABASE.includes(unit),
 			);
 		}
 
@@ -619,37 +505,38 @@ export const playground = query({
 	}),
 	handler: async (ctx) => {
 		const entries = await Promise.all(
-			[...NOTE_STUDY_DATABASE, ...NOTE_STUDY_BREAKDOWN_DATABASE].map(
-				async (unit) => {
-					const reading = await ctx.db
-						.query("readings")
-						.withIndex("by_reading_key", (q) =>
-							q.eq("readingKey", unit.readingKey),
-						)
-						.unique();
-					if (!reading) return null;
-					const lemma = await ctx.db.get(reading.lemmaId);
-					if (!lemma) return null;
-					const attestation = await ctx.db
-						.query("attestations")
-						.withIndex("by_reading_id", (q) =>
-							q.eq("readingId", reading._id),
-						)
-						.first();
-					return {
-						readingKey: unit.readingKey,
-						canonicalForm: lemma.canonicalForm,
-						emojiDescription: unitReadingEmojiDescription(reading),
-						family: lemma.family,
-						kind: lemma.kind,
-						readingId: reading._id,
-						lemmaId: lemma._id,
-						normalizedSurface:
-							unit.citationSurface.normalizedSurface,
-						attestationId: attestation?._id ?? null,
-					};
-				},
-			),
+			[
+				...NOTE_STUDY_DATABASE,
+				...NOTE_STUDY_BREAKDOWN_DATABASE,
+				...NOTE_STUDY_CLICK_STORY_DATABASE,
+			].map(async (unit) => {
+				const reading = await ctx.db
+					.query("readings")
+					.withIndex("by_reading_key", (q) =>
+						q.eq("readingKey", unit.readingKey),
+					)
+					.unique();
+				if (!reading) return null;
+				const lemma = await ctx.db.get(reading.lemmaId);
+				if (!lemma) return null;
+				const attestation = await ctx.db
+					.query("attestations")
+					.withIndex("by_reading_id", (q) =>
+						q.eq("readingId", reading._id),
+					)
+					.first();
+				return {
+					readingKey: unit.readingKey,
+					canonicalForm: lemma.canonicalForm,
+					emojiDescription: unitReadingEmojiDescription(reading),
+					family: lemma.family,
+					kind: lemma.kind,
+					readingId: reading._id,
+					lemmaId: lemma._id,
+					normalizedSurface: unit.citationSurface.normalizedSurface,
+					attestationId: attestation?._id ?? null,
+				};
+			}),
 		);
 		const shadowKeys = [
 			...new Set(

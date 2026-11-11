@@ -1,35 +1,71 @@
-import { CARD_WIDTH_REM, HEADER_REM } from "compass";
-import { OPEN_SCALE } from "@/presentation/deck-geometry";
+import { isNarrow } from "compass";
+import {
+	centreScaledTop,
+	coverBoxIn,
+	OPEN_SCALE,
+	type PileSlot,
+	pileSlotsIn,
+	remPx,
+} from "@/presentation/deck-geometry";
 import { centre, type Rect, rotateAround, type Slot, union } from "./geometry";
-
-const REM = 16;
-/** The real Deck's sizes: a Card's width and one folded Heading row. */
-const CARD_W = CARD_WIDTH_REM * REM;
-const TAIL_PX = HEADER_REM * REM;
-const CARD_H = 22 * REM;
-const FRAME_PAD = 24;
 
 export type Frame = { readonly w: number; readonly h: number };
 
 /**
- * The real Deck's pile: each Card a whole Card, the ones behind showing
- * `tail` px of their tops above the next, the front one at the foot and
- * resting at the open scale. Index 0 is the back.
+ * A slot of the foundation's pile in this engine's terms. A Card here is
+ * scaled about its centre, so a scaled slot sits lower by half of what its
+ * scale adds and its Card is drawn where the app draws it: its top edge a
+ * whole Heading row below the Card Tail above it.
  */
-export function pileSlots(frame: Frame, count: number, tail = TAIL_PX): Slot[] {
-	const w = Math.min(CARD_W, frame.w - 2 * FRAME_PAD);
-	const h = Math.min(CARD_H, frame.h - 2 * FRAME_PAD - tail * (count - 1));
-	const pileH = tail * (count - 1) + h;
-	const u = (frame.w - w) / 2;
-	const top = Math.max(FRAME_PAD, (frame.h - pileH) / 2 - FRAME_PAD);
-	return Array.from({ length: count }, (_, index) => ({
-		u,
-		v: top + index * tail,
-		w,
-		h,
+function engineSlot(slot: PileSlot): Slot {
+	return {
+		u: slot.inlineStart,
+		v: centreScaledTop(slot),
+		w: slot.width,
+		h: slot.height,
 		r: 0,
-		s: index === count - 1 ? OPEN_SCALE : 1,
-	}));
+		s: slot.scale,
+	};
+}
+
+function pile(frame: Frame, count: number, openScale: number): PileSlot[] {
+	return pileSlotsIn({ width: frame.w, height: frame.h }, count, {
+		rem: remPx(),
+		openScale,
+	});
+}
+
+/**
+ * The Deck's pile as it is dealt, back to front: the foundation's slots,
+ * which are the app's, with the frame as the Pane.
+ */
+export function pileSlots(
+	frame: Frame,
+	count: number,
+	openScale = OPEN_SCALE,
+): Slot[] {
+	return pile(frame, count, openScale).map(engineSlot);
+}
+
+/**
+ * The pile of a Deck dealt `dealt` Cards with only `count` of them on it,
+ * closed up: the Cards left take the first places of the pile as dealt and
+ * the last of them rests at the open scale. A Card keeps the size it was
+ * dealt at, because the Deck still has the Cards a hand took off it.
+ */
+export function closedPileSlots(
+	frame: Frame,
+	count: number,
+	dealt: number,
+): Slot[] {
+	return pile(frame, dealt, OPEN_SCALE)
+		.slice(0, count)
+		.map((slot, index) =>
+			engineSlot({
+				...slot,
+				scale: index === count - 1 ? OPEN_SCALE : 1,
+			}),
+		);
 }
 
 /**
@@ -53,15 +89,15 @@ export function fanSlots(slots: readonly Slot[], degrees: number): Slot[] {
 	});
 }
 
-/** The Cover a Card expands into: its Pane, inset as a Sheet is. */
+/** The Cover a Card expands into: the app's Cover box, with the frame as its Pane. */
 export function coverRect(frame: Frame): Rect {
-	const w = Math.min(720, frame.w - 2 * FRAME_PAD);
-	return {
-		u: (frame.w - w) / 2,
-		v: FRAME_PAD,
-		w,
-		h: frame.h - 2 * FRAME_PAD,
-	};
+	const rem = remPx();
+	const box = coverBoxIn(
+		{ width: frame.w, height: frame.h },
+		rem,
+		isNarrow(document.documentElement.clientWidth, rem),
+	);
+	return { u: box.inlineStart, v: box.top, w: box.width, h: box.height };
 }
 
 /** Where B and E put their targets: an L-shaped tray and an open pad. */

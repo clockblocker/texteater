@@ -7,7 +7,6 @@ import { useTableCarry } from "./table-carry";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 import { useDeckHover } from "./use-deck-hover";
-import { DUMMY_DECK } from "./words";
 
 /**
  * B, Table: zones are places. Under the pointer the Deck fans and the
@@ -16,6 +15,7 @@ import { DUMMY_DECK } from "./words";
  * does; over nothing is back, along an arc.
  */
 export function TableVariant({
+	cards,
 	frame,
 	rtl,
 	motion,
@@ -24,7 +24,7 @@ export function TableVariant({
 	deal,
 }: VariantProps<TableKnobs>) {
 	const deck = useDeck({
-		cards: DUMMY_DECK,
+		cards,
 		frame,
 		motion,
 		readouts,
@@ -109,6 +109,7 @@ export function TableVariant({
 		<>
 			{table.view}
 			<DeckCards
+				cards={cards}
 				deck={deck}
 				rtl={rtl}
 				held={table.held}

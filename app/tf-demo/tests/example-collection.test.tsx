@@ -5,6 +5,7 @@ import type { Id, TableNames } from "../convex/_generated/dataModel";
 import schema from "../convex/schema";
 import { ScrollPresentation } from "../src/views/scroll-view";
 import { NOTE_STUDY_BREAKDOWN_DATABASE } from "../tooling/notes-study/breakdown-units";
+import { NOTE_STUDY_CLICK_STORY_DATABASE } from "../tooling/notes-study/click-story-units";
 import { EXAMPLES_SCROLL_TITLE } from "../tooling/notes-study/example-contexts";
 import {
 	NOTE_STUDY_DATABASE,
@@ -42,6 +43,7 @@ test(
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
 			...NOTE_STUDY_BREAKDOWN_DATABASE,
+			...NOTE_STUDY_CLICK_STORY_DATABASE,
 		].filter((unit) => unit.knowledge.definition);
 		expect(allScrolls.filter((text) => text.origin)).toHaveLength(
 			definedUnits.length,
@@ -54,6 +56,7 @@ test(
 		const expected = [
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
+			...NOTE_STUDY_CLICK_STORY_DATABASE,
 		].flatMap((unit) => unit.occurrences).length;
 		const scrollId = scrolls[0]?._id;
 		if (!scrollId) throw new Error("Expected the examples Scroll.");

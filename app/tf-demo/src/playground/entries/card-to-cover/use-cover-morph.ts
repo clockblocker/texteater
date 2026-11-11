@@ -14,7 +14,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import type { Rect } from "../deck-interactions/geometry";
-import { coverRect, type Frame } from "../deck-interactions/layout";
+import type { Frame } from "../deck-interactions/layout";
 import {
 	cue,
 	type MotionContext,
@@ -45,6 +45,24 @@ import {
 	RISE_PX,
 	settledMs,
 } from "./timing";
+
+/** The room the prototype's Cover keeps from its frame, and the widest it grows. */
+const COVER_INSET_PX = 24;
+const COVER_MAX_PX = 720;
+
+/**
+ * The Cover this prototype grows a Card into: a column of its own, as
+ * #1311 measured the morph, rather than the app's Cover box.
+ */
+function coverRect(frame: Frame): Rect {
+	const w = Math.min(COVER_MAX_PX, frame.w - 2 * COVER_INSET_PX);
+	return {
+		u: (frame.w - w) / 2,
+		v: COVER_INSET_PX,
+		w,
+		h: frame.h - 2 * COVER_INSET_PX,
+	};
+}
 
 const COVER_Z = 200;
 /** A change of form nobody sees move: the reduced swap, behind a fade. */

@@ -27,7 +27,6 @@ import {
 } from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
-import { DUMMY_DECK } from "./words";
 
 const POP = { ms: 240 };
 /** The Deck's exit fade runs even: an eased one is all but out in its first half, before the drift has shown. */
@@ -102,6 +101,7 @@ function showsOf(
  * lights its border.
  */
 export function SwipeVariant({
+	cards,
 	frame,
 	rtl,
 	motion,
@@ -110,7 +110,7 @@ export function SwipeVariant({
 	deal,
 }: VariantProps<SwipeKnobs>) {
 	const deck = useDeck({
-		cards: DUMMY_DECK,
+		cards,
 		frame,
 		motion,
 		readouts,
@@ -493,6 +493,7 @@ export function SwipeVariant({
 				/>
 			) : null}
 			<DeckCards
+				cards={cards}
 				deck={deck}
 				rtl={rtl}
 				held={held}

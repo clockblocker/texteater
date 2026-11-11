@@ -1,6 +1,6 @@
 import type { Transition } from "motion/react";
-import { memo, type RefObject, useMemo, useState } from "react";
-import { type CardSkin, CardView } from "../deck-interactions/card-view";
+import { memo, type RefObject, useState } from "react";
+import { CardView } from "../deck-interactions/card-view";
 import type { Slot } from "../deck-interactions/geometry";
 import { type Frame, pileSlots } from "../deck-interactions/layout";
 import type { MotionContext } from "../deck-interactions/motion-kit";
@@ -19,22 +19,14 @@ const GUTTER_PX = 16;
 
 /** The real Deck's pile, its front Card at rest unscaled: a box here only ever resizes. */
 function flatPile(frame: Frame, count: number): Slot[] {
-	return pileSlots(frame, count).map((slot) => ({ ...slot, s: 1 }));
+	return pileSlots(frame, count, 1);
 }
 
-/** tf-demo's paper Card, contained or not; a tap opens it. */
-function coverSkin(contain: boolean): CardSkin {
-	return {
-		box: `flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper${contain ? " [contain:layout_paint]" : ""}`,
-		grab: "cursor-pointer",
-		shadow: (lift) => {
-			const offset = (0.25 + 1.25 * lift).toFixed(2);
-			const blur = (0.75 + 2.25 * lift).toFixed(2);
-			const alpha = (0.2 + 0.25 * lift).toFixed(2);
-			return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
-		},
-	};
-}
+/**
+ * What the prototype's knob takes off the foundation's box: with `contain`
+ * off, the box no longer stops its own resize's layout and paint.
+ */
+const UNCONTAINED = "[contain:none]!";
 
 /**
  * One Card on the table. Memoised: every prop but `form` and the
@@ -45,7 +37,7 @@ const CoverCardView = memo(function CoverCardView({
 	card,
 	form,
 	values,
-	skin,
+	contain,
 	rtl,
 	column,
 	clock,
@@ -62,7 +54,8 @@ const CoverCardView = memo(function CoverCardView({
 	readonly card: CoverCard;
 	readonly form: Form;
 	readonly values: CardValues;
-	readonly skin: CardSkin;
+	/** Whether the box contains its layout and paint, as the app's does. */
+	readonly contain: boolean;
 	readonly rtl: boolean;
 	readonly column: number;
 	readonly clock: MorphFeel["clock"];
@@ -80,11 +73,13 @@ const CoverCardView = memo(function CoverCardView({
 		<CardView
 			id={card.id}
 			label={`${card.title} card`}
-			skin={skin}
+			form={form}
+			/* a tap opens it; nothing picks it up */
+			liftable={false}
+			className={`${form === "cover" ? "" : "cursor-pointer"} ${contain ? "" : UNCONTAINED}`}
 			values={values}
 			rtl={rtl}
 			held={false}
-			expanded={form === "cover"}
 			mark={null}
 			onPointerDown={(event) => {
 				if (event.button !== 0 || form === "cover") return;
@@ -159,7 +154,6 @@ export function CoverStage({
 		frameRef,
 		recorder,
 	});
-	const skin = useMemo(() => coverSkin(contain), [contain]);
 	const column = (deck.slots[0]?.w ?? 0) - 2 * GUTTER_PX;
 	return deck.order.map((id) => {
 		const card = coverCardById(id);
@@ -171,7 +165,7 @@ export function CoverStage({
 				card={card}
 				form={morph.openId === id ? "cover" : "card"}
 				values={deck.valuesOf(id)}
-				skin={skin}
+				contain={contain}
 				rtl={rtl}
 				column={column}
 				clock={feel.clock}

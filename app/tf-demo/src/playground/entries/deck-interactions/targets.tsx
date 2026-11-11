@@ -1,6 +1,7 @@
 import { Maximize2Icon, XIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { type ReactNode, useEffect, useRef } from "react";
+import { PAPER_CORNERS } from "@/presentation/skin";
 import type { Target } from "./decide";
 import type { Rect } from "./geometry";
 import type { TableTargets } from "./layout";
@@ -148,7 +149,7 @@ export function TargetsView({
 					active={active === "slot"}
 					delayMs={0}
 					motion={context}
-					className="z-[5] rounded-[0.9rem] border-2 border-dashed border-line-strong"
+					className={`z-[5] ${PAPER_CORNERS} border-2 border-dashed border-line-strong`}
 				/>
 			) : null}
 			{tray.map((rect, index) => (
@@ -177,7 +178,7 @@ export function TargetsView({
 				active={active === "pad"}
 				delayMs={2 * staggerMs}
 				motion={context}
-				className="z-[5] rounded-[0.9rem] border-2 border-link/70 bg-link/15 text-link"
+				className={`z-[5] ${PAPER_CORNERS} border-2 border-link/70 bg-link/15 text-link`}
 			>
 				<Maximize2Icon aria-hidden="true" className="size-5" />
 			</TargetBox>

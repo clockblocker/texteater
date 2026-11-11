@@ -20,8 +20,8 @@ const SOURCES = readdirSync(SRC, { recursive: true, encoding: "utf8" })
 
 const read = (file: string) => readFileSync(join(SRC, file), "utf8");
 
-/** The paper's corners: the mark of a box skinned by hand. */
-const PAPER_CORNERS = "rounded-[0.9rem]";
+/** The paper's corners, outer or inner: the mark of a box skinned by hand. */
+const PAPER_CORNERS = /rounded-\[(calc\()?0\.9rem/;
 
 /**
  * The sizes a pile is built from. The app's renderer and its gestures read
@@ -32,17 +32,11 @@ const PILE_SIZES =
 	/\b(CARD_WIDTH_REM|HEADER_REM|PILE_HEIGHT_REM|DECK_TOP_REM|cardHeightPx|deckPlacements)\b/;
 
 /**
- * Surfaces that still draw a Card of their own. Each is a prototype with
- * its own face; moving one onto the foundation takes it off this list.
+ * Surfaces that still skin a Card of their own. Each is a prototype on
+ * another engine; moving one onto the foundation takes it off this list.
  */
 const OWN_SKIN: readonly string[] = [
-	"playground/entries/card-to-cover/cover-stage.tsx",
-	"playground/entries/deck-interactions/card-view.tsx",
-	"playground/entries/deck-interactions/targets.tsx",
 	"playground/entries/tabletop/note-body.tsx",
-];
-const OWN_PILE: readonly string[] = [
-	"playground/entries/deck-interactions/layout.ts",
 ];
 
 describe("one foundation draws every Presentation", () => {
@@ -52,11 +46,14 @@ describe("one foundation draws every Presentation", () => {
 		expect(SOURCES).toContain(
 			"playground/entries/deck-interactions/card-view.tsx",
 		);
+		expect(SOURCES).toContain(
+			"playground/entries/deck-interactions/layout.ts",
+		);
 	});
 
 	test("the paper skin is written once, in the foundation", () => {
 		const skinned = SOURCES.filter((file) =>
-			read(file).includes(PAPER_CORNERS),
+			PAPER_CORNERS.test(read(file)),
 		);
 		expect(skinned).toEqual(["presentation/skin.ts", ...OWN_SKIN].sort());
 	});
@@ -66,7 +63,7 @@ describe("one foundation draws every Presentation", () => {
 			(file) =>
 				file.startsWith("playground/") && PILE_SIZES.test(read(file)),
 		);
-		expect(piled).toEqual([...OWN_PILE].sort());
+		expect(piled).toEqual([]);
 	});
 
 	test("the foundation holds no motion engine", () => {

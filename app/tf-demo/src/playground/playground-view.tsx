@@ -53,7 +53,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Notes",
 		icon: StickyNoteIcon,
 		description:
-			"Every Note kind from the Notes Study fake db, as a Card and as a Sheet. Links navigate inside the gallery.",
+			"Every Note kind from the Notes Study fake db, as a Card, a Card Tail and a Cover, drawn by the components the app draws them with. Links in the Cover navigate inside the gallery.",
 		render: (route) => <NotesGallery route={route} />,
 	},
 	{
@@ -77,7 +77,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Loading",
 		icon: LoaderIcon,
 		description:
-			"Every Note kind while its data is still on the way, as a Card and as a Sheet.",
+			"Every Note kind while its data is still on the way, as a Card, a Card Tail and a Cover.",
 		render: () => <LoadingGallery />,
 	},
 	{
@@ -101,7 +101,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck interactions",
 		icon: GalleryHorizontalEndIcon,
 		description:
-			"Two ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, B (Table) and D (Swipe actions), behind one switch, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
+			"Two ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, B (Table) and D (Swipe actions), behind one switch, on one click's Deck of real Notes from the fake db, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
 		render: () => <DeckInteractions />,
 	},
 	{
