@@ -2,6 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { PlainTitle } from "@/presentation/heading";
 import {
 	renderApplicationSubject,
 	subjectLabel,
@@ -186,14 +187,14 @@ function useScrollTitle(target: ScrollSubjectTarget): string | undefined {
 function SectionHeading({ target }: { target: SectionTarget }) {
 	const title = useSectionTitle(target);
 	if (title === undefined) return <HeadingSkeleton />;
-	return <span className="min-w-0 truncate font-serif">{title}</span>;
+	return <PlainTitle>{title}</PlainTitle>;
 }
 
 /** A Scroll's Heading: what the Library calls it. */
 function ScrollHeading({ target }: { target: ScrollSubjectTarget }) {
 	const title = useScrollTitle(target);
 	if (title === undefined) return <HeadingSkeleton />;
-	return <span className="min-w-0 truncate font-serif">{title}</span>;
+	return <PlainTitle>{title}</PlainTitle>;
 }
 
 /**

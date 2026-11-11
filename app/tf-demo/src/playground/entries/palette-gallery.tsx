@@ -10,7 +10,7 @@ import {
 import { LockIcon } from "lucide-react";
 import { Fragment, type ReactNode, useState } from "react";
 
-import { Stage } from "./frames";
+import { Stage } from "./staged-presentation";
 
 /* ---------- The two axes a word can sit on ---------- */
 

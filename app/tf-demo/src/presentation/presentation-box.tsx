@@ -14,6 +14,7 @@ export function PresentationBox<T extends ElementType = "article">({
 	as,
 	form,
 	lift = 0,
+	liftable = true,
 	className = "",
 	style,
 	...rest
@@ -27,14 +28,16 @@ export function PresentationBox<T extends ElementType = "article">({
 	 * from `paperShadow` instead.
 	 */
 	readonly lift?: number;
-} & Omit<ComponentPropsWithRef<T>, "as" | "form" | "lift">) {
+	/** A hand can pick the Card up; off where nothing does, as in a gallery. */
+	readonly liftable?: boolean;
+} & Omit<ComponentPropsWithRef<T>, "as" | "form" | "lift" | "liftable">) {
 	const Element: ElementType = as ?? "article";
 	const shadow = (style as { boxShadow?: unknown } | undefined)?.boxShadow;
 	return (
 		<Element
 			data-presentation={form}
 			{...rest}
-			className={`${boxClass(form)} ${className as string}`}
+			className={`${boxClass(form, liftable)} ${className as string}`}
 			style={
 				shadow === undefined
 					? { boxShadow: paperShadow(form, lift), ...style }

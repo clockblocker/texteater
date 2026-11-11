@@ -7,7 +7,7 @@ import {
 	placementBox,
 } from "compass";
 import {
-	cardHeightRem,
+	cardBoxRem,
 	centreScaledTop,
 	coverBoxIn,
 	OPEN_SCALE,
@@ -44,7 +44,7 @@ describe("a dealt Deck's pile", () => {
 				(PANE.width - CARD_WIDTH_REM * REM) / 2,
 			);
 			expect(slot.top).toBe((DECK_TOP_REM + index * HEADER_REM) * REM);
-			expect(slot.height).toBe(cardHeightRem(4) * REM);
+			expect(slot.height).toBe(cardBoxRem(4).height * REM);
 		}
 	});
 
@@ -98,11 +98,17 @@ describe("the open Card's scale", () => {
 	});
 });
 
-describe("a Card's height", () => {
-	test("is the whole pile for a lone Card, and a Heading row less per Card behind", () => {
-		const lone = cardHeightRem(1);
-		expect(cardHeightRem(4)).toBe(lone - 3 * HEADER_REM);
-		expect(pileSlotsIn(PANE, 1, { rem: REM })[0]?.height).toBe(lone * REM);
+describe("a Card's size", () => {
+	test("is the Card's width, and the whole pile's height for a lone Card, a Heading row less per Card behind", () => {
+		const lone = cardBoxRem();
+		expect(lone.width).toBe(CARD_WIDTH_REM);
+		expect(cardBoxRem(4)).toEqual({
+			width: CARD_WIDTH_REM,
+			height: lone.height - 3 * HEADER_REM,
+		});
+		const [slot] = pileSlotsIn(PANE, 1, { rem: REM });
+		expect(slot?.width).toBe(lone.width * REM);
+		expect(slot?.height).toBe(lone.height * REM);
 	});
 });
 

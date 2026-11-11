@@ -5,22 +5,24 @@ import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
-import type {
-	WorkspaceSubject,
-	WorkspaceTarget,
-} from "@/workspace/workspace-subject";
+import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 import type { EntryRoute } from "../playground-router";
-import { CardFrame, SheetFrame, Stage } from "./frames";
-import { PlaygroundNote, playgroundNotesQuery } from "./playground-note";
+import { playgroundNotesQuery, playgroundParts } from "./playground-note";
+import { Stage, StagedPresentation } from "./staged-presentation";
 
 type PlaygroundCatalog = PlaygroundSnapshot["catalog"];
 
 /**
- * One Note at a time, shown in both forms. Following any link inside a Note
- * replaces the shown Note, so the route from an Attestation up to its Reading
- * can be walked exactly as the deck would walk it.
+ * One Note at a time, in the forms the app shows it in: a Card in front
+ * of its Deck, a Card Tail behind another Card, and a Cover. Each is drawn
+ * by the Presentation foundation the app's renderer draws it with, so a
+ * change to a Block, the Heading row or the box shows here and in the app
+ * together. A Card's links rest, as in the app; following a link in the
+ * Cover replaces the shown Note, so the route from an Attestation up to
+ * its Reading can be walked exactly as the Deck would walk it. The
+ * Cover's ← steps back through that walk and its × puts the Note away.
  *
  * The shown Note is the route: `/playground/notes/<kind>/<id>`, so every step
  * of that walk is a history entry and can be reloaded or linked to.
@@ -63,7 +65,13 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 		);
 	}
 
-	const subject = target ? subjectFor(target) : null;
+	const parts = target
+		? playgroundParts({
+				target,
+				snapshot: catalog.data,
+				follow: interaction.follow,
+			})
+		: null;
 	return (
 		<div className="flex h-full min-h-0">
 			<Catalog
@@ -72,28 +80,41 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 				onSelect={(next) => setTarget(segmentsFromTarget(next))}
 			/>
 			<div className="min-w-0 flex-1 overflow-auto p-6">
-				{subject ? (
+				{parts ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
 						<div className="flex flex-wrap items-start gap-8">
-							<Stage label="Card">
-								<CardFrame>
-									<PlaygroundNote
-										target={subject.target}
-										presentation="Card"
-										snapshot={catalog.data}
-										follow={interaction.follow}
+							<div className="grid max-w-full gap-8">
+								<Stage label="Card">
+									<StagedPresentation
+										form="card"
+										parts={parts}
 									/>
-								</CardFrame>
-							</Stage>
-							<Stage label="Sheet" className="min-w-0 flex-1">
-								<SheetFrame>
-									<PlaygroundNote
-										target={subject.target}
-										presentation="Sheet"
-										snapshot={catalog.data}
-										follow={interaction.follow}
+								</Stage>
+								<Stage label="Card Tail">
+									<StagedPresentation
+										form="tail-above"
+										parts={parts}
 									/>
-								</SheetFrame>
+								</Stage>
+							</div>
+							<Stage label="Cover" className="min-w-0 flex-1">
+								<StagedPresentation
+									form="cover"
+									parts={parts}
+									chrome={{
+										back: {
+											label: "Back",
+											enabled: true,
+											onPress: () =>
+												window.history.back(),
+										},
+										clear: {
+											label: "Put the Note away",
+											enabled: true,
+											onPress: () => setTarget([]),
+										},
+									}}
+								/>
 							</Stage>
 						</div>
 					</WorkspaceInteractionProvider>
@@ -159,14 +180,6 @@ export function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 		case "ResolutionStep":
 			return ["resolution", target.requestId, target.stepKind];
 	}
-}
-
-function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
-	return target.kind === "Scroll"
-		? { kind: "Scroll", target }
-		: target.kind === "Section"
-			? { kind: "Section", target }
-			: ({ kind: "Note", target } as WorkspaceSubject);
 }
 
 function Catalog({

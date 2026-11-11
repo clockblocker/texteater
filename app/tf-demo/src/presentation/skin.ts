@@ -20,17 +20,23 @@ const CORNERS = "rounded-[0.9rem]";
  * A Card is all handle, so none of it selects; a Sheet's text does, and
  * its Heading is the handle.
  */
-const CARD_HANDLE = "cursor-grab touch-none select-none active:cursor-grabbing";
+const CARD = "select-none";
+/** A Card a hand can pick up says so, and keeps a touch from scrolling the page under it. */
+const CARD_HANDLE = "cursor-grab touch-none active:cursor-grabbing";
 
-/** The classes of a Presentation's box in `form`. */
-export function boxClass(form: PresentationForm): string {
+/**
+ * The classes of a Presentation's box in `form`. `liftable` is off where
+ * nothing picks a Card up, as in a gallery.
+ */
+export function boxClass(form: PresentationForm, liftable = true): string {
 	const { sheet } = formLayout(form);
 	return [
 		PAPER,
 		form === "ground"
 			? "border-transparent"
 			: `${CORNERS} border-line-strong`,
-		sheet ? "" : CARD_HANDLE,
+		sheet ? "" : CARD,
+		sheet || !liftable ? "" : CARD_HANDLE,
 	]
 		.filter(Boolean)
 		.join(" ");

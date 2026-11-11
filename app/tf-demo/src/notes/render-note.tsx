@@ -205,15 +205,10 @@ type FixtureNoteInput = {
 };
 
 /**
- * Renders a Note from fixture data, as the playground does: on the default
- * Block layout instead of a stored one, with the default capabilities plus
- * the host's presentation and follow.
+ * Renders a Note from fixture data, as the playground does, split like
+ * `renderNoteParts`: on the default Block layout instead of a stored one,
+ * with the default capabilities plus the host's presentation and follow.
  */
-export function renderFixtureNote(input: FixtureNoteInput): ReactElement {
-	return fixtureNotes.renderNote(fixtureInput(input));
-}
-
-/** `renderFixtureNote`, split like `renderNoteParts`. */
 export function renderFixtureNoteParts(input: FixtureNoteInput): NoteParts {
 	return fixtureNotes.renderNoteParts(fixtureInput(input));
 }

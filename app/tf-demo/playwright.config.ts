@@ -10,6 +10,7 @@ const playgroundUrl = `http://127.0.0.1:${port}`;
    that script sets a placeholder (process env wins over `.env.local`). */
 const playgroundSpecs = [
 	"breakdowns-reveal.pw.ts",
+	"card-foundation.pw.ts",
 	"card-to-cover.pw.ts",
 	"compass.pw.ts",
 	"deck-gestures.pw.ts",

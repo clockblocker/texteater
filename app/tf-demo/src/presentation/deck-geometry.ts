@@ -1,4 +1,5 @@
 import {
+	CARD_WIDTH_REM,
 	cardHeightPx,
 	coverPlacement,
 	DECK_TOP_REM,
@@ -108,10 +109,13 @@ export function coverBoxIn(
 }
 
 /**
- * A Card's height in a Deck of `count` Cards whose Pane has room for the
+ * A Card's size in a Deck of `count` Cards whose Pane has room for the
  * whole pile, in rem: what a surface that lays a Card out in the page's
  * flow, outside any Pane, gives it.
  */
-export function cardHeightRem(count: number): number {
-	return cardHeightPx(count, 1);
+export function cardBoxRem(count = 1): {
+	readonly width: number;
+	readonly height: number;
+} {
+	return { width: CARD_WIDTH_REM, height: cardHeightPx(count, 1) };
 }

@@ -277,3 +277,8 @@ export function CardTitleRow({
 export function cardFaceClass(atFoot: boolean): string {
 	return `absolute inset-0 flex justify-center px-4 ${atFoot ? "" : "pb-3.5"}`;
 }
+
+/** A Heading's words for a Subject with a plain name, such as a Scroll or a Section. */
+export function PlainTitle({ children }: { children: ReactNode }) {
+	return <span className="min-w-0 truncate font-serif">{children}</span>;
+}

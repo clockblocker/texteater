@@ -39,12 +39,10 @@ const OWN_SKIN: readonly string[] = [
 	"playground/entries/card-to-cover/cover-stage.tsx",
 	"playground/entries/deck-interactions/card-view.tsx",
 	"playground/entries/deck-interactions/targets.tsx",
-	"playground/entries/frames.tsx",
 	"playground/entries/tabletop/note-body.tsx",
 ];
 const OWN_PILE: readonly string[] = [
 	"playground/entries/deck-interactions/layout.ts",
-	"playground/entries/frames.tsx",
 ];
 
 describe("one foundation draws every Presentation", () => {

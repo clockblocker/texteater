@@ -6,7 +6,6 @@ import {
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
 import type { EntryRoute } from "../playground-router";
-import { CardFrame, SheetFrame } from "./frames";
 import {
 	Inspector,
 	InspectorChoice,
@@ -15,13 +14,15 @@ import {
 } from "./inspector";
 import { type ExampleGroup, exampleTarget } from "./note-examples";
 import { segmentsFromTarget, targetFromSegments } from "./notes-gallery";
-import { PlaygroundNote, playgroundNotesQuery } from "./playground-note";
+import { playgroundNotesQuery, playgroundParts } from "./playground-note";
+import { StagedPresentation } from "./staged-presentation";
 
 /**
  * A prototype of real Notes from the Notes Study fake db, as playground ADR
- * 0001 lays one out: the frame shows only the Note, rendered by tf-demo's
- * real Blocks, and the inspector holds the explanation, the examples worth
- * judging and the knobs.
+ * 0001 lays one out: the frame shows only the Note, as a Cover or a Card
+ * drawn by the Presentation foundation from tf-demo's real Blocks, and the
+ * inspector holds the explanation, the examples worth judging and the
+ * knobs.
  *
  * The shown Note is the route, `/playground/<entry>/<kind>/<id>`, so every
  * click inside the Note is a history entry.
@@ -41,7 +42,7 @@ export function NotePrototype({
 	readonly lead: ReactNode;
 	/** The inspector's sections after the examples and the frame's knobs. */
 	readonly children?: ReactNode;
-	/** Wraps the shown Note, as a knob that reaches its Blocks does. */
+	/** Wraps the shown Presentation, as a knob that reaches its Blocks does. */
 	readonly wrapNote?: (note: ReactNode) => ReactNode;
 }) {
 	const snapshot = useQuery(playgroundNotesQuery);
@@ -76,23 +77,32 @@ export function NotePrototype({
 	const firstExample = examples[0]?.examples[0];
 	const target =
 		routed ?? (firstExample ? exampleTarget(data, firstExample) : null);
-	const Frame = presentation === "Card" ? CardFrame : SheetFrame;
 
 	return (
 		<div className="flex min-h-full justify-center px-6 py-10 lg:pe-[23rem]">
 			<div className="w-full max-w-2xl">
 				{target ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
-						<Frame>
-							{wrapNote(
-								<PlaygroundNote
-									target={target}
-									presentation={presentation}
-									snapshot={data}
-									follow={interaction.follow}
-								/>,
-							)}
-						</Frame>
+						{wrapNote(
+							<StagedPresentation
+								form={
+									presentation === "Card" ? "card" : "cover"
+								}
+								parts={playgroundParts({
+									target,
+									snapshot: data,
+									follow: interaction.follow,
+								})}
+								chrome={{
+									back: {
+										label: "Back",
+										enabled: true,
+										onPress: () => window.history.back(),
+									},
+									clear: null,
+								}}
+							/>,
+						)}
 					</WorkspaceInteractionProvider>
 				) : null}
 			</div>

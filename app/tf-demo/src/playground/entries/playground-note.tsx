@@ -1,7 +1,15 @@
-import { renderFixtureNote } from "@/notes";
+import { renderFixtureNoteParts } from "@/notes";
+import { PlainTitle } from "@/presentation/heading";
 import { ScrollPresentation } from "@/views/scroll-view";
-import type { WorkspaceTarget } from "@/workspace/workspace-subject";
+import { subjectLabel } from "@/views/subject-presentation";
+import { applicationRenderer } from "@/workspace/application-renderer";
+import type {
+	WorkspaceSubject,
+	WorkspaceTarget,
+} from "@/workspace/workspace-subject";
+import { scrollTitle } from "../../../shared/scroll-title";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
+import type { StagedParts } from "./staged-presentation";
 
 /** The fake db, built by the Vite plugin; every playground reads the same one. */
 export const playgroundNotesQuery = {
@@ -14,36 +22,16 @@ export const playgroundNotesQuery = {
 	},
 } as const;
 
-export function PlaygroundNote({
-	target,
-	presentation,
-	snapshot,
-	follow,
-}: {
-	target: WorkspaceTarget;
-	presentation: "Card" | "Sheet";
-	snapshot: PlaygroundSnapshot;
-	follow: (target: WorkspaceTarget) => void;
-}) {
-	if (target.kind === "Scroll") {
-		const text = snapshot.scrolls[target.scrollId];
-		return text ? (
-			<ScrollPresentation
-				sentences={text.sentences}
-				selectedSegmentKey={null}
-				onSegmentClick={async (sentence, index) => {
-					const attestationId = sentence.segments.find(
-						(segment) => segment.index === index,
-					)?.attestationId;
-					if (attestationId)
-						follow({ kind: "Attestation", attestationId });
-				}}
-			/>
-		) : (
-			<p>This Scroll is not part of the playground fixtures.</p>
-		);
-	}
+function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
+	return target.kind === "Scroll"
+		? { kind: "Scroll", target }
+		: target.kind === "Section"
+			? { kind: "Section", target }
+			: ({ kind: "Note", target } as WorkspaceSubject);
+}
 
+/** The fake db's key for a Note target, or null for a target that is no Note. */
+function fixtureNoteKey(target: WorkspaceTarget): string | null {
 	const id =
 		target.kind === "Reading"
 			? target.readingId
@@ -56,8 +44,83 @@ export function PlaygroundNote({
 						: target.kind === "Shadow"
 							? target.shadowId
 							: null;
-	const note = id ? snapshot.notes[`${target.kind}:${id}`] : null;
-	if (!note)
-		return <p>This target is not part of the playground fixtures.</p>;
-	return renderFixtureNote({ noteData: note, presentation, follow });
+	return id ? `${target.kind}:${id}` : null;
+}
+
+/**
+ * A fake db target as the parts a Presentation is drawn from: a Note's
+ * Heading Block and its other Blocks from the Notes renderers, as the app
+ * splits them, or a Scroll's title and its reader.
+ */
+export function playgroundParts({
+	target,
+	snapshot,
+	follow,
+}: {
+	target: WorkspaceTarget;
+	snapshot: PlaygroundSnapshot;
+	follow: (target: WorkspaceTarget) => void;
+}): StagedParts {
+	const subject = subjectFor(target);
+	const shared = {
+		label: subjectLabel(subject),
+		columnRem: applicationRenderer.columnRem(subject),
+	};
+	if (target.kind === "Scroll") {
+		const text = snapshot.scrolls[target.scrollId];
+		const title = text ? (
+			<PlainTitle>{scrollTitle(text)}</PlainTitle>
+		) : null;
+		const body = text ? (
+			<ScrollPresentation
+				sentences={text.sentences}
+				selectedSegmentKey={null}
+				onSegmentClick={async (sentence, index) => {
+					const attestationId = sentence.segments.find(
+						(segment) => segment.index === index,
+					)?.attestationId;
+					if (attestationId)
+						follow({ kind: "Attestation", attestationId });
+				}}
+			/>
+		) : (
+			<p className="p-3.5 text-sm text-ink-muted">
+				This Scroll is not part of the playground fixtures.
+			</p>
+		);
+		return {
+			...shared,
+			heading: { card: title, cover: title },
+			body: { card: body, sheet: body },
+		};
+	}
+	const key = fixtureNoteKey(target);
+	const noteData = key ? snapshot.notes[key] : null;
+	if (!noteData) {
+		const missing = (
+			<p className="p-3.5 text-sm text-ink-muted">
+				This target is not part of the playground fixtures.
+			</p>
+		);
+		return {
+			...shared,
+			heading: { card: null, cover: null },
+			body: { card: missing, sheet: missing },
+		};
+	}
+	const card = renderFixtureNoteParts({
+		noteData,
+		presentation: "Card",
+		follow,
+	});
+	const sheet = renderFixtureNoteParts({
+		noteData,
+		presentation: "Sheet",
+		follow,
+	});
+	return {
+		...shared,
+		heading: { card: card.heading, cover: sheet.heading },
+		body: { card: card.body, sheet: sheet.body },
+	};
 }

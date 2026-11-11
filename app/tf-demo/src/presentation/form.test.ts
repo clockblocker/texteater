@@ -109,6 +109,14 @@ describe("the paper skin", () => {
 			);
 	});
 
+	test("a Card says it can be picked up only where a hand can", () => {
+		expect(boxClass("card")).toContain("cursor-grab");
+		expect(boxClass("card", false)).not.toContain("cursor-grab");
+		expect(boxClass("card", false)).not.toContain("touch-none");
+		expect(boxClass("card", false)).toContain("select-none");
+		expect(boxClass("cover")).not.toContain("cursor-grab");
+	});
+
 	test("the shadow grows with the lift, and a Ground casts none", () => {
 		expect(paperShadow("card", 0)).toBe(
 			"0 0.25rem 0.75rem rgb(0 0 0 / 0.20)",
