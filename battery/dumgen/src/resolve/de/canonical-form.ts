@@ -292,11 +292,34 @@ function alignedWritten(
 }
 
 /**
+ * How a Standard member's kept letters are cased. The Canonical Form is in
+ * the dictionary's casing, never the position's, so the same occurrence
+ * of the word in it cases the member (Andere Länder, andere Sitten), and
+ * Luna's spelling of the member only when the Canonical Form lacks it.
+ */
+function keptCasing(form: string): (own: string, written: string) => string {
+	const formWords = form.split(/[\s…]+/u);
+	/** How often each kept word, folded, came before. */
+	const seen = new Map<string, number>();
+	return (own, written) => {
+		const folded = foldCase(own, "de");
+		const occurrence = seen.get(folded) ?? 0;
+		seen.set(folded, occurrence + 1);
+		const inForm = formWords.filter(
+			(candidate) => foldCase(candidate, "de") === folded,
+		)[occurrence];
+		if (inForm !== undefined) return inForm;
+		return foldCase(written, "de") === folded ? written : own;
+	};
+}
+
+/**
  * Luna's answer, when it is one Canonical Form and a spelling for each
  * member it writes: a Typo, a Shorthand the table leaves open, a
  * suspended fragment. A member the table spells keeps the table's
- * spelling; a Standard member keeps its letters, cased as Luna wrote the
- * same word, else as the Canonical Form when it is that word.
+ * spelling; a Standard member keeps its letters, cased as the Canonical
+ * Form writes the same word (a sentence-initial «Ach» of «ach» is ach),
+ * else as Luna wrote it.
  */
 export function checkWritten(
 	target: Target,
@@ -328,6 +351,7 @@ export function checkWritten(
 			`Luna spelled ${output.members.length} members, not ${target.members.length}`,
 		);
 	const members: string[] = [];
+	const caseKept = keptCasing(form);
 	for (const member of target.members) {
 		const written = aligned[member.position];
 		const word = typeof written === "string" ? written.trim() : "";
@@ -338,11 +362,7 @@ export function checkWritten(
 		}
 		const own = keeps(member);
 		if (own !== undefined) {
-			const cased = [word, form].find(
-				(candidate) =>
-					foldCase(candidate, "de") === foldCase(own, "de"),
-			);
-			members.push(cased ?? own);
+			members.push(caseKept(own, word));
 			continue;
 		}
 		const orthography = judged.orthographies[member.position];

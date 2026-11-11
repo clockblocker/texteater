@@ -58,3 +58,61 @@ test("an INTJ keeps the capital Luna writes, which may be lexical", async () => 
 		normalizedSurface: "Mann",
 	});
 });
+
+// On every other route a Standard member takes the casing the Canonical
+// Form gives the same word, which is the dictionary's (#1342): Luna's
+// members keep a sentence-initial capital the headword does not.
+
+test("a sentence-initial member Luna keeps capitalized takes the casing of its word in the Canonical Form", async () => {
+	// Ach0 ,1 _2 das3 _4 ist5 _6 schade7 .8
+	const { result } = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("ach", ["Ach"]).ask },
+		{
+			sentence: sentenceOf("Ach, das ist schade."),
+			unit: unitOf([0], "Lexeme/INTJ"),
+		},
+	);
+	expect(attested(result).surface).toMatchObject({
+		lemma: { canonicalForm: "ach" },
+		normalizedSurface: "ach",
+	});
+	expect(attested(result).members).toEqual([
+		{ attested: "Ach", orthography: "Standard" },
+	]);
+	// Keine0 _1 Ursache2 !3
+	const formula = await resolveOnce(
+		{
+			jev: fakeJev().ask,
+			luna: writes("keine Ursache", ["Keine", "Ursache"]).ask,
+		},
+		{
+			sentence: sentenceOf("Keine Ursache!"),
+			unit: unitOf([0, 2], "Locution/INTJ"),
+		},
+	);
+	expect(attested(formula.result).surface.normalizedSurface).toBe(
+		"keine Ursache",
+	);
+});
+
+test("a word the Canonical Form writes twice cases each member by its own occurrence", async () => {
+	// Andere0 _1 Länder2 ,3 _4 andere5 _6 Sitten7 .8
+	const { result } = await resolveOnce(
+		{
+			jev: fakeJev().ask,
+			luna: writes("Andere Länder, andere Sitten", [
+				"Andere",
+				"Länder",
+				"Andere",
+				"Sitten",
+			]).ask,
+		},
+		{
+			sentence: sentenceOf("Andere Länder, andere Sitten."),
+			unit: unitOf([0, 2, 5, 7], "Saying/Saying"),
+		},
+	);
+	expect(attested(result).surface.normalizedSurface).toBe(
+		"Andere Länder andere Sitten",
+	);
+});
