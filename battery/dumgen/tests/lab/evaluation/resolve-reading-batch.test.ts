@@ -1,16 +1,16 @@
 import { expect, test } from "bun:test";
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
+import { z } from "zod";
 import { createOpenAILunaBatch } from "../../../lab/evaluation/luna-batch.js";
-import {
-	type LunaBatchEvent,
-	readLedgerSizes,
-} from "../../../lab/evaluation/resolve-grammar/models.js";
+import { lunaChars } from "../../../lab/evaluation/resolve-grammar/model-pricing.js";
+import type { LunaBatchEvent } from "../../../lab/evaluation/resolve-grammar/models.js";
 import {
 	readingExperiment,
 	readingMetrics,
 } from "../../../lab/evaluation/resolve-reading/experiment.js";
+import { lunaRequestSchema } from "../../../lab/stored-json.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
 import { completedResponse, fakeOpenAI, userInputOf } from "./fake-openai.js";
 import {
@@ -237,69 +237,24 @@ test("an interrupted batch run's batch is settled by the next run, not sent agai
 	expect(readingMetrics(resumed.run).lines.reuse.rate).toBe(1);
 });
 
-test("the pricing pass prices uncached requests from measured sizes, the ledger's or its stages', and says so", async () => {
+test("the pricing pass prices each uncached request from its own characters, at its stage's measured rate once the cache measured it, and says so", async () => {
 	const experiment = readingExperiment("dev");
 	const root = await frozenRoot();
-	const ledger = join(root, "ledger.jsonl");
-	await writeFile(
-		ledger,
-		`${[
-			{
-				command: "evaluate",
-				experiment: experiment.id,
-				round: "old",
-				jev: { freshCalls: 10, freshInputTokens: 1000 },
-				luna: {
-					freshCalls: 10,
-					freshInputTokens: 1000,
-					freshOutputTokens: 10,
-				},
-			},
-			{
-				command: "evaluate",
-				experiment: experiment.id,
-				round: "latest",
-				jev: {
-					freshCalls: 4389,
-					freshInputTokens: 2772735,
-					freshOutputTokens: 0,
-				},
-				luna: {
-					freshCalls: 4462,
-					freshInputTokens: 2718169,
-					freshOutputTokens: 60511,
-				},
-			},
-			{
-				command: "luna-batch",
-				experiment: experiment.id,
-				batchId: "batch_x",
-			},
-		]
-			.map((line) => JSON.stringify(line))
-			.join("\n")}\n`,
-	);
-	expect(await readLedgerSizes(ledger, experiment.id)).toMatchObject({
-		round: "latest",
-		jev: { requests: 4389 },
-		luna: { requests: 4462 },
-	});
-	const fromLedger = await experiment.evaluate({
+	const unmeasured = await experiment.evaluate({
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
 		setsRoot: join(root, "sets"),
 		estimate: true,
-		ledger,
 	});
-	const price = fromLedger.price;
+	const price = unmeasured.price;
 	if (!price) throw Error("no price");
-	expect(price.jev.pricedFromLedger).toBe(price.jev.requests);
-	expect(price.luna.pricedFromLedger).toBe(price.luna.requests);
-	// 632 jev tokens and 13.6 Luna output tokens per request, measured.
-	expect(price.jev.inputTokens).toBe(632 * price.jev.requests);
-	expect(price.luna.outputTokens).toBe(14 * price.luna.requests);
-	expect(price.sizes.basis).toContain("ledger round latest");
+	// Nothing is cached: every request at the stored runs' bound.
+	expect(price.jev.pricedFromBound).toBe(price.jev.requests);
+	expect(price.luna.pricedFromBound).toBe(price.luna.requests);
+	expect(price.sizes.basis).toContain(
+		"from their characters at the stored runs' bound",
+	);
 	expect(price.cost.totalBatchUsd).toBeLessThan(price.cost.totalSyncUsd);
 	expect(price.cost.luna.syncTier).toBe("fast");
 
@@ -310,7 +265,6 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		root,
 		setsRoot: join(root, "sets"),
 		limit: 2,
-		ledger,
 		...goldTransports(),
 	});
 	const measured = await experiment.evaluate({
@@ -319,7 +273,6 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		root,
 		setsRoot: join(root, "sets"),
 		estimate: true,
-		ledger,
 	});
 	expect(measured.price?.jev.pricedFromStage).toBeGreaterThan(0);
 	// A whole round prices the cached requests too, at their own usage.
@@ -330,7 +283,6 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		setsRoot: join(root, "sets"),
 		estimate: true,
 		wholeRound: true,
-		ledger,
 	});
 	expect(whole.price?.jev.requests).toBe(price.jev.requests);
 	expect(whole.price?.jev.pricedFromCache).toBe(
@@ -340,4 +292,78 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 	expect(Object.keys(measured.price?.sizes.stages ?? {})).toEqual(
 		expect.arrayContaining([expect.stringMatching(/^jev:/u)]),
 	);
+});
+
+test("a Luna batch is priced from its own requests' characters, and one priced past what the cap leaves is not sent at all", async () => {
+	const experiment = readingExperiment("dev");
+	const batchRun = async (caps?: {
+		readonly jevInputTokens: number;
+		readonly lunaInputTokens: number;
+		readonly lunaOutputTokens: number;
+	}) => {
+		const root = await frozenRoot();
+		const openAI = fakeOpenAI(fakeLunaAnswer);
+		const events: LunaBatchEvent[] = [];
+		const run = experiment.evaluate({
+			experimentId: experiment.id,
+			sourceRevision: "test",
+			root,
+			setsRoot: join(root, "sets"),
+			jev: goldTransports().jev,
+			lunaBatch: createOpenAILunaBatch({
+				apiKey: "test",
+				baseUrl: fakeRoot,
+				fetch: openAI.batchFetch,
+				pollMs: 0,
+			}),
+			onLunaBatch: (event) => {
+				events.push(event);
+			},
+			...(caps ? { caps } : {}),
+		});
+		return { root, openAI, events, run };
+	};
+
+	// No stage is measured: each request at 0.29 tokens per character of
+	// its own prompt, input and schema, whatever a past round spent.
+	const free = await batchRun();
+	await free.run;
+	const [first] = free.events;
+	if (first?.event !== "submitted") throw Error("no batch");
+	const { requests } = z
+		.object({ requests: z.array(z.object({ request: lunaRequestSchema })) })
+		.parse(
+			JSON.parse(
+				await readFile(
+					join(
+						free.root,
+						"cache",
+						"batches",
+						`${first.batchId}.json`,
+					),
+					"utf8",
+				),
+			),
+		);
+	expect(requests.length).toBeGreaterThan(1);
+	const priced = requests.reduce(
+		(sum, { request }) => sum + Math.ceil(lunaChars(request) * 0.29),
+		0,
+	);
+	expect(first.estimate.inputTokens).toBe(priced);
+
+	// One token short of that batch: its first requests would fit, but a
+	// batch goes out whole, so none of it is sent.
+	const cap = priced - 1;
+	const capped = await batchRun({
+		jevInputTokens: 100_000_000,
+		lunaInputTokens: cap,
+		lunaOutputTokens: 100_000_000,
+	});
+	await expect(capped.run).rejects.toThrow(
+		`Luna input cap of ${cap} tokens: the next batch's ${requests.length} requests are priced at ${priced} input tokens, and ${cap} of the cap are left, so the batch was not sent`,
+	);
+	expect(capped.openAI.counts.batches).toBe(0);
+	expect(capped.openAI.counts.uploads).toBe(0);
+	expect(capped.events).toEqual([]);
 });

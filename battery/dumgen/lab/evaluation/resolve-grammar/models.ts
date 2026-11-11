@@ -53,7 +53,6 @@ import {
 	type Executor,
 	type GrammarPrice,
 	jevChars,
-	type LedgerSizes,
 	lunaChars,
 	RequestPricer,
 	type StageSize,
@@ -67,12 +66,7 @@ import { goldAnswers, goldWritten } from "./oracle.js";
 import { jevUsd, type LunaTier, syncTierOf } from "./pricing.js";
 
 export type { LunaBatchEvent } from "./model-batches.js";
-export {
-	type GrammarPrice,
-	type LedgerSizes,
-	readLedgerSizes,
-	type StageSize,
-} from "./model-pricing.js";
+export type { GrammarPrice, StageSize } from "./model-pricing.js";
 export type { GrammarCaps } from "./model-spend.js";
 
 type ModelMode = "offline" | "live" | "project";
@@ -107,8 +101,6 @@ export type GrammarModelsOptions = {
 	readonly beforeSpend?: () => void;
 	/** The round's hard caps on fresh tokens; a request that would cross one is refused. */
 	readonly caps?: GrammarCaps;
-	/** The tokens per request the port's ledger measured, for pricing. */
-	readonly ledgerSizes?: LedgerSizes;
 	/** The stage sizes a pricing pass measured, for a live run's caps. */
 	readonly stageSizes?: Readonly<Record<string, StageSize>>;
 	/** The configuration Luna is priced at; Dumgen's default otherwise. */
@@ -149,9 +141,6 @@ export class CachedModels<Case> {
 		this.#guard = new SpendGuard(options.caps, this.#lunaTier);
 		this.#pricer = new RequestPricer({
 			lunaConfiguration: this.#lunaConfiguration,
-			...(options.ledgerSizes
-				? { ledgerSizes: options.ledgerSizes }
-				: {}),
 			...(options.stageSizes ? { stageSizes: options.stageSizes } : {}),
 			...(options.wholeRound ? { wholeRound: true } : {}),
 		});
@@ -475,10 +464,10 @@ export class CachedModels<Case> {
 	}
 
 	/**
-	 * Sends the Luna requests the last pass held as one batch, within the
-	 * round's caps priced at the Batch rate, waits for it and fills the
-	 * cache. False when nothing was sent: none were held, or a cap stopped
-	 * the run.
+	 * Sends the Luna requests the last pass held as one batch, priced
+	 * whole at the Batch rate within what the round's caps leave, waits for
+	 * it and fills the cache. False when nothing was sent: none were held,
+	 * or the batch would cross a cap, which then stops the run.
 	 */
 	async sendLunaBatch(signal: AbortSignal): Promise<boolean> {
 		const queue = this.#queue;
@@ -493,7 +482,7 @@ export class CachedModels<Case> {
 		);
 		if (admitted.requests === 0) return false;
 		await queue.send(
-			held.slice(0, admitted.requests),
+			held,
 			{
 				inputTokens: admitted.inputTokens,
 				outputTokens: admitted.outputTokens,

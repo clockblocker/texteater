@@ -114,10 +114,6 @@ const readingRoute = "resolve-reading/de";
 /** The package root a subset's path in the manifest is relative to. */
 const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-/** The port's ledger, whose latest round's sizes price a run (#891). */
-const readingLedgerPath = fileURLToPath(
-	new URL("../../../evidence/resolve-reading/ledger.jsonl", import.meta.url),
-);
 /** Each attempt runs three times; each repetition is its own cached answer. */
 const readingRepetitions = 3;
 
@@ -151,8 +147,6 @@ export type ReadingEvaluateArgs = {
 	readonly lunaBatch?: LunaBatch;
 	/** Receives each batch as it is sent and settled, for the ledger. */
 	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
-	/** The ledger whose latest round's sizes price the run; the port's by default. */
-	readonly ledger?: string;
 	readonly offline?: boolean;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
@@ -434,8 +428,6 @@ async function evaluateReadingSet(
 			args.signal,
 		);
 	const priced = await priceRound(args, {
-		id,
-		ledger: readingLedgerPath,
 		directory,
 		models: (options) => new ReadingModels(options),
 		pass: passWith,

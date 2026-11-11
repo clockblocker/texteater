@@ -53,7 +53,6 @@ import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,
 	type GrammarModelsOptions,
-	type GrammarPrice,
 } from "../resolve-grammar/models.js";
 import {
 	fillLive,
@@ -86,39 +85,6 @@ const defaultRoot = fileURLToPath(
 );
 
 const route = "knowledge/de";
-
-/** The Knowledge port's ledger, whose latest round's sizes price a run (#891). */
-const ledgerPath = fileURLToPath(
-	new URL("../../../evidence/knowledge/ledger.jsonl", import.meta.url),
-);
-
-/**
- * What a request is priced at before the cache has measured its stages:
- * the Knowledge experiment's tokens per character (resolve.reading's
- * held-out round on 2026-10-03) and its typical Luna answers.
- */
-const stageSizes: GrammarPrice["sizes"]["stages"] = {
-	"jev:paradigmLicence": {
-		samples: 0,
-		inputTokensPerChar: 0.3652538054900962,
-		outputTokensPerRequest: 0,
-	},
-	"jev:plurality": {
-		samples: 0,
-		inputTokensPerChar: 0.3652538054900962,
-		outputTokensPerRequest: 0,
-	},
-	"luna:plural": {
-		samples: 0,
-		inputTokensPerChar: 0.24530701562551255,
-		outputTokensPerRequest: 8,
-	},
-	"luna:verbForms": {
-		samples: 0,
-		inputTokensPerChar: 0.24530701562551255,
-		outputTokensPerRequest: 45,
-	},
-};
 
 const maximumRepetitions = 3;
 
@@ -320,10 +286,7 @@ async function evaluateDoubletHalf(
 			args.signal,
 		);
 	const priced = await priceRound(args, {
-		id: experimentId,
-		ledger: ledgerPath,
 		directory,
-		stageSizes,
 		models: (options) => new LicenceModels(options),
 		pass: passWith,
 		repetitions,

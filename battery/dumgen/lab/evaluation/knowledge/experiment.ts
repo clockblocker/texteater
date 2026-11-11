@@ -103,67 +103,6 @@ const defaultKnowledgeRoot = fileURLToPath(
 
 const knowledgeRoute = "knowledge/de";
 
-/** The port's ledger, whose latest round's sizes price a run (#891). */
-const knowledgeLedgerPath = fileURLToPath(
-	new URL("../../../evidence/knowledge/ledger.jsonl", import.meta.url),
-);
-
-/**
- * What a Knowledge request is priced at before the port's own cache has
- * measured its stages (#891). Input: the tokens per character measured on
- * resolve.reading's cached held-out round on 2026-10-03, the closest
- * prompts in shape (392 Luna requests, 0.2453; 414 jev requests, 0.3653),
- * in place of the characters-per-token constants. Output: each Luna
- * stage's typical answer, an estimate (jev's output is free). A stage the
- * cache has measured three times prices itself instead.
- */
-const lunaTokensPerChar = 0.24530701562551255;
-const jevTokensPerChar = 0.3652538054900962;
-const lunaOutputs: Readonly<Record<string, number>> = {
-	transcription: 8,
-	definition: 25,
-	translations: 8,
-	plural: 8,
-	verbForms: 45,
-	valency: 70,
-	participleSource: 30,
-	sourceBase: 12,
-	attribution: 12,
-	relationCandidates: 45,
-};
-const jevStages = [
-	"plurality",
-	"sourceFormation",
-	"sourceJudgment",
-	"participleJudgment",
-	"locutionType",
-	"sayingType",
-	"formulaRole",
-	"relationJudgment",
-];
-const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
-	...Object.fromEntries(
-		Object.entries(lunaOutputs).map(([stage, output]) => [
-			`luna:${stage}`,
-			{
-				samples: 0,
-				inputTokensPerChar: lunaTokensPerChar,
-				outputTokensPerRequest: output,
-			},
-		]),
-	),
-	...Object.fromEntries(
-		jevStages.map((stage) => [
-			`jev:${stage}`,
-			{
-				samples: 0,
-				inputTokensPerChar: jevTokensPerChar,
-				outputTokensPerRequest: 0,
-			},
-		]),
-	),
-};
-
 /** Each case runs three times; each repetition is its own cached answer. */
 const knowledgeRepetitions = 3;
 
@@ -186,8 +125,6 @@ export type KnowledgeEvaluateArgs = {
 	/** Luna's cache misses through OpenAI's Batch API instead of `luna` (#891). */
 	readonly lunaBatch?: LunaBatch;
 	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
-	/** The ledger whose latest round's sizes price the run; the port's by default. */
-	readonly ledger?: string;
 	readonly offline?: boolean;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
@@ -457,10 +394,7 @@ async function evaluateKnowledgeSet(
 			args.signal,
 		);
 	const priced = await priceRound(args, {
-		id,
-		ledger: knowledgeLedgerPath,
 		directory,
-		stageSizes: proxyStageSizes,
 		models: (options) => new KnowledgeModels(options),
 		pass: passWith,
 		repetitions,

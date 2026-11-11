@@ -2,7 +2,8 @@
  * What a live run of the cached transports (`models.ts`) has spent, and
  * the caps it was granted (#876: budgets per round): every fresh request
  * and every batch is admitted here against them, priced by
- * `model-pricing.ts`, or refused.
+ * `model-pricing.ts`, or refused, so a run spends past a cap only by as
+ * much as its prices fall short of what is billed (#1345).
  */
 import { jevUsd, type LunaTier, lunaUsd } from "./pricing.js";
 
@@ -33,7 +34,7 @@ export type BatchRequestPrice = {
 	readonly output: number;
 };
 
-/** What a batch admitted: how many of the held requests, and their priced size. */
+/** What a batch admitted: all of the held requests or none, and their priced size. */
 export type AdmittedBatch = {
 	readonly requests: number;
 	readonly inputTokens: number;
@@ -157,48 +158,54 @@ export class SpendGuard {
 	}
 
 	/**
-	 * Admits the held requests of the next batch, priced at the Batch rate,
-	 * in order until the next would cross a cap, which then stops the run.
+	 * Prices the next batch whole at the Batch rate. A batch goes out whole
+	 * and nothing stops it partway, so one whose price would carry the
+	 * run's spend past a cap is refused, nothing of it sent, and stops the
+	 * run, saying what the batch would cost and what the cap leaves.
 	 */
-	admitBatch(prices: Iterable<BatchRequestPrice>): AdmittedBatch {
-		const caps = this.#caps;
-		let requests = 0;
+	admitBatch(prices: readonly BatchRequestPrice[]): AdmittedBatch {
 		let input = 0;
 		let output = 0;
-		let usd = 0;
 		for (const size of prices) {
-			const cost = lunaUsd(
-				{ inputTokens: size.input, outputTokens: size.output },
-				"batch",
-			);
-			if (caps) {
-				if (
-					this.spend.luna.freshInputTokens + input + size.input >
-					caps.lunaInputTokens
-				) {
-					this.capHit = `Luna input cap of ${caps.lunaInputTokens} tokens`;
-					break;
-				}
-				if (
-					this.spend.luna.freshOutputTokens + output + size.output >
-					caps.lunaOutputTokens
-				) {
-					this.capHit = `Luna output cap of ${caps.lunaOutputTokens} tokens`;
-					break;
-				}
-				if (
-					caps.usd !== undefined &&
-					this.spentUsd() + usd + cost > caps.usd
-				) {
-					this.capHit = `dollar cap of $${caps.usd}`;
-					break;
-				}
-			}
-			requests++;
 			input += size.input;
 			output += size.output;
-			usd += cost;
 		}
-		return { requests, inputTokens: input, outputTokens: output, usd };
+		const usd = lunaUsd(
+			{ inputTokens: input, outputTokens: output },
+			"batch",
+		);
+		const batch = {
+			requests: prices.length,
+			inputTokens: input,
+			outputTokens: output,
+			usd,
+		};
+		const caps = this.#caps;
+		if (!caps) return batch;
+		const { luna } = this.spend;
+		const refused = (cap: string, priced: string, left: string) => {
+			this.capHit = `${cap}: the next batch's ${prices.length} requests are priced at ${priced}, and ${left} of the cap are left, so the batch was not sent`;
+			return { requests: 0, inputTokens: 0, outputTokens: 0, usd: 0 };
+		};
+		if (luna.freshInputTokens + input > caps.lunaInputTokens)
+			return refused(
+				`Luna input cap of ${caps.lunaInputTokens} tokens`,
+				`${input} input tokens`,
+				`${caps.lunaInputTokens - luna.freshInputTokens}`,
+			);
+		if (luna.freshOutputTokens + output > caps.lunaOutputTokens)
+			return refused(
+				`Luna output cap of ${caps.lunaOutputTokens} tokens`,
+				`${output} output tokens`,
+				`${caps.lunaOutputTokens - luna.freshOutputTokens}`,
+			);
+		const spentUsd = this.spentUsd();
+		if (caps.usd !== undefined && spentUsd + usd > caps.usd)
+			return refused(
+				`dollar cap of $${caps.usd}`,
+				`$${usd.toFixed(4)}`,
+				`$${(caps.usd - spentUsd).toFixed(4)}`,
+			);
+		return batch;
 	}
 }

@@ -362,8 +362,11 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	expect(estimated.price?.luna.requests).toBeGreaterThan(4);
 	expect(estimated.price?.jev.requests).toBeGreaterThan(2);
 	expect(estimated.price?.cost.totalBatchUsd).toBeGreaterThan(0);
-	// Priced at the measured tokens per character, not the constants.
-	expect(estimated.price?.luna.pricedFromCharacters).toBe(0);
+	// Nothing is cached: every request is priced from its own characters
+	// at the stored runs' bound.
+	expect(estimated.price?.luna.pricedFromBound).toBe(
+		estimated.price?.luna.requests ?? -1,
+	);
 
 	let jevCalls = 0;
 	let lunaCalls = 0;

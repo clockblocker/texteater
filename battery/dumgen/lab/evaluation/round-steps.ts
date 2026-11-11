@@ -11,15 +11,13 @@ import type { JevAsk } from "../../src/segment/jev.js";
 import type { CaseFilter } from "../run-directory.js";
 import { type FrozenSet, isFrozen } from "./frozen-sets.js";
 import type { LunaBatch } from "./luna-batch.js";
-import {
-	type CachedModels,
-	type GrammarCaps,
-	type GrammarModelsOptions,
-	type GrammarPrice,
-	type LedgerSizes,
-	type LunaBatchEvent,
-	readLedgerSizes,
-	type StageSize,
+import type {
+	CachedModels,
+	GrammarCaps,
+	GrammarModelsOptions,
+	GrammarPrice,
+	LunaBatchEvent,
+	StageSize,
 } from "./resolve-grammar/models.js";
 
 /** The package root a subset's path in the manifest is relative to. */
@@ -31,7 +29,6 @@ type RoundArgs = {
 	readonly luna?: LunaAsk;
 	readonly lunaBatch?: LunaBatch;
 	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
-	readonly ledger?: string;
 	readonly offline?: boolean;
 	readonly estimate?: boolean;
 	readonly wholeRound?: boolean;
@@ -125,27 +122,23 @@ export function selectSubset<
 /** A run's price, and the sizes its live models price their calls by. */
 type Priced = {
 	readonly price?: GrammarPrice;
-	readonly ledgerSizes?: LedgerSizes;
 	readonly stageSizes?: Readonly<Record<string, StageSize>>;
 };
 
 /**
- * Prices an estimate or a live run: the latest ledger round's sizes, then
- * one pass of `models` in `project` mode. A live run's price goes to
- * `beforeLive`, which may refuse; an estimate's is only returned. An
- * offline run prices nothing.
+ * Prices an estimate or a live run: one pass of `models` in `project`
+ * mode, every request priced by its cached usage or its own characters
+ * (`model-pricing.ts`). A live run's price goes to `beforeLive`, which
+ * may refuse, and the stage sizes it measured price the live run's
+ * requests against its caps; an estimate's is only returned. An offline
+ * run prices nothing.
  */
 export async function priceRound<
 	Models extends Pick<CachedModels<unknown>, "price">,
 >(
 	args: RoundArgs,
 	round: {
-		readonly id: string;
-		/** The port's ledger, read unless `args.ledger` names another. */
-		readonly ledger: string;
 		readonly directory: string;
-		/** Stage sizes to project with before the ledger has any. */
-		readonly stageSizes?: Readonly<Record<string, StageSize>>;
 		readonly models: (options: GrammarModelsOptions) => Models;
 		readonly pass: (models: Models) => Promise<void>;
 		readonly repetitions: number;
@@ -153,25 +146,15 @@ export async function priceRound<
 	},
 ): Promise<Priced> {
 	if (!args.estimate && args.offline) return {};
-	const ledgerSizes = await readLedgerSizes(
-		args.ledger ?? round.ledger,
-		round.id,
-	);
 	const projecting = round.models({
 		directory: round.directory,
 		mode: "project",
-		...(round.stageSizes ? { stageSizes: round.stageSizes } : {}),
-		...(ledgerSizes ? { ledgerSizes } : {}),
 		...(args.estimate && args.wholeRound ? { wholeRound: true } : {}),
 	});
 	await round.pass(projecting);
 	const price = projecting.price(round.repetitions, round.attempts);
 	if (!args.estimate) await args.beforeLive?.(price);
-	return {
-		price,
-		...(ledgerSizes ? { ledgerSizes } : {}),
-		stageSizes: price.sizes.stages,
-	};
+	return { price, stageSizes: price.sizes.stages };
 }
 
 /** The options of the models a run asks through: live, or offline. */
@@ -188,7 +171,6 @@ export const runModelsOptions = (
 	...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
 	...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
 	...(args.caps ? { caps: args.caps } : {}),
-	...(priced.ledgerSizes ? { ledgerSizes: priced.ledgerSizes } : {}),
 	...(priced.stageSizes ? { stageSizes: priced.stageSizes } : {}),
 });
 

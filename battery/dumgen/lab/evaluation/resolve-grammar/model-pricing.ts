@@ -1,42 +1,66 @@
 /**
  * How the cached transports (`models.ts`) price the requests they would
- * send. A projection prices each request from measured sizes wherever
- * they exist (#891), in this order: the same request answered at another
- * repetition; the tokens per character its stage measured on this pass's
- * cache hits; the tokens per request the port's ledger measured in its
- * latest round; and only then a characters-per-token constant. The price
- * says how many requests each basis priced, and what it costs in dollars
- * synchronously and with Luna batched (`pricing.ts`). A live run prices
- * each fresh request the same way against its caps.
+ * send, in a projection and against a live run's caps alike (#891, #1345).
+ * A request a cached answer prices (the same request at another
+ * repetition, or, pricing a whole round, its own) costs that answer's
+ * usage. Every other request is priced from itself, its own characters:
+ *
+ * - at the tokens per character its stage measured on a pricing pass's
+ *   cache hits (three at least), with `stageMargin`;
+ * - else at `unmeasuredBound`, a bound on tokens per character that every
+ *   request the stored runs billed stays under.
+ *
+ * Never at a past round's tokens per request: the requests grow as their
+ * prompts do, and a round priced at an old mean once sent a Luna batch
+ * 1.7 times its price (#1345). The price says how many requests each
+ * basis priced, and what it costs in dollars synchronously and with Luna
+ * batched (`pricing.ts`).
  */
-import { readFile } from "node:fs/promises";
-import { canonicalJson, isRecord } from "common-utils";
-import { z } from "zod";
+import { canonicalJson } from "common-utils";
 import type { LunaConfiguration, LunaRequest } from "../../../src/luna.js";
 import type { JevRequest } from "../../../src/segment/jev.js";
-import { storedAs } from "../../stored-json.js";
 import { type RoundCost, roundCost } from "./pricing.js";
 
 export type Executor = "jev" | "luna";
 
-/**
- * Characters per input token of a jev request (its state and questions as
- * JSON): measured on 503 cached segment.inUnits dev requests on 2026-10-03
- * (5,259,599 characters, 1,827,732 input tokens). The last resort of a
- * projection, after the measured sizes.
- */
-const jevCharsPerToken = 2.88;
-/**
- * Characters per token of a Luna request's prompt and input, and of its
- * output: OpenAI's tokenizers give about 3.5 for German with English JSON.
- * An estimate, the last resort of a projection.
- */
-const lunaCharsPerToken = 3.5;
-
 /** Stage samples a measured size needs before it prices a request. */
 const minimumStageSamples = 3;
 
-/** Luna output tokens held back per request in flight, against the output cap. */
+/**
+ * Headroom on a stage's measured sizes. On the stored runs (2026-11-11:
+ * the 16,495 Luna requests of every batch journal under `.runs/`, grouped
+ * by system prompt, and the 22,286 jev and Luna cache hits of the dev
+ * sets' pricing passes, by stage), a stage's rate measured on its first
+ * three requests priced the rest of it within 12% of their billed input
+ * (worst: jev sayingType) and 19% of Luna's billed output (worst: Luna
+ * canonical); measured on half the stage, within 2% of both.
+ */
+const stageMargin = 1.2;
+
+/**
+ * What a request no stage measured is priced at: a fixed overhead plus
+ * tokens per character that bound every request the stored runs billed.
+ * Luna: 0.226 to 0.287 tokens per character over the 16,495 batch-journal
+ * requests of 2026-10-03 to 2026-11-11 (0.245 at the median), so 0.29
+ * prices each of their 31 batches 15% to 25% over what it billed; the
+ * batch that crossed its cap (#1345), billed 2,800,483 tokens, at
+ * 3,366,826. jev pays a framing overhead per request: 240 tokens and
+ * 0.39 per character bound all 11,662 dev cache hits of resolve.grammar,
+ * resolve.reading and knowledge.produce (0.36 to 0.82 tokens per
+ * character by stage), 25% over what they billed.
+ */
+const unmeasuredBound: Readonly<
+	Record<Executor, { readonly overhead: number; readonly perChar: number }>
+> = {
+	jev: { overhead: 240, perChar: 0.39 },
+	luna: { overhead: 0, perChar: 0.29 },
+};
+
+/**
+ * Luna output tokens held back per request in flight when no stage
+ * measured its answers, against the output cap: above every stored
+ * batch's mean answer (13 to 57 tokens).
+ */
 const lunaOutputPerRequest = 60;
 
 /** What a projection found: requests the cache misses, and their priced tokens. */
@@ -49,12 +73,10 @@ export type ExecutorProjection = {
 	 * or, pricing a whole round, its own.
 	 */
 	pricedFromCache: number;
-	/** Priced at its stage's tokens per character on this pass's cache hits. */
+	/** Priced from its characters at its stage's measured tokens per character. */
 	pricedFromStage: number;
-	/** Priced at the tokens per request of the ledger's latest round. */
-	pricedFromLedger: number;
-	/** Priced at a characters-per-token constant: no measurement applied. */
-	pricedFromCharacters: number;
+	/** Priced from its characters at the stored runs' bound: no stage measured it. */
+	pricedFromBound: number;
 };
 
 /** One stage's measured sizes, from the cache hits of a pricing pass. */
@@ -62,20 +84,6 @@ export type StageSize = {
 	readonly samples: number;
 	readonly inputTokensPerChar: number;
 	readonly outputTokensPerRequest: number;
-};
-
-/** One executor's tokens per fresh request in a ledger round. */
-type RequestSize = {
-	readonly requests: number;
-	readonly inputTokensPerRequest: number;
-	readonly outputTokensPerRequest: number;
-};
-
-/** The sizes the port's ledger measured in its latest round of an experiment. */
-export type LedgerSizes = {
-	readonly round: string;
-	readonly jev?: RequestSize;
-	readonly luna?: RequestSize;
 };
 
 /** A run's projected spend, per repetition and in all, with its price. */
@@ -89,19 +97,18 @@ export type GrammarPrice = {
 	/** Which measured sizes priced the requests no cache answered. */
 	readonly sizes: {
 		readonly stages: Readonly<Record<string, StageSize>>;
-		readonly ledger?: LedgerSizes;
 		readonly basis: string;
 	};
 };
 
-/** One request's priced tokens, and what measured them. */
+/** One request's priced tokens, and what priced them. */
 export type RequestPrice = {
 	readonly input: number;
 	readonly output: number;
-	readonly basis: "stage" | "ledger" | "characters";
+	readonly basis: "stage" | "bound";
 };
 
-/** The characters a request's size is measured by. */
+/** The characters a request is priced by. */
 export const jevChars = (request: JevRequest) =>
 	canonicalJson({ state: request.state, questions: request.questions })
 		.length;
@@ -110,90 +117,8 @@ export const lunaChars = (request: LunaRequest) =>
 	canonicalJson(request.input).length +
 	canonicalJson(request.outputSchema ?? {}).length;
 
-const freshSpendSchema = z.object({
-	freshCalls: z.number().optional(),
-	freshInputTokens: z.number().optional(),
-	freshOutputTokens: z.number().optional(),
-});
-
-/** What `readLedgerSizes` reads of an evaluate line. */
-const ledgerLineSchema = z.object({
-	round: z.string().optional(),
-	jev: freshSpendSchema.optional(),
-	luna: freshSpendSchema.optional(),
-});
-
-/**
- * The tokens per fresh request of an experiment's latest round in a port's
- * ledger (`evidence/resolve-*\/ledger.jsonl`): its `evaluate` lines for
- * that experiment and round, summed. Undefined without such a line.
- */
-export async function readLedgerSizes(
-	path: string,
-	experimentId: string,
-): Promise<LedgerSizes | undefined> {
-	let text: string;
-	try {
-		text = await readFile(path, "utf8");
-	} catch {
-		return undefined;
-	}
-	const lines = text
-		.split("\n")
-		.filter((line) => line.trim())
-		.flatMap((line, index) => {
-			let value: unknown;
-			try {
-				value = JSON.parse(line);
-			} catch {
-				return [];
-			}
-			// Only this experiment's evaluate lines are read, so only they
-			// are checked.
-			if (
-				!isRecord(value) ||
-				value.command !== "evaluate" ||
-				value.experiment !== experimentId
-			)
-				return [];
-			return [
-				storedAs(ledgerLineSchema, value, `${path} line ${index + 1}`),
-			];
-		})
-		.filter(
-			(line) =>
-				typeof line.round === "string" &&
-				((line.jev?.freshCalls ?? 0) > 0 ||
-					(line.luna?.freshCalls ?? 0) > 0),
-		);
-	const round = lines.at(-1)?.round;
-	if (round === undefined) return undefined;
-	const sizeOf = (executor: Executor): RequestSize | undefined => {
-		let requests = 0;
-		let input = 0;
-		let output = 0;
-		for (const line of lines) {
-			if (line.round !== round) continue;
-			requests += line[executor]?.freshCalls ?? 0;
-			input += line[executor]?.freshInputTokens ?? 0;
-			output += line[executor]?.freshOutputTokens ?? 0;
-		}
-		return requests > 0
-			? {
-					requests,
-					inputTokensPerRequest: input / requests,
-					outputTokensPerRequest: output / requests,
-				}
-			: undefined;
-	};
-	const jev = sizeOf("jev");
-	const luna = sizeOf("luna");
-	return { round, ...(jev ? { jev } : {}), ...(luna ? { luna } : {}) };
-}
-
 /** What a pricer is given: the sizes measured before, and Luna's rates. */
 export type PricerOptions = {
-	readonly ledgerSizes?: LedgerSizes;
 	readonly stageSizes?: Readonly<Record<string, StageSize>>;
 	readonly lunaConfiguration: LunaConfiguration;
 	readonly wholeRound?: boolean;
@@ -282,7 +207,11 @@ export class RequestPricer {
 		return measured;
 	}
 
-	/** The tokens one uncached request is priced at, and what measured them. */
+	/**
+	 * The tokens one uncached request is priced at, from its own
+	 * characters, and what priced them; its output from the answer gold
+	 * would write (`outputChars`), when no stage measured it.
+	 */
 	size(
 		executor: Executor,
 		stage: string,
@@ -291,36 +220,32 @@ export class RequestPricer {
 		stages: Readonly<Record<string, StageSize>> = this.stageSizes,
 	): RequestPrice {
 		const measured = stages[`${executor}:${stage}`];
-		if (measured)
+		if (measured && measured.samples >= minimumStageSamples)
 			return {
-				input: Math.ceil(chars * measured.inputTokensPerChar),
-				output: Math.ceil(measured.outputTokensPerRequest),
+				input: Math.ceil(
+					chars * measured.inputTokensPerChar * stageMargin,
+				),
+				output: Math.ceil(
+					measured.outputTokensPerRequest * stageMargin,
+				),
 				basis: "stage",
 			};
-		const ledger = this.#options.ledgerSizes?.[executor];
-		if (ledger)
-			return {
-				input: Math.ceil(ledger.inputTokensPerRequest),
-				output: Math.ceil(ledger.outputTokensPerRequest),
-				basis: "ledger",
-			};
-		return executor === "jev"
-			? {
-					input: Math.ceil(chars / jevCharsPerToken),
-					output: 0,
-					basis: "characters",
-				}
-			: {
-					input: Math.ceil(chars / lunaCharsPerToken),
-					output: Math.ceil(outputChars / lunaCharsPerToken),
-					basis: "characters",
-				};
+		const bound = unmeasuredBound[executor];
+		return {
+			input: Math.ceil(bound.overhead + chars * bound.perChar),
+			output:
+				executor === "jev"
+					? 0
+					: Math.ceil(outputChars * unmeasuredBound.luna.perChar),
+			basis: "bound",
+		};
 	}
 
 	/**
 	 * A fresh Luna request as a live run admits it: its input, and the
-	 * output held for it. A batched request may write its measured size
-	 * with a margin, or the synchronous hold when nothing measured it.
+	 * output held for it. A batched request may write its stage's
+	 * measured answer with the margin, or the synchronous hold when no
+	 * stage measured it.
 	 */
 	lunaHold(
 		stage: string,
@@ -331,9 +256,9 @@ export class RequestPricer {
 		return {
 			input: size.input,
 			output:
-				!batched || size.basis === "characters"
+				!batched || size.basis === "bound"
 					? lunaOutputPerRequest
-					: Math.ceil(size.output * 1.25),
+					: size.output,
 		};
 	}
 
@@ -348,8 +273,7 @@ export class RequestPricer {
 				outputTokens: exact.outputTokens,
 				pricedFromCache: exact.requests,
 				pricedFromStage: 0,
-				pricedFromLedger: 0,
-				pricedFromCharacters: 0,
+				pricedFromBound: 0,
 			};
 			for (const request of this.#unpriced) {
 				if (request.executor !== executor) continue;
@@ -364,8 +288,7 @@ export class RequestPricer {
 				projection.inputTokens += size.input;
 				projection.outputTokens += size.output;
 				if (size.basis === "stage") projection.pricedFromStage++;
-				else if (size.basis === "ledger") projection.pricedFromLedger++;
-				else projection.pricedFromCharacters++;
+				else projection.pricedFromBound++;
 			}
 			return projection;
 		};
@@ -376,9 +299,8 @@ export class RequestPricer {
 	price(repetitions: number, attempts: number): GrammarPrice {
 		const { jev, luna } = this.projection;
 		const stages = this.stageSizes;
-		const ledger = this.#options.ledgerSizes;
 		const counts = (projection: ExecutorProjection) =>
-			`${projection.pricedFromCache} from a cached answer's usage, ${projection.pricedFromStage} from their stage's measured tokens per character, ${projection.pricedFromLedger} from the ledger's tokens per request, ${projection.pricedFromCharacters} from a characters-per-token constant`;
+			`${projection.pricedFromCache} from a cached answer's usage, ${projection.pricedFromStage} from their characters at their stage's measured tokens per character, ${projection.pricedFromBound} from their characters at the stored runs' bound`;
 		return {
 			repetitions,
 			attempts,
@@ -387,8 +309,7 @@ export class RequestPricer {
 			cost: roundCost(jev, luna, this.#options.lunaConfiguration),
 			sizes: {
 				stages,
-				...(ledger ? { ledger } : {}),
-				basis: `${this.#options.wholeRound ? "The whole round, cached requests included. " : ""}Measured sizes priced every request they could: jev's ${jev.requests} requests ${counts(jev)}; Luna's ${luna.requests} requests ${counts(luna)}${ledger ? ` (ledger round ${ledger.round})` : ""}.`,
+				basis: `${this.#options.wholeRound ? "The whole round, cached requests included. " : ""}Every request priced by its cached usage or its own characters: jev's ${jev.requests} requests ${counts(jev)}; Luna's ${luna.requests} requests ${counts(luna)}.`,
 			},
 		};
 	}

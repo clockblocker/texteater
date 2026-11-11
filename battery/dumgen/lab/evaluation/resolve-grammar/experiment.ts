@@ -106,11 +106,6 @@ const grammarRepetitions = 3;
 
 export type { GrammarPrice } from "./models.js";
 
-/** The port's ledger, whose latest round's sizes price a run (#891). */
-const grammarLedgerPath = fileURLToPath(
-	new URL("../../../evidence/resolve-grammar/ledger.jsonl", import.meta.url),
-);
-
 export type GrammarEvaluateArgs = {
 	readonly experimentId: string;
 	readonly sourceRevision: string;
@@ -124,8 +119,6 @@ export type GrammarEvaluateArgs = {
 	readonly lunaBatch?: LunaBatch;
 	/** Receives each batch as it is sent and settled, for the ledger. */
 	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
-	/** The ledger whose latest round's sizes price the run; the port's by default. */
-	readonly ledger?: string;
 	readonly offline?: boolean;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
@@ -425,8 +418,6 @@ async function evaluateGrammarSet(
 			args.signal,
 		);
 	const priced = await priceRound(args, {
-		id,
-		ledger: grammarLedgerPath,
 		directory,
 		models: (options) => new GrammarModels(options),
 		pass: passWith,
