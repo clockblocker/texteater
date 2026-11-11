@@ -1,6 +1,6 @@
 /**
  * The wording of nomination's questions (`nomination.ts`) and their ids:
- * `candidates`' slot, pair, fixedness and v3 Saying questions, and
+ * `candidates`' slot, pair and fixedness questions, and
  * `final`'s re-asked idiom hosts, so … daß, Saying Choice and was … für.
  * They are worded byte for byte as the lab sent them, so cached answers
  * replay; the reflexive slot question is the exception, reworded on #1285.
@@ -16,7 +16,7 @@ import {
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
-import { type SayingSpan, sayingSpans } from "./saying-spans.js";
+import { sayingSpans } from "./saying-spans.js";
 import type { Reference, Sentence } from "./sentence.js";
 
 const slotQuestion: Record<SlotKind, (piece: string) => string> = {
@@ -62,8 +62,6 @@ export const fixedId = (id: number) => `f_${id}`;
 export const pairId = (pair: PairCandidate) =>
 	`c_${pair.left.id}_${pair.right.id}`;
 export const expressionId = (a: number, b: number) => `e_${a}_${b}`;
-export const sayingNoulId = (span: SayingSpan) =>
-	`y_${span.pieces.map((piece) => piece.id).join("_")}`;
 export const reaskedIdiomId = (id: number) => `s4_idiom_${id}`;
 export const correlatorId = (pair: PairCandidate) =>
 	`c4_${pair.left.id}_${pair.right.id}`;
@@ -74,7 +72,6 @@ export function candidateQuestions(
 	ref: Reference,
 	slots: readonly Slot[],
 	pairs: readonly PairCandidate[],
-	spans: readonly SayingSpan[],
 ): Questions {
 	const questions: Questions = {};
 	for (const slot of slots)
@@ -92,10 +89,6 @@ export function candidateQuestions(
 	for (const piece of sentence.pieces)
 		questions[fixedId(piece.id)] = noul(
 			`In \`sentence\`, is ${ref(piece)} a fixed word of an established multiword expression: an idiom (den Faden verlieren), a support-verb collocation (zur Verfügung stellen, eine Entscheidung treffen), a fixed adverbial (zum Teil, und so weiter, auf keinen Fall), a routine formula or exclamation of several words (tut mir leid, ach je, ha ha), or a proverb or famous quotation? Answer no for a word in an ordinary free combination.`,
-		);
-	for (const span of spans)
-		questions[sayingNoulId(span)] = noul(
-			`In \`sentence\`, is exactly the wording "${span.text}" a complete proverb, or a famous quotation or aphorism that speakers cite as a saying (Morgenstund hat Gold im Mund; Wer nichts weiß, muss alles glauben)? Answer no for an ordinary statement, and no when the saying is only part of this wording.`,
 		);
 	return questions;
 }

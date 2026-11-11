@@ -29,7 +29,6 @@ import {
 	oneSatellitePerHost,
 	reaskedIdiomId,
 	sayingChoiceId,
-	selectedSayings,
 	slotLinks,
 } from "./nomination.js";
 import {
@@ -73,7 +72,10 @@ export type Policy = {
 	readonly satellite: number;
 	readonly idiom: number | null;
 	readonly expression: number | null;
-	/** The floor of the v3 Saying Noul. */
+	/**
+	 * The floor of the Saying Choice's whole and fragment shares, no maxim
+	 * counted; the v3 Saying Noul it once read is no longer asked (#1341).
+	 */
 	readonly saying: number | null;
 	readonly absorb: boolean;
 	/** The fixedness both pieces of an expression pair need; 0.5 unless set. */
@@ -323,7 +325,7 @@ export function policyInput(
 		sayings:
 			policy.saying === null
 				? []
-				: selectedSayings(nomination, policy.saying),
+				: sayingsOf(nomination, { floor: policy.saying, maxim: false }),
 		absorb: policy.absorb,
 	};
 }

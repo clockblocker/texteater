@@ -248,6 +248,13 @@ a Government Choice, so each of their variants was production with that
 one Choice added. `replay` of an x5, verb or gov run now reports
 differences, and those levers' next live runs miss the cache.
 
+2026-11-11 (#1341): `candidates` no longer asks the per-span Saying Noul
+(`y_…`). Candidates v3's Saying policies, which decide the groups `route`
+pre-asks and candidates4's `v3` output, read the Saying Choice's whole and
+fragment shares at their floor instead. Production's units on dev came out
+the same; a `replay` of a candidates4 run made before this reports its `v3`
+policy as changed.
+
 ## Evaluate and scoring
 
 [Evaluate](segmentation-jev-lab-evaluate.md) covers `cli/evaluate.ts`'s

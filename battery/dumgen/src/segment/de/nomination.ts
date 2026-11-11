@@ -5,7 +5,9 @@
  *
  * 1. `candidates`: a host Choice per slot (an article's noun, a particle's
  *    or an auxiliary's verb, a noun's idiom verb, …), a Noul per proposed
- *    pair, a fixedness Noul per piece, and a Noul per Saying span.
+ *    pair and a fixedness Noul per piece. A Saying span is asked only in
+ *    `final`'s Saying Choice, which production membership and the route
+ *    batches both read (#1341).
  * 2. `expressions`: a Noul per pair of the pieces most likely fixed, whether
  *    they belong to one expression.
  * 3. `final`: step 0 asks a noun's idiom host again with clause-initial
@@ -45,12 +47,10 @@ import {
 	finalQuestions,
 	fixedId,
 	pairId,
-	sayingNoulId,
 	slotId,
 } from "./nomination-questions.js";
 import { argmaxBesideNone, partitionOf } from "./partition.js";
 import { governorShares } from "./phrase.js";
-import { type SayingSpan, sayingSpans } from "./saying-spans.js";
 import {
 	judgeState,
 	type Reference,
@@ -239,7 +239,7 @@ type ExpressionLink = {
 	readonly probability: number;
 };
 
-/** What code proposes before any answer: the slots, pairs and v3 Saying spans `candidates` asks about. */
+/** What code proposes before any answer: the slots and pairs `candidates` asks about. */
 export type Proposal = {
 	readonly sentence: Sentence;
 	readonly state: ReturnType<typeof judgeState>["state"];
@@ -247,7 +247,6 @@ export type Proposal = {
 	readonly inventory: GermanInventory;
 	readonly slots: readonly Slot[];
 	readonly pairs: readonly PairCandidate[];
-	readonly spans: readonly SayingSpan[];
 };
 
 /** What `candidates` answered, and what code read from it before any floor. */
@@ -292,15 +291,14 @@ export function proposalOf(
 		inventory,
 		slots: slotsOf(sentence, inventory),
 		pairs: pairCandidatesOf(sentence, inventory),
-		spans: sayingSpans(sentence),
 	};
 }
 
 /** The `candidates` request, which reads nothing jev answered. */
 export const candidatesPlan = (proposal: Proposal): Plan<Candidates> => {
-	const { sentence, ref, slots, pairs, spans } = proposal;
+	const { sentence, ref, slots, pairs } = proposal;
 	return {
-		questions: candidateQuestions(sentence, ref, slots, pairs, spans),
+		questions: candidateQuestions(sentence, ref, slots, pairs),
 		read: (first) => {
 			const accepted = matchedPairs(pairs, first, 0.5);
 			return {
@@ -390,25 +388,3 @@ export const nominate = Effect.fnUntraced(function* (
 	);
 	return { ...candidates, ...expressions, final };
 });
-
-/** The v3 Saying spans whose Noul clears the floor, most probable first, disjoint. */
-export function selectedSayings(
-	nomination: Pick<Nomination, "spans" | "first">,
-	floor: number,
-): number[][] {
-	const covered = new Set<number>();
-	const chosen: number[][] = [];
-	for (const span of [...nomination.spans]
-		.filter((span) => noulOf(nomination.first, sayingNoulId(span)) >= floor)
-		.sort(
-			(a, b) =>
-				noulOf(nomination.first, sayingNoulId(b)) -
-					noulOf(nomination.first, sayingNoulId(a)) ||
-				a.pieces.length - b.pieces.length,
-		)) {
-		if (span.pieces.some((piece) => covered.has(piece.id))) continue;
-		for (const piece of span.pieces) covered.add(piece.id);
-		chosen.push(span.pieces.map((piece) => piece.id));
-	}
-	return chosen;
-}

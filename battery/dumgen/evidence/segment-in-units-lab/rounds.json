@@ -201,16 +201,31 @@
 			"capTokens": 9047619,
 			"stopLineTokens": 9047619,
 			"pin": {
-				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusCommit": "343a48b2e1d99ab6cebd4eb9f38679ddf69c2649",
 				"dumcorpusDirty": true,
-				"hash": "0730c0f32ced76a0ec23eb864b931e955e04848415009304f6b1f46cd0f70f56",
+				"hash": "5947eb38f0fc04b7eadcc5ef00e1035136fca15e306251a1ce664bb4a06a68ab",
 				"inputs": {
-					"inventories": "a2a7274fad68072c9b30a5913b521972f09ad2f295e96f6f6a6b1d18bfb2f40b",
+					"inventories": "ee9c78860f97f258524a94734e9de3d92a515a6107fc6cfc1a2367da61315f5a",
 					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
-				"at": "2026-11-11T05:29:51.438Z"
+				"at": "2026-11-11T05:41:41.308Z"
 			},
-			"repins": []
+			"repins": [
+				{
+					"at": "2026-11-11T05:41:41.308Z",
+					"from": {
+						"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+						"dumcorpusDirty": true,
+						"hash": "0730c0f32ced76a0ec23eb864b931e955e04848415009304f6b1f46cd0f70f56",
+						"inputs": {
+							"inventories": "a2a7274fad68072c9b30a5913b521972f09ad2f295e96f6f6a6b1d18bfb2f40b",
+							"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+						},
+						"at": "2026-11-11T05:29:51.438Z"
+					},
+					"reason": "evaluate segment-in-units/de:dev --repin"
+				}
+			]
 		}
 	]
 }
