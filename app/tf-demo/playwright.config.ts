@@ -20,7 +20,6 @@ const playgroundSpecs = [
 	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
 	"pokemon-cards.pw.ts",
-	"resolution.pw.ts",
 	"tabletop.pw.ts",
 ];
 

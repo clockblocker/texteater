@@ -13,7 +13,6 @@ import {
 	SparklesIcon,
 	StickyNoteIcon,
 	TableIcon,
-	WandSparklesIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
@@ -27,7 +26,6 @@ import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
 import { PokemonCards } from "./entries/pokemon-cards/pokemon-cards";
 import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
-import { ResolutionEntry } from "./entries/resolution/resolution";
 import { TabletopEntry } from "./entries/tabletop/tabletop";
 import { pathnameAtom } from "./pathname-atoms";
 import {
@@ -129,14 +127,6 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"The tabletop battery end to end (#1317): Note Cards in a Deck on a Ground and a Pane beside it across a Split. Each Card is one Body resting in a CSS Slot and moved by Terms that decay to nothing. Tap one to grow it into a Cover, drag it home with your speed, drop it on the Pane, throw it away, or turn it over with F. Deal, Fan, Shuffle and Sort, the turn, slow-mo, reduced motion and RTL are in the inspector.",
 		render: () => <TabletopEntry />,
-	},
-	{
-		key: "resolution",
-		title: "Resolution",
-		icon: WandSparklesIcon,
-		description:
-			"How a click's Deck feels while its meaning resolves (#1332): a short German text over a fake Resolution Session, played by Today's real renderer and Notes or by Proposed on the tabletop battery. The word, each stage's latency, when and where the Deck is dealt, how a late Card joins, slow-mo, reduced motion and RTL are in the inspector.",
-		render: (route) => <ResolutionEntry route={route} />,
 	},
 	{
 		key: "pokemon-cards",
