@@ -59,6 +59,8 @@ const answer = z.discriminatedUnion("type", [
  * Its member check's two answers (both members fixed, the unit unchanged)
  * come from #1325's 2026-11-10 dev fill, repetition 0, and are kept apart
  * in `in-units-member-check-answers.json`; each Sentence's calls take them in.
+ * The adjective tests (`ta_…`) were re-recorded from the 2026-11-11 dev
+ * fill, repetition 0, at #1340's reworded test (#1341).
  */
 const recorded = z
 	.object({

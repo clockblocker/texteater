@@ -61,6 +61,26 @@ const topShare = (probabilities: Readonly<Record<string, number>>) =>
 const routeId = (group: readonly number[]) => `r_${group.join("_")}`;
 const identityId = (id: number) => `i_${id}`;
 const adjectiveTestId = (id: number) => `ta_${id}`;
+
+/**
+ * Rule de/adjective-stays-adj's test of a word's own letters, asked of the
+ * word: does it take an ending before a noun? Code spells the inflected
+ * form, -e added, or -n after a final e, so the judge reads that form and
+ * not a related adjective spelled otherwise (besonders is no besonder-):
+ * ewig is ewige, lange is langen, besonders would be besonderse (#1340).
+ */
+/**
+ * The share past which the test reads an adjective. The judge gives a form
+ * that is no word 0.04 to 0.06 and a real one 0.18 or more, near 0.5 for
+ * many; on dev, 0.3 kept every scored route and moved the most unscored
+ * ones the Rule's way of the floors tried (0.1 to 0.5, #1341).
+ */
+const attributiveFloor = 0.3;
+
+function attributiveTest(word: string): string {
+	const inflected = word.endsWith("e") ? `${word}n` : `${word}e`;
+	return `Is "${inflected}", the word "${word}" with an inflection ending, a German adjective form that stands before a noun (laut: der laute Ruf; schnell: die schnellen Hunde; lange: die langen Tage)? Answer no when "${inflected}" is no German word, or no adjective form, even if a related adjective is spelled otherwise.`;
+}
 const modifierTestId = (id: number) => `tm_${id}`;
 export const abbreviationId = (id: number) => `ra_${id}`;
 export const closedId = (id: number) => `cc_${id}`;
@@ -95,10 +115,12 @@ function routeQuestions(
 				: [];
 			if (piece) {
 				// Rule de/adjective-stays-adj: a word that can inflect as an
-				// attributive adjective is an ADJ, also used adverbially.
+				// attributive adjective is an ADJ, also used adverbially. The
+				// test is of the word's own letters, so one that only ever
+				// modifies is an ADV beside a same-stem adjective (#1340).
 				if (/^\p{Ll}/u.test(piece.text) && candidates.length === 0)
 					questions[adjectiveTestId(only)] = noul(
-						`Can the word ${ref(piece)}, in the form of its dictionary entry, also stand before a noun as an attributive adjective with an inflection ending (laut: ein lauter Ruf; schnell: der schnelle Hund)?`,
+						attributiveTest(piece.word.toLowerCase()),
 					);
 				// Rule de/pron-or-det-by-use: DET modifies a noun, PRON stands for one.
 				const kinds = new Set(
@@ -214,7 +236,7 @@ function readRoutes(
 		if (
 			adjective?.type === "noul" &&
 			current.choice === "Lexeme/ADV" &&
-			adjective.noul >= 0.5
+			adjective.noul >= attributiveFloor
 		)
 			identity.set(groupKey(group), { ...current, choice: "Lexeme/ADJ" });
 		// The DET/PRON test answering even (0.5) decides nothing: the

@@ -194,7 +194,7 @@
 				},
 				"ta_2": {
 					"type": "noul",
-					"noul": 0.06
+					"noul": 0.04
 				},
 				"r_3": {
 					"type": "choice",
@@ -257,7 +257,7 @@
 				},
 				"ta_4": {
 					"type": "noul",
-					"noul": 0.09
+					"noul": 0.12
 				},
 				"r_5": {
 					"type": "choice",
@@ -305,7 +305,7 @@
 				},
 				"ta_6": {
 					"type": "noul",
-					"noul": 0.21
+					"noul": 0.03
 				},
 				"r_4_5_6": {
 					"type": "choice",
