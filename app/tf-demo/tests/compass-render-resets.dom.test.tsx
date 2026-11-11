@@ -2,9 +2,9 @@ import "./support/dom";
 import { expect, test } from "bun:test";
 import { act, fireEvent, render } from "@testing-library/react";
 import { useLayoutEffect, useRef } from "react";
+import { useFolded } from "../src/presentation/heading";
 import { ContextsBlock } from "../src/workspace/compass/deck-models/blocks";
 import type { DummyNote } from "../src/workspace/compass/deck-models/dummy";
-import { useFolded } from "../src/workspace/compass/heading";
 import type { Form } from "../src/workspace/compass/subject";
 import { CONTEXT_PAGE } from "../src/workspace/motion/motion-spec";
 

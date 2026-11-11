@@ -1,6 +1,6 @@
 import { BAR_REM, groundOf, isRooted, type PaneNode } from "compass";
 import { type UIEvent, useState } from "react";
-import { coverHeadingRem, foldedAt } from "./heading";
+import { coverHeadingRem, foldedAt } from "@/presentation/form";
 
 /**
  * A Floating Pane's bar is its Ground's Heading, so it takes the Heading's

@@ -78,23 +78,8 @@ function PlacedSubject({
 							card ? "Card" : "Sheet",
 						)
 					)
-				) : subject.kind !== "Note" ? (
-					renderApplicationSubject(subject, card ? "Card" : "Sheet")
 				) : (
-					/* a Sheet's Heading is its bar, so its first Block keeps
-					   only the air under one */
-					<div
-						className={
-							card
-								? ""
-								: "[&_[data-note-presentation]>article]:pt-0"
-						}
-					>
-						{renderApplicationSubject(
-							subject,
-							card ? "Card" : "Sheet",
-						)}
-					</div>
+					renderApplicationSubject(subject, card ? "Card" : "Sheet")
 				)}
 			</NotePartProvider>
 		</WorkspaceInteractionProvider>

@@ -11,8 +11,8 @@ import {
 	ResizableSplitRegion,
 } from "lego";
 import type { ReactNode } from "react";
+import { sheetColumn } from "@/presentation/skin";
 import type { DeckInteraction } from "./interaction-policy";
-import { sheetColumn } from "./layout";
 import { GROUND_COLUMN_STYLE, GroundList, PaneBar } from "./pane-chrome";
 import type { SheetActions } from "./presentation-view";
 import { groundSheetOf, PREVIEW_PANE, rungLabel } from "./sheets";

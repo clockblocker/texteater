@@ -252,16 +252,36 @@ export type DeckSlot<S> = {
 const OPEN_RISE = 9;
 
 /**
+ * The places of a Deck of `count` resting Cards in their Pane, the top of
+ * the column first: each one Heading row below the one before, every one
+ * as tall as the front Card. A renderer that places its Cards in px reads
+ * them through `placementBox`, so its pile is this one.
+ */
+export function deckPlacements(
+	count: number,
+	openScale: number,
+	topRem = DECK_TOP_REM,
+): readonly Placement[] {
+	const column = deckColumn(openScale, topRem);
+	const height = cardHeight(count, column.height);
+	return Array.from({ length: count }, (_, index) => ({
+		inlineStart: column.inlineStart,
+		top: plus(column.top, inRem(index * HEADER_REM)),
+		width: column.width,
+		height,
+	}));
+}
+
+/**
  * Where a Deck's resting Cards sit in their Pane, in drawing order: the
- * last in rank on top of the column, each slot one Heading row below the
- * one before, every slot as tall as the front Card. The Card `frontId`
- * names is open, or the first in rank when it names none of `cards`; the
- * Cards drawn before it are folded above it and the rest below. Their z
- * rises toward the open Card from both sides, one step per slot, and the
- * open Card is over all of them. Past `OPEN_RISE` slots away they all
- * rest at `Z.deck`, which is safe: a Deck that long has slots one Heading
- * row tall (`cardHeight`), so no two of them overlap. A Card in hand is
- * the renderer's to lift over the rest.
+ * last in rank on top of the column, at the places `deckPlacements`
+ * gives. The Card `frontId` names is open, or the first in rank when it
+ * names none of `cards`; the Cards drawn before it are folded above it
+ * and the rest below. Their z rises toward the open Card from both sides,
+ * one step per slot, and the open Card is over all of them. Past
+ * `OPEN_RISE` slots away they all rest at `Z.deck`, which is safe: a Deck
+ * that long has slots one Heading row tall (`cardHeight`), so no two of
+ * them overlap. A Card in hand is the renderer's to lift over the rest.
  */
 export function deckSlots<S>(
 	cards: readonly Presentation<S>[],
@@ -270,25 +290,23 @@ export function deckSlots<S>(
 	topRem = DECK_TOP_REM,
 ): readonly DeckSlot<S>[] {
 	const count = cards.length;
-	const column = deckColumn(openScale, topRem);
-	const height = cardHeight(count, column.height);
+	const placements = deckPlacements(count, openScale, topRem);
 	const order = [...cards].reverse();
 	const frontAt = order.findIndex((card) => card.id === frontId);
 	const openAt = frontAt === -1 ? count - 1 : frontAt;
-	return order.map((card, index) => {
+	return order.flatMap((card, index) => {
+		const placement = placements[index];
+		if (!placement) return [];
 		const place: Place =
 			index < openAt ? "above" : index > openAt ? "below" : "open";
-		return {
-			card,
-			place,
-			placement: {
-				inlineStart: column.inlineStart,
-				top: plus(column.top, inRem(index * HEADER_REM)),
-				width: column.width,
-				height,
+		return [
+			{
+				card,
+				place,
+				placement,
+				z: Z.deck + Math.max(0, OPEN_RISE - Math.abs(index - openAt)),
 			},
-			z: Z.deck + Math.max(0, OPEN_RISE - Math.abs(index - openAt)),
-		};
+		];
 	});
 }
 

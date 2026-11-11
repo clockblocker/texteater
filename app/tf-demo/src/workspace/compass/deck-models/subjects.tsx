@@ -1,5 +1,5 @@
 import { CARD_WIDTH_REM } from "compass";
-import { sheetColumn } from "@/workspace/compass/layout";
+import { sheetColumn } from "@/presentation/skin";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { BodyBlock, ContextsBlock, LinksBlock, ScrollBlock } from "./blocks";
 import { cleanWord, type DummyNote, deckFor, type NoteLink } from "./dummy";
@@ -203,8 +203,7 @@ function PortedHeading({
 
 /**
  * A ported Note's Blocks but its Heading, as the Notes page renders them.
- * A Card's links are inert until it is a Sheet (#485). A Sheet's Heading
- * is its title, so the first Block keeps only the air it keeps under one.
+ * A Card's links are inert until it is a Sheet (#485).
  */
 function PortedBody({
 	note,
@@ -218,10 +217,7 @@ function PortedBody({
 	const sheet = view.form === "sheet";
 	if (!ported) return null;
 	return (
-		<div
-			inert={!sheet}
-			className={sheet ? "[&_[data-note-presentation]>article]:pt-0" : ""}
-		>
+		<div inert={!sheet}>
 			<PortedBlocks
 				note={ported}
 				presentation={sheet ? "Sheet" : "Card"}

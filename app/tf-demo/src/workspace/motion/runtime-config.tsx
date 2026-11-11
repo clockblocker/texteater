@@ -1,9 +1,10 @@
 import { createContext, type ReactNode, useContext, useMemo } from "react";
+import { OPEN_SCALE } from "@/presentation/deck-geometry";
 import * as spec from "./motion-spec";
 
 export const DEFAULT_DECK_MOTION = {
 	headingEdgeMs: spec.HEADING_EDGE.ms,
-	openScale: spec.OPEN_SCALE,
+	openScale: OPEN_SCALE,
 	stiffness: spec.DRAG_SPRING.stiffness,
 	damping: spec.DRAG_SPRING.damping,
 	morphStiffness: spec.MORPH.stiffness,

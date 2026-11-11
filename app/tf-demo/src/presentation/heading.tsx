@@ -1,6 +1,4 @@
-import { BAR_REM, HEADER_REM } from "compass";
 import { ArrowLeftIcon, XIcon } from "lucide-react";
-import { AnimatePresence, type MotionValue, motion } from "motion/react";
 import {
 	createContext,
 	type ReactNode,
@@ -9,16 +7,14 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { after, type motionOf } from "@/workspace/motion/motion-spec";
-import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
-import { useDeckMotion } from "@/workspace/motion/runtime-config";
-import { COVER_GUTTER_REM, remPx } from "./layout";
+import { foldedAt } from "./form";
 import { RestingControls } from "./resting-controls";
-import type { Form } from "./subject";
+import { COVER_GUTTER_REM } from "./skin";
 
 /**
- * The Heading Block, pinned first, and the Sheet chrome it carries as a
- * Cover (tf-demo ADR 0006).
+ * What a Heading row holds: a Card's title row, and the Sheet chrome the
+ * Heading carries as a Cover (tf-demo ADR 0006). `PresentationContent`
+ * places the row; nothing here moves.
  *
  * As a Cover the Heading is the Cover's bar: ← in the column's inline-start
  * gutter, × in its inline-end one, and the title on the body's own
@@ -47,27 +43,12 @@ export function useHeadingDesign(): HeadingDesign {
 	return useContext(HeadingDesignContext);
 }
 
-/** The tall Heading: a title row with the Notes page's air above it. */
-const TALL_REM = 4.5;
-/** The fold starts this far into the body, and undoes only at its top. */
-const FOLD_AT_PX = 24;
-
-export function coverHeadingRem(folded: boolean): number {
-	return folded ? BAR_REM : TALL_REM;
-}
-
 /**
- * Whether a Heading is folded: its Sheet's body has scrolled past
- * `FOLD_AT_PX`. It unfolds only back at the top, so the height the fold
- * gives the body cannot scroll it back under the line and flicker.
+ * `foldedAt`, for a Cover, whose Heading is its own: watches the Body's
+ * scroller under `root`.
  */
-export function foldedAt(was: boolean, scrollTop: number): boolean {
-	return was ? scrollTop > 0 : scrollTop > FOLD_AT_PX;
-}
-
-/** `foldedAt`, for a Cover, whose Heading is its own. */
 export function useFolded(
-	section: RefObject<HTMLElement | null>,
+	root: RefObject<HTMLElement | null>,
 	watching: boolean,
 ): boolean {
 	const [folded, setFolded] = useState(false);
@@ -81,14 +62,14 @@ export function useFolded(
 	useEffect(() => {
 		if (!watching) return;
 		const scroller =
-			section.current?.querySelector<HTMLElement>("[data-scroller]");
+			root.current?.querySelector<HTMLElement>("[data-scroller]");
 		if (!scroller) return;
 		const update = () =>
 			setFolded((was) => foldedAt(was, scroller.scrollTop));
 		update();
 		scroller.addEventListener("scroll", update, { passive: true });
 		return () => scroller.removeEventListener("scroll", update);
-	}, [section, watching]);
+	}, [root, watching]);
 	return folded;
 }
 
@@ -262,143 +243,37 @@ export function KeyHandles({
 }
 
 /**
- * The Heading: pinned first, the Note's lift handle as a Card and as a
- * Cover. As a Card it is the one-line title row, at the lower edge when
- * the Card is a Card Tail. As a Cover it is the Cover's bar: ← and ×
- * around the title, folding to the bar's height once the body scrolls.
- * As a Ground it folds shut, because the Pane bar carries the label.
- *
- * The row is one element whose height rides `MORPH` with the Note's box,
- * so the Cover's top edge is the Note's own edge in every frame. Only the
- * words change: the face leaving goes on `BAR_EXIT`, the one arriving
- * overlaps it on `BAR_ENTER`, and the row between them never fades. A
- * change of height with no change of form, a fold, rides `HEADING_RESIZE`.
+ * A Card's title row: the Heading's words on one line, centred at the
+ * content column, resting on the row's lower edge. A Card's title reads,
+ * but its links rest until it is a Sheet (#485).
  */
-export function HeadingBlock({
-	form,
-	ground,
-	back,
-	clear,
-	coverRem,
-	coverWidth,
-	folded,
-	cardTitle,
-	coverTitle,
-	keys,
-	morphing,
-	grab,
-	atBottom,
-	layout,
-	offset,
-	positionSpec,
+export function CardTitleRow({
 	column,
+	atFoot,
+	children,
 }: {
-	form: Form;
-	ground: boolean;
-	back: HeadingControl | null;
-	clear: HeadingControl | null;
-	/** The Cover face's height, in rem. */
-	coverRem: number;
-	/** The body column the Cover's title sits on, gutters included. */
-	coverWidth: string;
-	folded: boolean;
-	/** The Subject's Heading words as a Card's title row. */
-	cardTitle: ReactNode;
-	/** The Subject's Heading words as a Cover's title. */
-	coverTitle: ReactNode;
-	/** The keyboard's Lift and Expand for this Heading; see `KeyHandles`. */
-	keys: ReactNode;
-	/** The form changed this render: the row rides `MORPH`. */
-	morphing: boolean;
-	/** The row is the Cover's handle right now. */
-	grab: boolean;
-	atBottom: boolean;
-	layout: boolean;
-	offset: MotionValue<number>;
-	/** What the row's position rides; see `positionSpec` in `PresentationView`. */
-	positionSpec: ReturnType<typeof motionOf>;
-	/** The content column's width; the Card's row is centred at it. */
+	/** The content column's width, as CSS. */
 	column: string;
+	/** The row sits at its Card's lower edge, as a Card Tail's does. */
+	atFoot: boolean;
+	children: ReactNode;
 }) {
-	const { transition, MORPH, BAR_ENTER, BAR_EXIT, HEADING_RESIZE } =
-		useDeckMotion();
-	const reduce = useDeckReducedMotion();
-	const rem = remPx();
-	const face = form === "card" ? "card" : ground || !back ? null : "cover";
-	const rowRem =
-		face === "card" ? HEADER_REM : face === "cover" ? coverRem : 0;
-	/* the two faces overlap for a beat, and a touch of blur makes the
-	   overlap read as one title turning rather than two stacked. Reduced,
-	   the box is already there, so the words do not wait for it */
-	const fade = {
-		initial: { opacity: 0, filter: "blur(2px)" },
-		animate: {
-			opacity: 1,
-			filter: "blur(0px)",
-			transition: transition(reduce ? after(BAR_ENTER, 0) : BAR_ENTER),
-		},
-		exit: {
-			opacity: 0,
-			filter: "blur(2px)",
-			transition: transition(BAR_EXIT),
-		},
-	};
-	const rowSpec = morphing ? MORPH : transition(HEADING_RESIZE);
 	return (
-		<motion.div
-			data-heading=""
-			data-folded={face === "cover" ? folded : undefined}
-			/* `initial={false}`: a Note is dealt at its size; only a change
-			   of form is a move. */
-			initial={false}
-			layout={layout ? "position" : false}
-			layoutDependency={`${form}:${atBottom.toString()}`}
-			transition={{
-				...rowSpec,
-				layout: positionSpec,
-			}}
-			animate={{ height: rowRem * rem, opacity: face ? 1 : 0 }}
-			style={{ order: atBottom ? 2 : 0, y: offset }}
-			className={`relative w-full shrink-0 overflow-hidden select-none ${grab ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
+		<div
+			className="relative flex h-full w-full min-w-0 items-end"
+			style={{ maxWidth: column }}
 		>
-			<AnimatePresence initial={false}>
-				{face === "card" ? (
-					<motion.div
-						key="card"
-						{...fade}
-						className={`absolute inset-0 flex justify-center px-4 ${atBottom ? "" : "pb-3.5"}`}
-					>
-						<div
-							className="relative flex h-full w-full min-w-0 items-end"
-							style={{ maxWidth: column }}
-						>
-							{/* a Card's title reads, but its links rest until it is a Sheet (#485) */}
-							<RestingControls
-								resting
-								className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atBottom ? "pb-3.5" : ""}`}
-							>
-								{cardTitle}
-							</RestingControls>
-						</div>
-					</motion.div>
-				) : face === "cover" && back && clear ? (
-					<motion.div
-						key="cover"
-						{...fade}
-						className="absolute inset-0"
-					>
-						<SheetChrome
-							ruled={folded}
-							maxWidth={coverWidth}
-							back={back}
-							clear={clear}
-						>
-							{coverTitle}
-						</SheetChrome>
-					</motion.div>
-				) : null}
-			</AnimatePresence>
-			{face ? keys : null}
-		</motion.div>
+			<RestingControls
+				resting
+				className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atFoot ? "pb-3.5" : ""}`}
+			>
+				{children}
+			</RestingControls>
+		</div>
 	);
+}
+
+/** The classes of the face a Card's title row is drawn in, filling the Heading row. */
+export function cardFaceClass(atFoot: boolean): string {
+	return `absolute inset-0 flex justify-center px-4 ${atFoot ? "" : "pb-3.5"}`;
 }

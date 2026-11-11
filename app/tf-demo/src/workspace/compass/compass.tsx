@@ -30,6 +30,10 @@ import {
 	useRef,
 } from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
+import {
+	DEFAULT_HEADING_DESIGN,
+	HeadingDesignProvider,
+} from "@/presentation/heading";
 import { VELOCITY_SAMPLE_MS } from "@/workspace/motion/motion-spec";
 import {
 	type DeckMotionOverrides,
@@ -46,7 +50,6 @@ import {
 	type NoteHandle,
 	type ThrowTuning,
 } from "./gesture";
-import { DEFAULT_HEADING_DESIGN, HeadingDesignProvider } from "./heading";
 import {
 	ALL_INTERACTIONS,
 	type DeckInteraction,

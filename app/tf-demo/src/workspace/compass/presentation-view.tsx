@@ -5,22 +5,22 @@ import {
 	useEffect,
 	useRef,
 } from "react";
-import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
-import { useDeckMotion } from "@/workspace/motion/runtime-config";
-import type { Fate, NoteHandle } from "./gesture";
+import { cardForm, type PresentationForm } from "@/presentation/form";
 import {
-	coverHeadingRem,
-	HeadingBlock,
 	type HeadingControl,
 	KeyHandles,
-	useFolded,
 	useHeadingDesign,
-} from "./heading";
+} from "@/presentation/heading";
+import { PresentationBox } from "@/presentation/presentation-box";
+import { PresentationContent } from "@/presentation/presentation-content";
+import { restingBorder } from "@/presentation/skin";
+import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
+import { useContentMotion } from "./content-motion";
+import type { Fate, NoteHandle } from "./gesture";
 import { useDeckInteractions } from "./interaction-policy";
-import { sheetColumn } from "./layout";
-import { RestingControls } from "./resting-controls";
 import type { Form, Place, SubjectRenderer, SubjectView } from "./subject";
-import { useHeadingEdgeSlide, useNoteBox } from "./use-note-box";
+import { useNoteBox } from "./use-note-box";
 
 /**
  * What a Note's Segments and Links do, and how it updates its Deck. A
@@ -42,14 +42,81 @@ export function inertActions<S>(): SheetActions<S> {
 	};
 }
 
+/** What the gesture in progress says of a Note, for the page and its specs to read. */
+function gestureData({
+	held,
+	swiping,
+	fate,
+	pastCommit,
+	preview,
+}: {
+	held: boolean;
+	swiping: boolean;
+	fate: Fate | null;
+	pastCommit: boolean;
+	preview: boolean;
+}) {
+	return {
+		"data-held": held || undefined,
+		"data-arm": held && swiping ? "sweep" : undefined,
+		"data-fate": fate ?? undefined,
+		"data-past": pastCommit,
+		"data-swiping": swiping || undefined,
+		"data-preview": preview || undefined,
+	};
+}
+
+/** The foundation's form for a Presentation the Compass holds this way. */
+function shapeOf(
+	form: Form,
+	place: Place,
+	ground: boolean,
+	/** It has a ←: a Cover draws its own bar. */
+	barred: boolean,
+): PresentationForm {
+	if (form === "card") return cardForm(place);
+	return ground ? "ground" : barred ? "cover" : "sheet";
+}
+
 /**
- * One Presentation, in one of its forms (tf-demo ADR 0006). Its box is
- * the placement the renderer hands it, as CSS; a new placement is a
- * morph from the old one (`useNoteBox`). The drag transforms sit on top of the box,
- * so a release can fold them in and grow from there. The Subject's parts read `form` and
- * `place` and adapt.
+ * Whether a press picks the Note up. A Sheet is handled by its bar, never
+ * by its content: a Card is picked up from anywhere, a Sheet's body only
+ * scrolls. A Cover's bar is its Heading.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+function picksUp(
+	event: ReactPointerEvent<HTMLElement>,
+	{
+		form,
+		covered,
+		linksDrag,
+	}: { form: Form; covered: boolean; linksDrag: boolean },
+): boolean {
+	const target = event.target as HTMLElement;
+	/* a button is a click, except a link in a Cover's title while the
+	   links drag: that one is the Heading's to read past the slop */
+	if (
+		target.closest("button") &&
+		!(linksDrag && target.closest("[data-heading-title] button"))
+	)
+		return false;
+	if (covered) return false;
+	/* a press on a scrollbar scrolls; it never picks the Note up */
+	if (
+		target.hasAttribute("data-scroller") &&
+		event.nativeEvent.offsetX >= target.clientWidth
+	)
+		return false;
+	return form === "card" || target.closest("[data-heading]") !== null;
+}
+
+/**
+ * One Presentation, in one of its forms (tf-demo ADR 0006): the Compass's
+ * motion around the Presentation foundation, which draws the box and what
+ * it holds. Its box is the placement the renderer hands it, as CSS; a new
+ * placement is a morph from the old one (`useNoteBox`). The drag
+ * transforms sit on top of the box, so a release can fold them in and
+ * grow from there. The Subject's parts read `form` and `place` and adapt.
+ */
 export function PresentationView<S>({
 	renderer,
 	card,
@@ -122,14 +189,7 @@ export function PresentationView<S>({
 	actions: SheetActions<S>;
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
 }) {
-	const {
-		transition,
-		MORPH,
-		OPEN_SCALE,
-		HEADING_EDGE,
-		NOTE_BORDER,
-		CLIP_FADE,
-	} = useDeckMotion();
+	const { transition, MORPH, OPEN_SCALE, NOTE_BORDER } = useDeckMotion();
 	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
 	const design = useHeadingDesign();
@@ -168,68 +228,26 @@ export function PresentationView<S>({
 	}, [card.id, preview]);
 
 	function down(event: ReactPointerEvent<HTMLElement>) {
-		const target = event.target as HTMLElement;
-		/* a button is a click, except a link in a Cover's title while the
-		   links drag: that one is the Heading's to read past the slop */
-		if (
-			target.closest("button") &&
-			!(design.linksDrag && target.closest("[data-heading-title] button"))
-		)
-			return;
-		if (covered) return;
-		/* a press on a scrollbar scrolls; it never picks the Note up */
-		if (
-			target.hasAttribute("data-scroller") &&
-			event.nativeEvent.offsetX >= target.clientWidth
-		)
-			return;
-		/* a Sheet is handled by its bar, never by its content: a Card is
-		   picked up from anywhere, a Sheet's body only scrolls. A Cover's
-		   bar is its Heading. */
-		if (form === "card" || target.closest("[data-heading]")) onDown(event);
+		if (picksUp(event, { form, covered, linksDrag: design.linksDrag }))
+			onDown(event);
 	}
 
 	const sheet = form === "sheet";
 	const below = place === "below" && !sheet;
-	/* the open Card reads through its body as a Sheet does; the folded
-	   ones show only their Headings */
-	const scrolls = sheet || place === "open";
-	/**
-	 * Which transition the Heading and the Blocks ride when they swap ends.
-	 * A change of form is a morph on `MORPH`; a deck tap changes only which
-	 * edge the Heading sits at, on `HEADING_EDGE`.
-	 */
-	const previousForm = useRef(form);
-	const morphing = previousForm.current !== form;
-	useEffect(() => {
-		previousForm.current = form;
-	}, [form]);
-	const positionSpec = morphing ? MORPH : transition(HEADING_EDGE);
-	const { headingOffset, bodyOffset } = useHeadingEdgeSlide({
-		section,
-		form,
-		below,
-		held,
-		reduce,
-		HEADING_EDGE,
-		transition,
-	});
+	const shape = shapeOf(form, place, ground, back !== null);
+	const draw = useContentMotion({ section, form, below, held });
+	const opens = fate === "open" || preview;
+	/* a Cover's Heading is its lift handle, unless another Sheet covers it */
+	const grabs = shape === "cover" && !covered && !preview;
 	/* the border is the Card's fate: blue where letting go opens it, red
 	   on a Deck a release would sweep, and its resting colour otherwise.
 	   A Card that would leave also dims; see `LEAVING`. */
 	const borderColor = pastCommit
 		? "var(--destructive)"
-		: fate === "open" || preview
+		: opens
 			? "var(--link)"
-			: ground
-				? "transparent"
-				: "var(--line-strong)";
+			: restingBorder(shape);
 	const subject = card.subject;
-	const dataForm = ground ? "ground" : form;
-	const isCover = sheet && !ground && back !== null;
-	const folded = useFolded(section, isCover);
-	const columnRem = renderer.columnRem(subject);
-	const { column, body: coverWidth } = sheetColumn(columnRem, sheet);
 	const view = (as: Form): SubjectView<S> => ({
 		form: as,
 		place,
@@ -239,20 +257,18 @@ export function PresentationView<S>({
 	});
 
 	return (
-		<motion.article
+		<PresentationBox
+			as={motion.article}
+			form={shape}
+			lift={held ? 1 : 0}
 			ref={section}
 			aria-label={`${renderer.label(subject)} ${ground ? "ground" : sheet ? "sheet" : "card"}`}
 			data-card-id={card.id}
-			data-form={dataForm}
+			data-form={ground ? "ground" : form}
 			data-place={sheet ? undefined : place}
-			data-held={held || undefined}
-			data-arm={held && swiping ? "sweep" : undefined}
-			data-fate={fate ?? undefined}
-			data-past={pastCommit}
-			data-swiping={swiping || undefined}
+			{...gestureData({ held, swiping, fate, pastCommit, preview })}
 			data-pane={paneId}
 			data-sheet-id={sheetId ?? undefined}
-			data-preview={preview || undefined}
 			/* The border is the arm state. A Note is dealt wearing its
 			   resting colour; only arming changes it. */
 			initial={false}
@@ -273,79 +289,28 @@ export function PresentationView<S>({
 				...(preview ? { borderStyle: "dashed" } : {}),
 			}}
 			onPointerDown={down}
-			/* `contain` stops the width/height spring's recalc at this Note
-			   rather than letting it walk the deck. A Card is all handle, so
-			   none of it selects; a Sheet's text does, and its Heading is the
-			   handle (a Sheet in hand is drawn as a Card) */
-			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none select-none active:cursor-grabbing"}`}
+			/* the shadow follows the lift as a state: it is no part of a
+			   move, so it rides no spring */
+			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute transition-shadow duration-200 ease-out`}
 		>
-			{/* the content column: one width in every form, centred inside a
-			    Heading and a scroller that both span the Pane, so the scrollbar
-			    sits at the Pane's edge, not the column's. A ghost's ink is
-			    quiet, on paper as opaque as any: nothing shows through */}
-			<div
-				className={`flex min-h-0 w-full flex-1 flex-col ${preview ? "opacity-50" : ""}`}
-			>
-				<HeadingBlock
-					form={form}
-					ground={ground}
-					back={back}
-					clear={clear}
-					coverRem={coverHeadingRem(folded)}
-					coverWidth={coverWidth}
-					folded={folded}
-					cardTitle={renderer.render(
-						subject,
-						view("card"),
-						"heading",
-					)}
-					coverTitle={renderer.render(
-						subject,
-						view("sheet"),
-						"heading",
-					)}
-					keys={
-						keys.length && !preview ? (
-							<KeyHandles controls={keys} />
-						) : null
-					}
-					morphing={morphing}
-					grab={
-						sheet &&
-						!ground &&
-						!covered &&
-						!preview &&
-						allows("lift")
-					}
-					atBottom={below}
-					layout={!held && morphing}
-					offset={headingOffset}
-					positionSpec={positionSpec}
-					column={column}
-				/>
-				{/* the Blocks travel with the Heading: the row it vacates is
-				    the row they take */}
-				<motion.div
-					data-scroller=""
-					layout={!held && morphing ? "position" : false}
-					style={{ y: bodyOffset }}
-					layoutDependency={`${form}:${below.toString()}`}
-					transition={{ layout: positionSpec }}
-					className={`relative order-1 min-h-0 flex-1 ${scrolls ? "overflow-y-auto" : "overflow-hidden"}`}
-				>
-					<RestingControls resting={!sheet}>
-						{renderer.render(subject, view(form), "body")}
-					</RestingControls>
-					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
-					<motion.div
-						aria-hidden="true"
-						initial={false}
-						animate={{ opacity: sheet || below ? 0 : 1 }}
-						transition={transition(CLIP_FADE)}
-						className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
-					/>
-				</motion.div>
-			</div>
-		</motion.article>
+			<PresentationContent
+				form={shape}
+				columnRem={renderer.columnRem(subject)}
+				heading={{
+					card: renderer.render(subject, view("card"), "heading"),
+					cover: renderer.render(subject, view("sheet"), "heading"),
+				}}
+				body={renderer.render(subject, view(form), "body")}
+				chrome={{ back, clear }}
+				grab={grabs && allows("lift")}
+				keys={
+					keys.length && !preview ? (
+						<KeyHandles controls={keys} />
+					) : null
+				}
+				quiet={preview}
+				draw={draw}
+			/>
+		</PresentationBox>
 	);
 }

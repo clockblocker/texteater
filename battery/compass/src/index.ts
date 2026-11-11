@@ -13,6 +13,7 @@ export {
 	DEAL_GAP_PX,
 	DECK_TOP_REM,
 	deckColumnIn,
+	deckPlacements,
 	deckSlots,
 	dropRegions,
 	groundPlacement,
@@ -66,5 +67,10 @@ export type {
 	NavigationTarget,
 } from "./navigation";
 export { planNavigation } from "./navigation";
-export type { PlacementStyle } from "./placement";
-export { boxStyle, paneAnchor, placementStyle } from "./placement";
+export type { Placement, PlacementStyle } from "./placement";
+export {
+	boxStyle,
+	paneAnchor,
+	placementBox,
+	placementStyle,
+} from "./placement";

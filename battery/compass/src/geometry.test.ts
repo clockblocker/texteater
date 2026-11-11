@@ -8,6 +8,7 @@ import {
 	coverPlacement,
 	DECK_TOP_REM,
 	deckColumnIn,
+	deckPlacements,
 	deckSlots,
 	dropRegions,
 	edgeWidth,
@@ -523,6 +524,22 @@ describe("deckSlots", () => {
 				height: cardHeightPx(5, REM, column.height),
 			})),
 		);
+	});
+
+	test("a Deck's places by count are the places its Cards rest at", () => {
+		expect(deckPlacements(5, OPEN_SCALE)).toEqual(
+			slotsOf("c").map((slot) => slot.placement),
+		);
+		expect(
+			deckPlacements(2, OPEN_SCALE, 3).map((placement) =>
+				boxIn(placement),
+			),
+		).toEqual(
+			deckSlots(cards.slice(0, 2), null, OPEN_SCALE, 3).map((slot) =>
+				boxIn(slot.placement),
+			),
+		);
+		expect(deckPlacements(0, OPEN_SCALE)).toEqual([]);
 	});
 
 	test("z rises toward the open Card from both sides, and the open Card is over all", () => {

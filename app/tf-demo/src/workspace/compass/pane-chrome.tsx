@@ -1,10 +1,14 @@
 import { BAR_REM } from "compass";
 import { motion } from "motion/react";
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
+import {
+	type HeadingControl,
+	KeyHandles,
+	SheetChrome,
+} from "@/presentation/heading";
+import { COVER_GUTTER_REM } from "@/presentation/skin";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
-import { type HeadingControl, KeyHandles, SheetChrome } from "./heading";
-import { COVER_GUTTER_REM } from "./layout";
 
 /** A Pane's own chrome: the Pane bar, and the lists a Ground's first rungs show. */
 

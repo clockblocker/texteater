@@ -1,6 +1,7 @@
 import { type Box, isNarrow, sameBoxes, type WritingDirection } from "compass";
 import { type RefObject, useLayoutEffect, useRef, useState } from "react";
-import { directionOf, remPx, viewportWidth } from "./layout";
+import { remPx } from "@/presentation/deck-geometry";
+import { directionOf, viewportWidth } from "./layout";
 
 /**
  * Every drawn Pane's box, relative to the frame, kept fresh, with what

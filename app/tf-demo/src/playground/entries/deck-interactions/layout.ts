@@ -1,5 +1,5 @@
 import { CARD_WIDTH_REM, HEADER_REM } from "compass";
-import { OPEN_SCALE } from "@/workspace/motion/motion-spec";
+import { OPEN_SCALE } from "@/presentation/deck-geometry";
 import { centre, type Rect, rotateAround, type Slot, union } from "./geometry";
 
 const REM = 16;

@@ -102,17 +102,6 @@ export function motionOf(spec: Spec) {
 			} as const);
 }
 
-/* ---------------------------------------------------------------- scale */
-
-/**
- * The open Card's resting scale: 5 % larger than the Cards behind it.
- *
- * A tap used to be marked with a pulse. It is not any more: the open Card
- * simply rests larger than the rest, so which Card is in front reads at a
- * glance instead of only in the moment of the tap.
- */
-export const OPEN_SCALE = 1.05;
-
 /* -------------------------------------------------------------- springs */
 
 /**

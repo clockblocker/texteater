@@ -16,6 +16,7 @@ import {
 	useEffect,
 	useRef,
 } from "react";
+import { remPx } from "@/presentation/deck-geometry";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import {
 	type Destination,
@@ -26,7 +27,6 @@ import {
 	type NoteHandle,
 } from "./gesture";
 import type { DeckInteraction } from "./interaction-policy";
-import { remPx } from "./layout";
 import type { NoteMoves } from "./note-moves";
 import type { SheetView } from "./sheets";
 import type { CompassWorkspace } from "./use-compass-workspace";
