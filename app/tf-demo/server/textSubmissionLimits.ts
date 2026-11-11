@@ -19,9 +19,9 @@ export const MAX_SOURCE_TEXT_CHARACTERS = 10_000;
 export const MAX_SOURCE_SENTENCES = 25;
 /**
  * Paste: bounds one Sentence's segmentation questions, which grow with it;
- * a longer Sentence rejects the paste. Intake reads a Sentence in parts
- * of at most 500 characters (`longSentences.ts`), so a book's Sentences
- * need no such bound.
+ * a longer Sentence rejects the paste. A book's longer Sentence is read in
+ * parts of at most this many characters (`longSentences.ts`), so a book's
+ * Sentences need no such bound.
  */
 const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
 

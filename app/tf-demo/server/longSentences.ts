@@ -2,23 +2,37 @@ import { type SegmentedSentence, stitchedText } from "dumgen";
 import { MAX_SEGMENTS_PER_SENTENCE } from "./storedSegments";
 
 /**
- * A long Sentence through intake (#1193). `language.detect` reads its
- * opening slice, and `segment.inUnits` reads it in parts of at most
- * `PART_CHARACTERS`, each a Sentence of its own, whose Segments and units
- * are joined back into the one Sentence; a unit spanning two parts comes
- * back as two. A shorter Sentence passes through untouched. Only a
- * Sentence too long to store its Segments (`fitsSegments`) is never cut,
- * and stays a Plain Sentence.
+ * A long Sentence through intake (#1193, #1343). `segment.inUnits` reads a
+ * Sentence of up to `PART_CHARACTERS` whole; only a longer one, mostly
+ * text without sentence punctuation, is read in parts of at most that,
+ * each a Sentence of its own, whose Segments and units are joined back
+ * into the one Sentence. A unit spanning two parts comes back as two, so
+ * the part is as long as segmentation allows. `language.detect` reads a
+ * long Sentence's opening slice. Only a Sentence too long to store its
+ * Segments (`fitsSegments`) is never cut, and stays a Plain Sentence.
  */
 
 /**
  * At most how many characters one Sentence `segment.inUnits` reads holds.
- * One of its jev requests grows with the Sentence and TypeSafe refuses one
- * over its token limit: live on 2026-10-20, a 600-character German Sentence
- * took a request of 59,000 input tokens and a 700-character one failed
- * with `max_tokens_exceeded`.
+ * jev cuts its requests by tokens, so a long Sentence no longer passes
+ * TypeSafe's token limit (#1324): live, a 2,020-character Sentence
+ * segmented whole in 26 requests of 500,680 input tokens and 2.0 s, and
+ * Kleist Sentences of 1,039 and 1,553 characters in 16 and 23 requests of
+ * 284,209 and 418,783 tokens, under 2 s each (#1343). A cut
+ * splits the units that span it, and German puts a verb's two halves at
+ * the two ends of a long clause, so the bound stays only for text without
+ * sentence punctuation; a paste's Sentences reach it at most
+ * (`textSubmissionLimits.ts`).
  */
-export const PART_CHARACTERS = 500;
+export const PART_CHARACTERS = 2_000;
+
+/**
+ * At most how many characters of one Sentence `language.detect` reads: its
+ * language shows in its opening, and a detection request holds every
+ * Sentence of its window of about 30 in its state, which goes beside each
+ * of the request's chunks.
+ */
+export const DETECTION_CHARACTERS = 500;
 
 /**
  * Whether a Sentence's Segments, at most one per character, fit
@@ -97,7 +111,7 @@ export function sentenceParts(
  */
 export function detectionSlice(
 	sentence: string,
-	limit: number = PART_CHARACTERS,
+	limit: number = DETECTION_CHARACTERS,
 ): string {
 	const text = stitchedText(sentence);
 	if (text.length <= limit) return sentence;
