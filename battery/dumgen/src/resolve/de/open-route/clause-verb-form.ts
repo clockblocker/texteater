@@ -32,7 +32,7 @@ import {
 } from "dumcorpus/inventories";
 import type { Unit } from "../../../segment/segmented-sentence.js";
 import type { Target } from "../target.js";
-import { fold } from "./shape.js";
+import { fold, spellingOf } from "./shape.js";
 
 /** A verb's finite forms: none spelled like its infinitive, no participle (gekonnt). */
 const finiteFormsOf = (infinitive: string, forms: readonly string[]) =>
@@ -103,7 +103,8 @@ function clauseSegments(target: Target): readonly number[] {
 function governs(target: Target, index: number): boolean {
 	const segment = target.segments[index];
 	if (!segment) return false;
-	const form = fold(segment.text);
+	// A fused piece is the word its Segment stands for (Kanns of Kannste).
+	const form = fold(segment.surface ?? segment.text);
 	if (finiteModalForms.has(form)) return true;
 	if (!finiteOpenGovernorForms.has(form)) return false;
 	const unit = unitAt(target.units, index);
@@ -132,7 +133,11 @@ const anyForm: readonly VerbForm[] = ["Fin", "Inf", "Part"];
 export function clauseVerbForms(target: Target): readonly VerbForm[] {
 	const last = target.members.at(-1);
 	if (!last || !fold(last.text).endsWith("n")) return anyForm;
-	if (target.members.some(({ text }) => finiteClosedForms.has(fold(text))))
+	if (
+		target.members.some((member) =>
+			finiteClosedForms.has(fold(spellingOf(member))),
+		)
+	)
 		return anyForm;
 	if (wordBefore(target, last.segment) === "zu") return ["Inf"];
 	const besideGovernor = clauseSegments(target).some((index) =>

@@ -62,9 +62,13 @@ type AuxiliaryFeatures = (typeof auxiliarySurfaceFeatures)[number]["features"];
 export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
 	`${lemma.canonicalForm} ${reading.emojiDescription}`;
 
-/** The authored AUX uses a member's spelling realizes, by Canonical Form and Emoji Description. */
+/**
+ * The authored AUX uses a member's word realizes, by Canonical Form and
+ * Emoji Description: a fused piece's word is the one its Segment stands
+ * for (the Bis of Biste is bist, #1342).
+ */
 function auxiliaryUsesOf(member: Member): readonly string[] {
-	const spelled = fold(member.text);
+	const spelled = fold(spellingOf(member));
 	return [
 		...new Set(
 			authoredRealizations
@@ -213,7 +217,9 @@ export function verbalSatellites(
 				})
 			: [];
 	const reflexive = shape.verbal
-		? target.members.find((member) => reflexives.has(fold(member.text)))
+		? target.members.find((member) =>
+				reflexives.has(fold(spellingOf(member))),
+			)
 		: undefined;
 	return {
 		auxiliaries,

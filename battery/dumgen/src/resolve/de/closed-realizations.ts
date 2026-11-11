@@ -13,7 +13,7 @@ import {
 import { foldCase, isSyncreticUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
-import type { Member, Target } from "./target.js";
+import { fixedSpelling, type Member, type Target } from "./target.js";
 
 /** A DET or PRON Lexeme's Core Features; a Locution sets none. */
 type Core = Partial<
@@ -54,7 +54,9 @@ function hasIdentity(member: AuthoredMember, identity: ClosedClassIdentity) {
  * The authored realizations of the identity whose spelling is the
  * member's. An exact spelling decides, since a capital inside the Sentence
  * says something (formal Sie); at the Sentence's start, or when nothing
- * matches exactly, spellings are compared without case.
+ * matches exactly, spellings are compared without case. A fused piece no
+ * realization spells is matched as the word its Segment stands for (the
+ * te of kannste is du, #1342), and only then as a Typo.
  */
 export function matchingRealizations(
 	identity: ClosedClassIdentity,
@@ -73,8 +75,22 @@ export function matchingRealizations(
 	const folded = ofIdentity.filter(({ spelled }) =>
 		foldedTexts.has(foldCase(spelled, "de")),
 	);
-	if (exact.length === 0 && folded.length === 0)
+	if (exact.length === 0 && folded.length === 0) {
+		const standsFor =
+			member.spelling?.orthography === "Fused"
+				? fixedSpelling(member)
+				: undefined;
+		const stood =
+			standsFor === undefined
+				? []
+				: ofIdentity.filter(
+						({ spelled }) =>
+							foldCase(spelled, "de") ===
+							foldCase(standsFor, "de"),
+					);
+		if (stood.length > 0) return stood;
 		return typoRealizations(ofIdentity, foldCase(member.text, "de"));
+	}
 	if (exact.length === 0) return folded;
 	return opensSentence ? folded : exact;
 }
