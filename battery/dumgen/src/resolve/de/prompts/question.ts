@@ -363,7 +363,7 @@ export const question = {
 	),
 	cell: paragraph(
 		"question.cell",
-		"Which form of {lemma} is {m} in this sentence?",
+		"Which form of {lemma} is {m} in this sentence? A determiner bears the case, number and gender of its noun's phrase and a pronoun those of its own: read the case from the role that phrase plays in its clause, which each option names, never from the spelling, which fits several forms.",
 		rules.core,
 		rules.referent,
 	),
