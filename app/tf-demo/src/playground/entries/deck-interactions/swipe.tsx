@@ -4,7 +4,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { CarryPad } from "./carry-pad";
 import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
 import { drawn, type Slot } from "./geometry";
 import { pileSlots } from "./layout";
@@ -29,7 +28,6 @@ import {
 } from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
-import { useHoldCarry } from "./use-hold-carry";
 
 const POP = { ms: 240 };
 /** The Deck's exit fade runs even: an eased one is all but out in its first half, before the drift has shown. */
@@ -123,7 +121,6 @@ export function SwipeVariant({
 		layout: pileSlots,
 		close: knobs,
 	});
-	const carry = useHoldCarry({ deck, rtl, motion, readouts, knobs });
 	const [held, setHeld] = useState<string | null>(null);
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);
@@ -440,29 +437,8 @@ export function SwipeVariant({
 			g.commits = verdictOf(bound.axis, g.start, knobs.threshold).commits;
 			begin(g, bound.axis, true);
 		}
-		/* held still, the press lifts the Card into the hand, and from then
-		   on the carry has it; moved first, it is the swipe's */
-		const hold = carry.press(id, event, {
-			moving,
-			current: () => gen.current === g.gen,
-			onLift: () => {
-				const swiped = binding.current;
-				binding.current = null;
-				pull.stop();
-				swiped?.scatter();
-				setPanel(null);
-				setKept(null);
-				setHeld(id);
-			},
-			onDrop: () => setHeld(null),
-			onLanded: () => {
-				setPressed(null);
-				readouts.set({ phase: "rest" });
-			},
-		});
 		trackPointer(event, rtl, {
 			move: (drag) => {
-				if (hold.move(drag)) return;
 				if (!g.axis) {
 					if (Math.hypot(drag.dx, drag.dy) < knobs.axisLock) return;
 					g.axis =
@@ -470,13 +446,11 @@ export function SwipeVariant({
 							? "inline"
 							: "block";
 					g.slop = knobs.axisLock;
-					hold.forgo();
 					begin(g, g.axis, false);
 				}
 				move(g, g.axis, drag);
 			},
 			up: (drag) => {
-				if (hold.up(drag)) return;
 				if (g.axis) {
 					release(g, drag);
 					return;
@@ -487,7 +461,6 @@ export function SwipeVariant({
 				tapCard(deck, taps, id, drag, knobs);
 			},
 			cancel: () => {
-				if (hold.cancel()) return;
 				if (g.axis) {
 					release(g, null);
 					return;
@@ -503,47 +476,38 @@ export function SwipeVariant({
 	/* the panel is in the Deck's layer too, under the Cards in front of
 	   its Card: faded with them, it never shows through one */
 	return (
-		<>
-			<CarryPad
-				rect={carry.pad}
-				shown={carry.carried !== null}
-				over={carry.over}
-				drops={carry.drops}
-				motion={motion}
-			/>
-			<DeckLayer
-				opacity={deck.opacity}
-				lit={pressed === null && deck.status === "dealt"}
-			>
-				{panel && anchor && index >= 0 && deck.status !== "gone" ? (
-					<SwipePanel
-						key={`${panel.id}-${panel.axis}`}
-						panel={panel}
-						card={kept?.box ?? deck.valuesOf(panel.id)}
-						anchor={kept?.anchor ?? anchor}
-						shows={shows}
-						kept={kept?.uncovered ?? null}
-						values={values}
-						armed={armed}
-						threshold={knobs.threshold}
-						tint={knobs.tint}
-						labels={
-							knobs.panelLabels &&
-							(shows === null || shows >= LABEL_ROOM_PX)
-						}
-						rtl={rtl}
-						reduce={motion.reduce}
-					/>
-				) : null}
-				<DeckCards
-					cards={cards}
-					deck={deck}
+		<DeckLayer
+			opacity={deck.opacity}
+			lit={pressed === null && deck.status === "dealt"}
+		>
+			{panel && anchor && index >= 0 && deck.status !== "gone" ? (
+				<SwipePanel
+					key={`${panel.id}-${panel.axis}`}
+					panel={panel}
+					card={kept?.box ?? deck.valuesOf(panel.id)}
+					anchor={kept?.anchor ?? anchor}
+					shows={shows}
+					kept={kept?.uncovered ?? null}
+					values={values}
+					armed={armed}
+					threshold={knobs.threshold}
+					tint={knobs.tint}
+					labels={
+						knobs.panelLabels &&
+						(shows === null || shows >= LABEL_ROOM_PX)
+					}
 					rtl={rtl}
-					held={held}
-					highlight
-					onDown={onDown}
+					reduce={motion.reduce}
 				/>
-			</DeckLayer>
-		</>
+			) : null}
+			<DeckCards
+				cards={cards}
+				deck={deck}
+				rtl={rtl}
+				held={held}
+				highlight
+				onDown={onDown}
+			/>
+		</DeckLayer>
 	);
 }
