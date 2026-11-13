@@ -1,13 +1,6 @@
 /// <reference lib="dom" />
 import { expect, type Page } from "@playwright/test";
-import {
-	carry,
-	frame,
-	inspector,
-	landed,
-	pull,
-	targetCentre,
-} from "./deck-interactions";
+import { frame, inspector, landed, pull } from "./deck-interactions";
 import {
 	offBy,
 	type Sample,
@@ -31,16 +24,13 @@ export const closeButton = (page: Page) =>
 	frame(page).getByRole("button", { name: "Close", exact: true });
 
 /**
- * Opens Card `lead` (back to front) into the Cover as a hand does: D
- * swipes it up past the threshold, B carries it onto the pad. Resolves
- * once it rests there, the pointer off the Deck.
+ * Opens Card `lead` (back to front) into the Cover as a hand does: it
+ * swipes it up past the threshold. Resolves once it rests there, the
+ * pointer off the Deck.
  */
-export async function openCover(page: Page, variant: "B" | "D", lead: number) {
-	const card = cardAt(page, lead);
-	if (variant === "D") {
-		await pull(page, card, 0, -150);
-		await page.mouse.up();
-	} else await carry(page, card, () => targetCentre(page, "pad"));
+export async function openCover(page: Page, lead: number) {
+	await pull(page, cardAt(page, lead), 0, -150);
+	await page.mouse.up();
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
 	await page.mouse.move(5, 5);
 	await landed(page);

@@ -9,7 +9,6 @@ import {
 import { Inspector } from "../inspector";
 import { playgroundNotesQuery } from "../playground-note";
 import { dealtCards } from "./dealt-cards";
-import { ProjectionDot } from "./deck-cards";
 import { InspectorPanel } from "./inspector-panel";
 import { readKnobs } from "./knobs";
 import type { Frame } from "./layout";
@@ -52,13 +51,13 @@ const STAYS: WorkspaceInteraction = {
 };
 
 /**
- * The Deck-of-Cards interaction prototype: the ways to carry, put back,
- * dismiss and open a Card that are still in the running, behind one
- * switch. The Deck is one click's, dealt from the fake db as the app deals
- * it, and each Card is the Note the app shows, drawn by the Presentation
- * foundation. The frame shows only the Deck and what a variant puts on
- * the table; the copy, the switches, the knobs and the readouts are in
- * the inspector (playground ADR 0001).
+ * The Deck-of-Cards interaction prototype: the way to put back, close and
+ * open a Card that is in the running, D's swipe actions, behind the
+ * variant switch a new contender would join. The Deck is one click's,
+ * dealt from the fake db as the app deals it, and each Card is the Note
+ * the app shows, drawn by the Presentation foundation. The frame shows
+ * only the Deck and what the variant puts on it; the copy, the switches,
+ * the knobs and the readouts are in the inspector (playground ADR 0001).
  */
 export function DeckInteractions() {
 	const snapshot = useQuery(playgroundNotesQuery);
@@ -140,9 +139,6 @@ export function DeckInteractions() {
 								storedKnobs,
 							)}
 						</WorkspaceInteractionProvider>
-					) : null}
-					{settings.showProjection ? (
-						<ProjectionDot readouts={readouts} />
 					) : null}
 				</div>
 			</div>

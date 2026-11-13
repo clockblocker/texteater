@@ -17,16 +17,15 @@ function useStorage(entries: Map<string, string>) {
 	});
 }
 
-test("the page opens on B with full motion, real time and LTR", () => {
+test("the page opens on D with full motion, real time and LTR", () => {
 	useStorage(new Map());
 	expect(
 		settingsOf(AtomRegistry.make().get(deckInteractionSettingsAtom)),
 	).toEqual({
-		variant: "table",
+		variant: "swipe",
 		reducedMotion: "off",
 		timeScale: 1,
 		rtl: false,
-		showProjection: false,
 		knobs: {},
 	});
 });
@@ -43,7 +42,7 @@ test("a stored field that no longer decodes falls back alone", () => {
 	const settings = settingsOf(
 		AtomRegistry.make().get(deckInteractionSettingsAtom),
 	);
-	expect(settings.variant).toBe("table");
+	expect(settings.variant).toBe("swipe");
 	expect(settings.rtl).toBe(true);
 	expect(settings.timeScale).toBe(1);
 });
@@ -60,14 +59,14 @@ test("Storage that throws reads as the defaults", () => {
 	expect(
 		settingsOf(AtomRegistry.make().get(deckInteractionSettingsAtom))
 			.variant,
-	).toBe("table");
+	).toBe("swipe");
 });
 
 test("a knob out of range or of the wrong type keeps its default", () => {
 	expect(
-		readKnobs("table", { targetSize: 9999, commitPulse: "yes", fanDeg: 8 }),
-	).toEqual({ ...DEFAULTS.table, fanDeg: 8 });
-	expect(readKnobs("table", { showTargets: "near" }).showTargets).toBe(
-		"near",
+		readKnobs("swipe", { threshold: 9999, haptic: "yes", tint: 0.3 }),
+	).toEqual({ ...DEFAULTS.swipe, tint: 0.3 });
+	expect(readKnobs("swipe", { collapseCurve: "ease-in" }).collapseCurve).toBe(
+		"ease-in",
 	);
 });

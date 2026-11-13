@@ -80,7 +80,6 @@ const CoverCardView = memo(function CoverCardView({
 			values={values}
 			rtl={rtl}
 			held={false}
-			mark={null}
 			onPointerDown={(event) => {
 				if (event.button !== 0 || form === "cover") return;
 				let moved = false;

@@ -8,7 +8,6 @@ import {
 	pull,
 	redeal,
 	reduceMotion,
-	setKnob,
 } from "./deck-interactions";
 import {
 	choose,
@@ -31,14 +30,10 @@ import {
 
 /**
  * The Deck interactions spec's taps, declared into it by `tapSpecs`: a tap
- * on a Card behind the front one plays deck-of-cards' shuffle, in B and
- * D, in both writing directions, reduced, interrupted and retargeted.
+ * on a Card behind the front one plays deck-of-cards' shuffle, in D, in both writing directions, reduced, interrupted and retargeted.
  */
 
-const VARIANTS = [
-	["B", "B · Table"],
-	["D", "D · Swipe actions"],
-] as const;
+const VARIANTS = [["D", "D · Swipe actions"]] as const;
 type Variant = (typeof VARIANTS)[number][0];
 
 const card = (page: Page, index: number) =>
@@ -46,11 +41,7 @@ const card = (page: Page, index: number) =>
 const byId = (page: Page, id: string) =>
 	frame(page).locator(`[data-card-id="${id}"]`);
 
-/**
- * Opens a variant in a writing direction, the pointer off the Deck. B's
- * hover fan and lift are off: they are a move of their own, and the path
- * checks judge the shuffle alone.
- */
+/** Opens a variant in a writing direction, the pointer off the Deck. */
 async function open(page: Page, variant: Variant, rtl = false) {
 	const name = VARIANTS.find(([key]) => key === variant)?.[1] ?? "";
 	await chooseVariant(page, name);
@@ -58,10 +49,6 @@ async function open(page: Page, variant: Variant, rtl = false) {
 		await inspector(page)
 			.getByRole("button", { name: "RTL", exact: true })
 			.click();
-	if (variant === "B") {
-		await setKnob(page, "Hover fan", 0);
-		await setKnob(page, "Hover lift", 0);
-	}
 	await page.mouse.move(5, 5);
 	await landed(page);
 }
@@ -253,13 +240,7 @@ export function tapSpecs() {
 			await tapAt(page, await tailOf(card(page, 0)));
 			/* in its second leg: coming into the front slot */
 			await page.waitForTimeout(260);
-			if (variant === "B") {
-				const at = await tailOf(byId(page, id));
-				await page.mouse.move(at.x, at.y);
-				await page.mouse.down();
-				await page.mouse.move(at.x + 80, at.y + 50, { steps: 10 });
-				await page.waitForTimeout(200);
-			} else await pull(page, byId(page, id), -60, 0);
+			await pull(page, byId(page, id), -60, 0);
 			await page.mouse.up();
 			const frames = await done();
 			expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);

@@ -70,8 +70,6 @@ function cardValues(at: Slot, z: number): CardValues {
 		lift: value(0),
 		o: value(1),
 		z: value(z),
-		stamp: value(0),
-		glow: value(0),
 	};
 }
 

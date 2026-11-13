@@ -6,7 +6,6 @@ import {
 	inspector,
 	landed,
 	reduceMotion,
-	setKnob,
 } from "./deck-interactions";
 import {
 	besideOf,
@@ -42,11 +41,10 @@ import {
  * deck-of-cards' shuffle moves a Card, out beside the Deck, lifted, and in
  * under the Cards in front of it, restacking only where it overlaps none.
  * The front Card goes straight in. Reduced, it dissolves. Judged frame by
- * frame, in B and D, in both writing directions, and interrupted.
+ * frame, in D, in both writing directions, and interrupted.
  */
 
 const VARIANTS = {
-	B: "B · Table",
 	D: "D · Swipe actions",
 } as const;
 type Variant = keyof typeof VARIANTS;
@@ -55,7 +53,7 @@ const GAP = "Close clear gap";
 
 /**
  * Opens a variant in a writing direction, reduced or not, the pointer off
- * the Deck. B's hover fan and lift are off: they are a move of their own.
+ * the Deck.
  */
 async function open(page: Page, variant: Variant, rtl = false, reduce = false) {
 	await chooseVariant(page, VARIANTS[variant]);
@@ -64,10 +62,6 @@ async function open(page: Page, variant: Variant, rtl = false, reduce = false) {
 			.getByRole("button", { name: "RTL", exact: true })
 			.click();
 	if (reduce) await reduceMotion(page);
-	if (variant === "B") {
-		await setKnob(page, "Hover fan", 0);
-		await setKnob(page, "Hover lift", 0);
-	}
 	await page.mouse.move(5, 5);
 	await landed(page);
 }
@@ -83,12 +77,7 @@ async function expectRest(page: Page, rest: Shown[], order: string[]) {
 }
 
 /** Opens Card `lead` into the Cover, closes it with its ×, and judges the close frame by frame. */
-async function closeAndJudge(
-	page: Page,
-	variant: Variant,
-	lead: number,
-	reduce: boolean,
-) {
+async function closeAndJudge(page: Page, lead: number, reduce: boolean) {
 	const rest = await shown(page);
 	const ids = rest.map((own) => own.id);
 	const id = ids[lead] ?? "";
@@ -96,7 +85,7 @@ async function closeAndJudge(
 	if (!slot) throw new Error(`No Card ${lead}`);
 	const front = lead === ids.length - 1;
 	const gap = await knobValue(page, GAP);
-	await openCover(page, variant, lead);
+	await openCover(page, lead);
 	const cover = (await shown(page)).find((own) => own.id === id);
 	if (!cover) throw new Error("No Cover");
 	const done = await record(page, 1000);
@@ -166,17 +155,9 @@ export function closeSpecs() {
 				page,
 			}) => {
 				await open(page, "D", rtl, reduce);
-				await closeAndJudge(page, "D", 2, reduce);
-				await closeAndJudge(page, "D", 3, reduce);
+				await closeAndJudge(page, 2, reduce);
+				await closeAndJudge(page, 3, reduce);
 			});
-
-	test("B shares the close: a Card behind the front one goes out beside the Deck and in under the Cards in front; the front Card goes straight in", async ({
-		page,
-	}) => {
-		await open(page, "B");
-		await closeAndJudge(page, "B", 1, false);
-		await closeAndJudge(page, "B", 3, false);
-	});
 
 	test("D: a tap on a closing Card takes it on from where it shows, to the front", async ({
 		page,
@@ -185,7 +166,7 @@ export function closeSpecs() {
 		const rest = await shown(page);
 		const ids = rest.map((own) => own.id);
 		const id = ids[2] ?? "";
-		await openCover(page, "D", 2);
+		await openCover(page, 2);
 		const done = await record(page, 1500);
 		await closeButton(page).click();
 		await page.waitForTimeout(150);
@@ -213,7 +194,7 @@ export function closeSpecs() {
 		const ids = rest.map((own) => own.id);
 		const id = ids[2] ?? "";
 		const gap = await knobValue(page, GAP);
-		await openCover(page, "D", 2);
+		await openCover(page, 2);
 		const done = await record(page, 1500);
 		await closeButton(page).click();
 		await page.waitForTimeout(150);
@@ -242,7 +223,7 @@ export function closeSpecs() {
 		await open(page, "D");
 		const rest = await shown(page);
 		const id = rest.at(-1)?.id ?? "";
-		await openCover(page, "D", 3);
+		await openCover(page, 3);
 		const cover = (await shown(page)).find((own) => own.id === id);
 		const done = await record(page, 1500);
 		await closeButton(page).click();

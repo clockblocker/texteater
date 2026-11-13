@@ -13,8 +13,8 @@ import { CardView } from "./card-view";
 import type { DealtCard } from "./dealt-cards";
 import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
-import { type Readouts, useReadout } from "./readouts";
-import type { CardValues, Deck, Mark } from "./use-deck";
+import type { Readouts } from "./readouts";
+import type { CardValues, Deck } from "./use-deck";
 
 /** What every variant is rendered with. */
 export type VariantProps<K> = {
@@ -34,8 +34,6 @@ type CardHandler = (id: string, event: ReactPointerEvent<HTMLElement>) => void;
 /** The handlers every Card shares: the same functions on every render. */
 type Handlers = {
 	readonly down: CardHandler;
-	readonly enter: CardHandler;
-	readonly leave: CardHandler;
 	readonly close: () => void;
 };
 
@@ -56,8 +54,6 @@ export function DeckCards({
 	held,
 	highlight,
 	onDown,
-	onEnter,
-	onLeave,
 }: {
 	/** The Cards the Deck was dealt, by which each id is drawn. */
 	readonly cards: readonly DealtCard[];
@@ -67,8 +63,6 @@ export function DeckCards({
 	/** Whether the Card under the pointer lights its border while the `DeckLayer` is lit; left out, none ever does. */
 	readonly highlight?: boolean;
 	readonly onDown: CardHandler;
-	readonly onEnter?: CardHandler;
-	readonly onLeave?: CardHandler;
 }) {
 	const { expanded, closeCover } = deck;
 	useEffect(() => {
@@ -79,16 +73,14 @@ export function DeckCards({
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
 	}, [expanded, closeCover]);
-	const latest = useRef({ onDown, onEnter, onLeave, closeCover, expanded });
-	latest.current = { onDown, onEnter, onLeave, closeCover, expanded };
+	const latest = useRef({ onDown, closeCover, expanded });
+	latest.current = { onDown, closeCover, expanded };
 	const [handlers] = useState<Handlers>(() => ({
 		down: (id, event) => {
 			if (event.button !== 0 || latest.current.expanded) return;
 			if ((event.target as HTMLElement).closest("button")) return;
 			latest.current.onDown(id, event);
 		},
-		enter: (id, event) => latest.current.onEnter?.(id, event),
-		leave: (id, event) => latest.current.onLeave?.(id, event),
 		close: () => latest.current.closeCover(),
 	}));
 	if (deck.status === "gone") return null;
@@ -105,9 +97,7 @@ export function DeckCards({
 				rtl={rtl}
 				held={held === card.id}
 				expanded={expanded === card.id}
-				mark={deck.marks[card.id] ?? null}
 				highlight={highlight}
-				hovers={onEnter !== undefined || onLeave !== undefined}
 				handlers={handlers}
 			/>
 		));
@@ -119,9 +109,7 @@ const DeckCard = memo(function DeckCard({
 	rtl,
 	held,
 	expanded,
-	mark,
 	highlight,
-	hovers,
 	handlers,
 }: {
 	readonly card: DealtCard;
@@ -129,9 +117,7 @@ const DeckCard = memo(function DeckCard({
 	readonly rtl: boolean;
 	readonly held: boolean;
 	readonly expanded: boolean;
-	readonly mark: Mark | null;
 	readonly highlight: boolean | undefined;
-	readonly hovers: boolean;
 	readonly handlers: Handlers;
 }) {
 	const { id, parts } = card;
@@ -149,15 +135,8 @@ const DeckCard = memo(function DeckCard({
 			values={values}
 			rtl={rtl}
 			held={held}
-			mark={mark}
 			highlight={highlight}
 			onPointerDown={(event) => handlers.down(id, event)}
-			onPointerEnter={
-				hovers ? (event) => handlers.enter(id, event) : undefined
-			}
-			onPointerLeave={
-				hovers ? (event) => handlers.leave(id, event) : undefined
-			}
 		>
 			<PresentationContent
 				form={drawn}
@@ -206,19 +185,5 @@ export function DeckLayer({
 		>
 			{children}
 		</motion.div>
-	);
-}
-
-/** The projected endpoint of the Card's centre: an evaluator's mark, off by default. */
-export function ProjectionDot({ readouts }: { readonly readouts: Readouts }) {
-	const { projected } = useReadout(readouts);
-	if (!projected) return null;
-	return (
-		<div
-			aria-hidden="true"
-			data-projection=""
-			className="pointer-events-none absolute z-[300] size-3 -translate-y-1/2 rounded-full border-2 border-paper bg-link ltr:-translate-x-1/2 rtl:translate-x-1/2"
-			style={{ insetInlineStart: projected.u, top: projected.v }}
-		/>
 	);
 }

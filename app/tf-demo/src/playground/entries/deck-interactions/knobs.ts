@@ -4,19 +4,10 @@
  * the wrong type or out of range falls back to its default, alone.
  */
 
-import { CLOSE_DEFAULTS, CLOSE_KNOBS } from "./cover-close";
 import { SWIPE_DEFAULTS, SWIPE_KNOBS, type SwipeKnobs } from "./swipe-knobs";
-import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
-import { HOVER_DEFAULTS, HOVER_KNOBS } from "./use-deck-hover";
 
-export const VARIANT_KEYS = ["table", "swipe"] as const;
+export const VARIANT_KEYS = ["swipe"] as const;
 export type VariantKey = (typeof VARIANT_KEYS)[number];
-
-const SHOW_TARGETS = ["always", "pickup", "near"] as const;
-type ShowTargets = (typeof SHOW_TARGETS)[number];
-
-type KnobValue = number | boolean | string;
-type KnobValues = Readonly<Record<string, KnobValue>>;
 
 type NumberKnob<K extends string> = {
 	readonly kind: "number";
@@ -45,96 +36,15 @@ export type AnyKnob =
 	| ToggleKnob<string>
 	| ChoiceKnob<string>;
 
-type Knob<V extends KnobValues> = {
-	[K in keyof V & string]: V[K] extends number
-		? NumberKnob<K>
-		: V[K] extends boolean
-			? ToggleKnob<K>
-			: ChoiceKnob<K>;
-}[keyof V & string];
-
-function num<K extends string>(
-	key: K,
-	label: string,
-	min: number,
-	max: number,
-	step: number,
-	unit?: string,
-): NumberKnob<K> {
-	return { kind: "number", key, label, min, max, step, unit };
-}
-
-function toggle<K extends string>(key: K, label: string): ToggleKnob<K> {
-	return { kind: "toggle", key, label };
-}
-
-const FLICK = num("flickSpeed", "Flick speed", 0.1, 3, 0.05, "px/ms");
-
-/** B: the tap, the close, the fan, the lift, the lean, the targets' pull and the return. */
-const TABLE_DEFAULTS = {
-	...TAP_DEFAULTS,
-	...CLOSE_DEFAULTS,
-	...HOVER_DEFAULTS,
-	flickSpeed: 0.5,
-	liftScale: 1.06,
-	pressLift: 0.4,
-	followStiffness: 1400,
-	tiltGain: 6,
-	tiltMax: 10,
-	reflowStaggerMs: 24,
-	targetSize: 64,
-	targetStaggerMs: 30,
-	magnetRadius: 48,
-	slotReach: 96,
-	magnetStrength: 0.35,
-	hopPerPx: 0.12,
-	arcHeight: 40,
-	reducedReturnMs: 280,
-	commitPulse: true,
-	showTargets: "pickup" as ShowTargets,
-};
-export type TableKnobs = typeof TABLE_DEFAULTS;
-
-const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
-	...TAP_KNOBS,
-	...CLOSE_KNOBS,
-	...HOVER_KNOBS,
-	FLICK,
-	num("liftScale", "Lift scale", 1, 1.2, 0.01),
-	num("pressLift", "Press lift", 0, 1, 0.05),
-	num("followStiffness", "Follow stiffness", 100, 2000, 20),
-	num("tiltGain", "Tilt gain", 0, 20, 0.5, "°·ms/px"),
-	num("tiltMax", "Tilt max", 0, 30, 1, "°"),
-	num("reflowStaggerMs", "Reflow stagger", 0, 120, 4, "ms"),
-	num("targetSize", "Target size", 32, 160, 4, "px"),
-	num("targetStaggerMs", "Target stagger", 0, 120, 5, "ms"),
-	num("magnetRadius", "Magnet radius", 0, 160, 4, "px"),
-	num("slotReach", "Slot reach", 24, 240, 4, "px"),
-	num("magnetStrength", "Magnet strength", 0, 1, 0.05),
-	num("hopPerPx", "Return hop per px", 0, 0.5, 0.01),
-	num("arcHeight", "Return hop max", 0, 160, 4, "px"),
-	num("reducedReturnMs", "Reduced return", 80, 480, 10, "ms"),
-	toggle("commitPulse", "Commit pulse"),
-	{
-		kind: "choice",
-		key: "showTargets",
-		label: "Show targets",
-		options: SHOW_TARGETS,
-	},
-];
-
 export type KnobsOf = {
-	readonly table: TableKnobs;
 	readonly swipe: SwipeKnobs;
 };
 
 export const DEFAULTS: KnobsOf = {
-	table: TABLE_DEFAULTS,
 	swipe: SWIPE_DEFAULTS,
 };
 
 export const KNOBS: { readonly [K in VariantKey]: readonly AnyKnob[] } = {
-	table: TABLE_KNOBS,
 	swipe: SWIPE_KNOBS,
 };
 

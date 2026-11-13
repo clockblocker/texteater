@@ -44,7 +44,6 @@ export function createCardMovePlayer({
 	zOf,
 	liftedZ,
 	restZ,
-	onIdle,
 }: {
 	readonly valuesOf: (id: string) => CardValues;
 	/** The stacking of the place `index`, 0 the back. */
@@ -53,15 +52,13 @@ export function createCardMovePlayer({
 	readonly liftedZ: number;
 	/** A Card's stacking at rest in the Deck's order now. */
 	readonly restZ: (id: string) => number;
-	/** Called once no Card is left in a play. */
-	readonly onIdle: () => void;
 }) {
 	const parts = new Map<string, Part>();
 
 	/**
 	 * Lands `id` in the frame its tweens end: each value is set to where
 	 * that frame puts it with no speed left, so a spring started on it
-	 * next (the hover fan, a reflow) starts at rest instead of running on
+	 * next (a reflow, a swipe's fold) starts at rest instead of running on
 	 * past it with the tween's last step.
 	 */
 	function land(id: string, part: Part, move: CardMove, reduced: boolean) {
@@ -71,7 +68,6 @@ export function createCardMovePlayer({
 		for (const channel of CHANNELS) card[channel].jump(rest[channel]);
 		if (reduced) card.o.jump(1);
 		parts.delete(id);
-		if (parts.size === 0) onIdle();
 		return true;
 	}
 
@@ -199,7 +195,6 @@ export function createCardMovePlayer({
 		const card = valuesOf(id);
 		card.z.set(restZ(id));
 		if (part.reduced) card.o.jump(1);
-		if (parts.size === 0) onIdle();
 	}
 
 	return {
@@ -211,9 +206,7 @@ export function createCardMovePlayer({
 		/** Drops every part, for a Deck about to be placed afresh. */
 		clear: () => {
 			for (const part of parts.values()) part.cancel();
-			const busy = parts.size > 0;
 			parts.clear();
-			if (busy) onIdle();
 		},
 		has: (id: string) => parts.has(id),
 		get size() {

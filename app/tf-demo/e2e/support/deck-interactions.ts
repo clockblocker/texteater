@@ -3,7 +3,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 /**
  * Locators, gestures and frame sampling for the Deck interactions spec,
- * which drives the prototype's B and D variants in the playground.
+ * which drives the prototype's D variant in the playground.
  */
 
 export const inspector = (page: Page) =>
@@ -14,34 +14,6 @@ export const front = (page: Page) =>
 
 export async function chooseVariant(page: Page, name: string) {
 	await inspector(page).getByRole("button", { name, exact: true }).click();
-}
-
-/** Presses `card` near its top, moves to `to` slowly, rests, and lets go. */
-export async function carry(
-	page: Page,
-	card: Locator,
-	to: (start: { x: number; y: number }) => Promise<{ x: number; y: number }>,
-) {
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	const start = { x: box.x + box.width / 2, y: box.y + 24 };
-	await page.mouse.move(start.x, start.y);
-	await page.mouse.down();
-	await page.mouse.move(start.x + 10, start.y + 10, { steps: 2 });
-	const end = await to(start);
-	await page.mouse.move(end.x, end.y, { steps: 25 });
-	await page.waitForTimeout(150);
-	await page.mouse.up();
-}
-
-/** The middle of a B target, once a carried Card has shown it. */
-export async function targetCentre(page: Page, target: "tray" | "pad") {
-	const box = await frame(page)
-		.locator(`[data-target="${target}"]`)
-		.last()
-		.boundingBox();
-	if (!box) throw new Error(`Missing ${target} geometry`);
-	return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
 
 /** Sets one of the variant's range knobs in the inspector. */
@@ -69,56 +41,6 @@ export async function reduceMotion(page: Page) {
 export async function redeal(page: Page) {
 	await inspector(page).getByRole("button", { name: "Re-deal" }).click();
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
-}
-
-/** Presses `card` near its top and moves past the slop: the Card is in hand. */
-export async function lift(page: Page, card: Locator) {
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	const start = { x: box.x + box.width / 2, y: box.y + 24 };
-	await page.mouse.move(start.x, start.y);
-	await page.mouse.down();
-	await page.mouse.move(start.x + 10, start.y + 10, { steps: 2 });
-	return start;
-}
-
-/** The Card's rotation in degrees, read from its computed transform. */
-export function rotation(card: Locator) {
-	return card.evaluate((element) => {
-		const matrix = new DOMMatrixReadOnly(
-			getComputedStyle(element).transform,
-		);
-		return (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI;
-	});
-}
-
-/** Samples where `card`'s middle is, every frame for `ms`, as a share of the frame's width. */
-export function farthestOut(card: Locator, ms: number) {
-	return card.evaluate(
-		(element, duration) =>
-			new Promise<number>((resolve) => {
-				const frameBox = element
-					.closest("[data-deck-frame]")
-					?.getBoundingClientRect();
-				if (!frameBox) return resolve(Number.POSITIVE_INFINITY);
-				let worst = 0;
-				const end = performance.now() + duration;
-				const step = () => {
-					const box = element.getBoundingClientRect();
-					const middle = box.left + box.width / 2;
-					const out = Math.max(
-						frameBox.left - middle,
-						middle - frameBox.right,
-						0,
-					);
-					worst = Math.max(worst, out / frameBox.width);
-					if (performance.now() < end) requestAnimationFrame(step);
-					else resolve(worst);
-				};
-				requestAnimationFrame(step);
-			}),
-		ms,
-	);
 }
 
 export const panel = (page: Page) => frame(page).locator("[data-panel]");

@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import type { VariantProps } from "./deck-cards";
 import { readKnobs, type VariantKey } from "./knobs";
 import { SwipeVariant } from "./swipe";
-import { TableVariant } from "./table";
 
 type Common = Omit<VariantProps<never>, "knobs">;
 
@@ -17,17 +16,8 @@ export type VariantEntry = {
 	) => ReactNode;
 };
 
-/** The variants the page offers, in the spec's order: B and D are kept. */
+/** The variants the page offers, in the spec's order: D is kept; B, the Table, was retired. */
 export const VARIANTS: readonly VariantEntry[] = [
-	{
-		key: "table",
-		name: "B · Table",
-		summary:
-			"Zones are places. The Deck fans under the pointer; a picked-up Card trails the hand on a stiff spring, the Deck closes its gap, and three targets appear: the slot it left, the tray (dismiss) and the pad (open). Near a target the Card is pulled in.",
-		render: (common, stored) => (
-			<TableVariant {...common} knobs={readKnobs("table", stored)} />
-		),
-	},
 	{
 		key: "swipe",
 		name: "D · Swipe actions",

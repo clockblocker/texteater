@@ -216,7 +216,6 @@ export function SwipeVariant({
 		readouts.set({
 			zone: `${verdict.zone} · ${verdict.commits ? "will commit" : verdict.reason}`,
 			velocity: { x: drag.vx, y: drag.vy },
-			tilt: 0,
 		});
 	}
 

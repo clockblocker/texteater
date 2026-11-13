@@ -2,27 +2,22 @@
 import { expect, type Page, test } from "@playwright/test";
 import {
 	anchors,
-	carry,
 	chooseVariant,
-	farthestOut,
 	frame,
 	front,
 	inspector,
 	landed,
 	lastRelease,
 	layerOpacity,
-	lift,
 	type Moment,
 	panel,
 	pull,
 	redeal,
 	reduceMotion,
-	rotation,
 	shares,
 	spread,
 	strayed,
 	styles,
-	targetCentre,
 	topCardAt,
 	watchApart,
 	watchRelease,
@@ -37,14 +32,14 @@ import { tapSpecs } from "./support/deck-interactions-tap-specs";
 
 /**
  * The Deck interactions prototype: every variant behind the inspector's
- * switch, and in B and D a drag that closes the Deck and one that opens
- * the Card. Releases are slow, so none of them reads as a flick, except
- * where a case judges the motion a release while moving starts.
+ * switch, now D alone, and in D a swipe that closes the Deck and one that
+ * opens the Card. Releases are slow, so none of them reads as a flick,
+ * except where a case judges the motion a release while moving starts.
  */
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
-const VARIANTS = ["B · Table", "D · Swipe actions"];
+const VARIANTS = ["D · Swipe actions"];
 
 const card = (page: Page, index: number) =>
 	frame(page).locator("[data-card-id]").nth(index);
@@ -64,20 +59,6 @@ test("every variant deals the Deck, with nothing but Cards at rest", async ({
 	}
 });
 
-test("B: the tray closes the Deck, the pad opens the Card", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	await carry(page, front(page), () => targetCentre(page, "tray"));
-	await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
-	await expect(
-		inspector(page).locator('[data-readout="last release"]'),
-	).toHaveText("dismiss · tray");
-	await redeal(page);
-	await carry(page, front(page), () => targetCentre(page, "pad"));
-	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
-});
-
 test("the Card in hand never goes transparent", async ({ page }) => {
 	for (const name of VARIANTS) {
 		await chooseVariant(page, name);
@@ -93,114 +74,6 @@ test("the Card in hand never goes transparent", async ({ page }) => {
 		await page.mouse.up();
 		await redeal(page);
 	}
-});
-
-test("B: a Card just lifted lights nothing and wears no stamp", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	await lift(page, front(page));
-	await expect(frame(page).locator('[data-target="pad"]')).toBeVisible();
-	await page.waitForTimeout(200);
-	await expect(frame(page).locator("[data-target][data-active]")).toHaveCount(
-		0,
-	);
-	await expect(frame(page).locator("[data-stamp]")).toHaveCount(0);
-	await page.mouse.up();
-});
-
-test("B: only the target under the hand lights, and the release does what it shows", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	const start = await lift(page, front(page));
-	const pad = await targetCentre(page, "pad");
-	await page.mouse.move((start.x + pad.x) / 2, (start.y + pad.y) / 2, {
-		steps: 12,
-	});
-	await expect(frame(page).locator("[data-target][data-active]")).toHaveCount(
-		0,
-	);
-	await page.mouse.move(pad.x, pad.y, { steps: 12 });
-	await expect(
-		frame(page).locator('[data-target="pad"][data-active]'),
-	).toHaveCount(1);
-	await expect(frame(page).locator('[data-stamp="expand"]')).toHaveCount(1);
-	await page.mouse.up();
-	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
-});
-
-test("B: a Card dropped over nothing comes home without leaving the frame", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	const card = front(page);
-	const id = await card.getAttribute("data-card-id");
-	const start = await lift(page, card);
-	await page.mouse.move(start.x + 420, start.y + 260, { steps: 20 });
-	await page.waitForTimeout(150);
-	const home = frame(page).locator(`[data-card-id="${id ?? ""}"]`);
-	const sample = farthestOut(home, 900);
-	await page.mouse.up();
-	expect(await sample).toBe(0);
-	await expect(
-		inspector(page).locator('[data-readout="last release"]'),
-	).toHaveText("back · nothing");
-});
-
-test("B: a fast drop on the pad opens the Card in a straight line, never past the Cover or on the way the hand went", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	const card = front(page);
-	const start = await lift(page, card);
-	const pad = await targetCentre(page, "pad");
-	const watched = await watchRelease(card, 700);
-	/* a throw onto the pad, let go at speed toward inline-end and up */
-	for (const step of [1, 2, 3, 4, 5, 6]) {
-		await page.mouse.move(
-			start.x + ((pad.x - start.x) * step) / 6,
-			start.y + ((pad.y - start.y) * step) / 6,
-		);
-		if (step < 6) await page.waitForTimeout(16);
-	}
-	await page.mouse.up();
-	const moments = await watched();
-	const first = moments[0];
-	const last = moments.at(-1);
-	if (!first || !last) throw new Error("Nothing sampled");
-	await expect(lastRelease(page)).toHaveText("expand · pad");
-	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
-	/* The Card is let go leaning and opens into the app's Cover box, which
-	   spans its Pane: as the lean relaxes and the box grows, a corner of
-	   its drawn box swings, so an edge is no measure of the line. What
-	   goes straight is its middle, and its size only grows. */
-	const paths = {
-		across: (f: Moment) => f.mid,
-		down: (f: Moment) => (f.top + f.bottom) / 2,
-		width: (f: Moment) => f.right - f.x,
-		height: (f: Moment) => f.bottom - f.top,
-	};
-	/* how far a path strays outside the span from where the Card was let go to where it opens */
-	const stray = (of: (moment: Moment) => number) => {
-		const low = Math.min(of(first), of(last));
-		const high = Math.max(of(first), of(last));
-		return Math.max(
-			...moments.map((f) => Math.max(low - of(f), of(f) - high)),
-		);
-	};
-	for (const [name, of] of Object.entries(paths))
-		expect(stray(of), name).toBeLessThanOrEqual(0.5);
-});
-
-test("B: the lean relaxes once the hand rests", async ({ page }) => {
-	await chooseVariant(page, "B · Table");
-	const card = front(page);
-	const start = await lift(page, card);
-	await page.mouse.move(start.x + 260, start.y + 20, { steps: 6 });
-	await page.waitForTimeout(600);
-	expect(Math.abs(await rotation(card))).toBeLessThan(0.5);
-	await page.mouse.up();
 });
 
 test("D: short of the threshold the action shows, and a release puts the Card back", async ({
@@ -449,24 +322,6 @@ test("D: toward Close deck the rest of the Deck folds in at once onto any Card, 
 
 swipeDirectionSpecs();
 swipeUpSpecs();
-
-test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	const card = front(page);
-	const back = frame(page).locator("[data-card-id]").first();
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	await page.mouse.move(box.x + box.width / 2, box.y + 40, { steps: 4 });
-	await expect.poll(() => rotation(back)).toBeLessThan(-11);
-	await page.mouse.down();
-	await expect
-		.poll(async () => Math.abs(await rotation(back)))
-		.toBeLessThan(0.5);
-	await page.mouse.up();
-	await expect.poll(() => rotation(back)).toBeLessThan(-11);
-});
 
 test("D: hovering any Card changes no Card's transform, and lights only its border until a press", async ({
 	page,

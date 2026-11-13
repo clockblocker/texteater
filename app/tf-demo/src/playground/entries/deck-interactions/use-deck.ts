@@ -3,11 +3,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createCardMovePlayer } from "./card-move-player";
 import { CLOSE_DEFAULTS, type CloseKnobs, coverClose } from "./cover-close";
 import { approachRate, type Point, type Rect, type Slot } from "./geometry";
-import { coverRect, exitOffset, type Frame } from "./layout";
+import { coverRect, type Frame } from "./layout";
 import {
 	type MotionContext,
-	REDUCED_EXIT_MS,
-	REDUCED_EXIT_PX,
 	SPRINGS,
 	type SpringSpec,
 	settle,
@@ -31,8 +29,6 @@ export type CardValues = {
 	/** Only a deal, a reduced exit or a reduced reorder fades a Card; a Card in hand is solid. */
 	readonly o: MotionValue<number>;
 	readonly z: MotionValue<number>;
-	readonly stamp: MotionValue<number>;
-	readonly glow: MotionValue<number>;
 };
 
 /**
@@ -51,18 +47,8 @@ function makeValues(slot?: Slot, z = 1): CardValues {
 		lift: motionValue(0),
 		o: motionValue(1),
 		z: motionValue(z),
-		stamp: motionValue(0),
-		glow: motionValue(0),
 	};
 }
-
-type MarkTone = "dismiss" | "expand" | "back";
-/** The label stamped on a Card in hand, and the edge that glows. */
-export type Mark = {
-	readonly label: string;
-	readonly tone: MarkTone;
-	readonly edge: "start" | "end" | "top" | "bottom";
-};
 
 /** What a glide moves: everything a slot places. */
 const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
@@ -109,9 +95,6 @@ export function useDeck({
 	const [order, setOrder] = useState<readonly string[]>(initialOrder);
 	const [status, setStatus] = useState<DeckStatus>("dealt");
 	const [expanded, setExpanded] = useState<string | null>(null);
-	const [marks, setMarks] = useState<Readonly<Record<string, Mark | null>>>(
-		{},
-	);
 	/** The whole Deck's opacity, as one flattened layer: only D's Close deck lowers it. */
 	const [opacity] = useState(() => motionValue(1));
 	const [values] = useState(() => {
@@ -134,15 +117,12 @@ export function useDeck({
 	/* the order a tap reads: a second tap can come before the render */
 	const orderRef = useRef(order);
 	orderRef.current = order;
-	/** Whether a tap's shuffle or a close is still moving Cards: the hover fan waits for it. */
-	const [playing, setPlaying] = useState(false);
 	const [player] = useState(() =>
 		createCardMovePlayer({
 			valuesOf: (id) => values.get(id) ?? makeValues(),
 			zOf: (index) => BASE_Z + index,
 			liftedZ: LIFTED_Z,
 			restZ: (id) => BASE_Z + orderRef.current.indexOf(id),
-			onIdle: () => setPlaying(false),
 		}),
 	);
 	/* a Deck switched away mid-move leaves nothing cued behind it */
@@ -280,45 +260,6 @@ export function useDeck({
 		busy.current.delete(id);
 	}, []);
 
-	const mark = useCallback((id: string, next: Mark | null) => {
-		setMarks((current) => {
-			const was = current[id] ?? null;
-			if (
-				was?.label === next?.label &&
-				was?.tone === next?.tone &&
-				was?.edge === next?.edge
-			)
-				return current;
-			return { ...current, [id]: next };
-		});
-	}, []);
-
-	const clearMark = useCallback(
-		(id: string) => {
-			const card = valuesOf(id);
-			settle(card.stamp, 0, SPRINGS.settle, motionRef.current);
-			settle(card.glow, 0, SPRINGS.settle, motionRef.current);
-			mark(id, null);
-		},
-		[valuesOf, mark],
-	);
-
-	/** Takes `id` back to its slot and lets the layout have it again. */
-	const putBack = useCallback(
-		async (
-			id: string,
-			spec: SpringSpec = SPRINGS.settle,
-			velocity?: Point,
-		) => {
-			const slot = slotOf(id);
-			clearMark(id);
-			if (slot) await place(id, slot, spec, velocity);
-			release(id);
-			valuesOf(id).z.set(BASE_Z + order.indexOf(id));
-		},
-		[slotOf, clearMark, place, release, valuesOf, order],
-	);
-
 	/**
 	 * Brings `id` to the front; a Card already there stays as it is. With a
 	 * pull-out, the Cards that change places play deck-of-cards' shuffle
@@ -346,7 +287,6 @@ export function useDeck({
 					plan.moves.filter((move) => !busy.current.has(move.id)),
 					motionRef.current,
 				);
-				if (player.size > 0) setPlaying(true);
 			} else player.takeAll();
 			setOrder(next);
 		},
@@ -362,7 +302,6 @@ export function useDeck({
 	const expand = useCallback(
 		async (id: string, velocity?: Point) => {
 			player.take(id);
-			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
 			setExpanded(id);
@@ -374,7 +313,7 @@ export function useDeck({
 				velocity,
 			);
 		},
-		[clearMark, valuesOf, readouts, glide, frame, player],
+		[valuesOf, readouts, glide, frame, player],
 	);
 
 	/**
@@ -401,7 +340,6 @@ export function useDeck({
 		player.play([move], motionRef.current, () =>
 			readouts.set({ phase: "rest" }),
 		);
-		setPlaying(true);
 	}, [expanded, readouts, slots, close, player]);
 
 	/**
@@ -413,86 +351,12 @@ export function useDeck({
 			player.takeAll();
 			setStatus("leaving");
 			readouts.set({ phase: "settling" });
-			for (const id of order) clearMark(id);
 			await exit();
 			busy.current.clear();
 			setStatus("gone");
 			readouts.set({ phase: "gone", zone: null });
 		},
-		[order, clearMark, readouts, player],
-	);
-
-	/**
-	 * The Deck leaves along `direction` (logical, unit length): the lead
-	 * Card first with the hand's velocity, the rest after it `stagger` ms
-	 * apart, each keeping its own speed. A reduced exit moves 24 px while
-	 * it fades.
-	 */
-	const dismiss = useCallback(
-		({
-			direction,
-			lead,
-			stagger,
-			spec = SPRINGS.fly,
-			velocity,
-		}: {
-			readonly direction: Point;
-			readonly lead: string | null;
-			readonly stagger: number;
-			readonly spec?: SpringSpec;
-			readonly velocity?: Point;
-		}) => {
-			const context = motionRef.current;
-			const rest = [...order].reverse().filter((id) => id !== lead);
-			const leaving = lead ? [lead, ...rest] : rest;
-			const reach = context.reduce
-				? {
-						u: direction.u * REDUCED_EXIT_PX,
-						v: direction.v * REDUCED_EXIT_PX,
-					}
-				: exitOffset(frame, direction);
-			return leave(() =>
-				Promise.all(
-					leaving.map(async (id, index) => {
-						const card = valuesOf(id);
-						/* a Card not held back starts at once: a timer of 0
-						   would start each a task apart, after the render */
-						if (index * stagger > 0)
-							await wait(index * stagger, context);
-						const to = {
-							u: card.u.get() + reach.u,
-							v: card.v.get() + reach.v,
-						};
-						const own = id === lead ? velocity : undefined;
-						if (context.reduce) {
-							await Promise.all([
-								tweenTo(card.u, to.u, REDUCED_EXIT_MS, context),
-								tweenTo(card.v, to.v, REDUCED_EXIT_MS, context),
-								tweenTo(card.o, 0, REDUCED_EXIT_MS, context),
-							]);
-							return;
-						}
-						await Promise.all([
-							settle(
-								card.u,
-								to.u,
-								spec,
-								context,
-								own && own.u * 1000,
-							),
-							settle(
-								card.v,
-								to.v,
-								spec,
-								context,
-								own && own.v * 1000,
-							),
-						]);
-					}),
-				),
-			);
-		},
-		[order, frame, valuesOf, leave],
+		[readouts, player],
 	);
 
 	/** Deals the Deck again, in its first order, rising into place. */
@@ -503,7 +367,6 @@ export function useDeck({
 		setExpanded(null);
 		orderRef.current = initialOrder;
 		setOrder(initialOrder);
-		setMarks({});
 		const fresh = layout(frame, initialOrder.length);
 		/* jumps, not sets: the Deck is gone, so nothing visibly teleports,
 		   and a set would hand the next spring the jump as velocity */
@@ -519,8 +382,6 @@ export function useDeck({
 			card.r.jump(slot.r);
 			card.s.jump(slot.s);
 			card.lift.jump(0);
-			card.stamp.jump(0);
-			card.glow.jump(0);
 			card.o.jump(0);
 			card.z.jump(BASE_Z + index);
 			void wait(index * 40, context).then(() => {
@@ -530,7 +391,7 @@ export function useDeck({
 			});
 		});
 		setStatus("dealt");
-		readouts.set({ phase: "rest", zone: null, tilt: 0 });
+		readouts.set({ phase: "rest", zone: null });
 	}, [layout, frame, valuesOf, readouts, opacity, initialOrder, player]);
 
 	const dealt = useRef(deal);
@@ -545,8 +406,6 @@ export function useDeck({
 		order,
 		status,
 		expanded,
-		playing,
-		marks,
 		slots,
 		opacity,
 		valuesOf,
@@ -557,13 +416,9 @@ export function useDeck({
 		isBusy,
 		isPlaying: player.has,
 		restZ,
-		mark,
-		clearMark,
-		putBack,
 		bringToFront,
 		expand,
 		closeCover,
-		dismiss,
 		leave,
 		redeal,
 		motion: motionRef,

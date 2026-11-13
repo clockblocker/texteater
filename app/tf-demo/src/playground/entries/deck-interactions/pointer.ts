@@ -130,18 +130,3 @@ export function createTapCounter(
 		return double ? first.id : null;
 	};
 }
-
-/** Where a pointer is in the Deck's frame, in logical px. */
-export function framePoint(
-	element: Element,
-	clientX: number,
-	clientY: number,
-	rtl: boolean,
-): { readonly u: number; readonly v: number } {
-	const frame = element.closest("[data-deck-frame]") ?? element;
-	const box = frame.getBoundingClientRect();
-	return {
-		u: rtl ? box.right - clientX : clientX - box.left,
-		v: clientY - box.top,
-	};
-}

@@ -75,7 +75,6 @@ function ReadoutList({ readouts }: { readonly readouts: Readouts }) {
 			"Velocity",
 			`${readout.velocity.x.toFixed(2)}, ${readout.velocity.y.toFixed(2)} px/ms`,
 		],
-		["Tilt", `${readout.tilt.toFixed(1)}°`],
 		["Last release", readout.outcome ?? "–"],
 	];
 	return (
@@ -121,11 +120,11 @@ export function InspectorPanel({
 		<>
 			<InspectorSection>
 				<p className="text-ink-soft">
-					One Deck, several ways to handle it. Every variant does the
-					same things: carry a Card, put it back on the Deck, drop it
-					to close the Deck or to open the Card, flick the Deck away,
-					tap a Card behind the front one to shuffle it to the front,
-					and double-tap a Card to open it.
+					One Deck, and the way to handle it. Swipe a Card toward
+					inline-start or down to close the Deck, toward inline-end or
+					up to open the Card, and short of the threshold let go to
+					put it back; tap a Card behind the front one to shuffle it
+					to the front, and double-tap a Card to open it.
 				</p>
 			</InspectorSection>
 			<InspectorSection title="Variant">
@@ -183,16 +182,6 @@ export function InspectorPanel({
 						onSettings({ rtl: direction === "rtl" })
 					}
 				/>
-				<label className="flex items-center justify-between gap-3 text-ink-soft">
-					Projected endpoint dot
-					<input
-						type="checkbox"
-						checked={settings.showProjection}
-						onChange={(event) =>
-							onSettings({ showProjection: event.target.checked })
-						}
-					/>
-				</label>
 			</InspectorSection>
 			<InspectorSection title={`Knobs · ${entry.name}`}>
 				{KNOBS[entry.key].map((knob) => (

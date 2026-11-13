@@ -101,7 +101,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck interactions",
 		icon: GalleryHorizontalEndIcon,
 		description:
-			"Two ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, B (Table) and D (Swipe actions), behind one switch, on one click's Deck of real Notes from the fake db, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
+			"D (Swipe actions), the way to put a Card back, close the Deck and open the Card, as iOS Mail's full swipe, on one click's Deck of real Notes from the fake db, with its knobs, slow-mo, reduced motion and RTL in the inspector.",
 		render: () => <DeckInteractions />,
 	},
 	{

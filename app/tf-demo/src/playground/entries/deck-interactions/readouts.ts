@@ -1,5 +1,4 @@
 import { useSyncExternalStore } from "react";
-import type { Point } from "./geometry";
 
 type Phase = "rest" | "pressed" | "carrying" | "settling" | "expanded" | "gone";
 
@@ -9,20 +8,15 @@ export type Readout = {
 	readonly zone: string | null;
 	/** Physical px/ms. */
 	readonly velocity: { readonly x: number; readonly y: number };
-	readonly tilt: number;
 	/** The last release's decision and its reason. */
 	readonly outcome: string | null;
-	/** The projected endpoint of the Card's centre, logical, in the frame. */
-	readonly projected: Point | null;
 };
 
 const REST: Readout = {
 	phase: "rest",
 	zone: null,
 	velocity: { x: 0, y: 0 },
-	tilt: 0,
 	outcome: null,
-	projected: null,
 };
 
 /**

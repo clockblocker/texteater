@@ -14,12 +14,8 @@ import { formLayout, type PresentationForm } from "./form";
  */
 const PAPER =
 	"flex flex-col overflow-hidden border bg-paper [contain:layout_paint]";
-/**
- * The paper's corners; a Ground fills its Pane, so it has none of its own.
- * What is drawn in a Card's shape beside it, such as the outline of the
- * slot it left, takes them from here.
- */
-export const PAPER_CORNERS = "rounded-[0.9rem]";
+/** The paper's corners; a Ground fills its Pane, so it has none of its own. */
+const PAPER_CORNERS = "rounded-[0.9rem]";
 /** The corners of what is drawn inside a box's border, flush with it. */
 export const PAPER_INNER_CORNERS = "rounded-[calc(0.9rem_-_1px)]";
 /**

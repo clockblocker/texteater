@@ -136,7 +136,7 @@ for (const motion of ["no-preference", "reduce"] as const) {
 			expect(app.body.notePadding).toBe("0px 40px 56px");
 		});
 
-		for (const variant of ["B · Table", "D · Swipe actions"]) {
+		for (const variant of ["D · Swipe actions"]) {
 			test(`${variant}: a Card of Deck interactions is the same box, Heading row and Body as in the Notes gallery`, async ({
 				page,
 			}) => {

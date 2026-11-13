@@ -21,7 +21,6 @@ const StoredSettings = Schema.Struct({
 	reducedMotion: lenient(Schema.Literals(REDUCED_MOTION)),
 	timeScale: lenient(Schema.Literals(TIME_SCALES)),
 	rtl: lenient(Schema.Boolean),
-	showProjection: lenient(Schema.Boolean),
 	knobs: lenient(
 		Schema.Record(
 			Schema.String,
@@ -40,8 +39,6 @@ export type Settings = {
 	readonly reducedMotion: ReducedMotion;
 	readonly timeScale: TimeScale;
 	readonly rtl: boolean;
-	/** An evaluator's mark on the surface, so it starts off (ADR 0001). */
-	readonly showProjection: boolean;
 	readonly knobs: Readonly<
 		Record<string, Readonly<Record<string, number | boolean | string>>>
 	>;
@@ -49,11 +46,10 @@ export type Settings = {
 
 export function settingsOf(stored: StoredSettings): Settings {
 	return {
-		variant: stored.variant ?? "table",
+		variant: stored.variant ?? "swipe",
 		reducedMotion: stored.reducedMotion ?? "off",
 		timeScale: stored.timeScale ?? 1,
 		rtl: stored.rtl ?? false,
-		showProjection: stored.showProjection ?? false,
 		knobs: stored.knobs ?? {},
 	};
 }
