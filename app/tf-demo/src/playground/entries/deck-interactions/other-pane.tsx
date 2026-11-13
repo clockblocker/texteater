@@ -1,29 +1,10 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
 import { DISSOLVE_MS } from "./card-move";
 import type { Rect } from "./geometry";
 import { type MotionContext, transition } from "./motion-kit";
-import type { Deck } from "./use-deck";
 
 /** How long the stand-in Pane takes to come in as a Card opens in it, and to go as it closes. */
 const PANE_FADE_MS = 160;
-
-/**
- * Which Card is open in the other Pane: set as a swipe commits there, and
- * none once that Card's Cover closes, however it closes (its ×, its ←,
- * Escape). A Card opened into the Cover by other means is not in it.
- */
-export function useOtherPane(deck: Pick<Deck, "expanded">) {
-	const [held, setHeld] = useState<string | null>(null);
-	useEffect(() => {
-		if (deck.expanded === null) setHeld(null);
-	}, [deck.expanded]);
-	return {
-		/** The Card open there, if one is. */
-		holds: held !== null && deck.expanded === held ? held : null,
-		open: setHeld,
-	};
-}
 
 /**
  * The playground has no Panes, so this stands in for the other one: the

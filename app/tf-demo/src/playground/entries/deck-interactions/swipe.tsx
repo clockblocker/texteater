@@ -9,7 +9,7 @@ import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
 import { drawn, type Slot } from "./geometry";
 import { otherCoverRect, panesOf, pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
-import { OtherPane, useOtherPane } from "./other-pane";
+import { OtherPane } from "./other-pane";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
 import { type Anchor, type Binding, bindDeck } from "./swipe-collapse";
 import {
@@ -132,7 +132,6 @@ export function SwipeVariant({
 		close: knobs,
 		narrow: width === "phone",
 	});
-	const otherPane = useOtherPane(deck);
 	const [held, setHeld] = useState<string | null>(null);
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);
@@ -267,7 +266,8 @@ export function SwipeVariant({
 	 * never overshoots. Its time constant is a third of the fade, or
 	 * shorter where the hand was fast enough to carry the Deck further
 	 * than `driftPx`. A hand at rest or turned back carries nothing on;
-	 * reduced, the Deck only fades.
+	 * reduced, the Deck only fades. A Card open in the other Pane was not
+	 * in the fold and stays put there while it fades with the layer.
 	 */
 	async function vanish(axis: Axis, sign: -1 | 1, speed: number) {
 		const fade = animate(
@@ -290,7 +290,10 @@ export function SwipeVariant({
 							stiffness: rate * rate,
 							damping: 2 * rate,
 						};
-						return deck.order.map((id) => {
+						const folded = deck.order.filter(
+							(id) => id !== deck.beside,
+						);
+						return folded.map((id) => {
 							const value = deck.valuesOf(id)[key];
 							const to = value.get() + (sign * way) / rate;
 							return settle(value, to, spec, motion, sign * way);
@@ -338,7 +341,9 @@ export function SwipeVariant({
 	 * still covered goes in that frame, before the Card can uncover it, and
 	 * the Card, opening into the Cover, which holds its slot, comes back
 	 * over the strip while it fades. Left to the Card's values, the panel
-	 * would rise over the Deck with it and stretch toward the Cover.
+	 * would rise over the Deck with it and stretch toward the Cover. The
+	 * rest of the Deck, which fades out under the Cover, waits for the
+	 * panel to go first, so it never uncovers it.
 	 */
 	async function commit(
 		g: Gesture,
@@ -372,8 +377,7 @@ export function SwipeVariant({
 				verdict.zone === "other-pane" && panes.other
 					? otherCoverRect(panes.other)
 					: undefined;
-			if (into) otherPane.open(g.id);
-			await deck.expand(g.id, velocity, into);
+			await deck.expand(g.id, velocity, into, fade.finished);
 			return;
 		}
 		const sign = pull.get() < 0 ? -1 : 1;
@@ -502,7 +506,7 @@ export function SwipeVariant({
 		<>
 			<OtherPane
 				pane={panes.other}
-				holds={otherPane.holds !== null}
+				holds={deck.beside !== null}
 				motion={motion}
 			/>
 			<DeckLayer

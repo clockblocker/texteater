@@ -35,6 +35,7 @@ export function CardView({
 	values,
 	rtl,
 	held,
+	aside,
 	highlight,
 	onPointerDown,
 }: {
@@ -50,6 +51,8 @@ export function CardView({
 	readonly values: CardValues;
 	readonly rtl: boolean;
 	readonly held: boolean;
+	/** Whether it is open in another Pane, not over its Deck. */
+	readonly aside?: boolean;
 	/** Whether hovering the Card lights its border while its layer is lit; left out, it never does. */
 	readonly highlight?: boolean;
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -60,6 +63,10 @@ export function CardView({
 	const boxShadow = useTransform(values.lift, (lift) =>
 		paperShadow(form, lift),
 	);
+	const opacity = useTransform(
+		[values.o, values.veil],
+		([own = 1, veil = 1]: number[]) => own * veil,
+	);
 	return (
 		<PresentationBox
 			as={motion.article}
@@ -69,6 +76,7 @@ export function CardView({
 			data-card-id={id}
 			data-held={held || undefined}
 			data-expanded={expanded || undefined}
+			data-aside={aside || undefined}
 			onPointerDown={onPointerDown}
 			style={{
 				insetInlineStart: 0,
@@ -79,7 +87,7 @@ export function CardView({
 				height: values.h,
 				rotate,
 				scale: values.s,
-				opacity: values.o,
+				opacity,
 				zIndex: values.z,
 				boxShadow,
 			}}

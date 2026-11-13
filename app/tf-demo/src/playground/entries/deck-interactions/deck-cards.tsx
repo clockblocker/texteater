@@ -37,12 +37,14 @@ type CardHandler = (id: string, event: ReactPointerEvent<HTMLElement>) => void;
 /** The handlers every Card shares: the same functions on every render. */
 type Handlers = {
 	readonly down: CardHandler;
-	readonly close: () => void;
+	readonly close: (id: string) => void;
 };
 
 /**
  * The Deck's Cards, back to front, each wired to the variant's gesture.
- * Escape or the Cover's ← or × puts an expanded Card back. Each Card is
+ * A Card's ← or × puts it back from its Cover, and Escape the one over
+ * the Deck, or else the one in the other Pane. A Card in the other Pane
+ * takes no press, and leaves the rest free to take theirs. Each Card is
  * memoised and its handlers stay the same across renders, so a render of
  * the Deck re-renders only the Cards whose own props change: a reorder
  * moves their elements and re-renders none of them. That is why every
@@ -67,24 +69,29 @@ export function DeckCards({
 	readonly highlight?: boolean;
 	readonly onDown: CardHandler;
 }) {
-	const { expanded, closeCover } = deck;
+	const { expanded, beside, closeCover } = deck;
 	useEffect(() => {
-		if (!expanded) return;
+		if (!expanded && !beside) return;
+		/* on the document, so it runs before the Inspector's window
+		   listener, which leaves an Escape that closed a Cover alone */
 		const onKey = (event: KeyboardEvent) => {
-			if (event.key === "Escape") closeCover();
+			if (event.key !== "Escape") return;
+			event.preventDefault();
+			closeCover();
 		};
-		window.addEventListener("keydown", onKey);
-		return () => window.removeEventListener("keydown", onKey);
-	}, [expanded, closeCover]);
-	const latest = useRef({ onDown, closeCover, expanded });
-	latest.current = { onDown, closeCover, expanded };
+		document.addEventListener("keydown", onKey);
+		return () => document.removeEventListener("keydown", onKey);
+	}, [expanded, beside, closeCover]);
+	const latest = useRef({ onDown, closeCover, expanded, beside });
+	latest.current = { onDown, closeCover, expanded, beside };
 	const [handlers] = useState<Handlers>(() => ({
 		down: (id, event) => {
 			if (event.button !== 0 || latest.current.expanded) return;
+			if (id === latest.current.beside) return;
 			if ((event.target as HTMLElement).closest("button")) return;
 			latest.current.onDown(id, event);
 		},
-		close: () => latest.current.closeCover(),
+		close: (id) => latest.current.closeCover(id),
 	}));
 	if (deck.status === "gone") return null;
 	return deck.order
@@ -99,7 +106,8 @@ export function DeckCards({
 				values={deck.valuesOf(card.id)}
 				rtl={rtl}
 				held={held === card.id}
-				expanded={expanded === card.id}
+				expanded={expanded === card.id || beside === card.id}
+				aside={beside === card.id}
 				highlight={highlight}
 				handlers={handlers}
 			/>
@@ -112,6 +120,7 @@ const DeckCard = memo(function DeckCard({
 	rtl,
 	held,
 	expanded,
+	aside,
 	highlight,
 	handlers,
 }: {
@@ -120,6 +129,7 @@ const DeckCard = memo(function DeckCard({
 	readonly rtl: boolean;
 	readonly held: boolean;
 	readonly expanded: boolean;
+	readonly aside: boolean;
 	readonly highlight: boolean | undefined;
 	readonly handlers: Handlers;
 }) {
@@ -138,6 +148,7 @@ const DeckCard = memo(function DeckCard({
 			values={values}
 			rtl={rtl}
 			held={held}
+			aside={aside}
 			highlight={highlight}
 			onPointerDown={(event) => handlers.down(id, event)}
 		>
@@ -150,12 +161,12 @@ const DeckCard = memo(function DeckCard({
 					back: {
 						label: "Collapse back to card",
 						enabled: true,
-						onPress: handlers.close,
+						onPress: () => handlers.close(id),
 					},
 					clear: {
 						label: "Close",
 						enabled: true,
-						onPress: handlers.close,
+						onPress: () => handlers.close(id),
 					},
 				}}
 			/>

@@ -73,16 +73,45 @@ export function anchors(page: Page) {
 
 type Anchor = { u: number; v: number };
 
-/** Waits until a deal has landed: every Card opaque, and none moving between two looks. */
+/**
+ * Resolves after `count` more frames have drawn: a page too busy to draw
+ * in a wait would otherwise show the Cards where the last frame left
+ * them, as if they had stopped there.
+ */
+function frames(page: Page, count: number) {
+	return page.evaluate(
+		(left) =>
+			new Promise<void>((resolve) => {
+				const step = (n: number) =>
+					n === 0
+						? resolve()
+						: requestAnimationFrame(() => step(n - 1));
+				step(left);
+			}),
+		count,
+	);
+}
+
+/**
+ * Waits until a deal has landed: every Card opaque, and none moving
+ * between two looks. While a Card is open over the Deck, the rest of it
+ * is hidden under its Cover, so there a Card may be fully transparent
+ * instead; a Card open in the other Pane hides none.
+ */
 export async function landed(page: Page) {
 	await expect
 		.poll(async () => {
 			const before = await anchors(page);
 			await page.waitForTimeout(32);
+			await frames(page, 2);
 			const after = await anchors(page);
 			const opaque = await styles(page, "opacity");
+			const open =
+				(await frame(page)
+					.locator("[data-expanded]:not([data-aside])")
+					.count()) > 0;
 			return (
-				opaque.every((own) => own === "1") &&
+				opaque.every((own) => own === "1" || (open && own === "0")) &&
 				before.every((at, index) => {
 					const now = after[index];
 					return now && Math.hypot(at.u - now.u, at.v - now.v) < 0.05;

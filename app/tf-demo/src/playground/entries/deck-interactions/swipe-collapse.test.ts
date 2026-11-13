@@ -69,6 +69,7 @@ function cardValues(at: Slot, z: number): CardValues {
 		s: value(at.s),
 		lift: value(0),
 		o: value(1),
+		veil: value(1),
 		z: value(z),
 	};
 }
@@ -98,6 +99,7 @@ async function bindPile(
 	pile: Pile,
 	lead: string,
 	settle: (value: MotionValue<number>, to: number, velocity: number) => void,
+	beside: string | null = null,
 ) {
 	const order = pile.map((card) => card.id);
 	const slots = pile.map((card) => card.slot);
@@ -121,6 +123,7 @@ async function bindPile(
 					throw new Error("Nothing here scatters the Deck");
 				},
 				opacity,
+				beside,
 			},
 			lead,
 			"inline",
@@ -260,6 +263,69 @@ describe("D's fold onto a Card from inside the Deck", () => {
 		expect(front.s.get()).toBe(1.05);
 		expect(opacity.get()).toBe(1);
 		expect(stacked()).toEqual(before);
+	});
+});
+
+describe("D's fold beside a Card open in the other Pane", () => {
+	test("leaves that Card where it is and on its way, folding only the Cards on the Deck, and its scatter sends only those home", async () => {
+		const pile = makePile({ back: { u: 900, v: 300, w: 500, h: 700 } });
+		const [back, middle, front] = pile.map((card) => card.values);
+		if (!back || !middle || !front) throw new Error("Missing a Card");
+		/* on its way into the other Pane */
+		animate(back.u, 1000, SETTLE);
+		const placed: string[] = [];
+		const order = pile.map((card) => card.id);
+		const slots = pile.map((card) => card.slot);
+		const pull = motionValue(0);
+		let binding: Binding | null = null;
+		await pointerEvent(() => {
+			binding = bindDeck(
+				{
+					order,
+					slots,
+					slotOf: (id) => slots[order.indexOf(id)],
+					valuesOf: (id) => {
+						const card = pile.find((other) => other.id === id);
+						if (!card) throw new Error(`No Card ${id}`);
+						return card.values;
+					},
+					release: () => {},
+					place: (id) => {
+						placed.push(id);
+						return new Promise<never>(() => {});
+					},
+					opacity: motionValue(1),
+					beside: "back",
+				},
+				"front",
+				"inline",
+				pull,
+				{
+					threshold: 96,
+					curve: "linear",
+					opacity: 0.5,
+					settle: (value, to, velocity) => {
+						animate(value, to, { ...SETTLE, velocity });
+					},
+				},
+			);
+		});
+		cleanups.push(() => {
+			binding?.stop();
+			for (const { values } of pile)
+				for (const key of KEYS) values[key].stop();
+		});
+		await nextFrame();
+		await pointerEvent(() => pull.set(-96));
+		await nextFrame();
+		await nextFrame();
+		expect(middle.u.get()).toBeCloseTo(front.u.get(), 6);
+		expect(back.u.get()).toBeGreaterThan(900);
+		expect(back.u.isAnimating()).toBe(true);
+		expect(back.v.get()).toBe(300);
+		expect(back.s.get()).toBe(1);
+		(binding as Binding | null)?.scatter();
+		expect(placed).toEqual(["front", "middle"]);
 	});
 });
 

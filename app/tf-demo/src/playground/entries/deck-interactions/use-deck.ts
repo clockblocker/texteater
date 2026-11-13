@@ -32,6 +32,12 @@ export type CardValues = {
 	readonly lift: MotionValue<number>;
 	/** Only a deal, a reduced exit or a reduced reorder fades a Card; a Card in hand is solid. */
 	readonly o: MotionValue<number>;
+	/**
+	 * 0 while another Card is open over the Deck, else 1: the Card shows at
+	 * `o` times this, so hiding it under the Cover never stops a move's own
+	 * fade, which would then never finish.
+	 */
+	readonly veil: MotionValue<number>;
 	readonly z: MotionValue<number>;
 };
 
@@ -50,6 +56,7 @@ function makeValues(slot?: Slot, z = 1): CardValues {
 		s: motionValue(slot?.s ?? 1),
 		lift: motionValue(0),
 		o: motionValue(1),
+		veil: motionValue(1),
 		z: motionValue(z),
 	};
 }
@@ -76,6 +83,8 @@ async function dissolveTo(
 	await animate(card.o, 1, transition(half, context));
 }
 
+/** How long the rest of the Deck takes to fade out as a Card opens over it, and back in as it closes. */
+const VEIL_MS = 160;
 const BASE_Z = 10;
 /** A Card a tap or a close lifts off the Deck: above every Card in it, under the hand's. */
 const LIFTED_Z = 90;
@@ -121,6 +130,9 @@ export function useDeck({
 	const [order, setOrder] = useState<readonly string[]>(initialOrder);
 	const [status, setStatus] = useState<DeckStatus>("dealt");
 	const [expanded, setExpanded] = useState<string | null>(null);
+	/** The Card open over the Deck as of now, for a call before the render. */
+	const expandedRef = useRef<string | null>(null);
+	expandedRef.current = expanded;
 	/** The whole Deck's opacity, as one flattened layer: only D's Close deck lowers it. */
 	const [opacity] = useState(() => motionValue(1));
 	const [values] = useState(() => {
@@ -134,6 +146,9 @@ export function useDeck({
 	});
 	/** Cards a gesture is driving, which a re-layout leaves alone. */
 	const busy = useRef(new Set<string>());
+	/** The Card open in the other Pane, if one is; the ref is it as of now, for a call before the render. */
+	const [beside, setBeside] = useState<string | null>(null);
+	const besideRef = useRef<string | null>(null);
 	const slots = useMemo(
 		() => layout(frame, order.length),
 		[layout, frame, order.length],
@@ -320,20 +335,94 @@ export function useDeck({
 	);
 
 	/**
+	 * The rest of the Deck while a Card is open over it in its own Pane:
+	 * every other Card on it fades out as the Card opens and back in as it
+	 * closes, so none shows round the Cover. A Card open in the other Pane
+	 * is not on the Deck and keeps showing.
+	 */
+	const veil = useCallback(
+		(open: string, to: 0 | 1) => {
+			for (const id of orderRef.current)
+				if (id !== open && id !== besideRef.current)
+					tweenTo(valuesOf(id).veil, to, VEIL_MS, motionRef.current);
+		},
+		[valuesOf],
+	);
+
+	/**
+	 * Takes `id` from the other Pane back into its place the way it went:
+	 * in one straight line to its slot, shrinking as it travels, on the
+	 * spring it opened on. It takes its place in the stacking as it sets
+	 * off, beside the Deck, where that shows nowhere, so it slides in
+	 * between its neighbours, under the Cards in front of it. Reduced, it
+	 * dissolves back, as it dissolved there. Landed on a Deck another Card
+	 * is open over, it fades out with the rest of it. It stays busy until
+	 * it lands, or the re-layout would take it on its own spring; a hand
+	 * that takes it stops the move, which then never finishes, and the
+	 * hand's release frees it.
+	 */
+	const goHome = useCallback(
+		(id: string) => {
+			const index = orderRef.current.indexOf(id);
+			const slot = slots[index];
+			if (!slot) {
+				busy.current.delete(id);
+				return;
+			}
+			const card = valuesOf(id);
+			card.z.set(BASE_Z + index);
+			const to = { ...slot, r: slot.r ?? 0, s: slot.s ?? 1, lift: 0 };
+			void (
+				motionRef.current.reduce
+					? dissolveTo(card, to, motionRef.current)
+					: glide(id, to, SPRINGS.morph)
+			).then(() => {
+				busy.current.delete(id);
+				if (expandedRef.current)
+					tweenTo(card.veil, 0, VEIL_MS, motionRef.current);
+			});
+		},
+		[slots, valuesOf, glide],
+	);
+
+	/**
 	 * Opens `id` into the Cover in a straight line from where it is: of
 	 * the hand's `velocity` only the part headed for the Cover carries on,
 	 * so a hand moving any other way never carries the Card off the line
 	 * or past the Cover first. With `into`, a Cover's box in another Pane,
-	 * it opens there instead, the same way; reduced, it dissolves into it.
+	 * it opens there instead, the same way, and a Card already open there
+	 * goes home as it comes; reduced, it dissolves into it. A Card open in
+	 * the other Pane leaves the Deck as it was, every other Card on it
+	 * free to be swiped, tapped and opened. Over the Deck, the rest of it
+	 * fades out once `uncovered` has: a swipe's panel, under the Cards in
+	 * front of the swiped one, which they would otherwise uncover.
 	 */
 	const expand = useCallback(
-		async (id: string, velocity?: Point, into?: Rect) => {
+		async (
+			id: string,
+			velocity?: Point,
+			into?: Rect,
+			uncovered?: Promise<unknown>,
+		) => {
 			player.take(id);
 			busy.current.add(id);
 			const card = valuesOf(id);
 			card.z.set(COVER_Z);
-			setExpanded(id);
 			readouts.set({ phase: "expanded" });
+			if (into) {
+				const was = besideRef.current;
+				besideRef.current = id;
+				setBeside(id);
+				if (was && was !== id) goHome(was);
+			} else {
+				expandedRef.current = id;
+				setExpanded(id);
+				if (!uncovered) veil(id, 0);
+				else
+					void uncovered.then(() => {
+						if (expandedRef.current === id) veil(id, 0);
+					});
+			}
 			const box =
 				into ??
 				coverRect(
@@ -348,34 +437,51 @@ export function useDeck({
 			}
 			await glide(id, to, SPRINGS.morph, velocity);
 		},
-		[valuesOf, readouts, glide, frame, player, narrow],
+		[valuesOf, readouts, glide, frame, player, narrow, goHome, veil],
 	);
 
 	/**
-	 * Puts the Card in the Cover back into its place, as `coverClose`
-	 * plans it, from wherever it shows: the player has it from here, so
-	 * its stacking comes with the plan, in the frame the plan puts it.
+	 * Closes `which`, or with none the Cover over the Deck, or else the
+	 * Card in the other Pane. The one in the other Pane goes home as
+	 * `goHome` takes it. The one over the Deck goes back into its place as
+	 * `coverClose` plans it, from wherever it shows, while the rest of the
+	 * Deck comes back in: the player has it from here, so its stacking
+	 * comes with the plan, in the frame the plan puts it.
 	 */
-	const closeCover = useCallback(() => {
-		const id = expanded;
-		if (!id) return;
-		busy.current.delete(id);
-		setExpanded(null);
-		const move = coverClose({
-			order: orderRef.current,
-			id,
-			slots,
-			knobs: close,
-		});
-		if (!move) {
-			readouts.set({ phase: "rest" });
-			return;
-		}
-		readouts.set({ phase: "settling" });
-		player.play([move], motionRef.current, () =>
-			readouts.set({ phase: "rest" }),
-		);
-	}, [expanded, readouts, slots, close, player]);
+	const closeCover = useCallback(
+		(which?: string) => {
+			const open = expandedRef.current;
+			const id = which ?? open ?? besideRef.current;
+			if (!id) return;
+			if (id === besideRef.current) {
+				besideRef.current = null;
+				setBeside(null);
+				goHome(id);
+				if (!open) readouts.set({ phase: "rest" });
+				return;
+			}
+			if (id !== open) return;
+			expandedRef.current = null;
+			setExpanded(null);
+			veil(id, 1);
+			busy.current.delete(id);
+			const move = coverClose({
+				order: orderRef.current,
+				id,
+				slots,
+				knobs: close,
+			});
+			if (!move) {
+				readouts.set({ phase: "rest" });
+				return;
+			}
+			readouts.set({ phase: "settling" });
+			player.play([move], motionRef.current, () =>
+				readouts.set({ phase: "rest" }),
+			);
+		},
+		[readouts, slots, close, player, goHome, veil],
+	);
 
 	/**
 	 * The Deck leaves as `exit` takes it, the variant's own motion; it is
@@ -388,6 +494,8 @@ export function useDeck({
 			readouts.set({ phase: "settling" });
 			await exit();
 			busy.current.clear();
+			besideRef.current = null;
+			setBeside(null);
 			setStatus("gone");
 			readouts.set({ phase: "gone", zone: null });
 		},
@@ -399,7 +507,10 @@ export function useDeck({
 		const context = motionRef.current;
 		busy.current.clear();
 		player.clear();
+		expandedRef.current = null;
 		setExpanded(null);
+		besideRef.current = null;
+		setBeside(null);
 		orderRef.current = initialOrder;
 		setOrder(initialOrder);
 		const fresh = layout(frame, initialOrder.length);
@@ -418,6 +529,7 @@ export function useDeck({
 			card.s.jump(slot.s);
 			card.lift.jump(0);
 			card.o.jump(0);
+			card.veil.jump(1);
 			card.z.jump(BASE_Z + index);
 			void wait(index * 40, context).then(() => {
 				if (busy.current.has(id)) return;
@@ -441,6 +553,7 @@ export function useDeck({
 		order,
 		status,
 		expanded,
+		beside,
 		slots,
 		opacity,
 		valuesOf,

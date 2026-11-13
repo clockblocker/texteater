@@ -37,7 +37,14 @@ const KEYS = ["u", "v", "s"] as const;
 /** What a binding reads of the Deck and moves in it. */
 type Pile = Pick<
 	Deck,
-	"order" | "slots" | "slotOf" | "valuesOf" | "release" | "place" | "opacity"
+	| "order"
+	| "slots"
+	| "slotOf"
+	| "valuesOf"
+	| "release"
+	| "place"
+	| "opacity"
+	| "beside"
 >;
 
 /**
@@ -58,7 +65,8 @@ type Pile = Pick<
  * No Card's z-index moves: the ones behind go under the Card and the ones
  * in front over it, so the folded stack shows the front Card it showed
  * before. A spring on `pull` takes them all home; a hand on it scrubs
- * them.
+ * them. A Card open in the other Pane is not on the Deck: the fold leaves
+ * it where it is, and whatever is moving it.
  */
 export function bindDeck(
 	deck: Pile,
@@ -91,7 +99,7 @@ export function bindDeck(
 			carry(anchor[key], home[key], card[key].getVelocity());
 	const followers = deck.order.flatMap((id, i) => {
 		const slot = deck.slots[i];
-		if (!slot || id === lead) return [];
+		if (!slot || id === lead || id === deck.beside) return [];
 		const values = deck.valuesOf(id);
 		const base = {
 			u: motionValue(values.u.get()),
