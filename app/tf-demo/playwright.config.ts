@@ -14,6 +14,7 @@ const playgroundSpecs = [
 	"card-to-cover.pw.ts",
 	"compass.pw.ts",
 	"deck-gestures.pw.ts",
+	"deck-hold.pw.ts",
 	"deck-interactions.pw.ts",
 	"deck-motion.pw.ts",
 	"deck-swipe-exit.pw.ts",

@@ -1,3 +1,4 @@
+import { CARRY_DEFAULTS, CARRY_KNOBS } from "./carry-knobs";
 import { CLOSE_DEFAULTS, CLOSE_KNOBS } from "./cover-close";
 import type { AnyKnob } from "./knobs";
 import { COLLAPSE_CURVES, type CollapseCurve } from "./swipe-gesture";
@@ -15,11 +16,13 @@ import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
  * Toward Close deck the Deck fades as one layer with the gather, to
  * `dismissOpacity` at the threshold; a commit carries it on at the hand's
  * speed for at most `driftPx`, slowing to a stop, while it fades out in
- * `exitFadeMs`.
+ * `exitFadeMs`. A Card held still lifts into the hand: its knobs are
+ * the carry's (`carry-knobs.ts`), and the haptic tick marks the lift too.
  */
 export const SWIPE_DEFAULTS = {
 	...TAP_DEFAULTS,
 	...CLOSE_DEFAULTS,
+	...CARRY_DEFAULTS,
 	threshold: 96,
 	rubberLimit: 48,
 	axisLock: 10,
@@ -86,4 +89,5 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 	num("flickMs", "Flick projection", 50, 500, 10, "ms"),
 	{ kind: "toggle", key: "haptic", label: "Haptic tick (where supported)" },
 	{ kind: "toggle", key: "panelLabels", label: "Panel labels" },
+	...CARRY_KNOBS,
 ];

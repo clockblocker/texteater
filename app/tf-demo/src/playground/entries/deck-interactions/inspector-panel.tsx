@@ -124,7 +124,10 @@ export function InspectorPanel({
 					inline-start or down to close the Deck, toward inline-end or
 					up to open the Card, and short of the threshold let go to
 					put it back; tap a Card behind the front one to shuffle it
-					to the front, and double-tap a Card to open it.
+					to the front, and double-tap a Card to open it. Press a Card
+					and hold still to lift it into the hand: carry it anywhere,
+					over the Move to pane pad if you like, and let go to put it
+					back.
 				</p>
 			</InspectorSection>
 			<InspectorSection title="Variant">

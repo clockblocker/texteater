@@ -1,6 +1,8 @@
 import { type MotionValue, motionValue } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { DISSOLVE_MS } from "./card-move";
 import { createCardMovePlayer } from "./card-move-player";
+import { REDUCED_TWEEN_MAX_PX } from "./carry";
 import { CLOSE_DEFAULTS, type CloseKnobs, coverClose } from "./cover-close";
 import { approachRate, type Point, type Rect, type Slot } from "./geometry";
 import { coverRect, type Frame } from "./layout";
@@ -95,6 +97,8 @@ export function useDeck({
 	const [order, setOrder] = useState<readonly string[]>(initialOrder);
 	const [status, setStatus] = useState<DeckStatus>("dealt");
 	const [expanded, setExpanded] = useState<string | null>(null);
+	/** The Card a hand has lifted out of the Deck, whose gap the rest close; null when none is out. */
+	const [out, setOut] = useState<string | null>(null);
 	/** The whole Deck's opacity, as one flattened layer: only D's Close deck lowers it. */
 	const [opacity] = useState(() => motionValue(1));
 	const [values] = useState(() => {
@@ -112,6 +116,13 @@ export function useDeck({
 		() => layout(frame, order.length),
 		[layout, frame, order.length],
 	);
+	/** The pile one Card shorter, which the rest close up into while one is out: `slots` stays every Card's home. */
+	const closed = useMemo(
+		() => (out === null ? null : layout(frame, order.length - 1)),
+		[layout, frame, order.length, out],
+	);
+	/* the gap the last reflow laid out: a change of it is the gap closing or opening */
+	const laidOut = useRef(out);
 	const motionRef = useRef(motion);
 	motionRef.current = motion;
 	/* the order a tap reads: a second tap can come before the render */
@@ -231,17 +242,62 @@ export function useDeck({
 		[valuesOf],
 	);
 
-	/* every Card no gesture holds rides to its slot */
+	/**
+	 * Takes `id` to `slot` as the gap behind a lifted Card closes or opens:
+	 * on the reflow's spring, and under reduced motion a short tween for a
+	 * step of 24 px or less and a dissolve for a longer one.
+	 */
+	const shift = useCallback(
+		(id: string, slot: Slot) => {
+			const card = valuesOf(id);
+			const context = motionRef.current;
+			const far =
+				Math.hypot(card.u.get() - slot.u, card.v.get() - slot.v) >
+				REDUCED_TWEEN_MAX_PX;
+			if (!context.reduce || !far) {
+				void place(id, slot, SPRINGS.reflow);
+				return;
+			}
+			player.take(id);
+			void tweenTo(card.o, 0, DISSOLVE_MS, context).finished.then(() => {
+				if (busy.current.has(id) || player.has(id)) return;
+				for (const key of ["u", "v", "w", "h", "r", "s"] as const)
+					card[key].jump(slot[key]);
+				card.lift.jump(0);
+				tweenTo(card.o, 1, DISSOLVE_MS, context);
+			});
+		},
+		[valuesOf, place, player],
+	);
+
+	/* every Card no gesture holds rides to its slot, the one a hand has
+	   lifted out apart: the rest close up behind it */
 	useEffect(() => {
 		if (frame.w === 0 || status !== "dealt") return;
-		order.forEach((id, index) => {
-			const slot = slots[index];
+		const gap = laidOut.current !== out;
+		laidOut.current = out;
+		const rest = closed ? order.filter((id) => id !== out) : order;
+		rest.forEach((id, index) => {
+			const slot = (closed ?? slots)[index];
 			const card = valuesOf(id);
 			if (!slot || isBusy(id) || id === expanded) return;
-			card.z.set(BASE_Z + index);
-			void place(id, slot, SPRINGS.reflow);
+			card.z.set(BASE_Z + order.indexOf(id));
+			if (gap) shift(id, slot);
+			else void place(id, slot, SPRINGS.reflow);
 		});
-	}, [slots, order, status, expanded, frame.w, place, valuesOf, isBusy]);
+	}, [
+		slots,
+		closed,
+		out,
+		order,
+		status,
+		expanded,
+		frame.w,
+		place,
+		shift,
+		valuesOf,
+		isBusy,
+	]);
 
 	/** The hand takes `id`, and with it the Deck: a shuffle or a close ends where every Card shows. */
 	const hold = useCallback(
@@ -259,6 +315,8 @@ export function useDeck({
 	const release = useCallback((id: string) => {
 		busy.current.delete(id);
 	}, []);
+	/** Lifts `id` out of the Deck, whose other Cards close its gap, or with null puts it back in, and the gap opens again. */
+	const liftOut = useCallback((id: string | null) => setOut(id), []);
 
 	/**
 	 * Brings `id` to the front; a Card already there stays as it is. With a
@@ -365,6 +423,7 @@ export function useDeck({
 		busy.current.clear();
 		player.clear();
 		setExpanded(null);
+		setOut(null);
 		orderRef.current = initialOrder;
 		setOrder(initialOrder);
 		const fresh = layout(frame, initialOrder.length);
@@ -413,6 +472,7 @@ export function useDeck({
 		place,
 		hold,
 		release,
+		liftOut,
 		isBusy,
 		isPlaying: player.has,
 		restZ,

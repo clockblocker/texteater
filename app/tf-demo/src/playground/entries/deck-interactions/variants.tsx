@@ -22,7 +22,7 @@ export const VARIANTS: readonly VariantEntry[] = [
 		key: "swipe",
 		name: "D · Swipe actions",
 		summary:
-			"Zones are revealed under the Card, as in iOS Mail. The Card slides on one axis and uncovers red Close deck (inline-start, down) or blue Open (inline-end, up); at the detent the colour fills and the Card resists. Past it a release commits. Toward Close deck the rest of the Deck gathers onto whichever Card is swiped, every Card keeping its place in the stack, and the whole Deck fades as one layer; a commit carries it on a short way and fades it out. The Deck never moves on hover; the Card under the pointer lights its border.",
+			"Zones are revealed under the Card, as in iOS Mail. The Card slides on one axis and uncovers red Close deck (inline-start, down) or blue Open (inline-end, up); at the detent the colour fills and the Card resists. Past it a release commits. Toward Close deck the rest of the Deck gathers onto whichever Card is swiped, every Card keeping its place in the stack, and the whole Deck fades as one layer; a commit carries it on a short way and fades it out. The Deck never moves on hover; the Card under the pointer lights its border. A press held still for a moment lifts the Card into the hand instead: it trails the hand freely while the Deck closes its gap and a stand-in Move to pane pad shows, and a release puts it back into its slot; a press that moves first is a swipe.",
 		render: (common, stored) => (
 			<SwipeVariant {...common} knobs={readKnobs("swipe", stored)} />
 		),
