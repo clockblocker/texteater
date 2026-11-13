@@ -223,8 +223,16 @@ export async function sweepGrowing(page: Page) {
 	await pull(page, card(page, 1), -90, 0);
 	await page.mouse.up();
 	const watched = await watchPanel(page, 3, "inline");
-	const start = await pull(page, card(page, 3), -40, 0);
-	await page.mouse.move(start.x - 140, start.y, { steps: 20 });
+	/* the front Card is still on its way home, so it is pressed in its
+	   middle, which no Card covers wherever it is, not near its top edge,
+	   where the Card behind may still show */
+	const box = await card(page, 3).boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const start = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+	await page.mouse.move(start.x, start.y);
+	await page.mouse.down();
+	await page.mouse.move(start.x - 40, start.y, { steps: 30 });
+	await page.mouse.move(start.x - 180, start.y, { steps: 20 });
 	const seen = await watched();
 	await page.mouse.up();
 	return seen;
