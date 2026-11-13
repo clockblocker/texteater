@@ -12,6 +12,7 @@ import { createTapCounter, type Drag, trackPointer } from "./pointer";
 import { type Anchor, type Binding, bindDeck } from "./swipe-collapse";
 import {
 	type Axis,
+	releaseVerdictOf,
 	takeUp,
 	travelOf,
 	type Verdict,
@@ -96,7 +97,9 @@ function showsOf(
  * along either axis. One value, the pull, drives all of it, and one
  * threshold is the breakpoint: there the Deck is whole, the colour floods
  * in, the icon is whole and stays put while the Card goes on, and a
- * release commits. Short of it, a release brings everything back. The
+ * release commits. Short of it, a release brings everything back, unless
+ * "Flick commits" is on and the hand was going fast enough the way it
+ * pulled to have reached it: then the colour floods in as it lets go. The
  * Deck itself never moves on hover: the Card under the pointer only
  * lights its border.
  */
@@ -362,13 +365,19 @@ export function SwipeVariant({
 		setPanel(null);
 	}
 
-	/** The release reads the very value the panel was showing, at the hand's last spot. */
+	/** The release reads the very value the panel was showing, at the hand's last spot, and the hand's speed there if a flick counts. */
 	function release(g: Gesture, drag: Drag | null) {
 		const axis = g.axis;
 		if (!axis) return;
 		if (drag) move(g, axis, drag);
 		const verdict: Verdict = drag
-			? verdictOf(axis, pull.get(), knobs.threshold)
+			? releaseVerdictOf(
+					axis,
+					pull.get(),
+					along(axis, drag).speed,
+					knobs.threshold,
+					{ on: knobs.flickCommits, ms: knobs.flickMs },
+				)
 			: {
 					commits: false,
 					zone: zoneOf(axis, pull.get()),

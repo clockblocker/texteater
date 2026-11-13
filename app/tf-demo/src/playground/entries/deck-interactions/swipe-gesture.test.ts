@@ -5,6 +5,7 @@ import {
 	collapseOf,
 	iconAt,
 	progressOf,
+	releaseVerdictOf,
 	rubberBand,
 	takeUp,
 	travelOf,
@@ -152,5 +153,48 @@ describe("D's Open, in a straight line", () => {
 
 	test("a Card already there has no way to go", () => {
 		expect(approachRate(cover, cover, { u: 0, v: -2000 })).toBe(0);
+	});
+});
+
+describe("D's flick at release", () => {
+	const ON = { on: true, ms: 200 } as const;
+	const OFF = { on: false, ms: 200 } as const;
+
+	test("short and slow, the Card comes back", () => {
+		expect(releaseVerdictOf("inline", -60, -0.05, THRESHOLD, ON)).toEqual(
+			verdictOf("inline", -60, THRESHOLD),
+		);
+	});
+
+	test("short and fast the way it pulled, a release commits on the pull's zone", () => {
+		expect(releaseVerdictOf("inline", -60, -0.6, THRESHOLD, ON)).toEqual({
+			commits: true,
+			zone: "dismiss",
+			reason: "flick 180",
+		});
+		expect(releaseVerdictOf("block", -60, -0.6, THRESHOLD, ON)).toEqual({
+			commits: true,
+			zone: "expand",
+			reason: "flick 180",
+		});
+	});
+
+	test("fast but turned back, the hand carries it no further", () => {
+		expect(releaseVerdictOf("inline", 60, -2, THRESHOLD, ON).commits).toBe(
+			false,
+		);
+	});
+
+	test("with the flick off, only the distance counts", () => {
+		expect(releaseVerdictOf("inline", -60, -2, THRESHOLD, OFF)).toEqual(
+			verdictOf("inline", -60, THRESHOLD),
+		);
+	});
+
+	test("at the threshold a release commits as it showed, whatever the hand", () => {
+		for (const flick of [ON, OFF])
+			expect(
+				releaseVerdictOf("inline", THRESHOLD, -3, THRESHOLD, flick),
+			).toEqual(verdictOf("inline", THRESHOLD, THRESHOLD));
 	});
 });

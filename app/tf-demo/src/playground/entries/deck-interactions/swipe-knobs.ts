@@ -6,7 +6,9 @@ import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
 /**
  * D's knobs and their tuned defaults. One threshold is the breakpoint for
  * everything: the Deck is whole, the panel lights and a release commits
- * there, and nowhere else. Under the hand everything tracks it 1:1, the
+ * there, and, with "Flick commits" off, nowhere else. With it on, a
+ * release short of it also commits when the hand's speed, carried on for
+ * `flickMs`, would reach it; the panel still lights on the distance alone. Under the hand everything tracks it 1:1, the
  * panel's icon too, which stops once the strip is full; the springs are
  * Motion's stiffness/damping at mass 1, and the reduced return is
  * critically damped at whatever stiffness.
@@ -32,6 +34,8 @@ export const SWIPE_DEFAULTS = {
 	pressLift: 0.3,
 	reducedReturnStiffness: 260,
 	panelFadeMs: 160,
+	flickCommits: false,
+	flickMs: 200,
 	haptic: true,
 	panelLabels: true,
 };
@@ -78,6 +82,8 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 		10,
 	),
 	num("panelFadeMs", "Panel fade on commit", 0, 400, 10, "ms"),
+	{ kind: "toggle", key: "flickCommits", label: "Flick commits" },
+	num("flickMs", "Flick projection", 50, 500, 10, "ms"),
 	{ kind: "toggle", key: "haptic", label: "Haptic tick (where supported)" },
 	{ kind: "toggle", key: "panelLabels", label: "Panel labels" },
 ];

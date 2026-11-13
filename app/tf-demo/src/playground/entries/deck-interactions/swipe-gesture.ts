@@ -3,8 +3,11 @@
  * locked axis, in signed logical px: negative toward inline-start or up,
  * positive toward inline-end or down. One threshold decides everything:
  * `progressOf` draws the Deck's collapse, every "will commit" signal turns
- * on when it reaches 1, and a release then commits. Nothing else, not the
- * hand's speed nor where it has been, moves that breakpoint.
+ * on when it reaches 1, and a release then commits. With "Flick commits"
+ * off, nothing else, not the hand's speed nor where it has been, moves that
+ * breakpoint. With it on, a release short of it may also commit from the
+ * hand's speed (`releaseVerdictOf`), while the panel still arms on the
+ * distance alone.
  */
 
 export type Axis = "inline" | "block";
@@ -82,6 +85,37 @@ export function verdictOf(
 	return progressOf(pull, threshold) >= 1
 		? { commits: true, zone, reason: `threshold ${px}` }
 		: { commits: false, zone, reason: `short ${px}` };
+}
+
+/** A flick at release: whether it counts, and how far ahead the hand's speed is projected, in ms. */
+export type Flick = { readonly on: boolean; readonly ms: number };
+
+/**
+ * What a release does: `verdictOf` first, so a pull at the threshold
+ * commits as it showed. Short of it, with the flick on, the pull is
+ * projected `flick.ms` ahead at the hand's speed (px/ms, signed along the
+ * axis as the pull is), and a projection that reaches the threshold
+ * commits. Only speed the way the pull went counts: a hand at rest or
+ * turned back carries it no further. The zone stays the pull's.
+ */
+export function releaseVerdictOf(
+	axis: Axis,
+	pull: number,
+	speed: number,
+	threshold: number,
+	flick: Flick,
+): Verdict {
+	const verdict = verdictOf(axis, pull, threshold);
+	if (verdict.commits || !flick.on || pull === 0) return verdict;
+	const sign = pull < 0 ? -1 : 1;
+	const onward = Math.max(0, speed * sign);
+	const projected = Math.abs(pull) + onward * flick.ms;
+	if (progressOf(projected, threshold) < 1) return verdict;
+	return {
+		commits: true,
+		zone: verdict.zone,
+		reason: `flick ${Math.round(projected).toString()}`,
+	};
 }
 
 /**
