@@ -75,6 +75,12 @@ export function bindDeck(
 ): Binding {
 	const home = deck.slotOf(lead);
 	const card = deck.valuesOf(lead);
+	/* a value already at rest where it is going needs no spring to get
+	   there: it stays a plain value at its place */
+	const carry: Settle = (value, to, velocity) => {
+		if (value.get() === to && Math.abs(velocity) < 0.01) return;
+		rules.settle(value, to, velocity);
+	};
 	const lift = home ? (home.h * home.s - home.h) / 2 : 0;
 	const anchor = {
 		u: motionValue(card.u.get()),
@@ -82,7 +88,7 @@ export function bindDeck(
 	};
 	if (home)
 		for (const key of ["u", "v"] as const)
-			rules.settle(anchor[key], home[key], card[key].getVelocity());
+			carry(anchor[key], home[key], card[key].getVelocity());
 	const followers = deck.order.flatMap((id, i) => {
 		const slot = deck.slots[i];
 		if (!slot || id === lead) return [];
@@ -93,14 +99,14 @@ export function bindDeck(
 			s: motionValue(values.s.get()),
 		};
 		for (const key of KEYS)
-			rules.settle(base[key], slot[key], values[key].getVelocity());
+			carry(base[key], slot[key], values[key].getVelocity());
 		/* where it ends, against the Card: never bigger, top edges level */
 		const s = Math.min(slot.s, home?.s ?? 1);
 		const dv = (slot.h * s - slot.h) / 2 - lift;
 		return [{ id, slot, values, base, s, dv }];
 	});
 	const faded = motionValue(deck.opacity.get());
-	rules.settle(faded, 1, deck.opacity.getVelocity());
+	carry(faded, 1, deck.opacity.getVelocity());
 	/* The fold takes the other Cards from whatever moved them in its first
 	   frame: a spring stopped there has drawn that frame and stops as it
 	   is, while one stopped from the pointer event would draw once more,
@@ -120,6 +126,12 @@ export function bindDeck(
 	   turned round, and the spring that takes the Deck on at a release
 	   started from it. On the loop each write is a frame from the last, so
 	   a value rewritten where it was reads as at rest, which it is. */
+	/* The share last drawn, and whether a base or the fade has moved since:
+	   a fold at 0 drawn again over bases standing still would only write
+	   every other Card where it already is, every frame of a pull toward
+	   Open or short of the fold. */
+	let drawnShare = Number.NaN;
+	let rebased = true;
 	const draw = () => {
 		if (!taken) {
 			taken = true;
@@ -136,6 +148,9 @@ export function bindDeck(
 			rules.threshold,
 			rules.curve,
 		);
+		if (share === 0 && drawnShare === 0 && !rebased) return;
+		drawnShare = share;
+		rebased = false;
 		for (const { values, base, s, dv } of followers) {
 			const from = { u: base.u.get(), v: base.v.get(), s: base.s.get() };
 			values.u.set(from.u + (u - from.u) * share);
@@ -148,13 +163,17 @@ export function bindDeck(
 	const redraw = () => {
 		frame.preRender(draw);
 	};
+	const rebase = () => {
+		rebased = true;
+		redraw();
+	};
 	const stops = [
 		pull.on("change", redraw),
 		anchor.u.on("change", redraw),
 		anchor.v.on("change", redraw),
-		faded.on("change", redraw),
+		faded.on("change", rebase),
 		...followers.flatMap(({ base }) =>
-			KEYS.map((key) => base[key].on("change", redraw)),
+			KEYS.map((key) => base[key].on("change", rebase)),
 		),
 	];
 	const stop = () => {
