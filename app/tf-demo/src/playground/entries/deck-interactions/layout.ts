@@ -1,4 +1,3 @@
-import { isNarrow } from "compass";
 import {
 	centreScaledTop,
 	coverBoxIn,
@@ -8,6 +7,7 @@ import {
 	remPx,
 } from "@/presentation/deck-geometry";
 import type { Rect, Slot } from "./geometry";
+import type { Width } from "./width";
 
 export type Frame = { readonly w: number; readonly h: number };
 
@@ -47,13 +47,46 @@ export function pileSlots(
 	return pile(frame, count, openScale).map(engineSlot);
 }
 
-/** The Cover a Card expands into: the app's Cover box, with the frame as its Pane. */
-export function coverRect(frame: Frame): Rect {
-	const rem = remPx();
+/**
+ * The Cover a Card expands into: the app's Cover box, with the frame as
+ * its Pane; on a phone it fills the Pane.
+ */
+export function coverRect(frame: Frame, narrow: boolean): Rect {
 	const box = coverBoxIn(
 		{ width: frame.w, height: frame.h },
-		rem,
-		isNarrow(document.documentElement.clientWidth, rem),
+		remPx(),
+		narrow,
 	);
 	return { u: box.inlineStart, v: box.top, w: box.width, h: box.height };
+}
+
+/**
+ * The frame as D's Panes: the Deck's own Pane at inline-start and, on a
+ * wide screen, the other Pane at inline-end, `share` of the frame across.
+ * On a phone the Deck's Pane is the whole frame and there is no other.
+ * The Deck rests in its own Pane at every moment, so a Card opened in
+ * the other Pane leaves it where it is.
+ */
+export function panesOf(
+	frame: Frame,
+	width: Width,
+	share: number,
+): { readonly deck: Frame; readonly other: Rect | null } {
+	if (width === "phone") return { deck: frame, other: null };
+	const w = Math.round(frame.w * share);
+	return {
+		deck: { w: frame.w - w, h: frame.h },
+		other: { u: frame.w - w, v: 0, w, h: frame.h },
+	};
+}
+
+/** Where a Card opened in the other Pane `pane` rests: a wide Pane's Cover box in it. */
+export function otherCoverRect(pane: Rect): Rect {
+	const box = coverBoxIn({ width: pane.w, height: pane.h }, remPx(), false);
+	return {
+		u: pane.u + box.inlineStart,
+		v: pane.v + box.top,
+		w: box.width,
+		h: box.height,
+	};
 }

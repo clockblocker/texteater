@@ -15,6 +15,7 @@ import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
 import type { Readouts } from "./readouts";
 import type { CardValues, Deck } from "./use-deck";
+import type { Width } from "./width";
 
 /** What every variant is rendered with. */
 export type VariantProps<K> = {
@@ -27,6 +28,8 @@ export type VariantProps<K> = {
 	readonly knobs: K;
 	/** Bumped by the inspector's Re-deal. */
 	readonly deal: number;
+	/** How wide the screen reads: the inspector's override, or the screen's own. */
+	readonly width: Width;
 };
 
 type CardHandler = (id: string, event: ReactPointerEvent<HTMLElement>) => void;

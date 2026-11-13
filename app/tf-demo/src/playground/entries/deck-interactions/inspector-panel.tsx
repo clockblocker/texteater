@@ -8,6 +8,7 @@ import {
 	type TimeScale,
 } from "./settings-atoms";
 import { VARIANTS, variantEntry } from "./variants";
+import { WIDTH_SETTINGS, type WidthSetting } from "./width";
 
 const button =
 	"cursor-pointer rounded-md border border-line px-2 py-1 text-xs text-ink-soft hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50";
@@ -121,10 +122,13 @@ export function InspectorPanel({
 			<InspectorSection>
 				<p className="text-ink-soft">
 					One Deck, and the way to handle it. Swipe a Card toward
-					inline-start or down to close the Deck, toward inline-end or
-					up to open the Card, and short of the threshold let go to
-					put it back; tap a Card behind the front one to shuffle it
-					to the front, and double-tap a Card to open it.
+					inline-start or down to close the Deck, up to open the Card,
+					and short of the threshold let go to put it back. Toward
+					inline-end it opens the Card too on a phone; on a wide
+					screen (md and up, or Width: wide) it opens the Card in the
+					other Pane, a stand-in at inline-end beside the Deck's own.
+					Tap a Card behind the front one to shuffle it to the front,
+					and double-tap a Card to open it.
 				</p>
 			</InspectorSection>
 			<InspectorSection title="Variant">
@@ -181,6 +185,15 @@ export function InspectorPanel({
 					onChange={(direction) =>
 						onSettings({ rtl: direction === "rtl" })
 					}
+				/>
+				<InspectorChoice<WidthSetting>
+					label="Width"
+					value={settings.width}
+					options={WIDTH_SETTINGS.map((width) => ({
+						value: width,
+						label: width,
+					}))}
+					onChange={(width) => onSettings({ width })}
 				/>
 			</InspectorSection>
 			<InspectorSection title={`Knobs · ${entry.name}`}>

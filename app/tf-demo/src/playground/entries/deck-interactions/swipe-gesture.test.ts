@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { approachRate } from "./geometry";
+import { panesOf } from "./layout";
 import {
 	COLLAPSE_CURVES,
 	collapseOf,
@@ -12,15 +13,104 @@ import {
 	verdictOf,
 	zoneOf,
 } from "./swipe-gesture";
+import { widthOf } from "./width";
 
 const THRESHOLD = 96;
 
 describe("D's directions", () => {
-	test("inline-start and down close the Deck; inline-end and up open the Card", () => {
-		expect(zoneOf("inline", -10)).toBe("dismiss");
-		expect(zoneOf("inline", 10)).toBe("expand");
-		expect(zoneOf("block", 10)).toBe("dismiss");
-		expect(zoneOf("block", -10)).toBe("expand");
+	test("on a phone, inline-start and down close the Deck; inline-end and up open the Card", () => {
+		expect(zoneOf("inline", -10, "phone")).toBe("dismiss");
+		expect(zoneOf("inline", 10, "phone")).toBe("expand");
+		expect(zoneOf("block", 10, "phone")).toBe("dismiss");
+		expect(zoneOf("block", -10, "phone")).toBe("expand");
+	});
+
+	test("on a wide screen, inline-end opens the Card in the other Pane, and every other way is as on a phone", () => {
+		expect(zoneOf("inline", 10, "wide")).toBe("other-pane");
+		expect(zoneOf("inline", -10, "wide")).toBe("dismiss");
+		expect(zoneOf("block", 10, "wide")).toBe("dismiss");
+		expect(zoneOf("block", -10, "wide")).toBe("expand");
+	});
+
+	test("the other Pane commits at the same threshold, and folds nothing", () => {
+		expect(verdictOf("inline", THRESHOLD - 1, THRESHOLD, "wide")).toEqual({
+			commits: false,
+			zone: "other-pane",
+			reason: "short 95",
+		});
+		expect(verdictOf("inline", THRESHOLD, THRESHOLD, "wide")).toEqual({
+			commits: true,
+			zone: "other-pane",
+			reason: "threshold 96",
+		});
+		expect(collapseOf("inline", THRESHOLD, THRESHOLD, "linear")).toBe(0);
+	});
+
+	test("Close deck folds the Deck the same at either width", () => {
+		for (const width of ["phone", "wide"] as const) {
+			expect(verdictOf("inline", -THRESHOLD, THRESHOLD, width)).toEqual({
+				commits: true,
+				zone: "dismiss",
+				reason: "threshold 96",
+			});
+			expect(verdictOf("block", THRESHOLD, THRESHOLD, width).zone).toBe(
+				"dismiss",
+			);
+		}
+		expect(collapseOf("block", THRESHOLD, THRESHOLD, "linear")).toBe(1);
+	});
+
+	test("a flick toward inline-end on a wide screen commits to the other Pane, with the flick on only", () => {
+		const flick = (on: boolean) =>
+			releaseVerdictOf(
+				"inline",
+				60,
+				0.6,
+				THRESHOLD,
+				{ on, ms: 200 },
+				"wide",
+			);
+		expect(flick(true)).toEqual({
+			commits: true,
+			zone: "other-pane",
+			reason: "flick 180",
+		});
+		expect(flick(false)).toEqual({
+			commits: false,
+			zone: "other-pane",
+			reason: "short 60",
+		});
+	});
+});
+
+describe("how wide the screen reads", () => {
+	test("auto reads compass's md breakpoint, 48 rem", () => {
+		expect(widthOf("auto", 767, 16)).toBe("phone");
+		expect(widthOf("auto", 768, 16)).toBe("wide");
+		expect(widthOf("auto", 900, 20)).toBe("phone");
+	});
+
+	test("the inspector's phone and wide pin it, whatever the screen", () => {
+		expect(widthOf("phone", 1600, 16)).toBe("phone");
+		expect(widthOf("wide", 375, 16)).toBe("wide");
+	});
+});
+
+describe("D's Panes", () => {
+	const frame = { w: 1000, h: 800 };
+
+	test("on a phone the Deck's Pane is the whole frame, and there is no other", () => {
+		expect(panesOf(frame, "phone", 0.5)).toEqual({
+			deck: frame,
+			other: null,
+		});
+	});
+
+	test("on a wide screen the other Pane takes its share at inline-end, and the Deck's Pane the rest", () => {
+		expect(panesOf(frame, "wide", 0.4)).toEqual({
+			deck: { w: 600, h: 800 },
+			other: { u: 600, v: 0, w: 400, h: 800 },
+		});
 	});
 });
 
@@ -32,7 +122,7 @@ describe("D's one breakpoint", () => {
 			expect(collapseOf("inline", pull, THRESHOLD, curve)).toBeLessThan(
 				1,
 			);
-		expect(verdictOf("inline", pull, THRESHOLD)).toEqual({
+		expect(verdictOf("inline", pull, THRESHOLD, "phone")).toEqual({
 			commits: false,
 			zone: "dismiss",
 			reason: "short 95",
@@ -44,7 +134,7 @@ describe("D's one breakpoint", () => {
 		expect(progressOf(pull, THRESHOLD)).toBe(1);
 		for (const curve of COLLAPSE_CURVES)
 			expect(collapseOf("inline", pull, THRESHOLD, curve)).toBe(1);
-		expect(verdictOf("inline", pull, THRESHOLD)).toEqual({
+		expect(verdictOf("inline", pull, THRESHOLD, "phone")).toEqual({
 			commits: true,
 			zone: "dismiss",
 			reason: "threshold 96",
@@ -53,16 +143,18 @@ describe("D's one breakpoint", () => {
 
 	test("moving the threshold moves both together", () => {
 		expect(collapseOf("inline", -120, 140, "linear")).toBeLessThan(1);
-		expect(verdictOf("inline", -120, 140).commits).toBe(false);
+		expect(verdictOf("inline", -120, 140, "phone").commits).toBe(false);
 		expect(collapseOf("inline", -140, 140, "linear")).toBe(1);
-		expect(verdictOf("inline", -140, 140).commits).toBe(true);
+		expect(verdictOf("inline", -140, 140, "phone").commits).toBe(true);
 	});
 
 	test("Open commits at the same threshold and folds nothing", () => {
-		expect(verdictOf("inline", THRESHOLD - 1, THRESHOLD).commits).toBe(
-			false,
-		);
-		expect(verdictOf("block", -THRESHOLD, THRESHOLD)).toMatchObject({
+		expect(
+			verdictOf("inline", THRESHOLD - 1, THRESHOLD, "phone").commits,
+		).toBe(false);
+		expect(
+			verdictOf("block", -THRESHOLD, THRESHOLD, "phone"),
+		).toMatchObject({
 			commits: true,
 			zone: "expand",
 		});
@@ -161,18 +253,22 @@ describe("D's flick at release", () => {
 	const OFF = { on: false, ms: 200 } as const;
 
 	test("short and slow, the Card comes back", () => {
-		expect(releaseVerdictOf("inline", -60, -0.05, THRESHOLD, ON)).toEqual(
-			verdictOf("inline", -60, THRESHOLD),
-		);
+		expect(
+			releaseVerdictOf("inline", -60, -0.05, THRESHOLD, ON, "phone"),
+		).toEqual(verdictOf("inline", -60, THRESHOLD, "phone"));
 	});
 
 	test("short and fast the way it pulled, a release commits on the pull's zone", () => {
-		expect(releaseVerdictOf("inline", -60, -0.6, THRESHOLD, ON)).toEqual({
+		expect(
+			releaseVerdictOf("inline", -60, -0.6, THRESHOLD, ON, "phone"),
+		).toEqual({
 			commits: true,
 			zone: "dismiss",
 			reason: "flick 180",
 		});
-		expect(releaseVerdictOf("block", -60, -0.6, THRESHOLD, ON)).toEqual({
+		expect(
+			releaseVerdictOf("block", -60, -0.6, THRESHOLD, ON, "phone"),
+		).toEqual({
 			commits: true,
 			zone: "expand",
 			reason: "flick 180",
@@ -180,21 +276,28 @@ describe("D's flick at release", () => {
 	});
 
 	test("fast but turned back, the hand carries it no further", () => {
-		expect(releaseVerdictOf("inline", 60, -2, THRESHOLD, ON).commits).toBe(
-			false,
-		);
+		expect(
+			releaseVerdictOf("inline", 60, -2, THRESHOLD, ON, "phone").commits,
+		).toBe(false);
 	});
 
 	test("with the flick off, only the distance counts", () => {
-		expect(releaseVerdictOf("inline", -60, -2, THRESHOLD, OFF)).toEqual(
-			verdictOf("inline", -60, THRESHOLD),
-		);
+		expect(
+			releaseVerdictOf("inline", -60, -2, THRESHOLD, OFF, "phone"),
+		).toEqual(verdictOf("inline", -60, THRESHOLD, "phone"));
 	});
 
 	test("at the threshold a release commits as it showed, whatever the hand", () => {
 		for (const flick of [ON, OFF])
 			expect(
-				releaseVerdictOf("inline", THRESHOLD, -3, THRESHOLD, flick),
-			).toEqual(verdictOf("inline", THRESHOLD, THRESHOLD));
+				releaseVerdictOf(
+					"inline",
+					THRESHOLD,
+					-3,
+					THRESHOLD,
+					flick,
+					"phone",
+				),
+			).toEqual(verdictOf("inline", THRESHOLD, THRESHOLD, "phone"));
 	});
 });

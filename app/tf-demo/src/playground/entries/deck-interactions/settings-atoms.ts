@@ -2,6 +2,7 @@ import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
 import { localStorageAtom } from "@/lib/local-storage-atoms";
 import { VARIANT_KEYS, type VariantKey } from "./knobs";
+import { WIDTH_SETTINGS, type WidthSetting } from "./width";
 
 const REDUCED_MOTION = ["system", "on", "off"] as const;
 export type ReducedMotion = (typeof REDUCED_MOTION)[number];
@@ -21,6 +22,7 @@ const StoredSettings = Schema.Struct({
 	reducedMotion: lenient(Schema.Literals(REDUCED_MOTION)),
 	timeScale: lenient(Schema.Literals(TIME_SCALES)),
 	rtl: lenient(Schema.Boolean),
+	width: lenient(Schema.Literals(WIDTH_SETTINGS)),
 	knobs: lenient(
 		Schema.Record(
 			Schema.String,
@@ -39,6 +41,8 @@ export type Settings = {
 	readonly reducedMotion: ReducedMotion;
 	readonly timeScale: TimeScale;
 	readonly rtl: boolean;
+	/** "auto" reads the screen; "phone" and "wide" pin how wide it reads. */
+	readonly width: WidthSetting;
 	readonly knobs: Readonly<
 		Record<string, Readonly<Record<string, number | boolean | string>>>
 	>;
@@ -50,6 +54,7 @@ export function settingsOf(stored: StoredSettings): Settings {
 		reducedMotion: stored.reducedMotion ?? "off",
 		timeScale: stored.timeScale ?? 1,
 		rtl: stored.rtl ?? false,
+		width: stored.width ?? "auto",
 		knobs: stored.knobs ?? {},
 	};
 }

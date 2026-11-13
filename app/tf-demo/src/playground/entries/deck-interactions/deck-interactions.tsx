@@ -20,6 +20,7 @@ import {
 	settingsOf,
 } from "./settings-atoms";
 import { variantEntry } from "./variants";
+import { useWidth } from "./width";
 
 const TITLE = "Deck interactions";
 
@@ -80,6 +81,7 @@ export function DeckInteractions() {
 	const [deal, setDeal] = useState(0);
 	const frameRef = useRef<HTMLDivElement>(null);
 	const frame = useFrameSize(frameRef);
+	const width = useWidth(settings.width);
 	const entry = variantEntry(settings.variant);
 	const storedKnobs = settings.knobs[entry.key];
 	const knobs = readKnobs(entry.key, storedKnobs);
@@ -107,6 +109,7 @@ export function DeckInteractions() {
 					data-deck-frame=""
 					data-variant={entry.key}
 					data-reduced={reduce || undefined}
+					data-width={width}
 					className="relative min-h-[36rem] flex-1 touch-none overflow-hidden rounded-[0.7rem] border border-line bg-canvas"
 				>
 					{snapshot.isError ? (
@@ -124,7 +127,7 @@ export function DeckInteractions() {
 					) : null}
 					{frame.w > 0 && cards && cards.length > 0 ? (
 						<WorkspaceInteractionProvider
-							key={`${entry.key}-${settings.rtl.toString()}`}
+							key={`${entry.key}-${settings.rtl.toString()}-${width}`}
 							interaction={STAYS}
 						>
 							{entry.render(
@@ -135,6 +138,7 @@ export function DeckInteractions() {
 									motion,
 									readouts,
 									deal,
+									width,
 								},
 								storedKnobs,
 							)}
@@ -149,7 +153,11 @@ export function DeckInteractions() {
 					readouts={readouts}
 					onSettings={(next) => {
 						patch(next);
-						if (next.variant || next.rtl !== undefined)
+						if (
+							next.variant ||
+							next.rtl !== undefined ||
+							next.width !== undefined
+						)
 							readouts.set({
 								phase: "rest",
 								zone: null,

@@ -1,4 +1,4 @@
-import { Maximize2Icon, XIcon } from "lucide-react";
+import { Maximize2Icon, PanelRightOpenIcon, XIcon } from "lucide-react";
 import { type MotionValue, motion, useTransform } from "motion/react";
 import { PAPER_INNER_CORNERS } from "@/presentation/skin";
 import type { Anchor } from "./swipe-collapse";
@@ -41,9 +41,33 @@ const GAP = 8;
  */
 const BORDER_PX = 1;
 
-const TONE = {
-	dismiss: { fill: "bg-destructive", text: "text-destructive" },
-	expand: { fill: "bg-link", text: "text-link" },
+/**
+ * Each action's icon, label and tone. The other Pane's is amber, the
+ * app's third chart hue, so it never reads as Open's blue or Close deck's
+ * red; its icon is a Pane opening at inline-end, mirrored in RTL.
+ */
+const ACTIONS = {
+	dismiss: {
+		Icon: XIcon,
+		label: "Close deck",
+		fill: "bg-destructive",
+		text: "text-destructive",
+		mirrors: false,
+	},
+	expand: {
+		Icon: Maximize2Icon,
+		label: "Open",
+		fill: "bg-link",
+		text: "text-link",
+		mirrors: false,
+	},
+	"other-pane": {
+		Icon: PanelRightOpenIcon,
+		label: "Other pane",
+		fill: "bg-chart-3",
+		text: "text-chart-3",
+		mirrors: true,
+	},
 } as const;
 
 /**
@@ -66,7 +90,8 @@ function alongOf(
 /**
  * D's action panel, in the Card's own box and just under it, as an iOS
  * Mail row's actions are: red "Close deck" for inline-start and down,
- * blue "Open" for inline-end and up. It is the Card's box at its anchor,
+ * blue "Open" for up, and for inline-end on a phone, amber "Other pane"
+ * for inline-end on a wide screen. It is the Card's box at its anchor,
  * less the border across the axis, drawn by the Card's own
  * values and scaled about the same centre, so its edges sit exactly
  * inside the Card's at any scale. As the Card uncovers it the strip is
@@ -170,12 +195,15 @@ export function SwipePanel({
 	);
 	const fill = useTransform(values.flood, (f) => tint + (1 - tint) * f);
 	const toned = useTransform(values.flood, (f) => 1 - f);
-	const tone = TONE[panel.zone];
-	const Icon = panel.zone === "dismiss" ? XIcon : Maximize2Icon;
-	const label = panel.zone === "dismiss" ? "Close deck" : "Open";
+	const tone = ACTIONS[panel.zone];
+	const { Icon, label } = tone;
 	const face = (
 		<>
-			<Icon aria-hidden="true" className="size-5" strokeWidth={2.25} />
+			<Icon
+				aria-hidden="true"
+				className={`size-5${tone.mirrors && rtl ? " -scale-x-100" : ""}`}
+				strokeWidth={2.25}
+			/>
 			{labels ? (
 				<span
 					data-panel-label=""

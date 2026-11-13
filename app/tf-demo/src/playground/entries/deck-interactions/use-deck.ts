@@ -1,5 +1,8 @@
-import { type MotionValue, motionValue } from "motion/react";
+import { isNarrow } from "compass";
+import { animate, type MotionValue, motionValue } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { remPx } from "@/presentation/deck-geometry";
+import { DISSOLVE_MS } from "./card-move";
 import { createCardMovePlayer } from "./card-move-player";
 import { CLOSE_DEFAULTS, type CloseKnobs, coverClose } from "./cover-close";
 import { approachRate, type Point, type Rect, type Slot } from "./geometry";
@@ -9,6 +12,7 @@ import {
 	SPRINGS,
 	type SpringSpec,
 	settle,
+	transition,
 	tweenTo,
 	wait,
 } from "./motion-kit";
@@ -53,6 +57,25 @@ function makeValues(slot?: Slot, z = 1): CardValues {
 /** What a glide moves: everything a slot places. */
 const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
 
+/**
+ * Takes `card` to `to` as the reduced path takes a Card across the table:
+ * it fades out where it shows, is put there while hidden, and fades in,
+ * each half `DISSOLVE_MS` long, as the Deck's player dissolves a close.
+ * A close that takes the Card meanwhile stops its fade, and a stopped
+ * animation never finishes, so the rest of this never runs.
+ */
+async function dissolveTo(
+	card: CardValues,
+	to: Readonly<Record<(typeof GLIDING)[number], number>>,
+	context: MotionContext,
+) {
+	for (const key of GLIDING) card[key].jump(card[key].get());
+	const half = { ms: DISSOLVE_MS, ease: [0, 0, 1, 1] as const };
+	await animate(card.o, 0, transition(half, context));
+	for (const key of GLIDING) card[key].jump(to[key]);
+	await animate(card.o, 1, transition(half, context));
+}
+
 const BASE_Z = 10;
 /** A Card a tap or a close lifts off the Deck: above every Card in it, under the hand's. */
 const LIFTED_Z = 90;
@@ -79,6 +102,7 @@ export function useDeck({
 	layout,
 	deal,
 	close = CLOSE_DEFAULTS,
+	narrow,
 }: {
 	/** The Cards dealt, back to front: read once, when the Deck is made. */
 	readonly cards: readonly { readonly id: string }[];
@@ -90,6 +114,8 @@ export function useDeck({
 	readonly layout: (frame: Frame, count: number) => Slot[];
 	/** How the Cover's close plays: its defaults unless a variant's knobs say. */
 	readonly close?: CloseKnobs;
+	/** Whether the Cover fills its Pane, as on a phone; left out, the screen says, as the app reads it. */
+	readonly narrow?: boolean;
 }) {
 	const [initialOrder] = useState(() => cards.map((card) => card.id));
 	const [order, setOrder] = useState<readonly string[]>(initialOrder);
@@ -297,23 +323,32 @@ export function useDeck({
 	 * Opens `id` into the Cover in a straight line from where it is: of
 	 * the hand's `velocity` only the part headed for the Cover carries on,
 	 * so a hand moving any other way never carries the Card off the line
-	 * or past the Cover first.
+	 * or past the Cover first. With `into`, a Cover's box in another Pane,
+	 * it opens there instead, the same way; reduced, it dissolves into it.
 	 */
 	const expand = useCallback(
-		async (id: string, velocity?: Point) => {
+		async (id: string, velocity?: Point, into?: Rect) => {
 			player.take(id);
 			busy.current.add(id);
-			valuesOf(id).z.set(COVER_Z);
+			const card = valuesOf(id);
+			card.z.set(COVER_Z);
 			setExpanded(id);
 			readouts.set({ phase: "expanded" });
-			await glide(
-				id,
-				{ ...coverRect(frame), r: 0, s: 1 },
-				SPRINGS.morph,
-				velocity,
-			);
+			const box =
+				into ??
+				coverRect(
+					frame,
+					narrow ??
+						isNarrow(document.documentElement.clientWidth, remPx()),
+				);
+			const to = { ...box, r: 0, s: 1, lift: 0 };
+			if (into && motionRef.current.reduce) {
+				await dissolveTo(card, to, motionRef.current);
+				return;
+			}
+			await glide(id, to, SPRINGS.morph, velocity);
 		},
-		[valuesOf, readouts, glide, frame, player],
+		[valuesOf, readouts, glide, frame, player, narrow],
 	);
 
 	/**

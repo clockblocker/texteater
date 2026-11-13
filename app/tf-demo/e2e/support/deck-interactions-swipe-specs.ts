@@ -23,7 +23,8 @@ import { record } from "./deck-interactions-tap";
 /**
  * The Deck interactions spec's swipe checks in each writing direction,
  * declared into it by `swipeDirectionSpecs`: every Card takes every swipe,
- * and the panel fits the swiped Card and holds its icon still.
+ * and the panel fits the swiped Card and holds its icon still. The spec's
+ * screen is wide, so inline-end opens the Card in the other Pane.
  */
 export function swipeDirectionSpecs() {
 	for (const to of DIRECTIONS) {
@@ -38,7 +39,7 @@ export function swipeDirectionSpecs() {
 				to === "LTR" ? ["left", "right"] : ["right", "left"];
 			expect(front).toEqual({
 				[start]: "dismiss armed, closes",
-				[end]: "expand armed, opens",
+				[end]: "other-pane armed, opens",
 				up: "expand armed, opens",
 				down: "dismiss armed, closes",
 			});

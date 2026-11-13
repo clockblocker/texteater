@@ -16,6 +16,7 @@ const playgroundSpecs = [
 	"deck-gestures.pw.ts",
 	"deck-interactions.pw.ts",
 	"deck-motion.pw.ts",
+	"deck-other-pane.pw.ts",
 	"deck-swipe-exit.pw.ts",
 	"deck-tricks.pw.ts",
 	"motion-preference.pw.ts",

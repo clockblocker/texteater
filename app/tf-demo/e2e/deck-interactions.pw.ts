@@ -28,6 +28,7 @@ import {
 	swipeDirectionSpecs,
 	swipeUpSpecs,
 } from "./support/deck-interactions-swipe-specs";
+import { choose } from "./support/deck-interactions-tap";
 import { tapSpecs } from "./support/deck-interactions-tap-specs";
 
 /**
@@ -181,10 +182,13 @@ test("D: past the threshold the panel arms, and the release does what it shows",
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
 });
 
-test("D: an Open commit goes straight to the Cover, never further toward inline-end, and the Deck behind rests", async ({
+test("D: an Open commit goes straight to the Cover, never further toward inline-end, and the Deck behind rests (inline-end opens it on a phone)", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
+	await choose(page, "Width", "phone");
+	await page.mouse.move(5, 5);
+	await landed(page);
 	const card = front(page);
 	const box = await card.boundingBox();
 	if (!box) throw new Error("Missing card geometry");
@@ -277,7 +281,7 @@ test("D: in RTL, inline-start is on the right, and the Deck gathers onto a Card 
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
 });
 
-test("D: toward Open a Card from behind slides out under the Cards in front of it", async ({
+test("D: toward inline-end a Card from behind slides out under the Cards in front of it", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
@@ -287,7 +291,7 @@ test("D: toward Open a Card from behind slides out under the Cards in front of i
 	);
 	await pull(page, back, 80, 0);
 	await expect(back).toHaveCSS("z-index", z);
-	await expect(panel(page)).toHaveAttribute("data-panel", "expand");
+	await expect(panel(page)).toHaveAttribute("data-panel", "other-pane");
 	await page.mouse.up();
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 });

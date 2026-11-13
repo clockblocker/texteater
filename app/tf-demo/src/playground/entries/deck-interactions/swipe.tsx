@@ -1,13 +1,15 @@
 import { animate, motionValue } from "motion/react";
 import {
 	type PointerEvent as ReactPointerEvent,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
 import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
 import { drawn, type Slot } from "./geometry";
-import { pileSlots } from "./layout";
+import { otherCoverRect, panesOf, pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
+import { OtherPane, useOtherPane } from "./other-pane";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
 import { type Anchor, type Binding, bindDeck } from "./swipe-collapse";
 import {
@@ -49,9 +51,9 @@ type Gesture = {
 };
 
 /**
- * A panel let go on Open: its box, its stacking and its anchor as they
- * were drawn when the hand let go, held still, and how much of it the
- * Card had uncovered then, in px.
+ * A panel let go on Open or the other Pane: its box, its stacking and
+ * its anchor as they were drawn when the hand let go, held still, and how
+ * much of it the Card had uncovered then, in px.
  */
 type Kept = {
 	readonly box: PanelBox;
@@ -72,9 +74,9 @@ function along(axis: Axis, drag: Drag) {
  * Cards in front hide it as they hide the Card. Across the block axis all
  * of the Card's width shows. Across the inline axis, toward Close deck,
  * they come onto the Card and uncover its box as they go, so its icon
- * sits in its middle, as on the front Card; toward Open they stay put,
- * and a Card behind shows only its strip above the next Card: its icon
- * sits in that strip.
+ * sits in its middle, as on the front Card; toward Open or the other
+ * Pane they stay put, and a Card behind shows only its strip above the
+ * next Card: its icon sits in that strip.
  */
 function showsOf(
 	slots: readonly Slot[],
@@ -83,7 +85,7 @@ function showsOf(
 ): number | null {
 	const slot = slots[index];
 	const next = slots[index + 1];
-	if (!slot || !next || panel.axis !== "inline" || panel.zone !== "expand")
+	if (!slot || !next || panel.axis !== "inline" || panel.zone === "dismiss")
 		return null;
 	return Math.max(0, drawn(next).v - drawn(slot).v);
 }
@@ -101,7 +103,9 @@ function showsOf(
  * "Flick commits" is on and the hand was going fast enough the way it
  * pulled to have reached it: then the colour floods in as it lets go. The
  * Deck itself never moves on hover: the Card under the pointer only
- * lights its border.
+ * lights its border. On a wide screen the Deck rests in its own Pane, and
+ * a swipe toward inline-end opens the Card in the other Pane beside it,
+ * the way Open opens it into the Cover; on a phone it opens the Cover.
  */
 export function SwipeVariant({
 	cards,
@@ -111,16 +115,24 @@ export function SwipeVariant({
 	readouts,
 	knobs,
 	deal,
+	width,
 }: VariantProps<SwipeKnobs>) {
+	/* the Deck rests in its own Pane; on a wide screen the other is beside it */
+	const panes = useMemo(
+		() => panesOf(frame, width, knobs.otherPaneShare),
+		[frame, width, knobs.otherPaneShare],
+	);
 	const deck = useDeck({
 		cards,
-		frame,
+		frame: panes.deck,
 		motion,
 		readouts,
 		deal,
 		layout: pileSlots,
 		close: knobs,
+		narrow: width === "phone",
 	});
+	const otherPane = useOtherPane(deck);
 	const [held, setHeld] = useState<string | null>(null);
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);
@@ -200,7 +212,7 @@ export function SwipeVariant({
 			axis === "inline" ? g.slot.w * g.slot.s : g.slot.h * g.slot.s;
 		const sign = hand < 0 ? -1 : 1;
 		pull.set(sign * travelOf(Math.abs(hand), end, knobs.rubberLimit));
-		const verdict = verdictOf(axis, pull.get(), knobs.threshold);
+		const verdict = verdictOf(axis, pull.get(), knobs.threshold, width);
 		const next: Panel = { id: g.id, axis, sign, zone: verdict.zone };
 		setPanel((current) =>
 			current?.id === next.id &&
@@ -315,7 +327,8 @@ export function SwipeVariant({
 	}
 
 	/**
-	 * At it: the panel fades as the Card opens, or as the Card and the Deck
+	 * At it: the panel fades as the Card opens, here or in the other Pane,
+	 * or as the Card and the Deck
 	 * folded onto it leave as one: the fold is whole there, and the other
 	 * Cards, which just finished it, would otherwise part from the Card.
 	 * The Card opens in a straight line from where the hand let go, so a
@@ -346,17 +359,21 @@ export function SwipeVariant({
 				motion,
 			),
 		);
-		if (verdict.zone === "expand") {
+		if (verdict.zone !== "dismiss") {
 			if (bound) setKept(keep(g.id, axis, bound.anchor));
 			void fade.then(() => {
 				if (gen.current !== g.gen) return;
 				setPanel(null);
 				setKept(null);
 			});
-			await deck.expand(
-				g.id,
-				axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed },
-			);
+			const velocity =
+				axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed };
+			const into =
+				verdict.zone === "other-pane" && panes.other
+					? otherCoverRect(panes.other)
+					: undefined;
+			if (into) otherPane.open(g.id);
+			await deck.expand(g.id, velocity, into);
 			return;
 		}
 		const sign = pull.get() < 0 ? -1 : 1;
@@ -376,10 +393,11 @@ export function SwipeVariant({
 					along(axis, drag).speed,
 					knobs.threshold,
 					{ on: knobs.flickCommits, ms: knobs.flickMs },
+					width,
 				)
 			: {
 					commits: false,
-					zone: zoneOf(axis, pull.get()),
+					zone: zoneOf(axis, pull.get(), width),
 					reason: "cancelled",
 				};
 		setHeld(null);
@@ -434,7 +452,12 @@ export function SwipeVariant({
 			pull.stop();
 			g.axis = bound.axis;
 			g.start = pull.get();
-			g.commits = verdictOf(bound.axis, g.start, knobs.threshold).commits;
+			g.commits = verdictOf(
+				bound.axis,
+				g.start,
+				knobs.threshold,
+				width,
+			).commits;
 			begin(g, bound.axis, true);
 		}
 		trackPointer(event, rtl, {
@@ -476,38 +499,45 @@ export function SwipeVariant({
 	/* the panel is in the Deck's layer too, under the Cards in front of
 	   its Card: faded with them, it never shows through one */
 	return (
-		<DeckLayer
-			opacity={deck.opacity}
-			lit={pressed === null && deck.status === "dealt"}
-		>
-			{panel && anchor && index >= 0 && deck.status !== "gone" ? (
-				<SwipePanel
-					key={`${panel.id}-${panel.axis}`}
-					panel={panel}
-					card={kept?.box ?? deck.valuesOf(panel.id)}
-					anchor={kept?.anchor ?? anchor}
-					shows={shows}
-					kept={kept?.uncovered ?? null}
-					values={values}
-					armed={armed}
-					threshold={knobs.threshold}
-					tint={knobs.tint}
-					labels={
-						knobs.panelLabels &&
-						(shows === null || shows >= LABEL_ROOM_PX)
-					}
-					rtl={rtl}
-					reduce={motion.reduce}
-				/>
-			) : null}
-			<DeckCards
-				cards={cards}
-				deck={deck}
-				rtl={rtl}
-				held={held}
-				highlight
-				onDown={onDown}
+		<>
+			<OtherPane
+				pane={panes.other}
+				holds={otherPane.holds !== null}
+				motion={motion}
 			/>
-		</DeckLayer>
+			<DeckLayer
+				opacity={deck.opacity}
+				lit={pressed === null && deck.status === "dealt"}
+			>
+				{panel && anchor && index >= 0 && deck.status !== "gone" ? (
+					<SwipePanel
+						key={`${panel.id}-${panel.axis}`}
+						panel={panel}
+						card={kept?.box ?? deck.valuesOf(panel.id)}
+						anchor={kept?.anchor ?? anchor}
+						shows={shows}
+						kept={kept?.uncovered ?? null}
+						values={values}
+						armed={armed}
+						threshold={knobs.threshold}
+						tint={knobs.tint}
+						labels={
+							knobs.panelLabels &&
+							(shows === null || shows >= LABEL_ROOM_PX)
+						}
+						rtl={rtl}
+						reduce={motion.reduce}
+					/>
+				) : null}
+				<DeckCards
+					cards={cards}
+					deck={deck}
+					rtl={rtl}
+					held={held}
+					highlight
+					onDown={onDown}
+				/>
+			</DeckLayer>
+		</>
 	);
 }

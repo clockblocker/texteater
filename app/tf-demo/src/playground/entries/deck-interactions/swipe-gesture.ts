@@ -10,8 +10,10 @@
  * distance alone.
  */
 
+import type { Width } from "./width";
+
 export type Axis = "inline" | "block";
-export type Zone = "dismiss" | "expand";
+export type Zone = "dismiss" | "expand" | "other-pane";
 
 export const COLLAPSE_CURVES = ["linear", "ease-in"] as const;
 export type CollapseCurve = (typeof COLLAPSE_CURVES)[number];
@@ -26,13 +28,20 @@ const CURVES: Record<CollapseCurve, (t: number) => number> = {
 const RUBBER_C = 0.55;
 
 /**
- * The action a pull uncovers: inline-start and down close the Deck,
- * inline-end and up open the Card.
+ * The action a pull uncovers on a screen of `width`: inline-start and
+ * down close the Deck, and up opens the Card, at every width. Inline-end
+ * opens the Card too on a phone; on a wide screen it opens the Card in
+ * the other Pane instead.
  */
-export function zoneOf(axis: Axis, pull: number): Zone {
-	const toStart = pull < 0;
-	if (axis === "inline") return toStart ? "dismiss" : "expand";
-	return toStart ? "expand" : "dismiss";
+export function zoneOf(axis: Axis, pull: number, width: Width): Zone {
+	if (pull < 0) return axis === "inline" ? "dismiss" : "expand";
+	if (axis === "block") return "dismiss";
+	return width === "wide" ? "other-pane" : "expand";
+}
+
+/** Whether a pull is toward Close deck, which it is the same way at every width. */
+function dismisses(axis: Axis, pull: number): boolean {
+	return axis === "inline" ? pull < 0 : pull >= 0;
 }
 
 /** iOS's rubber band: past an edge, each px moves less, never past `limit`. */
@@ -79,8 +88,9 @@ export function verdictOf(
 	axis: Axis,
 	pull: number,
 	threshold: number,
+	width: Width,
 ): Verdict {
-	const zone = zoneOf(axis, pull);
+	const zone = zoneOf(axis, pull, width);
 	const px = Math.round(Math.abs(pull)).toString();
 	return progressOf(pull, threshold) >= 1
 		? { commits: true, zone, reason: `threshold ${px}` }
@@ -104,8 +114,9 @@ export function releaseVerdictOf(
 	speed: number,
 	threshold: number,
 	flick: Flick,
+	width: Width,
 ): Verdict {
-	const verdict = verdictOf(axis, pull, threshold);
+	const verdict = verdictOf(axis, pull, threshold, width);
 	if (verdict.commits || !flick.on || pull === 0) return verdict;
 	const sign = pull < 0 ? -1 : 1;
 	const onward = Math.max(0, speed * sign);
@@ -130,7 +141,7 @@ export function collapseOf(
 	threshold: number,
 	curve: CollapseCurve,
 ): number {
-	if (zoneOf(axis, pull) !== "dismiss") return 0;
+	if (!dismisses(axis, pull)) return 0;
 	return CURVES[curve](progressOf(pull, threshold));
 }
 

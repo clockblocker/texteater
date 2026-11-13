@@ -26,6 +26,7 @@ test("the page opens on D with full motion, real time and LTR", () => {
 		reducedMotion: "off",
 		timeScale: 1,
 		rtl: false,
+		width: "auto",
 		knobs: {},
 	});
 });
@@ -35,7 +36,12 @@ test("a stored field that no longer decodes falls back alone", () => {
 		new Map([
 			[
 				STORAGE_KEY,
-				JSON.stringify({ variant: "retired", rtl: true, timeScale: 3 }),
+				JSON.stringify({
+					variant: "retired",
+					rtl: true,
+					timeScale: 3,
+					width: "tablet",
+				}),
 			],
 		]),
 	);
@@ -45,6 +51,7 @@ test("a stored field that no longer decodes falls back alone", () => {
 	expect(settings.variant).toBe("swipe");
 	expect(settings.rtl).toBe(true);
 	expect(settings.timeScale).toBe(1);
+	expect(settings.width).toBe("auto");
 });
 
 test("Storage that throws reads as the defaults", () => {

@@ -16,6 +16,8 @@ import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
  * `dismissOpacity` at the threshold; a commit carries it on at the hand's
  * speed for at most `driftPx`, slowing to a stop, while it fades out in
  * `exitFadeMs`.
+ * On a wide screen the other Pane takes `otherPaneShare` of the frame at
+ * inline-end, and the Deck rests in the middle of what is left.
  */
 export const SWIPE_DEFAULTS = {
 	...TAP_DEFAULTS,
@@ -38,6 +40,7 @@ export const SWIPE_DEFAULTS = {
 	flickMs: 200,
 	haptic: true,
 	panelLabels: true,
+	otherPaneShare: 0.5,
 };
 export type SwipeKnobs = typeof SWIPE_DEFAULTS;
 
@@ -86,4 +89,5 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 	num("flickMs", "Flick projection", 50, 500, 10, "ms"),
 	{ kind: "toggle", key: "haptic", label: "Haptic tick (where supported)" },
 	{ kind: "toggle", key: "panelLabels", label: "Panel labels" },
+	num("otherPaneShare", "Other pane share (wide)", 0.3, 0.7, 0.05),
 ];

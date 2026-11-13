@@ -1,6 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import { pileCards, presentationMetrics } from "./support/card-foundation";
 import { chooseVariant, landed } from "./support/deck-interactions";
+import { choose } from "./support/deck-interactions-tap";
 
 /**
  * One foundation draws a Presentation in the app's renderer, in the Notes
@@ -203,10 +204,16 @@ for (const motion of ["no-preference", "reduce"] as const) {
 				await dealInApp(page),
 				'[data-form="card"]',
 			);
-			const prototype = await pileCards(
-				await dealInDeckInteractions(page, "D · Swipe actions"),
-				"[data-card-id]",
+			/* on a wide screen D gives the Deck its own Pane beside the other
+			   one, so the frame is the Deck's whole Pane only on a phone */
+			const frame = await dealInDeckInteractions(
+				page,
+				"D · Swipe actions",
 			);
+			await choose(page, "Width", "phone");
+			await page.mouse.move(5, 5);
+			await landed(page);
+			const prototype = await pileCards(frame, "[data-card-id]");
 			const rounded = (cards: typeof app) =>
 				cards.map((card) => ({
 					width: card.width,
