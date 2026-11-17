@@ -80,6 +80,21 @@ export type SlotLink = {
 export type SlotReading = Pick<Candidates, "sentence" | "accepted">;
 
 /**
+ * The multiword names the accepted name pairs make, each its piece ids
+ * (Johann Wolfgang von Goethe, das Schwäbische Meer's Schwäbischen Meeres).
+ */
+export function acceptedNames(
+	accepted: SlotReading["accepted"],
+): (readonly number[])[] {
+	const pairs = accepted
+		.filter(([, , kind]) => kind === "name")
+		.map(([left, right]) => [left, right] as const);
+	return partitionOf([...new Set(pairs.flat())], pairs).filter(
+		(name) => name.length > 1,
+	);
+}
+
+/**
  * A slot's host shares with each accepted name's pieces pooled on its most
  * probable piece: a name is one host, and the judge spreads an article's
  * share over its words (die Deutsche Post AG: Deutsche 0.08, Post 0.42, AG
@@ -89,12 +104,7 @@ function pooledByName(
 	accepted: SlotReading["accepted"],
 	probabilities: Readonly<Record<string, number>>,
 ): Readonly<Record<string, number>> {
-	const pairs = accepted
-		.filter(([, , kind]) => kind === "name")
-		.map(([left, right]) => [left, right] as const);
-	const names = partitionOf([...new Set(pairs.flat())], pairs).filter(
-		(name) => name.length > 1,
-	);
+	const names = acceptedNames(accepted);
 	if (names.length === 0) return probabilities;
 	const pooled: Record<string, number> = { ...probabilities };
 	for (const name of names) {

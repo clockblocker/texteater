@@ -18,6 +18,7 @@ import {
 	fusedSiblings,
 	isArticle,
 	nounLike,
+	oldSpellingCorrelators,
 	particleForms,
 	reflexiveSubject,
 	splitAdverbForm,
@@ -131,62 +132,75 @@ const zuInfinitive: ReadonlySet<string> = new Set(
 	germanConjunctionLocutions.zuInfinitive,
 );
 
-export function anchors(nomination: Nomination): Decision {
-	const { pieces } = nomination.sentence;
-	const named = new Map(
-		nomination.pairs.map((pair) => [
-			`${pair.left.id},${pair.right.id}`,
-			pair.name,
-		]),
+/** The name of each proposed pair, old-spelling so … daß included, by its two piece ids. */
+function pairNames(nomination: Nomination): ReadonlyMap<string, string> {
+	return new Map(
+		[
+			...nomination.pairs,
+			...oldSpellingCorrelators(nomination.sentence),
+		].map((pair) => [`${pair.left.id},${pair.right.id}`, pair.name]),
 	);
+}
+
+/** A unit the `anchors` rule closes: its anchors and the correlator or conjunction they form. */
+export type AnchoredUnit = {
+	readonly pieces: readonly number[];
+	readonly name: string;
+};
+
+/**
+ * The units the `anchors` rule closes: each accepted correlator, X-dass
+ * subordinator and zu-infinitive circumposition, its anchors only.
+ */
+export function anchoredUnits(nomination: Nomination): AnchoredUnit[] {
+	const { pieces } = nomination.sentence;
+	const named = pairNames(nomination);
+	return accepted(nomination)
+		.filter(
+			([left, right, kind]) =>
+				kind === "correlator" ||
+				(kind === "circumposition" &&
+					zuInfinitive.has(named.get(`${left},${right}`) ?? "")),
+		)
+		.map(([left, right]) => {
+			const name = named.get(`${left},${right}`) ?? "";
+			const ids = [left, right];
+			for (const [anchor, next] of extraAnchors[name] ?? []) {
+				const at = ids.find(
+					(id) => pieces[id - 1]?.word.toLowerCase() === anchor,
+				);
+				const following = at === undefined ? undefined : pieces[at];
+				if (following && lower(following) === next)
+					ids.push(following.id);
+			}
+			return { pieces: ids, name };
+		});
+}
+
+export function anchors(nomination: Nomination): Decision {
 	return {
-		closed: accepted(nomination)
-			.filter(
-				([left, right, kind]) =>
-					kind === "correlator" ||
-					(kind === "circumposition" &&
-						zuInfinitive.has(named.get(`${left},${right}`) ?? "")),
-			)
-			.map(([left, right]) => {
-				const ids = [left, right];
-				for (const [anchor, next] of extraAnchors[
-					named.get(`${left},${right}`) ?? ""
-				] ?? []) {
-					const at = ids.find(
-						(id) => pieces[id - 1]?.word.toLowerCase() === anchor,
-					);
-					const following = at === undefined ? undefined : pieces[at];
-					if (following && lower(following) === next)
-						ids.push(following.id);
-				}
-				return { pieces: ids, family: "Locution" };
-			}),
+		closed: anchoredUnits(nomination).map(({ pieces }) => ({
+			pieces,
+			family: "Locution",
+		})),
 	};
 }
 
 /**
- * The route of a unit of exactly an accepted circumposition's two pieces
- * that no zu-infinitive conjunction names: Locution ADP
- * (de/bracket-particle-or-circumposition), whatever Kind the route Choice
- * hears. Von diesem Tag an is [Von, an] ADP like von morgen an (#1162).
+ * The accepted circumpositions no zu-infinitive conjunction names, each its
+ * two piece ids, which `anchorRoutes` routes Locution ADP.
  */
-export function circumpositionRoutes(nomination: Nomination): FixedRoute {
-	const named = new Map(
-		nomination.pairs.map((pair) => [
-			`${pair.left.id},${pair.right.id}`,
-			pair.name,
-		]),
-	);
-	const fixed = new Set(
-		accepted(nomination)
-			.filter(
-				([left, right, kind]) =>
-					kind === "circumposition" &&
-					!zuInfinitive.has(named.get(`${left},${right}`) ?? ""),
-			)
-			.map(([left, right]) => groupKey([left, right])),
-	);
-	return (group) => (fixed.has(groupKey(group)) ? "Locution/ADP" : undefined);
+export function plainCircumpositions(
+	nomination: Nomination,
+): (readonly [number, number])[] {
+	const named = pairNames(nomination);
+	return accepted(nomination)
+		.filter(
+			([left, right, kind]) =>
+				kind === "circumposition" &&
+				!zuInfinitive.has(named.get(`${left},${right}`) ?? ""),
+		)
+		.map(([left, right]) => [left, right] as const);
 }
 
 /** Quantity bisschen, in its spelling and its Historical spelling: the realizations of PRON bisschen. */

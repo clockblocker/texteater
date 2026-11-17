@@ -16,8 +16,8 @@
  * assembly and the inventory are settings, so the reference's adopted
  * setting (#762) stays expressible for experiments. Over its membership
  * run X3's ten code rules, X5's saying-closed, D4's stranded-adverb,
- * X4's bracket-particle (#851, `code-rules.ts`) and #1155's particle-verb,
- * which routing reads, each enforcing one dumcorpus Rule: on dev X3's
+ * X4's bracket-particle (#851, `code-rules.ts`), #1155's particle-verb and
+ * the name rule, which routing reads, each enforcing one dumcorpus Rule: on dev X3's
  * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
  * merges those whose two units both pass de/fixed-member-test at 0.6: with
@@ -163,6 +163,7 @@ export const productionUnitSettings: UnitSettings = {
 		"saying-closed",
 		"bracket-particle",
 		"particle-verb",
+		"name",
 	],
 	// #1325: every member of an assembled Locution is asked
 	// de/fixed-member-test, and one read free at 0.7, the floor its idiom

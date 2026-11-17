@@ -7,20 +7,25 @@
  * - `split-adverb` (de/split-adverb-is-one-target,
  *   de/pronominal-adverb-stands-alone): an accepted split adverb (Da … hin,
  *   Wo … mit) is one unit of exactly its two pieces, and the verb stays
- *   bare.
+ *   bare. That unit routes Lexeme ADV (`code-rules-routes.ts`).
  * - `stranded-adverb` (de/split-adverb-is-one-target,
  *   de/pronominal-adverb-stands-alone): a preposition that is never a
  *   separable particle (für, von, gegen, in, neben, hinter, zwischen) left
  *   at the end of its clause has no complement, so with a da, wo or hier
  *   before it in that clause it is a split pronominal adverb, though the
- *   judge rejected the pair: Da kann ich nichts für gives [Da, für].
+ *   judge rejected the pair: Da kann ich nichts für gives [Da, für],
+ *   a Lexeme ADV.
  * - `anchors` (de/correlator-anchors, de/dass-conjunction,
  *   de/complex-preposition): an accepted correlator, X-dass subordinator or
  *   circumposition is one Locution of its anchors only, the auch and nur of
  *   sowohl … als auch and nicht nur … sondern auch included. The words they
- *   connect or govern stay outside. A unit of exactly an accepted
- *   circumposition's two pieces that no zu-infinitive conjunction names
- *   routes Locution ADP (de/bracket-particle-or-circumposition, #1162).
+ *   connect or govern stay outside. A unit of exactly those anchors routes
+ *   the Kind its Rule names: CCONJ entweder … oder, SCONJ je … desto and
+ *   um … zu, ADV teils … teils, and Lexeme SCONJ for so dass, the
+ *   spelling of sodass (de/dass-conjunction). A unit of exactly an
+ *   accepted circumposition's two pieces that no zu-infinitive conjunction
+ *   names routes Locution ADP (de/bracket-particle-or-circumposition,
+ *   #1162).
  * - `quantifier` (de/quantifier-by-use): ein wenig, ein paar, and an
  *   article right before quantity bisschen, are one Lexeme PRON unit each,
  *   and what they quantify is its own: Nach ein paar Sekunden gives
@@ -99,6 +104,11 @@
  *   every other Lexeme Kind's. That keeps a Locution of another Kind with
  *   one prefix word (ohne … zu, Auf Wiedersehen, vor allem) a Locution, and
  *   asks nothing more, since routing reads the answers it already has.
+ * - `name` (de/proper-noun-article, ADR 0039): a unit of two or more
+ *   pieces of one multiword name the judge accepted, with nothing beside
+ *   them but articles, routes Lexeme PROPN, whatever Kind the route Choice
+ *   hears: [des, Schwäbischen, Meeres] is PROPN Schwäbisches Meer, never a
+ *   NOUN Meer whose members hold Schwäbischen.
  * - `saying-closed` (de/saying-needs-uptake,
  *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
  *   over exactly its own words, so a link between a word inside a Saying
@@ -107,6 +117,12 @@
  *   governed preposition.
  */
 import type { AssembledEdge, Family, Membership } from "./assembly.js";
+import {
+	anchorRoutes,
+	nameRoutes,
+	splitAdverbRoutes,
+	strandedAdverbRoutes,
+} from "./code-rules-routes.js";
 import {
 	bracketParticles,
 	infixedZu,
@@ -118,7 +134,6 @@ import {
 	articleHeadRoutes,
 	articleHeads,
 	binomialLinks,
-	circumpositionRoutes,
 	pronouns,
 	quantifierRoutes,
 	quantifiers,
@@ -147,6 +162,7 @@ export const codeRules = [
 	"saying-closed",
 	"bracket-particle",
 	"particle-verb",
+	"name",
 ] as const;
 
 export type CodeRule = (typeof codeRules)[number];
@@ -167,17 +183,23 @@ export type Decision = {
 };
 
 /**
- * The routes the listed rules fix (`anchors`, `quantifier`, `article-head`, `was-fuer`, `particle-verb`), the
- * first rule's that fixes one; undefined when no listed rule fixes routes.
+ * The routes the listed rules fix (`split-adverb`, `stranded-adverb`,
+ * `anchors`, `quantifier`, `article-head`, `was-fuer`, `particle-verb`,
+ * `name`), the first rule's that fixes one; undefined when no listed rule
+ * fixes routes.
  */
 export function codeRoutes(
 	nomination: Nomination,
 	rules: readonly CodeRule[],
 ): FixedRoute | undefined {
 	const routes = [
-		...(rules.includes("anchors")
-			? [circumpositionRoutes(nomination)]
+		...(rules.includes("split-adverb")
+			? [splitAdverbRoutes(nomination)]
 			: []),
+		...(rules.includes("stranded-adverb")
+			? [strandedAdverbRoutes(nomination)]
+			: []),
+		...(rules.includes("anchors") ? [anchorRoutes(nomination)] : []),
 		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
 		...(rules.includes("article-head")
 			? [articleHeadRoutes(nomination)]
@@ -186,6 +208,7 @@ export function codeRoutes(
 		...(rules.includes("particle-verb")
 			? [particleVerbRoutes(nomination)]
 			: []),
+		...(rules.includes("name") ? [nameRoutes(nomination)] : []),
 	];
 	if (routes.length === 0) return undefined;
 	return (group, shares) => {
@@ -219,6 +242,8 @@ function decisionsOf(
 		"answer-apart": () => ({}),
 		// Read by routing (`codeRoutes`).
 		"particle-verb": () => ({}),
+		// Read by routing (`codeRoutes`).
+		name: () => ({}),
 		"saying-closed": () => sayingsClosed(membership.edges),
 		"bracket-particle": () => bracketParticles(nomination),
 	};
