@@ -26,6 +26,12 @@ const SOURCE = "Er gibt auf. Er wohnt im Haus.\n\nJa!";
 
 const VERB = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 const PRON = { language: "de", family: "Lexeme", kind: "PRON" } as const;
+/** Er as intake stores it: a PRON unit with its closed-class identity (#864). */
+const ER = {
+	segments: [0],
+	route: PRON,
+	identity: { kind: "PRON" as const, canonicalForm: "er", pronType: "Prs" },
+};
 
 /**
  * The submission as the `persistSubmittedScroll` mutation takes it: intake hands
@@ -120,10 +126,7 @@ test("intake splits a Scroll into paragraphs and Sentences in code and hands eac
 	]);
 	const [gibtAuf, wohnt] = submission?.sentences ?? [];
 	// A separable verb is one unit over discontinuous Segments, by index.
-	expect(gibtAuf?.units).toEqual([
-		{ segments: [0], route: PRON },
-		{ segments: [2, 4], route: VERB },
-	]);
+	expect(gibtAuf?.units).toEqual([ER, { segments: [2, 4], route: VERB }]);
 	// A fused word arrives as its pieces, each with the word it stands for.
 	expect(wohnt?.segments.slice(4, 6)).toEqual([
 		{ kind: "ResolvableText", text: "i", surface: "in" },
@@ -154,10 +157,7 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 			view: await projectSentenceView(ctx, sentence, "visitor-1"),
 		};
 	});
-	expect(view.units).toEqual([
-		{ segments: [0], route: PRON },
-		{ segments: [2, 4], route: VERB },
-	]);
+	expect(view.units).toEqual([ER, { segments: [2, 4], route: VERB }]);
 	expect(
 		view.view.segments.map(({ index, text, unit }) => ({
 			index,
@@ -165,7 +165,7 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 			unit,
 		})),
 	).toEqual([
-		{ index: 0, text: "Er", unit: { segments: [0], route: PRON } },
+		{ index: 0, text: "Er", unit: ER },
 		{ index: 1, text: " ", unit: undefined },
 		{ index: 2, text: "gibt", unit: { segments: [2, 4], route: VERB } },
 		{ index: 3, text: " ", unit: undefined },
@@ -257,7 +257,7 @@ test("a Sentence whose jev request fails is stored marked as not segmented, with
 	});
 	// The other Sentences are untouched by it.
 	expect(sentences[0]?.units).toEqual([
-		{ segments: [0], route: PRON },
+		ER,
 		{ segments: [2, 4], route: VERB },
 	]);
 	expect(sentences[0]).not.toHaveProperty("segmentationFailed");
@@ -434,7 +434,7 @@ test("a mixed paste keeps its Extracted Text, segments only its German Sentences
 		},
 	]);
 	expect(submission.sentences[4]?.units).toEqual([
-		{ segments: [0], route: PRON },
+		ER,
 		{ segments: [2, 4], route: VERB },
 	]);
 	// Code rules the Hebrew Sentence out, so segmentation never reads it;

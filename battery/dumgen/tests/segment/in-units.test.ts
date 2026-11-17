@@ -125,6 +125,7 @@ test("inUnits segments each Sentence of each paragraph and routes its units", as
 		{
 			segments: [0],
 			route: { language: "de", family: "Lexeme", kind: "PRON" },
+			identity: { kind: "PRON", canonicalForm: "er", pronType: "Prs" },
 		},
 		{
 			segments: [2, 4],

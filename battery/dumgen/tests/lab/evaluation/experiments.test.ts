@@ -118,6 +118,12 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 	if (!offline.run) throw Error("no offline run");
 	expect(outputs(offline.run)).toEqual(outputs(run));
 
+	// The lab's runs store no closed-class identity (#864).
+	const labOutput = {
+		units: labCase.idealOutput.units.map(
+			({ identity: _, ...unit }) => unit,
+		),
+	};
 	const labRun: LabRun = {
 		runId: "lab",
 		arm: "candidates4",
@@ -137,9 +143,7 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 				repetitions: [0, 1, 2].map((repetition) => ({
 					outputs: {
 						[productionPolicy]:
-							repetition === 2
-								? { units: [] }
-								: labCase.idealOutput,
+							repetition === 2 ? { units: [] } : labOutput,
 					},
 					calls: [],
 					wallMs: 0,

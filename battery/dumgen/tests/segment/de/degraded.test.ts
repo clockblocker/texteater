@@ -66,6 +66,7 @@ test("a failed closed request leaves only the pieces it decides Unresolved, neve
 	expect(units).toContainEqual({
 		segments: [0],
 		route: route("Lexeme", "PRON"),
+		identity: { kind: "PRON", canonicalForm: "das", pronType: "Dem" },
 	});
 	expect(degraded.map(({ stage }) => stage)).toEqual(["closed"]);
 	// closed was sent once and apart, the routes went out all the same.

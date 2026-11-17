@@ -26,7 +26,11 @@
  *   prefix is Lexeme VERB, whatever Family code named.
  * - A one-piece DET or PRON unit keeps the authored identity the identity
  *   Choice picked, re-read for the final Kind when a Rule test flipped it
- *   (#864, `storedIdentity`).
+ *   or the Choice answered Other (#864, `storedIdentity`): a unit routed
+ *   DET or PRON whose spelling realizes an authored member of that Kind
+ *   always stores one, since a Closed Route resolves only to authored
+ *   members (system ADR 0021) and `resolve.grammar` builds its Lemma from
+ *   that identity alone.
  *
  * The route requests and how their answers read are `route-requests.ts`.
  */
@@ -70,17 +74,20 @@ import type { Piece, Sentence } from "./sentence.js";
  * The identity a one-piece unit stores (#864), consistent with its final
  * route: the picked candidate when its Kind is the route's, else the most
  * probable candidate of the route's Kind in the same Choice, as when the
- * DET/PRON Rule test flipped the Kind. None for another route, for
- * `Other`, or when no candidate has the route's Kind. A route a code rule
- * fixed (`fixed`) overrides `Other` as well, so a bare bisschen the judge
- * heard as another word still stores PRON bisschen.
+ * DET/PRON Rule test flipped the Kind or the Choice answered Other while
+ * the route Choice, or a code rule, still routed the unit DET or PRON.
+ * Other says no description fitted, not that the word is another one: the
+ * closed classes are enumerated, so a DET or PRON reading of this spelling
+ * is one of its authored members (system ADR 0021), and storing none would
+ * leave the click a permanent Catalog Miss. None for another route, or
+ * when the spelling realizes no member of the route's Kind: that is a gap
+ * in the inventory, which the click reports as a Catalog Miss.
  */
 export function storedIdentity(
 	pick: IdentityPick | undefined,
 	route: UnitRouteKey,
-	fixed = false,
 ): ClosedClassIdentity | undefined {
-	if (!pick || (pick.choice === "Other" && !fixed)) return undefined;
+	if (!pick) return undefined;
 	const kind =
 		route === "Lexeme/DET"
 			? "DET"
@@ -442,7 +449,6 @@ export function routeMembership(
 						? storedIdentity(
 								picks.get(groupKey(group)),
 								route(group),
-								fixed(group) !== undefined,
 							)
 						: undefined;
 				return {

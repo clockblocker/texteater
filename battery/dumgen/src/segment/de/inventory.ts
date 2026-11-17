@@ -55,9 +55,14 @@ const pronTypeNames: Readonly<Record<string, string>> = {
  * one PRON in every use (de/quantifier-by-use), so the default "standing
  * for a whole noun phrase" made jev answer Other for ein bisschen Milch and
  * klingt bisschen förmlich. ein wenig and ein paar are two pieces, which
- * the identity Choice never asks about.
+ * the identity Choice never asks about. es is the one PRON es in every use
+ * that stays a unit of its own (de/expletive-es-joins-its-verb): beside
+ * referential es, positional es and anticipatory es refer to nothing, so
+ * "standing for a whole noun phrase" made jev answer Other for Es geht
+ * durch mehrerer Herren Länder.
  */
 const pronounUses: Readonly<Record<string, string>> = {
+	es: "the pronoun 'it' in every use: standing for a noun phrase or a whole statement (Das Buch? Ich lese es; Ich weiß es), or referring to nothing, as the subject of an impersonal verb or the placeholder in first position (Es geht bergauf; Es kamen Gäste) or before a clause it anticipates (Es freut mich, dass du kommst)",
 	bisschen:
 		"the quantity word 'a bit, a little' in every use: before a noun (ein bisschen Brot, kein bisschen Zeit), alone (Iss noch ein bisschen) or grading a word (ein bisschen kalt, wartet bisschen länger)",
 };

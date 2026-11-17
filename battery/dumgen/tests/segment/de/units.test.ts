@@ -62,7 +62,11 @@ test("satellites join their verb and fixed words make a Locution, the split arti
 		germanUnits({ segments: zumGlueck }, judge.ask),
 	);
 	expect(units).toEqual([
-		{ segments: [0], route: route("Lexeme", "PRON") },
+		{
+			segments: [0],
+			route: route("Lexeme", "PRON"),
+			identity: { kind: "PRON", canonicalForm: "er", pronType: "Prs" },
+		},
 		{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
 		{ segments: [9, 10, 12], route: route("Locution", "ADV") },
 	]);

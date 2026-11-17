@@ -35,7 +35,15 @@ export const labCase: LabCase = {
 	input,
 	idealOutput: {
 		units: [
-			{ segments: [0], route: route("Lexeme", "PRON") },
+			{
+				segments: [0],
+				route: route("Lexeme", "PRON"),
+				identity: {
+					kind: "PRON",
+					canonicalForm: "er",
+					pronType: "Prs",
+				},
+			},
 			{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
 			{ segments: [9, 10, 12], route: route("Locution", "ADV") },
 		],

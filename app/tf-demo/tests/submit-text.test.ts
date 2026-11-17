@@ -89,6 +89,7 @@ test("a submitted German Scroll is split, segmented and stored with each Sentenc
 		{
 			segments: [0],
 			route: { language: "de", family: "Lexeme", kind: "PRON" },
+			identity: { kind: "PRON", canonicalForm: "er", pronType: "Prs" },
 		},
 		{
 			segments: [2, 4],
