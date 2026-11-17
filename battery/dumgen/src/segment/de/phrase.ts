@@ -82,7 +82,7 @@ export function phraseWindow(
  * first (auf ihn ist kein Verlass), so a noun past a pronoun may still be
  * a governor.
  */
-export function prepositionObject(
+function prepositionObject(
 	sentence: Sentence,
 	preposition: Piece,
 ): Piece | undefined {

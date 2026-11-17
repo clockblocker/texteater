@@ -203,7 +203,7 @@ export const emojiDescriptionSchema = {
  * The most tokens the Emoji Description call may write: at most 25 over
  * 9,113 cached answers, and four emoji in ZWJ sequences stay well under.
  */
-export const emojiDescriptionOutputLimit = 128;
+const emojiDescriptionOutputLimit = 128;
 
 /**
  * The Emoji Description request Luna gets, without its configuration. Luna

@@ -523,7 +523,7 @@ export const fusedArticle = (piece: Piece): boolean =>
  * apart is left to the expression pairs: um Ruhe and in den Rasen were read
  * as fixed at 0.71 and are free.
  */
-export function fusedPhraseLinks(
+function fusedPhraseLinks(
 	nomination: Pick<Nomination, "sentence" | "fixed">,
 	expression: readonly (readonly [number, number])[],
 	floor: number,

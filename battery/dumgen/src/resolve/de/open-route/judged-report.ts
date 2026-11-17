@@ -12,7 +12,7 @@ import type { Target } from "../target.js";
 import type { FirstRead } from "./first-request.js";
 
 /** The judged part of a click: its route and jev's answers, with what the headword may still change. */
-export function judgedGrammar(target: Target, first: FirstRead): JudgedGrammar {
+function judgedGrammar(target: Target, first: FirstRead): JudgedGrammar {
 	const nominal = first.block === "nominal" ? first : undefined;
 	const pending: JudgedGrammar["pending"] = nominal?.noun
 		? ["gender", "case"]
