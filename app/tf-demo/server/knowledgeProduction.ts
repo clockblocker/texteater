@@ -54,8 +54,9 @@ export type KnowledgeProduction = {
  * One run's input, `knowledge.produce`'s: the occurrence's Encounter and
  * Attestation, whose `valencyEvidence` is the attested government, its
  * Reading, whether the occurrence created the Reading (`New`) or reused it
- * (`TopUp`), what to produce, and whether to break the Reading down after
- * its Source (`breakdown`, `knowledgeBreakdown.ts`).
+ * (`TopUp`), what to produce, and whether to break the Reading down when
+ * its Source leaves the Breakdown standing (`breakdown`,
+ * `knowledgeBreakdown.ts`).
  */
 export type KnowledgeInput = {
 	readonly encounter: ClickEncounter;

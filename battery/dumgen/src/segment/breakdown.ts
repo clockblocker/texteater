@@ -7,9 +7,10 @@
  * and reaches jev alone: code proposes the cuts and the Canonical Forms,
  * jev picks. The Reading's language module does the work.
  *
- * The host runs them in order: a Reading with a Source (Knowledge's
- * `source`) runs neither, and one whose `source` failed or is Unresolved
- * waits for it; any other runs `segment.inConstituents`, and
+ * The host keeps them only for a Reading with no Source: one with a Source
+ * (Knowledge's `source`) keeps neither, and one whose `source` failed or
+ * is Unresolved waits for it. It may start them before the Source is
+ * known and drop what they answer. It runs `segment.inConstituents`, and
  * `segment.inMorphemes` only when that finds none.
  *
  * Their pieces are Dumrel Breakdown pieces whose targets are Unit Shadows;

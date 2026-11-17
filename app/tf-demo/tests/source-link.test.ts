@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import * as Latch from "effect/Latch";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
 import { type Segmenters, withBreakdown } from "../server/knowledgeBreakdown";
@@ -460,6 +461,11 @@ test("Breakdown pieces refer to their parts' Shadows, so each Shadow Note lists 
 
 /** The adjective's stored Source after publication, if any. */
 async function storedAdjectiveSource(t: TestConvexDb) {
+	return (await storedGekocht(t))?.source;
+}
+
+/** The stored Knowledge of `gekocht`. */
+async function storedGekocht(t: TestConvexDb) {
 	const row = await t.run((ctx) =>
 		ctx.db
 			.query("accumulatedKnowledge")
@@ -468,7 +474,7 @@ async function storedAdjectiveSource(t: TestConvexDb) {
 			)
 			.unique(),
 	);
-	return row?.knowledge?.source;
+	return row?.knowledge;
 }
 
 test("a Source whose stored base already names the word as its Source is dropped, not failed (#1279)", async () => {
@@ -565,10 +571,12 @@ const GEKOCHT_MORPHEMES = [
 /**
  * Runs the scheduled `gekocht` attempt with a producer that answers
  * `kochen` as its Source and breaks the word down as Dumgen's producer
- * does, recording which segmenters it asked.
+ * does, recording which segmenters it asked. The Source comes only once
+ * the segmenters have answered.
  */
 async function runWithSource(t: TestConvexDb) {
 	const asked: string[] = [];
+	const answered = Latch.makeUnsafe(false);
 	const segmenters: Segmenters<never> = {
 		inConstituents: () => {
 			asked.push("constituents");
@@ -576,13 +584,17 @@ async function runWithSource(t: TestConvexDb) {
 		},
 		inMorphemes: () => {
 			asked.push("morphemes");
-			return Effect.succeed(GEKOCHT_MORPHEMES as never);
+			return Effect.as(Latch.open(answered), GEKOCHT_MORPHEMES as never);
 		},
 	};
 	await generateWith(t, "participle", (input, { sourcePointsBack }) =>
 		withBreakdown(
 			segmenters,
-			{ changes: [SOURCE_CHANGE], failures: [], pendingRelations: [] },
+			Effect.as(Latch.await(answered), {
+				changes: [SOURCE_CHANGE],
+				failures: [],
+				pendingRelations: [],
+			}),
 			input,
 			sourcePointsBack,
 		),
@@ -605,20 +617,22 @@ test("a Source dropped for pointing back counts as none, so the run still breaks
 	);
 	expect(attempt?.state).toBe("Committed");
 	expect(await storedAdjectiveSource(t)).toBeUndefined();
-	const row = await t.run((ctx) =>
-		ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", readingIdentityKey(GEKOCHT_READING)),
-			)
-			.unique(),
+	expect((await storedGekocht(t))?.breakdown?.morphemes).toEqual(
+		GEKOCHT_MORPHEMES,
 	);
-	expect(row?.knowledge?.breakdown?.morphemes).toEqual(GEKOCHT_MORPHEMES);
 
-	// A Source that stands holds both segmenters.
+	// A Source that stands drops the Breakdown the segmenters started on.
 	const accepting = createTestConvex();
 	await seedAdjective(accepting, "visitor-1", "Scheduled");
 	await storeVerb(accepting, KOCHEN_READING);
-	expect(await runWithSource(accepting)).toEqual([]);
+	expect(await runWithSource(accepting)).toEqual([
+		"constituents",
+		"morphemes",
+	]);
 	expect(await storedAdjectiveSource(accepting)).toEqual(KOCHEN_SOURCE);
+	expect((await storedGekocht(accepting))?.breakdown).toBeUndefined();
+	const acceptingAttempt = await accepting.run((ctx) =>
+		ctx.db.query("knowledgeGenerationAttempts").unique(),
+	);
+	expect(acceptingAttempt?.state).toBe("Committed");
 });

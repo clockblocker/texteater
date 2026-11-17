@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
 import type {
 	KnowledgeFailure,
 	KnowledgeProduction,
@@ -11,15 +12,19 @@ import type {
 
 /**
  * A Reading's Breakdown in a Knowledge run (ADR 0050, ADR 0051, Dumgen ADR
- * 0007). The host asks Knowledge for the Source first, inside the run's
- * `knowledge.produce`. A Reading with a Source runs neither segmenter, and
- * one whose `source` failed or is Unresolved holds both. A Source that
- * publication drops for pointing back (#1279) counts as none. Any other runs
- * `segment.inConstituents`, and a single-word Lexeme it finds none for is a
- * bottom word, which `segment.inMorphemes` splits. Each piece links to a
- * Unit Shadow, so nothing is generated for a part the learner hasn't met
- * (D20). The Breakdown stays outside the coverage request, as the Source
- * does: a failure leaves the Reading Partial, and its retry asks again.
+ * 0007). The segmenters start alongside the run's `knowledge.produce`, which
+ * asks for the Source, so the Breakdown never waits for Luna's fields; jev's
+ * few calls cost little next to that wait. Only once the Source is known is
+ * the Breakdown kept or dropped. A Reading with a Source keeps neither
+ * segmenter's answer, and one whose `source` failed or is Unresolved keeps
+ * no Breakdown either. A Source that publication drops for pointing back
+ * (#1279) counts as none. Any other runs `segment.inConstituents`, and a
+ * single-word Lexeme it finds none for is a bottom word, which
+ * `segment.inMorphemes` splits. Each piece links to a Unit Shadow, so
+ * nothing is generated for a part the learner hasn't met (D20). The
+ * Breakdown stays outside the coverage request, as the Source does: a
+ * failure leaves the Reading Partial, and its retry asks again. A dropped
+ * Breakdown neither publishes nor fails anything.
  */
 
 /** The Families whose Readings have a Breakdown; a Morpheme or Foreign one has none. */
@@ -54,7 +59,7 @@ export function asksBreakdown(
 
 /**
  * What `knowledge.produce` answered for the Source decides whether the
- * segmenters run. A Source that publication drops for pointing back counts
+ * segmenters' Breakdown is kept. A Source that publication drops for pointing back counts
  * as none (#1279), so `pointsBack` is asked about the produced one.
  */
 export function segmentsAfterSource<E, R>(
@@ -150,8 +155,9 @@ const isSingleWordLexeme = (lemma: Dumling.Lemma<"de">) =>
 	lemma.family === "Lexeme" && !/\s/u.test(lemma.canonicalForm);
 
 /**
- * The Breakdown changes and failures for a Reading the run found no Source
- * for. A failed call is a failure of its part, never the run's error.
+ * The Breakdown changes and failures for a Reading, kept only when the run
+ * finds no Source for it. A failed call is a failure of its part, never the
+ * run's error.
  */
 export function produceBreakdown<R>(
 	segmenters: Segmenters<R>,
@@ -188,13 +194,17 @@ export function produceBreakdown<R>(
 }
 
 /**
- * A run's production with its Breakdown added, when the run asks for one
- * and what `knowledge.produce` answered for the Source leaves the
- * segmenters to run.
+ * `produce`'s production with its Breakdown added, when the run asks for
+ * one and what `produce` answered for the Source leaves the Breakdown
+ * standing. The segmenters run alongside `produce`, before the Source is
+ * known, and their changes follow `produce`'s. A Breakdown the Source
+ * holds is dropped, its fiber interrupted if it still runs: its changes
+ * never publish and its failures are no run's. `produce`'s error, or
+ * `pointsBack`'s, interrupts the segmenters too.
  */
 export function withBreakdown<E, R, RS>(
 	segmenters: Segmenters<RS>,
-	produced: KnowledgeProduction,
+	produce: Effect.Effect<KnowledgeProduction, E, R>,
 	input: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly breakdown: boolean;
@@ -204,22 +214,27 @@ export function withBreakdown<E, R, RS>(
 		change: KnowledgeProduction["changes"][number],
 	) => Effect.Effect<boolean, E, R>,
 ): Effect.Effect<KnowledgeProduction, E, R | RS> {
+	if (!input.breakdown) return produce;
 	return Effect.gen(function* () {
-		if (
-			!input.breakdown ||
-			!(yield* segmentsAfterSource(produced, pointsBack))
-		)
+		// A child fiber: it ends with this one, however this one ends.
+		const breakdown = yield* Effect.forkChild(
+			produceBreakdown(segmenters, {
+				reading: input.reading,
+				...(input.sentence === undefined
+					? {}
+					: { sentence: input.sentence }),
+			}),
+		);
+		const produced = yield* produce;
+		if (!(yield* segmentsAfterSource(produced, pointsBack))) {
+			yield* Fiber.interrupt(breakdown);
 			return produced;
-		const breakdown = yield* produceBreakdown(segmenters, {
-			reading: input.reading,
-			...(input.sentence === undefined
-				? {}
-				: { sentence: input.sentence }),
-		});
+		}
+		const { changes, failures } = yield* Fiber.join(breakdown);
 		return {
 			...produced,
-			changes: [...produced.changes, ...breakdown.changes],
-			failures: [...produced.failures, ...breakdown.failures],
+			changes: [...produced.changes, ...changes],
+			failures: [...produced.failures, ...failures],
 		};
 	});
 }

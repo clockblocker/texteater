@@ -368,7 +368,7 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 						}),
 						...(plan.asksSource ? { source: null } : {}),
 					},
-					// The segmenters follow the Source (ADR 0050).
+					// The Source decides whether the Breakdown stands (ADR 0050).
 					breakdown: plan.asksBreakdown,
 				},
 				{

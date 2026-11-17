@@ -174,11 +174,14 @@ base's letters in order. Then jev confirms, choosing a conversion's
 direction among both (`Lauf` from `laufen`, not the reverse). The type is
 not stored, since nothing reads it.
 
-The host asks for `source` before the segmenters. A Reading with a Source
-runs neither segmenter. Any other runs `segment.inConstituents`, and when
-that finds none, the Reading is a bottom word and `segment.inMorphemes`
-splits it (ADR 0051). A failed or Unresolved `source` holds both
-segmenters. A clipping or acronym whose base doesn't pass is Unresolved,
+The Source decides whether the Breakdown stands. A Reading with a Source
+keeps no segmenter's answer. Any other runs `segment.inConstituents`, and
+when that finds none, the Reading is a bottom word and
+`segment.inMorphemes` splits it (ADR 0051). A failed or Unresolved
+`source` keeps no Breakdown either. The host starts the segmenters
+alongside `source`, so the Breakdown doesn't wait for Luna, and drops
+their answers when the Source holds them; a dropped Breakdown never
+publishes and fails nothing. A clipping or acronym whose base doesn't pass is Unresolved,
 not none, so no split is invented for `Kita`. A conversion that doesn't
 pass counts as none, since splitting `Lauf` as a bottom word shows the
 same `lauf · ∅`. The host also rejects a Source whose base's own stored

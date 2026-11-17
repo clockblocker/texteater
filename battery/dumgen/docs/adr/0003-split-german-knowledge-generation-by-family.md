@@ -50,7 +50,7 @@ writes no Breakdown: a Reading's Constituents come from
 for a formation: a participle's verb as before (system ADR 0036), any
 other formation's base. Code checks the letters by type, and jev confirms,
 choosing a conversion's direction among both. A clipping or acronym whose
-base doesn't pass is Unresolved, so the host holds the segmenters for it
+base doesn't pass is Unresolved, so the host keeps no Breakdown for it
 rather than split it as a bottom word.
 
 The route names follow system ADR 0039, which replaced the Phraseme Family
