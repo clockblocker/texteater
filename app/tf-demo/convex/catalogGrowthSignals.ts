@@ -54,6 +54,21 @@ export function catalogGrowthSignalIdentity(miss: CatalogMiss): {
 	};
 }
 
+/** What `safeFailureMessage` keeps of a stored failure message. */
+const MAX_FAILURE_MESSAGE_LENGTH = 240;
+
+/**
+ * The failure a Catalog Miss settles with: the general sentence and
+ * Dumgen's own reason, cut to what a stored failure message keeps, so
+ * `resolution_inspector` shows why no member matched.
+ */
+function catalogMissMessage(miss: Pick<CatalogMiss, "message">): string {
+	const message = `No reviewed catalog member matches this encounter: ${miss.message.trim()}`;
+	return message.length <= MAX_FAILURE_MESSAGE_LENGTH
+		? message
+		: `${message.slice(0, MAX_FAILURE_MESSAGE_LENGTH - 1)}…`;
+}
+
 async function recordCatalogGrowthSignal(
 	ctx: MutationCtx,
 	miss: ValidatedCatalogMiss,
@@ -103,7 +118,7 @@ export const recordAndSettleCatalogMiss = internalMutation({
 		await recordCatalogGrowthSignal(ctx, miss, guard.requestId);
 		await settleResolutionSession(ctx, session, {
 			kind: "PermanentFailure",
-			message: "No reviewed catalog member matches this encounter.",
+			message: catalogMissMessage(miss),
 			failureCode: "CatalogMiss",
 		});
 		return null;
@@ -131,8 +146,7 @@ export const recordKnowledgeCatalogMiss = internalMutation({
 			runNumber,
 			{
 				failureCode: "catalogMiss",
-				failureMessage:
-					"No reviewed catalog member matches this encounter.",
+				failureMessage: catalogMissMessage(miss),
 			},
 			productionEvidence,
 		);

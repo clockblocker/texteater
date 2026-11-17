@@ -107,6 +107,30 @@ describe("Catalog Growth Signals", () => {
 		]);
 	});
 
+	test("the failed session keeps Dumgen's reason, cut to what a failure message holds", async () => {
+		const t = createTestConvex();
+		await t.mutation(
+			internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+			{ guard: await startSession(t, "request-1"), miss },
+		);
+		await t.mutation(
+			internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+			{
+				guard: await startSession(t, "request-2"),
+				miss: { ...miss, message: "y".repeat(400) },
+			},
+		);
+
+		const [short, long] = await tableRows(t, "resolutionSessions");
+		expect(short).toMatchObject({
+			failureCode: "CatalogMiss",
+			failureMessage:
+				"No reviewed catalog member matches this encounter: No reviewed member matches",
+		});
+		expect(long?.failureMessage).toHaveLength(240);
+		expect(long?.failureMessage).toEndWith("y…");
+	});
+
 	test("a retry against the terminal session cannot double count", async () => {
 		const t = createTestConvex();
 		const args = { guard: await startSession(t, "request-1"), miss };
