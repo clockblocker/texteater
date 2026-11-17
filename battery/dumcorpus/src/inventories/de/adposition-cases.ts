@@ -267,6 +267,7 @@ const germanLocutionAdpositions: Readonly<
 	"an … vorbei": only("Dat"),
 	"auf … hin": only("Acc"),
 	"im Vergleich zu": only("Dat"),
+	"über … hin": only("Acc"), // über die Wellen hin.
 	"über … hinaus": only("Acc"),
 	"über … hinweg": only("Acc"),
 	"um … herum": only("Acc"),
@@ -277,6 +278,14 @@ const germanLocutionAdpositions: Readonly<
 	"von … wegen": only("Gen"), // von Amts wegen.
 	"zu … hin": only("Dat"),
 };
+
+/**
+ * The circumpositions among the Locution ADPs, by Canonical Form (von … an):
+ * Dumgen proposes each as a circumposition pair by its last word.
+ */
+export const germanCircumpositions: readonly string[] = Object.keys(
+	germanLocutionAdpositions,
+).filter((form) => form.includes(" … "));
 
 /**
  * A Canonical Form as the table keys it: without letter case, as Lemma

@@ -329,6 +329,7 @@ test("the table gives each Locution ADP one case set", () => {
 		["um … herum", ["Acc"]],
 		["auf … hin", ["Acc"]],
 		["zu … hin", ["Dat"]],
+		["über … hin", ["Acc"]],
 		["über … hinweg", ["Acc"]],
 		["von … wegen", ["Gen"]],
 		["an … entlang", ["Dat"]],

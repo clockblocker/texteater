@@ -432,9 +432,11 @@ const circumpositionTails = new Set([
 	"aus",
 	"her",
 	"hin",
+	"hinweg",
 	"entlang",
 	"herum",
 	"willen",
+	"wegen",
 	"zu",
 	"ab",
 ]);

@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import {
+	germanCircumpositions,
 	germanConjunctionLocutions,
 	germanParticleMember,
 } from "dumcorpus/inventories";
@@ -34,6 +35,24 @@ test("every zu-infinitive Locution is a correlator Dumgen proposes by its name",
 		const [first, second] = name.split(" … ");
 		if (!first || !second) throw Error(`Not a correlator name: ${name}`);
 		expect(correlatorNames(first, "wir", second)).toContain(name);
+	}
+});
+
+test("every circumposition in dumcorpus's ADP Case Table is a pair Dumgen proposes by its name", () => {
+	// über … hinweg and von … wegen once had no tail, so no pair.
+	expect(germanCircumpositions).toContain("über … hin");
+	for (const name of germanCircumpositions) {
+		const [first, second] = name.split(" … ");
+		if (!first || !second)
+			throw Error(`Not a circumposition name: ${name}`);
+		expect(
+			pairCandidatesOf(
+				sentence(first, "dem", "Haus", second),
+				authoredInventory,
+			)
+				.filter((pair) => pair.kind === "circumposition")
+				.map((pair) => pair.name),
+		).toContain(name);
 	}
 });
 

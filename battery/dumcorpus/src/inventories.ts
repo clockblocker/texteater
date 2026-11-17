@@ -46,6 +46,7 @@ export {
 	germanAdpositionAllowedCases,
 	germanAdpositionAllows,
 	germanAdpositionEntry,
+	germanCircumpositions,
 	germanGovernablePrepositions,
 } from "./inventories/de/adposition-cases.js";
 export {
