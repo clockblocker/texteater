@@ -1,3 +1,4 @@
+import { useAtomSet, useAtomValue } from "@effect/atom-react";
 import type { FunctionReturnType } from "convex/server";
 import {
 	ReaderPlainSegment,
@@ -8,7 +9,15 @@ import {
 import { useMemo, useState } from "react";
 
 import { segmentKey } from "@/hooks/use-segment-selection";
+import { ExplainerBadge, useScrollExplainer } from "@/views/pronoun-explainer";
+import {
+	explainerHeldAtom,
+	holdsExplainerModifier,
+	hoveredPronounAtom,
+	hoveredPronounInAtom,
+} from "@/views/pronoun-explainer-atoms";
 import type { api } from "../../convex/_generated/api";
+import { isPronounUnit, unitKey } from "../../shared/pronoun-explanation";
 import { isPlainSentence } from "../../shared/supported-target-language";
 
 /** A stored Segment as a Visitor sees it in the reader. */
@@ -49,6 +58,11 @@ export type ReaderSentenceData = {
  * the word clicked. A Plain Sentence, in another language than the Scroll's
  * target or in none detected, has no Segments: it reads as plain text in
  * its own language and direction.
+ *
+ * In a Scroll's reader, holding the Explainer Modifier (Cmd, or Ctrl off
+ * Apple platforms) turns hovers and clicks into the explainer's: a pronoun
+ * unit under the pointer turns bold with a "?" on the chunk hovered, a
+ * click asks what it refers to, and no other word previews or selects.
  */
 export function ReaderSentence<S extends ReaderSentenceData>({
 	sentence,
@@ -71,6 +85,12 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 }) {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 	const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+	const explainer = useScrollExplainer();
+	const explaining = useAtomValue(explainerHeldAtom) && explainer !== null;
+	const hoveredPronoun = useAtomValue(
+		hoveredPronounInAtom(sentence.sentenceId),
+	);
+	const setHoveredPronoun = useAtomSet(hoveredPronounAtom);
 	// Built once per Sentence view, so a hover reads a map and asks nobody.
 	const groups = useMemo(
 		() => segmentGroups(sentence.segments),
@@ -78,7 +98,8 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 	);
 	const notSegmented = sentence.segmentationFailed === true;
 	const plain = isPlainSentence(sentence.language);
-	const previewIndex = notSegmented ? null : (hoveredIndex ?? focusedIndex);
+	const previewIndex =
+		notSegmented || explaining ? null : (hoveredIndex ?? focusedIndex);
 	const previewGroup =
 		previewIndex === null ? undefined : groups.get(previewIndex);
 	const selectedSegment = sentence.segments.find(
@@ -146,6 +167,21 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 			isPreviewed,
 			isSelected,
 		);
+		const pronoun =
+			explainer && isPronounUnit(segment.unit) ? segment.unit : undefined;
+		const target = pronoun
+			? {
+					sentenceId: sentence.sentenceId,
+					pronoun: pronoun.segments,
+					segmentIndex: segment.index,
+				}
+			: null;
+		// The pronoun under the explainer: bold, its hovered chunk badged.
+		const explained =
+			explaining &&
+			pronoun !== undefined &&
+			hoveredPronoun !== null &&
+			unitKey(hoveredPronoun.pronoun) === unitKey(pronoun.segments);
 
 		return (
 			<ReaderSegment
@@ -154,10 +190,13 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				tone={segmentTone(displayState, segment)}
 				gender={segment.encountered ? segment.gender : undefined}
 				interaction={segmentInteraction(displayState)}
+				data-segment={segment.index}
+				className={explainerSegmentClass(explaining, target, explained)}
 				disabled={
 					plain ||
-					segment.resolutionState === "Active" ||
-					segment.resolutionState === "PermanentFailure"
+					(!(explaining && target) &&
+						(segment.resolutionState === "Active" ||
+							segment.resolutionState === "PermanentFailure"))
 				}
 				aria-pressed={isSelected}
 				aria-label={
@@ -167,11 +206,26 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				}
 				onBlur={() => setFocusedIndex(null)}
 				onFocus={() => setFocusedIndex(segment.index)}
-				onMouseEnter={() => setHoveredIndex(segment.index)}
-				onMouseLeave={() => setHoveredIndex(null)}
+				onMouseEnter={() => {
+					setHoveredIndex(segment.index);
+					if (target) setHoveredPronoun(target);
+				}}
+				onMouseLeave={() => {
+					setHoveredIndex(null);
+					if (target) setHoveredPronoun(null);
+				}}
 				onClick={(event) => {
 					// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
 					if (event.detail > 0) event.currentTarget.blur();
+					if (
+						explainer &&
+						(explaining || holdsExplainerModifier(event))
+					) {
+						// An explainer click explains a pronoun and opens nothing.
+						event.preventDefault();
+						if (target) explainer.explain(target);
+						return;
+					}
 					void onSegmentClick(
 						sentence,
 						segment.index,
@@ -180,9 +234,37 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				}}
 			>
 				{segment.text}
+				{explained &&
+				target &&
+				hoveredPronoun?.segmentIndex === segment.index ? (
+					<ExplainerBadge
+						status={explainer.statusOf(
+							target.sentenceId,
+							target.pronoun,
+						)}
+					/>
+				) : null}
 			</ReaderSegment>
 		);
 	}
+}
+
+/**
+ * How a word looks under the explainer: a pronoun takes the help cursor
+ * and, while explained, a bold drawn with text shadows, which keeps its
+ * width, so the line never reflows under the pointer; any other word looks
+ * unclickable.
+ */
+function explainerSegmentClass(
+	explaining: boolean,
+	pronoun: object | null,
+	explained: boolean,
+): string | undefined {
+	if (!explaining) return undefined;
+	if (!pronoun) return "cursor-default";
+	return explained
+		? "cursor-help [text-shadow:0.03em_0_0_currentColor,-0.03em_0_0_currentColor]"
+		: "cursor-help";
 }
 
 /**

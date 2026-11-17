@@ -20,6 +20,7 @@ import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { FolioRequest, folioOpenings } from "@/views/folio-request";
 import { NotFoundView } from "@/views/not-found-view";
+import { PronounExplainer } from "@/views/pronoun-explainer";
 import { ReaderSentence } from "@/views/reader-sentence";
 import {
 	usePagedScrolling,
@@ -177,31 +178,33 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 	}
 
 	return (
-		<ScrollPresentation
-			error={error}
-			notice={notice}
-			onSegmentClick={handleSegmentSelection}
-			focus={focus.occurrence}
-			selectedSegmentKey={selection.selectedSegmentKey}
-			sentences={sentences}
-			sceneBreaks={scrollDetail.sceneBreaks}
-			showSegmentAction={needsSegmentation}
-			isSegmenting={segmentText.isPending}
-			onSegmentText={() => void handleSegmentText()}
-			readerRef={reader}
-			leadIn={(sentence) => {
-				const folio = openings.get(sentence.sentenceId);
-				return folio ? <FolioRequest folio={folio} /> : null;
-			}}
-			end={
-				pages?.hasNext ? null : (
-					<ScrollEnd
-						scrollId={scrollDetail.scrollId}
-						originalUrl={scrollDetail.originalUrl}
-					/>
-				)
-			}
-		/>
+		<PronounExplainer scrollId={scrollDetail.scrollId} reader={reader}>
+			<ScrollPresentation
+				error={error}
+				notice={notice}
+				onSegmentClick={handleSegmentSelection}
+				focus={focus.occurrence}
+				selectedSegmentKey={selection.selectedSegmentKey}
+				sentences={sentences}
+				sceneBreaks={scrollDetail.sceneBreaks}
+				showSegmentAction={needsSegmentation}
+				isSegmenting={segmentText.isPending}
+				onSegmentText={() => void handleSegmentText()}
+				readerRef={reader}
+				leadIn={(sentence) => {
+					const folio = openings.get(sentence.sentenceId);
+					return folio ? <FolioRequest folio={folio} /> : null;
+				}}
+				end={
+					pages?.hasNext ? null : (
+						<ScrollEnd
+							scrollId={scrollDetail.scrollId}
+							originalUrl={scrollDetail.originalUrl}
+						/>
+					)
+				}
+			/>
+		</PronounExplainer>
 	);
 }
 

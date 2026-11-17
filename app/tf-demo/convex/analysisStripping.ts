@@ -146,6 +146,17 @@ async function stripSentenceAnalysisBatch(
 		await deleteResolutionSessions(ctx, sessions);
 		return sessions.length;
 	}
+	// A Pronoun Explanation names the units that go below, so it goes first.
+	const explanations = await ctx.db
+		.query("pronounExplanations")
+		.withIndex("by_sentence_id_and_pronoun_key", (q) =>
+			q.eq("sentenceId", sentenceId),
+		)
+		.take(STRIP_SEGMENT_BATCH);
+	if (explanations.length > 0) {
+		await Promise.all(explanations.map(({ _id }) => ctx.db.delete(_id)));
+		return explanations.length;
+	}
 	// The units index into the Segments below, so they go with them, and
 	// so does a failed segmentation's mark; fields, not rows, they are not
 	// counted.

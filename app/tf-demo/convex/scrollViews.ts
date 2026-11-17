@@ -69,7 +69,7 @@ const scrollViewValidator = v.object({
 });
 
 /** A Scroll this Visitor may read: shared, or their own private one. */
-async function readableScroll(
+export async function readableScroll(
 	ctx: QueryCtx,
 	scrollIdValue: string,
 	visitorId: string,

@@ -150,6 +150,17 @@ One biggest unit intake stores with its Sentence. It is a hint for selection
 and resolution, not linguistic identity. See [Dumgen ADR 0007].
 _Avoid_: Sentence Analysis, precomputed resolution, Unit map
 
+**Explainer**:
+The reader's second way to hover and click, on while the Learner holds Cmd
+(Ctrl off Apple platforms): a click explains a word instead of selecting
+it. It explains pronouns so far.
+_Avoid_: explain mode, inspector
+
+**Pronoun Explanation**:
+What one pronoun Stored Unit refers to: its Antecedents (Dumgen), drawn as
+pen marks. It is asked once and stored for every Visitor.
+_Avoid_: coreference, anaphora resolution
+
 **Shared Demo Dictionary**:
 The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor
 identity never scopes its records.

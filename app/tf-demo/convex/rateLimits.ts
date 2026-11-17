@@ -37,11 +37,23 @@ export const RATE_LIMITS = {
 		period: MINUTE,
 		shards: 10,
 	},
+	/** Each explanation is asked once for everyone, so this bounds new ones only. */
+	pronounExplanation: { kind: "token bucket", rate: 30, period: MINUTE },
+	pronounExplanationGlobal: {
+		kind: "token bucket",
+		rate: 300,
+		period: MINUTE,
+		shards: 10,
+	},
 } as const;
 
 const rateLimiter = new RateLimiter(components.rateLimiter, RATE_LIMITS);
 
-type RateLimitedWork = "textSubmission" | "folioRequest" | "segmentSelection";
+type RateLimitedWork =
+	| "textSubmission"
+	| "folioRequest"
+	| "segmentSelection"
+	| "pronounExplanation";
 
 /** What a Visitor over the limit reads, given how long to wait. */
 const overLimitMessage: Record<RateLimitedWork, (seconds: number) => string> = {
@@ -51,6 +63,8 @@ const overLimitMessage: Record<RateLimitedWork, (seconds: number) => string> = {
 		`Too many passages were asked for recently; try again in ${Math.ceil(seconds / 60)} minutes.`,
 	segmentSelection: (seconds) =>
 		`Too many words were selected recently; try again in ${seconds} seconds.`,
+	pronounExplanation: (seconds) =>
+		`Too many pronouns were explained recently; try again in ${seconds} seconds.`,
 };
 
 /**

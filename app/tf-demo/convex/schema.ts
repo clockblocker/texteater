@@ -1,6 +1,7 @@
 import { defineSchema } from "convex/server";
 import { canonicalBatchTables } from "./model/tables/canonicalBatches";
 import { dictionaryTables } from "./model/tables/dictionary";
+import { explanationTables } from "./model/tables/explanations";
 import { inspectionTables } from "./model/tables/inspection";
 import { knowledgeTables } from "./model/tables/knowledge";
 import { relationPublicationTables } from "./model/tables/relationPublication";
@@ -18,4 +19,5 @@ export default defineSchema({
 	...visitorTables,
 	...resolutionTables,
 	...canonicalBatchTables,
+	...explanationTables,
 });

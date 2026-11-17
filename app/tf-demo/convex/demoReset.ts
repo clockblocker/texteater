@@ -82,6 +82,7 @@ export const resetDemoTableNames = [
 	"dictionaryLemmas",
 	"surfaces",
 	"lemmas",
+	"pronounExplanations",
 	"scrollProgress",
 	"sectionProgress",
 	"segments",

@@ -74,6 +74,7 @@ import type * as model_sourceDirection from "../model/sourceDirection.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
 import type * as model_tables_canonicalBatches from "../model/tables/canonicalBatches.js";
 import type * as model_tables_dictionary from "../model/tables/dictionary.js";
+import type * as model_tables_explanations from "../model/tables/explanations.js";
 import type * as model_tables_inspection from "../model/tables/inspection.js";
 import type * as model_tables_knowledge from "../model/tables/knowledge.js";
 import type * as model_tables_relationPublication from "../model/tables/relationPublication.js";
@@ -104,6 +105,8 @@ import type * as modules_scroll_submission from "../modules/scroll/submission.js
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as personalAnnotations from "../personalAnnotations.js";
+import type * as pronounExplanationActions from "../pronounExplanationActions.js";
+import type * as pronounExplanations from "../pronounExplanations.js";
 import type * as rateLimits from "../rateLimits.js";
 import type * as readingBlockLayouts from "../readingBlockLayouts.js";
 import type * as readingNotes from "../readingNotes.js";
@@ -195,6 +198,7 @@ declare const fullApi: ApiFromModules<{
   "model/storedSegments": typeof model_storedSegments;
   "model/tables/canonicalBatches": typeof model_tables_canonicalBatches;
   "model/tables/dictionary": typeof model_tables_dictionary;
+  "model/tables/explanations": typeof model_tables_explanations;
   "model/tables/inspection": typeof model_tables_inspection;
   "model/tables/knowledge": typeof model_tables_knowledge;
   "model/tables/relationPublication": typeof model_tables_relationPublication;
@@ -225,6 +229,8 @@ declare const fullApi: ApiFromModules<{
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   personalAnnotations: typeof personalAnnotations;
+  pronounExplanationActions: typeof pronounExplanationActions;
+  pronounExplanations: typeof pronounExplanations;
   rateLimits: typeof rateLimits;
   readingBlockLayouts: typeof readingBlockLayouts;
   readingNotes: typeof readingNotes;

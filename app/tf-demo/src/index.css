@@ -49,3 +49,53 @@
 	display: inline-block;
 	animation: note-arrive 180ms ease-out both;
 }
+
+/* The pronoun explainer's pen: thin green hand-drawn strokes over the page
+   (src/views/pen-marks.tsx). They stand drawn at once; where motion is
+   allowed they draw in, loop first, then arrow, then its head. */
+@theme {
+	--color-pen: oklch(0.55 0.14 152);
+}
+
+.pen-mark {
+	fill: none;
+	stroke: var(--color-pen);
+	stroke-width: 1.6;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+@keyframes pen-draw {
+	from {
+		stroke-dashoffset: 1;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.pen-stroke {
+		stroke-dasharray: 1;
+		animation: pen-draw 300ms ease-out both;
+	}
+	.pen-stroke-arrow {
+		animation-delay: 180ms;
+	}
+	.pen-stroke-head {
+		animation-delay: 440ms;
+		animation-duration: 120ms;
+	}
+}
+
+:root[data-motion-preference="ignore"] .pen-stroke {
+	stroke-dasharray: 1;
+	animation: pen-draw 300ms ease-out both;
+}
+:root[data-motion-preference="ignore"] .pen-stroke-arrow {
+	animation-delay: 180ms;
+}
+:root[data-motion-preference="ignore"] .pen-stroke-head {
+	animation-delay: 440ms;
+	animation-duration: 120ms;
+}
