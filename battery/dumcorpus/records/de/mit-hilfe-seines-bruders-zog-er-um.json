@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Mit Hilfe seines Bruders zog er um.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hilfe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seines" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bruders" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zog" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/preposition-spelled-apart",
+				"hash": "c3b39195b832f5c2"
+			}
+		],
+		"references": [
+			{
+				"title": "Amtliches Regelwerk, § 39 E3 (3)",
+				"url": "https://grammis.ids-mannheim.de/rechtschreibung/6157",
+				"supports": "mithilfe/mit Hilfe is a preposition the writer may spell as one word or two."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Mit Hilfe is the official rules' other spelling of the one preposition mithilfe (§ 39 E3 (3)), a Lexeme ADP: the Surface is a Licensed Variant over two members, neither a Locution ADP nor the ADP mit with the NOUN Hilfe (de/preposition-spelled-apart). Its complement seines Bruders takes mithilfe's genitive."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "mithilfe",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "mit Hilfe",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Mit", "orthography": "Standard" },
+					{ "attested": "Hilfe", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"governedCase": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		}
+	],
+	"noTarget": []
+}

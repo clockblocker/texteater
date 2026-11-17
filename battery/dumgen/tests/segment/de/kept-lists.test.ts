@@ -3,13 +3,12 @@ import {
 	germanCircumpositions,
 	germanConjunctionLocutions,
 	germanParticleMember,
+	germanSpelledApartPrepositions,
 } from "dumcorpus/inventories";
-import {
-	numberWords,
-	pairCandidatesOf,
-} from "../../../src/segment/de/candidates.js";
+import { numberWords } from "../../../src/segment/de/candidates.js";
 import { fixed, uses } from "../../../src/segment/de/closed-class.js";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
+import { pairCandidatesOf } from "../../../src/segment/de/pair-candidates.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";
 
@@ -62,6 +61,25 @@ test("every dass Locution is an adjacent conjunction Dumgen proposes by its name
 		const [first, second] = name.split(" ");
 		if (!first || !second) throw Error(`Not a two-word name: ${name}`);
 		expect(correlatorNames(first, second)).toContain(name);
+	}
+});
+
+test("every one-word preposition's two-word spelling is a pair Dumgen proposes by its Canonical Form, sentence-initial too", () => {
+	for (const [form, apart] of Object.entries(
+		germanSpelledApartPrepositions,
+	)) {
+		const [first, second] = apart.split(" ");
+		if (!first || !second) throw Error(`Not a two-word spelling: ${apart}`);
+		const initial = `${first.charAt(0).toUpperCase()}${first.slice(1)}`;
+		for (const words of [
+			["Er", "kam", first, second, "des", "Freundes"],
+			[initial, second, "des", "Freundes"],
+		])
+			expect(
+				pairCandidatesOf(sentence(...words), authoredInventory)
+					.filter((pair) => pair.kind === "spelled-apart")
+					.map((pair) => pair.name),
+			).toEqual([form]);
 	}
 });
 

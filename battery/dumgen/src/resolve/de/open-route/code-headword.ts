@@ -12,7 +12,11 @@
  * not, so they stay Luna's.
  */
 
-import { authoredMembers, germanAdpositionEntry } from "dumcorpus/inventories";
+import {
+	authoredMembers,
+	germanAdpositionEntry,
+	germanSpelledApartPrepositions,
+} from "dumcorpus/inventories";
 import type { LemmaCandidate } from "../../types.js";
 import type { Written } from "../canonical-form.js";
 import type { Target } from "../target.js";
@@ -35,10 +39,49 @@ export const asWritten = (first: FirstRead) =>
 	);
 
 /**
+ * Each two-word spelling of a one-word preposition dumcorpus lists, in
+ * lowercase, with that preposition and the two words in their lexical
+ * casing.
+ */
+const spelledApart: ReadonlyMap<
+	string,
+	{ readonly canonicalForm: string; readonly members: readonly string[] }
+> = new Map(
+	Object.entries(germanSpelledApartPrepositions).map(([form, apart]) => [
+		inLowercase(apart),
+		{ canonicalForm: form, members: apart.split(" ") },
+	]),
+);
+
+/**
+ * The one-word preposition a Lexeme ADP's two members spell apart, as
+ * auf Grund spells aufgrund (de/preposition-spelled-apart); undefined
+ * for any other click. Its Surface is that preposition's Licensed
+ * Variant.
+ */
+export function spelledApartPreposition(target: Target): string | undefined {
+	return spelledApartWords(target)?.canonicalForm;
+}
+
+const spelledApartWords = (target: Target) => {
+	const { family, kind } = target.route;
+	if (family !== "Lexeme" || kind !== "ADP" || target.members.length !== 2)
+		return undefined;
+	return spelledApart.get(
+		target.members
+			.map((member) => inLowercase(spellingOf(member)))
+			.join(" "),
+	);
+};
+
+/**
  * The headword code writes for a one-member Lexeme on a route that
- * settles it, and when it stands; undefined where Luna writes it.
+ * settles it, or for a one-word preposition written as two words, and
+ * when it stands; undefined where Luna writes it.
  */
 export function codeHeadword(target: Target): CodeHeadword | undefined {
+	const apart = spelledApartWords(target);
+	if (apart) return { written: apart, settles: asWritten };
 	const [lone, ...others] = target.members;
 	const { family, kind } = target.route;
 	if (!lone || others.length > 0 || family !== "Lexeme") return undefined;

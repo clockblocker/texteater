@@ -76,12 +76,29 @@ position, since its words are its Canonical Form, and dumcorpus's ADP Case
 Table gives it one case set
 ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).
 
+**Prepositions spelled apart.** A one-word preposition that the official
+spelling rules also let be written as two words (§ 39 E3 (3): `anstelle`,
+`aufgrund`, `aufseiten`, `mithilfe`, `vonseiten`, `zugunsten`, `zulasten`,
+`zuungunsten`) stays one Lexeme ADP when written apart. `auf Grund des
+Wetters` attests the Lexeme ADP `aufgrund`, its Surface a Licensed Variant
+with two members
+([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
+It is not a Locution ADP, since it has one Head, merely spelled
+in two words. Nor is it the ADP `auf` with the NOUN `Grund`. A complex
+preposition is different: `im Vergleich zu` has no one-word spelling and its
+noun is a word of its own, so it stays a Locution ADP. The same words read
+literally are separate units: `auf Seiten 12 bis 14` is the ADP `auf` and the
+NOUN `Seite`. dumcorpus lists the pairs, and its Rule cites the list.
+`anhand` and `infolge` are not on it, since the rules spell them as one word
+only; `in Folge` means 'in a row'.
+
 **Subordinators with `dass`.** A preposition that joins `dass` into one
 subordinator (`ohne dass`, `statt dass`, `anstatt dass`) makes one Locution
 SCONJ. The `statt` and `anstatt` forms are separate Lemmas, related as
 synonyms, as `je … desto` and `je … umso` are. Adjacent `so dass` is not a
 Locution: it is Duden's other spelling of the Lexeme SCONJ `sodass`, a
-Licensed Variant with two members, as `auf Grund` is of `aufgrund`. Split
+Licensed Variant with two members, as `auf Grund` is of the Lexeme ADP
+`aufgrund` (see Prepositions spelled apart). Split
 around a word, `so … dass` is a correlator Locution. dumcorpus lists this
 family and the zu-infinitive one (`um … zu`, `ohne … zu`, `statt … zu`,
 `anstatt … zu`), and its Rules cite the list instead of naming its members

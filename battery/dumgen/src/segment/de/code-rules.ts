@@ -25,7 +25,11 @@
  *   spelling of sodass (de/dass-conjunction). A unit of exactly an
  *   accepted circumposition's two pieces that no zu-infinitive conjunction
  *   names routes Locution ADP (de/bracket-particle-or-circumposition,
- *   #1162).
+ *   #1162). An accepted one-word preposition written as two words
+ *   (germanSpelledApartPrepositions) is one unit of its two pieces that
+ *   routes Lexeme ADP, never a Locution or an ADP and a NOUN: Auf Grund
+ *   des Wetters gives [Auf, Grund] ADP aufgrund
+ *   (de/preposition-spelled-apart).
  * - `quantifier` (de/quantifier-by-use): ein wenig, ein paar, and an
  *   article right before quantity bisschen, are one Lexeme PRON unit each,
  *   and what they quantify is its own: Nach ein paar Sekunden gives

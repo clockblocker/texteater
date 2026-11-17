@@ -67,6 +67,17 @@ export const locutionsAndSayings: Rule[] = [
 		records: ["de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang"],
 	},
 	{
+		id: "de/preposition-spelled-apart",
+		statement:
+			"A one-word preposition whose two-word spelling the spelling rules also accept, listed in germanSpelledApartPrepositions, stays its Lexeme ADP when written apart: auf Grund des Wetters gives [auf, Grund] ADP aufgrund, its Surface a Licensed Variant over two members, never a Locution ADP and never the ADP auf with the NOUN Grund. Its complement takes the one word's case. Unlike a complex preposition (de/complex-preposition), it is one word that may be spelled in two, as so dass is sodass (de/dass-conjunction). The same words read literally are separate units: auf Seiten 12 bis 14 is the ADP auf and the NOUN Seite.",
+		adrs: ["ADR-0039", "ADR-0041"],
+		routes: lexeme("ADP"),
+		records: [
+			"de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des",
+			"de/mit-hilfe-seines-bruders-zog-er-um",
+		],
+	},
+	{
 		id: "de/routine-formula-is-intj",
 		statement:
 			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen), is an INTJ: a Lexeme when it is one word (danke), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge, so one Lemma may carry several Readings. An expression that also serves as an adverbial inside a clause, with the same meaning, keeps Kind ADV even standing alone (Gott sei Dank). Words that only stand together are no formula, nor is a formula with a complement and sense it lacks (darf ich um Ruhe bitten): they resolve word by word.",

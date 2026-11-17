@@ -191,3 +191,34 @@ test("anchors: a correlator's or conjunction's anchors route the Kind its Rule n
 				}),
 			).toEqual(entry.route);
 });
+
+test("anchors: a one-word preposition written as two words is one Lexeme ADP unit, whichever route the route Choice picks", async () => {
+	// Auf0 _1 Grund2 _3 des4 _5 Wetters6 _7 fiel8 _9 das10 _11 Spiel12 _13 aus14 .15
+	const text = "Auf Grund des Wetters fiel das Spiel aus.";
+	for (const key of allRoutes)
+		expect(
+			await routeOf(text, [0, 2], {
+				c_1_2: noul(0.9),
+				r_1_2: heard(key),
+			}),
+		).toEqual(route("Lexeme", "ADP"));
+	// Read as fixed words of one expression, it is still no Locution.
+	expect(
+		await routeOf(text, [0, 2], {
+			c_1_2: noul(0.9),
+			f_1: noul(0.9),
+			f_2: noul(0.9),
+			e_1_2: noul(0.9),
+			r_1_2: heard("Locution/ADP"),
+		}),
+	).toEqual(route("Lexeme", "ADP"));
+});
+
+test("anchors: a rejected spelled-apart pair leaves auf and Grund to the route Choice", async () => {
+	// Das0 _1 Schiff2 _3 lief4 _5 auf6 _7 Grund8 .9
+	const units = await unitsOf("Das Schiff lief auf Grund.", {
+		c_4_5: noul(0.1),
+	});
+	expect(units.map(({ segments }) => segments)).toContainEqual([6]);
+	expect(units.map(({ segments }) => segments)).toContainEqual([8]);
+});

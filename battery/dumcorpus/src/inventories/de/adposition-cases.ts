@@ -160,6 +160,10 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	angesichts: prep(only("Gen")),
 	anhand: prep(only("Gen")),
 	anlässlich: prep(only("Gen")),
+	// anstelle, aufgrund, aufseiten, mithilfe, vonseiten, zugunsten,
+	// zulasten, zuseiten and zuungunsten may be written as two words
+	// (germanSpelledApartPrepositions). Before von they take no case of
+	// their own: in aufgrund von Problemen, von takes the dative.
 	anstelle: prep(only("Gen")),
 	aufgrund: prep(only("Gen")),
 	aufseiten: prep(only("Gen")),
@@ -177,6 +181,7 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	jenseits: prep(only("Gen")),
 	kraft: prep(only("Gen")),
 	mangels: prep(only("Gen")),
+	mithilfe: prep(only("Gen")),
 	namens: prep(only("Gen")),
 	ob: prep(only("Gen")),
 	oberhalb: prep(only("Gen")),
@@ -186,9 +191,11 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	unterhalb: prep(only("Gen")),
 	unweit: prep(only("Gen")),
 	vermöge: prep(only("Gen")),
+	vonseiten: prep(only("Gen")),
 	vorbehaltlich: prep(only("Gen")),
 	zugunsten: { Prep: only("Gen"), Post: only("Dat") }, // dem Freund zugunsten.
 	zulasten: prep(only("Gen")),
+	zuseiten: prep(only("Gen")), // Archaic.
 	zuungunsten: { Prep: only("Gen"), Post: only("Dat") }, // dem Antragsteller zuungunsten.
 	zuzüglich: prep(only("Gen")),
 	zwecks: prep(only("Gen")),

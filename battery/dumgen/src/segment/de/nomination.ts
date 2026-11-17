@@ -32,13 +32,7 @@ import {
 } from "../ask.js";
 import type { Segment } from "../segmented-sentence.js";
 import { askPlan, type Plan } from "../stage-graph.js";
-import {
-	type PairCandidate,
-	pairCandidatesOf,
-	type Slot,
-	type SlotKind,
-	slotsOf,
-} from "./candidates.js";
+import { type Slot, type SlotKind, slotsOf } from "./candidates.js";
 import type { GermanInventory } from "./inventory.js";
 import {
 	candidateQuestions,
@@ -49,6 +43,7 @@ import {
 	pairId,
 	slotId,
 } from "./nomination-questions.js";
+import { type PairCandidate, pairCandidatesOf } from "./pair-candidates.js";
 import { argmaxBesideNone, partitionOf } from "./partition.js";
 import { governorShares } from "./phrase.js";
 import {

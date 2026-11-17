@@ -14,6 +14,7 @@ import {
 	type Unresolved,
 } from "../questions.js";
 import type { Target } from "../target.js";
+import { spelledApartPreposition } from "./code-headword.js";
 import { type AdpCase, fold, type Shape, spellingOf } from "./shape.js";
 
 /**
@@ -32,12 +33,15 @@ export function askAdposition(
 	shape: Shape,
 ): AdpositionPlan {
 	const [only] = target.members;
+	// auf Grund takes aufgrund's cases (de/preposition-spelled-apart).
+	const canonicalForm =
+		spelledApartPreposition(target) ??
+		(only && target.members.length === 1
+			? fold(spellingOf(only))
+			: undefined);
 	const entry =
-		shape.lexeme && only && target.members.length === 1
-			? germanAdpositionEntry({
-					family: "Lexeme",
-					canonicalForm: fold(spellingOf(only)),
-				})
+		shape.lexeme && canonicalForm !== undefined
+			? germanAdpositionEntry({ family: "Lexeme", canonicalForm })
 			: null;
 	const cases: readonly AdpCase[] = entry
 		? germanAdpositionAllowedCases(entry)

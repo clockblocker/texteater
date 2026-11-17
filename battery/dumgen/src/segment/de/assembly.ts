@@ -21,7 +21,6 @@ import {
 	isSymbolPiece,
 	nounLike,
 	numberRanges,
-	type PairCandidate,
 	superlativeLinks,
 } from "./candidates.js";
 import {
@@ -31,6 +30,7 @@ import {
 	sayingChoiceId,
 	slotLinks,
 } from "./nomination.js";
+import type { PairCandidate } from "./pair-candidates.js";
 import {
 	argmaxBesideNone,
 	groupKey,

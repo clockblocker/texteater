@@ -141,3 +141,45 @@ test("an adverb in its comparative is Luna's, and an ADP the ADP Case Table list
 	// mit has an authored Reading for the judge, so nothing is drafted.
 	expect(along.sent).toEqual([]);
 });
+
+test("a one-word preposition written as two words is code's headword, its Surface a Licensed Variant whatever jev judges (de/preposition-spelled-apart)", async () => {
+	for (const spelling of ["Canonical", "Licensed"]) {
+		// Auf0 _1 Grund2 _3 des4 _5 Wetters6 _7 fiel8 _9 das10 _11 Spiel12 _13 aus14 .15
+		const writer = luna("never asked");
+		const { result, trace } = await resolveOnce(
+			{ jev: fakeJev({ spelling }).ask, luna: writer.ask },
+			{
+				sentence: sentenceOf(
+					"Auf Grund des Wetters fiel das Spiel aus.",
+				),
+				unit: unitOf([0, 2], "Lexeme/ADP"),
+			},
+		);
+		const attestation = attested(result);
+		expect(attestation.surface.lemma.canonicalForm).toBe("aufgrund");
+		expect(attestation.surface.spelling).toEqual({
+			kind: "Variant",
+			variantTags: ["Licensed"],
+		});
+		expect(attestation.members.map(({ attested }) => attested)).toEqual([
+			"Auf",
+			"Grund",
+		]);
+		// aufgrund's genitive, never a case of auf.
+		expect(attestation).toHaveProperty("valencyEvidence", [
+			{
+				member: null,
+				complement: {
+					kind: "Case",
+					governedCase: "Gen",
+					referent: "Either",
+				},
+				realizedCase: "Gen",
+			},
+		]);
+		// No Canonical Form call.
+		expect(trace?.calls.map(({ stage }) => stage)).not.toContain(
+			"canonical",
+		);
+	}
+});

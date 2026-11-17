@@ -9,13 +9,15 @@ import type { Questions } from "@typesafe-ai/sdk";
 import { choice, noul } from "../ask.js";
 import {
 	idiomHosts,
-	oldSpellingCorrelators,
-	type PairCandidate,
 	type Slot,
 	type SlotKind,
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
+import {
+	oldSpellingCorrelators,
+	type PairCandidate,
+} from "./pair-candidates.js";
 import { sayingSpans } from "./saying-spans.js";
 import type { Reference, Sentence } from "./sentence.js";
 
@@ -53,6 +55,8 @@ const pairQuestion: Record<
 		`In \`sentence\`, do ${ref(pair.left)} and ${ref(pair.right)} together form the fixed conjunction ${pair.name}?`,
 	circumposition: (pair, ref) =>
 		`In \`sentence\`, do ${ref(pair.left)} and ${ref(pair.right)} together form one circumposition around a phrase (von … an, an … vorbei, über … hinaus, um … willen), rather than ${ref(pair.right)} being a verb's particle or an adverb?`,
+	"spelled-apart": (pair, ref) =>
+		`In \`sentence\`, are ${ref(pair.left)} and ${ref(pair.right)} the preposition ${pair.name} written as two words (auf Grund des Wetters is aufgrund, mit Hilfe seines Bruders is mithilfe), rather than a preposition and a noun used literally (auf Seiten 12 bis 14)?`,
 	name: (pair, ref) =>
 		`In \`sentence\`, are ${ref(pair.left)} and ${ref(pair.right)} parts of one multiword proper name (Johann Wolfgang von Goethe, Tundu Lissu, New York), rather than a title or common noun next to a name, or two separate names?`,
 };

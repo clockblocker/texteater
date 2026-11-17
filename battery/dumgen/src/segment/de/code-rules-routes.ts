@@ -17,6 +17,7 @@ import { isArticle } from "./candidates.js";
 import {
 	anchoredUnits,
 	plainCircumpositions,
+	spelledApartPrepositions,
 	splitAdverbs,
 	strandedAdverbs,
 } from "./code-rules-words.js";
@@ -151,12 +152,17 @@ function anchoredRoute(name: string, adjacent: boolean): RouteKey | undefined {
  * (`anchoredRoute`), and a unit of exactly an accepted circumposition's two
  * pieces that no zu-infinitive conjunction names is Locution ADP
  * (de/bracket-particle-or-circumposition): Von diesem Tag an is [Von, an]
- * ADP like von morgen an (#1162).
+ * ADP like von morgen an (#1162). A unit of exactly an accepted one-word
+ * preposition written as two words is that Lexeme ADP, as so dass is the
+ * Lexeme SCONJ sodass: [auf, Grund] is aufgrund
+ * (de/preposition-spelled-apart).
  */
 export function anchorRoutes(nomination: Nomination): FixedRoute {
 	const fixed = new Map<string, RouteKey>();
 	for (const pair of plainCircumpositions(nomination))
 		fixed.set(keyOf(pair), "Locution/ADP");
+	for (const pair of spelledApartPrepositions(nomination))
+		fixed.set(keyOf(pair), "Lexeme/ADP");
 	const { pieces, segments } = nomination.sentence;
 	const adjacent = (ids: readonly number[]) => {
 		const [left, right] = ids.map((id) => pieces[id - 1]);

@@ -27,7 +27,7 @@ are two Lemmas. A grammatical difference outside identity does not split a
 Lemma: \`Mutter\` 'mother' (\`Mütter\`) and \`Mutter\` 'nut' (\`Muttern\`) are one
 Lemma with two Readings, and each Reading's Knowledge records its plural.
 
-A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, English \`I'll\` or \`don't\`, or Hebrew \`בבית\` is not a Lemma. Each of its pieces is a syntactic word of its own Lexeme Kind, never a Morpheme: \`'ll\` is AUX \`will\`, \`n't\` is PART \`not\`, Hebrew \`ב\` is ADP. The Attestation member realized by such a piece carries the orthography \`Fused\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
+A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, English \`I'll\` or \`don't\`, or Hebrew \`בבית\` is not a Lemma. Each of its pieces is a syntactic word of its own Lexeme Kind, never a Morpheme: \`'ll\` is AUX \`will\`, \`n't\` is PART \`not\`, Hebrew \`ב\` is ADP. The Attestation member realized by such a piece carries the orthography \`Fused\`. A Lexeme may still have several realized members: a satellite, such as the governed preposition of German \`rechnen … mit\` (VERB), or the two words of a one-word Lemma written apart, a Licensed Variant such as \`auf Grund\` of the ADP \`aufgrund\` or \`so dass\` of the SCONJ \`sodass\`. A unit with two or more Heads is a Locution: \`entweder … oder\` (CCONJ), \`um … zu\` (SCONJ), \`im Vergleich zu\` (ADP).
 
 ## Surface
 

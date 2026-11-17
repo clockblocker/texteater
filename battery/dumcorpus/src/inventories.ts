@@ -101,6 +101,7 @@ export {
 	type AuthoredRealization,
 	authoredRealizations,
 } from "./inventories/de/realizations.js";
+export { germanSpelledApartPrepositions } from "./inventories/de/spelled-apart-prepositions.js";
 export { germanSplitAdverbParts } from "./inventories/de/split-adverb-parts.js";
 export { germanSuppletiveComparisons } from "./inventories/de/suppletive-comparison.js";
 export {

@@ -170,7 +170,9 @@ _Avoid_: sentence order, slotted Surface, for what is stored
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
-mistake. It is not a Paradigm Variant (Dumrel). See [ADR 0041].
+mistake. It is not a Paradigm Variant (Dumrel). A one-word Lemma written as
+two words (`auf Grund` of `aufgrund`, `so dass` of `sodass`) is a Variant,
+not a Locution. See [ADR 0041] and [ADR 0039].
 _Avoid_: licensed variant, for Variant in general; Variant type, for its tags
 
 **Attestation**:

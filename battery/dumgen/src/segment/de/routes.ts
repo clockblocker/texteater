@@ -57,7 +57,7 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Lexeme/ADJ":
 		"Adjective, also comparative or used adverbially (singt laut), and every participle outside a perfect or passive (die gebratenen Zwiebeln, Die Tür ist geschlossen)",
 	"Lexeme/ADP":
-		"Preposition or postposition that no word governs (im Keller)",
+		"Preposition or postposition that no word governs (im Keller), also a one-word preposition written as two words (auf Grund, mit Hilfe)",
 	"Lexeme/ADV":
 		"Adverb, including pronominal adverbs (darauf, davon), a split adverb (Da … von, Wo … hin) and interrogative or relative wo, wann, wie, warum",
 	"Lexeme/CCONJ": "Coordinating conjunction (und, oder, aber, denn, sondern)",
@@ -75,13 +75,14 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	// Rule de/coined-name-substitute-is-propn.
 	"Lexeme/PROPN":
 		"Proper name, with the article that opens its phrase (die Schweiz, der Rhein), and a fixed name-substitute or nickname coined for one referent, even one built from a pronoun or a clause (Du-weißt-schon-wer)",
-	"Lexeme/SCONJ": "Subordinating conjunction (dass, weil, ob, als, wenn)",
+	"Lexeme/SCONJ":
+		"Subordinating conjunction (dass, weil, ob, als, wenn), also sodass written as so dass",
 	"Lexeme/SYM": "Symbol such as %, €, §, +",
 	"Lexeme/VERB":
 		"One verb with its separable particle, required reflexive, auxiliaries, expletive es and governed preposition; modals and copulas included",
 	"Locution/ADJ": "Fixed multiword expression acting as an adjective",
 	"Locution/ADP":
-		"Fixed multiword preposition or circumposition (um … willen)",
+		"Fixed multiword preposition or circumposition (im Vergleich zu, um … willen)",
 	"Locution/ADV":
 		"Fixed multiword adverbial (zum Teil, auf keinen Fall, so oder so, ganz und gar)",
 	"Locution/CCONJ":
@@ -93,7 +94,7 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Locution/NUM": "Fixed multiword numeral expression",
 	"Locution/PRON": "Fixed multiword pronoun",
 	"Locution/SCONJ":
-		"Fixed multiword subordinator or correlator (um … zu, je … desto, so dass)",
+		"Fixed multiword subordinator or correlator (um … zu, je … desto, ohne dass)",
 	"Locution/VERB":
 		"Idiom or collocation acting as a verb (den Faden verlieren, zur Verfügung stellen, Angst haben)",
 	"Saying/Saying":

@@ -11,7 +11,6 @@ import {
 	fusedSiblings,
 	nounLike,
 	numberRanges,
-	oldSpellingCorrelators,
 	superlativeLinks,
 } from "../../../../src/segment/de/candidates.js";
 import {
@@ -23,6 +22,7 @@ import {
 	sayingChoiceId,
 	slotId,
 } from "../../../../src/segment/de/nomination.js";
+import { oldSpellingCorrelators } from "../../../../src/segment/de/pair-candidates.js";
 import { argmaxBesideNone } from "../../../../src/segment/de/partition.js";
 import { sayingSpans } from "../../../../src/segment/de/saying-spans.js";
 import type { Connection, Edge } from "../../harness/stages.js";

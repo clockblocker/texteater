@@ -33,8 +33,13 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/preposition-spelled-apart",
+				"hash": "c3b39195b832f5c2"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -42,7 +47,7 @@
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "Context names editorial headword; two-word standard variant stays aligned."
+				"rationale": "auf Grund is the official rules' other spelling of the one preposition aufgrund (§ 39 E3 (3)), a Lexeme ADP: the Surface is a Licensed Variant over two members, neither a Locution ADP nor the ADP auf with the NOUN Grund (de/preposition-spelled-apart). Its complement takes aufgrund's genitive."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

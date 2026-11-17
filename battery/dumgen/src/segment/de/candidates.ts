@@ -2,10 +2,9 @@
  * Deterministic candidates for German units. Code finds the pieces that
  * could attach to another word (articles, separable particles,
  * auxiliaries, reflexives, expletive es, governed prepositions, a noun's
- * idiom verb), the pairs that could be one unit (split adverbs,
- * correlators, circumpositions, multiword names) and the spans a Saying
- * could cover. The judge only picks a host among a bounded window, or
- * `none`, and weighs the pairs and spans.
+ * idiom verb) and the spans a Saying could cover; `pair-candidates.ts`
+ * finds the pairs that could be one unit. The judge only picks a host
+ * among a bounded window, or `none`, and weighs the pairs and spans.
  */
 import {
 	type AuthoredRealization,
@@ -33,14 +32,6 @@ export type Slot = {
 	readonly piece: Piece;
 	/** The pieces the judge may choose as the host. */
 	readonly hosts: readonly Piece[];
-};
-
-/** Two pieces code proposes as one unit, for a Noul. */
-export type PairCandidate = {
-	readonly kind: "split-adverb" | "correlator" | "circumposition" | "name";
-	readonly left: Piece;
-	readonly right: Piece;
-	readonly name: string;
 };
 
 function pronTypeOf({ member }: AuthoredRealization): unknown {
@@ -390,148 +381,6 @@ export const splitTails: ReadonlySet<string> = new Set(
 	germanSplitAdverbParts.map(({ tail }) => tail),
 );
 
-const correlators: readonly (readonly [string, string, string])[] = [
-	["entweder", "oder", "entweder … oder"],
-	["weder", "noch", "weder … noch"],
-	["sowohl", "als", "sowohl … als auch"],
-	["sowohl", "wie", "sowohl … wie auch"],
-	["nicht", "sondern", "nicht nur … sondern auch"],
-	["je", "desto", "je … desto"],
-	["je", "umso", "je … umso"],
-	["je", "je", "je … je"],
-	["einerseits", "andererseits", "einerseits … andererseits"],
-	["teils", "teils", "teils … teils"],
-	["um", "zu", "um … zu"],
-	["ohne", "zu", "ohne … zu"],
-	["statt", "zu", "statt … zu"],
-	["anstatt", "zu", "anstatt … zu"],
-	["so", "dass", "so … dass"],
-];
-
-/** Two adjacent words proposed as one subordinator (#735 keeps *X dass* a Locution). */
-const adjacentConjunctions: readonly (readonly [string, string])[] = [
-	["ohne", "dass"],
-	["ohne", "daß"],
-	["so", "dass"],
-	["so", "daß"],
-	["als", "ob"],
-	["als", "wenn"],
-	["statt", "dass"],
-	["anstatt", "dass"],
-	["außer", "dass"],
-	["nur", "dass"],
-	["kaum", "dass"],
-	["auch", "wenn"],
-	["und", "zwar"],
-];
-
-const circumpositionTails = new Set([
-	"vorbei",
-	"hinaus",
-	"an",
-	"aus",
-	"her",
-	"heraus",
-	"hervor",
-	"hin",
-	"hindurch",
-	"hinweg",
-	"entlang",
-	"herum",
-	"willen",
-	"wegen",
-	"zu",
-	"ab",
-]);
-
-const nameConnectors = new Set([
-	"von",
-	"van",
-	"de",
-	"di",
-	"da",
-	"del",
-	"zu",
-	"der",
-	"vom",
-]);
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export function pairCandidatesOf(
-	sentence: Sentence,
-	inventory: GermanInventory,
-): PairCandidate[] {
-	const pairs: PairCandidate[] = [];
-	const { pieces } = sentence;
-	for (const [index, left] of pieces.entries()) {
-		const right = pieces[index + 1];
-		if (!right) continue;
-		for (const [first, second] of adjacentConjunctions)
-			if (lower(left) === first && lower(right) === second)
-				pairs.push({
-					kind: "correlator",
-					left,
-					right,
-					name: `${first} ${second}`,
-				});
-		// Names: capitalized pieces, possibly joined by von, van, de.
-		if (nounLike(left) && left.clause === right.clause) {
-			const connects = (at: number) => {
-				const piece = pieces[at];
-				return piece !== undefined && nameConnectors.has(lower(piece));
-			};
-			let next = index + 1;
-			while (connects(next) && next - index < 3) next++;
-			const partner = pieces[next];
-			if (partner && nounLike(partner) && partner.clause === left.clause)
-				pairs.push({
-					kind: "name",
-					left,
-					right: partner,
-					name: "",
-				});
-		}
-	}
-	for (const left of pieces) {
-		if (!inventory.isAdposition(left.surface) || left.fusedWord) continue;
-		for (const right of pieces)
-			if (
-				right.id > left.id + 1 &&
-				right.id - left.id <= 8 &&
-				right.clause === left.clause &&
-				circumpositionTails.has(lower(right))
-			)
-				pairs.push({
-					kind: "circumposition",
-					left,
-					right,
-					name: `${lower(left)} … ${lower(right)}`,
-				});
-	}
-	for (const left of sentence.pieces) {
-		const head = lower(left);
-		for (const right of sentence.pieces) {
-			if (right.id <= left.id) continue;
-			const tail = lower(right);
-			const adverb = splitAdverbForm(head, tail);
-			if (
-				adverb !== undefined &&
-				right.clause === left.clause &&
-				right.id - left.id <= 10
-			)
-				pairs.push({ kind: "split-adverb", left, right, name: adverb });
-			for (const [first, second, name] of correlators)
-				if (
-					head === first &&
-					tail === second &&
-					right.id - left.id <= 20
-				)
-					pairs.push({ kind: "correlator", left, right, name });
-		}
-	}
-	return pairs;
-}
-
 /** `am` before a superlative in -sten joins it (`am liebsten`), with no judge. */
 export function superlativeLinks(
 	sentence: Sentence,
@@ -599,26 +448,6 @@ export function idiomHosts(sentence: Sentence, piece: Piece): Piece[] {
 			(!nounLike(other) || clauseInitial(sentence, other)) &&
 			!isArticle(other),
 	);
-}
-
-/** Non-adjacent correlators in the old spelling daß. */
-export function oldSpellingCorrelators(sentence: Sentence): PairCandidate[] {
-	const pairs: PairCandidate[] = [];
-	for (const left of sentence.pieces)
-		if (lower(left) === "so")
-			for (const right of sentence.pieces)
-				if (
-					right.id > left.id + 1 &&
-					right.id - left.id <= 20 &&
-					lower(right) === "daß"
-				)
-					pairs.push({
-						kind: "correlator",
-						left,
-						right,
-						name: "so … daß",
-					});
-	return pairs;
 }
 
 /** A number range's number words: the numeral speller's words, and eine (eine Million). */

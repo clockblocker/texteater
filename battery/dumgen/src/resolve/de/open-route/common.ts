@@ -20,6 +20,7 @@ import {
 	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
+import { spelledApartPreposition } from "./code-headword.js";
 import {
 	askFreeAdverbs,
 	type FreeAdverbQuestions,
@@ -278,8 +279,11 @@ export const readHead = answerReader(function* (
 	const digits = target.members.every(
 		(member) => member.spelling || /^\d+$/u.test(member.text),
 	);
+	// A numeral in digits, and a one-word preposition written as two
+	// words (de/preposition-spelled-apart), are Licensed whatever jev says.
 	const spelling: Spelling =
-		target.route.kind === "NUM" && digits
+		(target.route.kind === "NUM" && digits) ||
+		spelledApartPreposition(target) !== undefined
 			? { kind: "Variant", variantTags: ["Licensed"] }
 			: spellingAnswer === "Canonical"
 				? { kind: "Canonical" }

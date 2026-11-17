@@ -18,7 +18,6 @@ import {
 	fusedSiblings,
 	isArticle,
 	nounLike,
-	oldSpellingCorrelators,
 	particleForms,
 	reflexiveSubject,
 	splitAdverbForm,
@@ -29,6 +28,7 @@ import {
 import type { ClosedUnit, Decision } from "./code-rules.js";
 import { bracketClauses } from "./code-rules-verbs.js";
 import { displacedArticles, type Nomination } from "./nomination.js";
+import { oldSpellingCorrelators } from "./pair-candidates.js";
 import { groupKey } from "./partition.js";
 import { adjectiveEnding, fusedPrepositions, phraseWindow } from "./phrase.js";
 import type { RouteKey } from "./routes.js";
@@ -177,12 +177,28 @@ export function anchoredUnits(nomination: Nomination): AnchoredUnit[] {
 		});
 }
 
+/**
+ * The accepted one-word prepositions written as two words, each its two
+ * piece ids: [auf, Grund] is aufgrund (de/preposition-spelled-apart).
+ */
+export function spelledApartPrepositions(
+	nomination: Nomination,
+): (readonly [number, number])[] {
+	return accepted(nomination)
+		.filter(([, , kind]) => kind === "spelled-apart")
+		.map(([left, right]) => [left, right] as const);
+}
+
 export function anchors(nomination: Nomination): Decision {
 	return {
-		closed: anchoredUnits(nomination).map(({ pieces }) => ({
-			pieces,
-			family: "Locution",
-		})),
+		closed: [
+			...anchoredUnits(nomination).map(
+				({ pieces }): ClosedUnit => ({ pieces, family: "Locution" }),
+			),
+			...spelledApartPrepositions(nomination).map(
+				(pieces): ClosedUnit => ({ pieces, family: "Lexeme" }),
+			),
+		],
 	};
 }
 

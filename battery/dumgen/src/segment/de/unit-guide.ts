@@ -10,6 +10,7 @@ export const unitGuide = {
 		"A verb owns its separable particle (zog … an), an inherently reflexive pronoun (sich schämen, erinnert sich), the auxiliaries sein/haben/werden of its perfect, future or passive (hat … gegessen, ist … worden, wird … gebaut), a non-referential es it selects (es gibt, es regnet, geht's), and a preposition it governs (wartet auf, erinnert sich an), wherever they stand.",
 		"An adjective or noun owns a preposition it governs: stolz auf, Angst vor. A free preposition (im Keller, mit dem Bus) is a unit of its own.",
 		"A split adverb is one unit: Da … von is davon, Wo … hin is wohin. A pronominal adverb written as one word (darauf, davon) is its own unit and never joins a verb.",
+		"A word that may be written as one or as two is one unit either way, never a fixed expression or a preposition with a noun:auf Grund is the preposition aufgrund, mit Hilfe mithilfe, an Stelle anstelle, zu Gunsten zugunsten, and so dass the conjunction sodass.",
 		"Stay apart: a modal verb and its infinitive, a copula (sein, werden, bleiben) and its predicate, zu before an infinitive, nicht, attributive adjectives, a participle describing a state (Die Tür ist geschlossen), pronouns, conjunctions, adverbs.",
 	],
 	multiword_units: [
