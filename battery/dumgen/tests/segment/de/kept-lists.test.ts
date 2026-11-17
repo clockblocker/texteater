@@ -41,6 +41,7 @@ test("every zu-infinitive Locution is a correlator Dumgen proposes by its name",
 test("every circumposition in dumcorpus's ADP Case Table is a pair Dumgen proposes by its name", () => {
 	// über … hinweg and von … wegen once had no tail, so no pair.
 	expect(germanCircumpositions).toContain("über … hin");
+	expect(germanCircumpositions).toContain("unter … hervor");
 	for (const name of germanCircumpositions) {
 		const [first, second] = name.split(" … ");
 		if (!first || !second)

@@ -266,17 +266,26 @@ const germanLocutionAdpositions: Readonly<
 	"an … entlang": only("Dat"),
 	"an … vorbei": only("Dat"),
 	"auf … hin": only("Acc"),
+	"aus … heraus": only("Dat"), // aus der Not heraus.
+	"durch … hindurch": only("Acc"), // durch den Wald hindurch.
+	"gegen … hin": only("Acc"), // gegen Abend hin.
+	"hinter … her": only("Dat"), // hinter ihm her.
 	"im Vergleich zu": only("Dat"),
+	"nach … hin": only("Dat"), // nach Süden hin.
 	"über … hin": only("Acc"), // über die Wellen hin.
 	"über … hinaus": only("Acc"),
 	"über … hinweg": only("Acc"),
 	"um … herum": only("Acc"),
 	"um … willen": only("Gen"),
+	"unter … hervor": only("Dat"), // unter dem Tisch hervor.
+	"von … ab": only("Dat"), // von morgen ab.
 	"von … an": only("Dat"),
 	"von … aus": only("Dat"),
 	"von … her": only("Dat"),
 	"von … wegen": only("Gen"), // von Amts wegen.
+	"vor … her": only("Dat"), // vor sich her.
 	"zu … hin": only("Dat"),
+	"zwischen … hindurch": only("Dat"), // zwischen den Bäumen hindurch.
 };
 
 /**
