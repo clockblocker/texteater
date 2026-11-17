@@ -391,3 +391,31 @@ test("a click that came out is a successful operation, its dropped guessed call 
 	const { resolution: _resolution, ...failedClick } = trace;
 	expect(operationSteps(failedClick, "root")[0]?.status).toBe("Interrupted");
 });
+
+test("a call a stored batch answer stood in for says so in its row (#1351)", () => {
+	const trace = {
+		operation: "resolve.grammar",
+		startedAt: 1_000,
+		durationMs: 40,
+		calls: [
+			{
+				stage: "canonical",
+				executor: "luna",
+				storedAnswer: "batch_1",
+				inputTokens: 0,
+				outputTokens: 0,
+				startedAt: 1_000,
+				durationMs: 3,
+			},
+		],
+		waits: [],
+		sentences: [],
+		resolution: { outcome: "Resolved" },
+	} as const;
+	const [, row] = operationSteps(trace, "root");
+	expect(row?.name).toBe("canonical · stored answer");
+	expect(JSON.parse(row?.payloadJson ?? "{}")).toMatchObject({
+		storedAnswer: "batch_1",
+		tokens: { input: 0, output: 0 },
+	});
+});

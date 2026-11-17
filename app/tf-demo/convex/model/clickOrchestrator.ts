@@ -1,5 +1,6 @@
 "use node";
 
+import type { Infer } from "convex/values";
 import { operations } from "dumgen";
 import type { ReadingResolution } from "../../server/clickResolution";
 import { dumgenClickResolution } from "../../server/dumgenClickResolution";
@@ -25,6 +26,7 @@ import { storedUnitOf } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
+import type { resolutionContextValidator } from "../resolutionContext";
 import { requireJev, resegment } from "./deploymentDumgen";
 import { convexId } from "./resolutionSessionLifecycle";
 
@@ -68,6 +70,25 @@ export function orchestratorFor(
 }
 
 /**
+ * A Resolution Context as `resolutionContext.load` returns it, its Lemma
+ * candidates parsed: the click's, and the one a batch asks a click's Luna
+ * request ahead from (#1351).
+ */
+export function parsedResolutionContext(
+	context: Infer<typeof resolutionContextValidator>,
+): ResolutionContext {
+	return {
+		...context,
+		lemmaCandidates: context.lemmaCandidates.map(
+			({ lemma, foundUnder }) => ({
+				lemma: parseGermanLemma(lemma),
+				foundUnder,
+			}),
+		),
+	} as ResolutionContext;
+}
+
+/**
  * Every Occurrence commit runs under the Resolution Session that asked for it
  * and settles that session in its own transaction (ADR-0004). Scroll submission
  * has no session and makes no commit.
@@ -87,22 +108,12 @@ function createConvexPersistence(
 ): OrchestrationPersistence {
 	return {
 		async loadResolutionContext(input) {
-			const context = await ctx.runQuery(
-				internal.resolutionContext.load,
-				{
+			return parsedResolutionContext(
+				await ctx.runQuery(internal.resolutionContext.load, {
 					...input,
 					sentenceId: convexId<"sentences">(input.sentenceId),
-				},
+				}),
 			);
-			return {
-				...context,
-				lemmaCandidates: context.lemmaCandidates.map(
-					({ lemma, foundUnder }) => ({
-						lemma: parseGermanLemma(lemma),
-						foundUnder,
-					}),
-				),
-			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {
 			const { readingAvailable, succeeded } = input.progress ?? {};

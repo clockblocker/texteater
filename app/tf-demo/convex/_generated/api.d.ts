@@ -9,6 +9,8 @@
  */
 
 import type * as analysisStripping from "../analysisStripping.js";
+import type * as canonicalBatchActions from "../canonicalBatchActions.js";
+import type * as canonicalBatches from "../canonicalBatches.js";
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as crons from "../crons.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
@@ -70,6 +72,7 @@ import type * as model_scrollAnalysisStripping from "../model/scrollAnalysisStri
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_sourceDirection from "../model/sourceDirection.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
+import type * as model_tables_canonicalBatches from "../model/tables/canonicalBatches.js";
 import type * as model_tables_dictionary from "../model/tables/dictionary.js";
 import type * as model_tables_inspection from "../model/tables/inspection.js";
 import type * as model_tables_knowledge from "../model/tables/knowledge.js";
@@ -127,6 +130,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   analysisStripping: typeof analysisStripping;
+  canonicalBatchActions: typeof canonicalBatchActions;
+  canonicalBatches: typeof canonicalBatches;
   catalogGrowthSignals: typeof catalogGrowthSignals;
   crons: typeof crons;
   definitionTextActions: typeof definitionTextActions;
@@ -188,6 +193,7 @@ declare const fullApi: ApiFromModules<{
   "model/shadows": typeof model_shadows;
   "model/sourceDirection": typeof model_sourceDirection;
   "model/storedSegments": typeof model_storedSegments;
+  "model/tables/canonicalBatches": typeof model_tables_canonicalBatches;
   "model/tables/dictionary": typeof model_tables_dictionary;
   "model/tables/inspection": typeof model_tables_inspection;
   "model/tables/knowledge": typeof model_tables_knowledge;

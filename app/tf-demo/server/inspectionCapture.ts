@@ -117,10 +117,23 @@ function operationStatus(trace: OperationTrace): InspectionStep["status"] {
 }
 
 /**
+ * A call's row name: its stage, its Sentence, and whether a stored batch
+ * answer stood in for the model's (#1351).
+ */
+function callStepName(call: OperationTrace["calls"][number]): string {
+	const name =
+		call.sentence === undefined
+			? call.stage
+			: `${call.stage} · Sentence ${call.sentence}`;
+	return call.storedAnswer === undefined ? name : `${name} · stored answer`;
+}
+
+/**
  * One Dumgen operation's inspection rows, built from its OperationTrace
  * alone (#559, #885): the operation, and under it each call (stage,
- * Sentence, `jev | luna`, tokens, timing, failure, and the prompt and
- * answer when the host asked for payloads) and each wait for the request
+ * Sentence, `jev | luna`, tokens, timing, failure, the stored answer that
+ * stood in for the model's, and the prompt and answer when the host asked
+ * for payloads) and each wait for the request
  * budget. Sentence outcomes, the click's resolution and the operation's
  * events ride on the operation row. The `dumgen.*` spans carry no payloads
  * and render no row.
@@ -177,10 +190,7 @@ export function operationSteps(
 		steps.push({
 			id: crypto.randomUUID(),
 			parentId: operationId,
-			name:
-				call.sentence === undefined
-					? call.stage
-					: `${call.stage} · Sentence ${call.sentence}`,
+			name: callStepName(call),
 			owner: `${DUMGEN} · ${call.executor}`,
 			kind: call.executor === "jev" ? "TypeSafe" : "LLM",
 			startedAt: call.startedAt,
@@ -198,6 +208,9 @@ export function operationSteps(
 					? {}
 					: { sentence: call.sentence }),
 				executor: call.executor,
+				...(call.storedAnswer === undefined
+					? {}
+					: { storedAnswer: call.storedAnswer }),
 				tokens: {
 					input: call.inputTokens,
 					output: call.outputTokens,

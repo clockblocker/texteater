@@ -3,9 +3,9 @@ import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
+import { clickGrammarInputOf, clickSentenceOf } from "./clickGrammarInput";
 import type {
 	ClickEncounter,
-	ClickGrammarSentence,
 	ClickResolution,
 	ReadingResolution,
 } from "./clickResolution";
@@ -33,11 +33,6 @@ import type {
 	ReusableAttestation,
 } from "./orchestrationPorts";
 import type { ModelFailure, ResolutionRunError } from "./resolutionFailure";
-import {
-	assertStoredSentence,
-	encounterSentenceOf,
-	unitsByMember,
-} from "./storedSegments";
 
 export type {
 	OrchestrationPersistence,
@@ -254,32 +249,18 @@ function resolveGrammatical<R>(
 	request: ResolveSegmentInput,
 	judging: JudgedGrammarSave,
 ) {
-	const stored = context.sentence;
-	if (!stored) throw new Error("The requested sentence does not exist.");
-	const sentence = clickSentenceOf(stored);
-	const unit = unitsByMember(stored.units).get(request.clickedSegmentIndex);
-	return options.resolution
-		.grammar(
-			{
-				sentence,
+	const input = clickGrammarInputOf(context, request.clickedSegmentIndex);
+	const { unit } = input;
+	return options.resolution.grammar(input, judging.onJudged).pipe(
+		Effect.ensuring(judging.grammarReturned),
+		Effect.withSpan(
+			"Resolve grammar",
+			inspectionStep("app/tf-demo · ClickResolution", {
 				clickedSegmentIndex: request.clickedSegmentIndex,
-				...(unit ? { unit } : {}),
-				units: stored.units ?? [],
-				lemmaCandidates: context.lemmaCandidates,
-				neighbours: context.neighbours ?? {},
-			},
-			judging.onJudged,
-		)
-		.pipe(
-			Effect.ensuring(judging.grammarReturned),
-			Effect.withSpan(
-				"Resolve grammar",
-				inspectionStep("app/tf-demo · ClickResolution", {
-					clickedSegmentIndex: request.clickedSegmentIndex,
-					unit,
-				}),
-			),
-		);
+				unit,
+			}),
+		),
+	);
 }
 
 /**
@@ -627,14 +608,6 @@ function effectFrom<Value, Error>(
 
 function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
-}
-
-function clickSentenceOf(stored: PersistedSentence): ClickGrammarSentence {
-	if (stored.language !== "de") {
-		throw new Error("Only German click resolution is enabled in tf-demo.");
-	}
-	assertStoredSentence(stored);
-	return encounterSentenceOf(stored);
 }
 
 /** The stored Segments an Encounter's target names, for committing membership. */

@@ -1,15 +1,20 @@
 "use node";
 
 import {
+	canonicalAheadStage,
+	createOpenAILunaBatch,
 	DumgenLive,
 	InvalidModelOutput,
 	type Jev,
 	JevTransport,
 	type Luna,
+	type LunaBatch,
 	LunaTransport,
 	type OperationTrace,
 	operations,
 	ProviderFailure,
+	type StoredLunaAnswer,
+	storedLunaAsk,
 	TraceSink,
 } from "dumgen";
 import * as Effect from "effect/Effect";
@@ -41,11 +46,14 @@ export type CallPolicy = {
 /**
  * The model transports a deployment has, each made under a `CallPolicy`:
  * jev through TypeSafe where `TYPESAFE_API_KEY` is set, Luna through OpenAI
- * where `OPENAI_API_KEY` is. jev has no prompt cache to ask for.
+ * where `OPENAI_API_KEY` is, and there Luna's Batch API too, which asks a
+ * click's canonical request ahead (#1351). jev has no prompt cache to ask
+ * for.
  */
 export type ModelTransports = {
 	readonly jev?: (policy: CallPolicy) => Layer.Layer<JevTransport>;
 	readonly luna?: (policy: CallPolicy) => Layer.Layer<LunaTransport>;
+	readonly lunaBatch?: () => LunaBatch;
 };
 
 const deadline = ({ timeoutMs }: CallPolicy) =>
@@ -74,6 +82,11 @@ function environmentTransports(): ModelTransports {
 							...(policy.promptCaching
 								? { promptCaching: true }
 								: {}),
+						}),
+					lunaBatch: () =>
+						createOpenAILunaBatch({
+							apiKey: lunaKey,
+							promptCaching: true,
 						}),
 				}
 			: {}),
@@ -108,23 +121,56 @@ const unset = (key: string) => async (): Promise<never> => {
 	throw Error(`${key} is not set on the Convex deployment`);
 };
 
+/** Finds the stored answer to a Luna request by its key (`lunaRequestKey`). */
+export type FindStoredAnswer = (
+	requestKey: string,
+) => Promise<StoredLunaAnswer | undefined>;
+
+/**
+ * `luna` with its canonical requests answered from `find` where it holds
+ * one (`storedLunaAsk`, #1351); every other request, and one with no
+ * stored answer, goes to `luna`.
+ */
+const answeringStored = (
+	luna: Layer.Layer<LunaTransport>,
+	find: FindStoredAnswer,
+): Layer.Layer<LunaTransport> =>
+	Layer.effect(
+		LunaTransport,
+		Effect.gen(function* () {
+			const { ask } = yield* LunaTransport;
+			return {
+				ask: storedLunaAsk(ask, {
+					stages: new Set([canonicalAheadStage]),
+					find,
+				}),
+			};
+		}),
+	).pipe(Layer.provide(luna));
+
 /**
  * `DumgenLive` over the deployment's transports, made under `policy`. A
  * transport the deployment lacks fails each call that needs it, so an
  * action that cannot run without one checks first; intake never asks
- * Luna. Traces go where the action's `TraceSink` says.
+ * Luna. With `stored`, Luna's canonical requests are answered from the
+ * answers a batch asked ahead where there is one. Traces go where the
+ * action's `TraceSink` says.
  */
 export function deploymentDumgen(
 	policy: CallPolicy = {},
+	stored?: FindStoredAnswer,
 ): Layer.Layer<Jev | Luna> {
 	const transports = modelTransports();
+	const luna = transports.luna?.(policy);
 	return DumgenLive({
 		jev:
 			transports.jev?.(policy) ??
 			JevTransport.fromAsk(unset("TYPESAFE_API_KEY")),
-		luna:
-			transports.luna?.(policy) ??
-			LunaTransport.fromAsk(unset("OPENAI_API_KEY")),
+		luna: luna
+			? stored
+				? answeringStored(luna, stored)
+				: luna
+			: LunaTransport.fromAsk(unset("OPENAI_API_KEY")),
 	});
 }
 
@@ -160,15 +206,22 @@ export function clickCallDeadlineMs(
 /**
  * The click's Dumgen: jev and Luna at the click deadline, read when the
  * Layer is built, so a bad deadline fails the click's run, with Luna's
- * prompts cached. A click that needs no model needs no key: its
- * operations `requireJev` when they run.
+ * prompts cached, and its canonical request answered from the answers a
+ * batch asked ahead, found by `stored` (#1351). A click that needs no
+ * model needs no key: its operations `requireJev` when they run.
  */
-export const clickDumgen: Layer.Layer<Jev | Luna> = Layer.suspend(() =>
-	deploymentDumgen({
-		timeoutMs: clickCallDeadlineMs(),
-		promptCaching: true,
-	}),
-);
+export const clickDumgen = (
+	stored?: FindStoredAnswer,
+): Layer.Layer<Jev | Luna> =>
+	Layer.suspend(() =>
+		deploymentDumgen(
+			{
+				timeoutMs: clickCallDeadlineMs(),
+				promptCaching: true,
+			},
+			stored,
+		),
+	);
 
 /**
  * A Knowledge run's Dumgen: the transports' own deadlines, with Luna's

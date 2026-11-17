@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "./_generated/server";
+import { scheduleCanonicalBatch } from "./canonicalBatches";
 import {
 	occurrenceCommitArgs,
 	openOccurrenceCommit,
@@ -59,7 +60,17 @@ export const persistSubmittedScroll = internalMutation({
 		sentenceIds: v.array(v.id("sentences")),
 		deduplicated: v.boolean(),
 	}),
-	handler: persistSubmittedScrollImplementation,
+	handler: async (ctx, input) => {
+		const persisted = await persistSubmittedScrollImplementation(
+			ctx,
+			input,
+		);
+		// A paste or link is processed whole: its canonical requests are
+		// asked ahead of its clicks (#1351).
+		if (!persisted.deduplicated)
+			await scheduleCanonicalBatch(ctx, { scrollId: persisted.scrollId });
+		return persisted;
+	},
 });
 
 /** The Extracted Text a stored Scroll re-runs from, unchecked, if any. */

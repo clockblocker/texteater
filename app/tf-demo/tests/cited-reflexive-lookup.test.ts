@@ -65,8 +65,6 @@ test("a phrase that cites a reflexive finds its Lemma, under the words it was re
 			});
 		}
 		return loadResolutionContext(ctx, {
-			requestId: "request-1",
-			visitorId: "visitor-1",
 			sentenceId,
 			// gemütlich
 			clickedSegmentIndex: 8,

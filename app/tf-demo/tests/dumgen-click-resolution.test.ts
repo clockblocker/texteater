@@ -260,7 +260,7 @@ test("a click's and a Knowledge run's Luna cache their prompts; only a click's c
 	});
 	try {
 		for (const dumgen of [
-			clickDumgen,
+			clickDumgen(),
 			knowledgeDumgen,
 			Layer.suspend(() => deploymentDumgen()),
 		])

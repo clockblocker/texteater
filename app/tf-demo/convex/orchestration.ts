@@ -199,7 +199,15 @@ export const runResolutionSession = internalAction({
 								),
 							),
 							dumgenTraced(inspection),
-							Effect.provide(clickDumgen),
+							Effect.provide(
+								clickDumgen(async (requestKey) => {
+									const answer = await ctx.runQuery(
+										internal.canonicalBatches.storedAnswer,
+										{ requestKey },
+									);
+									return answer ?? undefined;
+								}),
+							),
 						),
 			}),
 		).pipe(

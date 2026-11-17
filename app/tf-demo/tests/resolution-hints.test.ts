@@ -47,8 +47,6 @@ async function hintsFor(
 			});
 		}
 		return loadResolutionContext(ctx, {
-			requestId: "request-1",
-			visitorId: "visitor-1",
 			sentenceId,
 			clickedSegmentIndex: clicked * 2,
 		});

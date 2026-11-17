@@ -14,7 +14,11 @@ import {
 	lunaRequestOf,
 	type OutputLimit,
 } from "../luna.js";
+import { canonicalStage } from "./de/canonical-form.js";
 import type { ResolveGrammarInput } from "./types.js";
+
+/** The Luna stage whose request `canonicalRequestAhead` builds. */
+export const canonicalAheadStage = canonicalStage;
 
 /**
  * The request and its output limit, or none where the click asks Luna

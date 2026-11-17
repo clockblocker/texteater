@@ -255,11 +255,14 @@ test("an inspected click on a unit intake left Unresolved settles at selection, 
 	expect(await inspection(t, "request-1")).toEqual([
 		"Settle the unresolved unit [Code · app/tf-demo · resolutionSessions.selectSegment · Success]",
 	]);
-	// No run, and no Reading, so no Knowledge attempt either.
+	// No run, and no Reading, so no Knowledge attempt either; the stored
+	// paste's canonical batch is Intake's (#1351).
 	const jobs = await t.run((ctx) =>
 		ctx.db.system.query("_scheduled_functions").collect(),
 	);
-	expect(jobs).toEqual([]);
+	expect(
+		jobs.filter(({ name }) => !name.startsWith("canonicalBatchActions:")),
+	).toEqual([]);
 });
 
 test("an inspected click renders each Dumgen operation it runs as rows whose calls carry their payloads (#885)", async () => {

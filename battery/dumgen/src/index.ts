@@ -58,7 +58,10 @@ export {
 export { Luna, LunaTransport, lunaTokens } from "./luna-call.js";
 export type { OperationTrace } from "./operation-trace.js";
 export { operations } from "./operations.js";
-export { canonicalRequestAhead } from "./resolve/canonical-ahead.js";
+export {
+	canonicalAheadStage,
+	canonicalRequestAhead,
+} from "./resolve/canonical-ahead.js";
 export type {
 	GrammarResolution,
 	JudgedGrammar,

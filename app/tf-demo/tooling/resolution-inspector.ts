@@ -244,6 +244,42 @@ export function listRecentResolutionInspections(
 	return runReadonlyInspection(source, options);
 }
 
+/** The latest batches of canonical requests asked ahead of the clicks (#1351). */
+export function listCanonicalBatches(
+	limit = 20,
+	options?: DeploymentOptions,
+): Promise<void> {
+	const source = `
+		return await ctx.db
+			.query("canonicalBatches")
+			.withIndex("by_submitted_at")
+			.order("desc")
+			.take(${literal(limit)});
+	`;
+	return runReadonlyInspection(source, options);
+}
+
+/** One batch of canonical requests, by its row or its OpenAI id, and how many answers it stored. */
+export function inspectCanonicalBatch(
+	batchId: string,
+	options?: DeploymentOptions,
+): Promise<void> {
+	const source = `
+		const id = ${literal(batchId)};
+		const normalized = ctx.db.normalizeId("canonicalBatches", id);
+		const batch = normalized
+			? await ctx.db.get(normalized)
+			: (await ctx.db.query("canonicalBatches").collect()).find((row) => row.openAIBatchId === id) ?? null;
+		if (!batch) throw new Error("Canonical batch not found: " + id);
+		const answers = await ctx.db
+			.query("canonicalBatchAnswers")
+			.withIndex("by_batch_id", (q) => q.eq("batchId", batch._id))
+			.collect();
+		return { batch, storedAnswers: answers.length };
+	`;
+	return runReadonlyInspection(source, options);
+}
+
 function usage(): never {
 	console.error(`Usage:
   bun run resolution_inspector trace <inspectionStepId>
@@ -252,6 +288,8 @@ function usage(): never {
   bun run resolution_inspector run <resolutionRunId>
   bun run resolution_inspector segment <segmentId>
   bun run resolution_inspector recent [limit]
+  bun run resolution_inspector batches [limit]
+  bun run resolution_inspector batch <canonicalBatchId | openAIBatchId>
 
 Options:
   --prod
@@ -293,7 +331,13 @@ if (import.meta.main) {
 		await inspectResolutionRun(identifier, options);
 	else if (command === "segment" && identifier)
 		await inspectSegment(identifier, options);
-	else if (command === "recent") {
+	else if (command === "batch" && identifier)
+		await inspectCanonicalBatch(identifier, options);
+	else if (command === "batches") {
+		const limit = identifier === undefined ? 20 : Number(identifier);
+		if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) usage();
+		await listCanonicalBatches(limit, options);
+	} else if (command === "recent") {
 		const limit = identifier === undefined ? 20 : Number(identifier);
 		if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) usage();
 		await listRecentResolutionInspections(limit, options);

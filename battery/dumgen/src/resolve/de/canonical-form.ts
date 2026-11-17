@@ -25,6 +25,9 @@ import type { MemberOrthography } from "./member-spelling.js";
 import { canonicalForm, routeGuidance } from "./prompts.js";
 import { fixedSpelling, type Target, targetState } from "./target.js";
 
+/** The stage of Luna's Canonical Form call, as its trace and a host's stored answers name it. */
+export const canonicalStage = "canonical";
+
 /** What grammar fixed before Luna writes: the judged features and what stays out of the headword. */
 export type Judged = {
 	readonly orthographies: readonly MemberOrthography[];

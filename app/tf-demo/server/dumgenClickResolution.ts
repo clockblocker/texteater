@@ -11,6 +11,7 @@ import type {
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
+	type ClickGrammarInput,
 	type ClickGrammarSentence,
 	type ClickReadingInput,
 	type ClickResolution,
@@ -64,6 +65,36 @@ const dumgenUnit = (unit: StoredUnit): Unit =>
 	}) as Unit;
 
 /**
+ * What Dumgen's `resolve.grammar` takes for a click, but its `onJudged`:
+ * the stored unit under the click, among the Sentence's others as intake
+ * stored them, the neighbours and the stored Lemmas found under its words;
+ * none for a click on a Segment with no routed unit. A batch that asks a
+ * click's Luna request ahead builds it the same way (#1351).
+ */
+export function dumgenGrammarInput(
+	input: ClickGrammarInput,
+): ResolveGrammarInput | undefined {
+	const unit = routedUnit(input.unit);
+	if (!unit) return undefined;
+	const stored = dumgenUnit(unit);
+	// The clicked unit among the Sentence's others, as intake stored them.
+	const units = input.units.some(
+		({ segments }) =>
+			segments.length === stored.segments.length &&
+			segments.every((index, at) => index === stored.segments[at]),
+	)
+		? input.units.map(dumgenUnit)
+		: [stored];
+	return {
+		language: "de",
+		sentence: dumgenSentence(input.sentence, units),
+		unit: stored,
+		neighbours: input.neighbours,
+		lemmaCandidates: input.lemmaCandidates,
+	};
+}
+
+/**
  * The ClickResolution whose halves are Dumgen's `resolve.grammar` (#876)
  * and `resolve.reading` (#877). Grammar: the stored unit under the click
  * goes in, with the Sentence and its other units, its neighbours and the stored Lemmas found
@@ -92,36 +123,23 @@ export function dumgenClickResolution<R>(
 	return Object.freeze({
 		grammar: (input, onJudged) => {
 			// Dumgen answers a unit intake left Unresolved with no call (#861).
-			const unit = routedUnit(input.unit);
-			if (!unit)
+			const grammar = dumgenGrammarInput(input);
+			if (!grammar)
 				return Effect.succeed({
 					decision: "Unresolved" as const,
 					language: "de" as const,
 				});
-			const stored = dumgenUnit(unit);
-			// The clicked unit among the Sentence's others, as intake stored them.
-			const units = input.units.some(
-				({ segments }) =>
-					segments.length === stored.segments.length &&
-					segments.every(
-						(index, at) => index === stored.segments[at],
-					),
-			)
-				? input.units.map(dumgenUnit)
-				: [stored];
 			// Handed over when a click needs it, so a click that reuses a
 			// committed occurrence needs no model key.
 			return Effect.suspend(() =>
 				dumgen().resolve.grammar({
-					language: "de",
-					sentence: dumgenSentence(input.sentence, units),
-					unit: stored,
-					neighbours: input.neighbours,
-					lemmaCandidates: input.lemmaCandidates,
+					...grammar,
 					...(onJudged ? { onJudged } : {}),
 				}),
 			).pipe(
-				Effect.map((result) => clickGrammarOf(result, input, stored)),
+				Effect.map((result) =>
+					clickGrammarOf(result, input, grammar.unit),
+				),
 			);
 		},
 		reading: (input) => {

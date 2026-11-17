@@ -52,12 +52,14 @@ export const resolutionContextValidator = v.object({
 	}),
 });
 
-/** One snapshot of reuse, sentence, and bounded dictionary hints; commit rechecks ownership. */
+/**
+ * One snapshot of reuse, sentence, and bounded dictionary hints; commit
+ * rechecks ownership. It reads no Visitor, so a batch asking a click's
+ * Luna request ahead loads the same context the click will (#1351).
+ */
 export async function loadResolutionContext(
 	ctx: QueryCtx,
 	input: {
-		requestId: string;
-		visitorId: string;
 		sentenceId: Id<"sentences">;
 		clickedSegmentIndex: number;
 	},

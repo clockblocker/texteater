@@ -4,6 +4,7 @@ import { cutFolios, savesOf, windowsOf } from "../../server/folios";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../_generated/server";
+import { scheduleCanonicalBatch } from "../canonicalBatches";
 import { assertAnalyzedSentence } from "../modules/scroll/submission";
 import { sentenceInputValidator } from "./validators";
 
@@ -109,6 +110,11 @@ export async function nextFolioWindow(
 		await ctx.db.patch(folio._id, {
 			state: "Processed",
 			updatedAt: Date.now(),
+		});
+		// The Folio's canonical requests are asked ahead of its clicks (#1351).
+		await scheduleCanonicalBatch(ctx, {
+			scrollId: folio.scrollId,
+			folioId: folio._id,
 		});
 		return null;
 	}

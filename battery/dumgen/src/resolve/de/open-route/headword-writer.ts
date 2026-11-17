@@ -27,6 +27,7 @@ import {
 import type { LemmaCandidate } from "../../types.js";
 import {
 	canonicalFormRequest,
+	canonicalStage,
 	checkWritten,
 	type Judged,
 	type Written,
@@ -118,7 +119,7 @@ export const startHeadword = Effect.fnUntraced(function* (
 		hints,
 	);
 	const write = (judged: Judged) =>
-		luna("canonical", request(judged), (output) =>
+		luna(canonicalStage, request(judged), (output) =>
 			checkWritten(target, judged, output),
 		);
 	const draft =

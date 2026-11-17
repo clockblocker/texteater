@@ -26,7 +26,7 @@
  * scheduled run with `check`, and reads a final batch's lines with `lines`.
  */
 import { isRecord, messageOf } from "common-utils";
-import type { LunaRequest, LunaResponse } from "./luna.js";
+import type { LunaRequest, LunaResponse, OutputLimit } from "./luna.js";
 import { lunaResponseOf, lunaResponsesBody } from "./openai-luna.js";
 
 /** The HTTP calls a batch makes; the runtime's `fetch` fits. */
@@ -48,7 +48,7 @@ export type BatchFetch = (
 export type BatchRequest = {
 	readonly customId: string;
 	readonly request: LunaRequest;
-};
+} & OutputLimit;
 
 /** How one request of a settled batch came out. */
 type BatchAnswer =
@@ -222,13 +222,13 @@ const isUploadedFile = (value: unknown): value is { readonly id?: string } =>
 
 /** The JSONL line one request becomes. */
 function inputLineOf(
-	{ customId, request }: BatchRequest,
+	{ customId, request, maxOutputTokens }: BatchRequest,
 	options: { readonly promptCaching?: boolean } = {},
 ): string {
-	const { service_tier: _tier, ...body } = lunaResponsesBody(
-		request,
-		options,
-	);
+	const { service_tier: _tier, ...body } = lunaResponsesBody(request, {
+		...options,
+		...(maxOutputTokens === undefined ? {} : { maxOutputTokens }),
+	});
 	return JSON.stringify({
 		custom_id: customId,
 		method: "POST",
