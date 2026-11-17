@@ -42,6 +42,12 @@ export type LunaDraft = (LunaRequest extends infer R
 	: never) &
 	OutputLimit;
 
+/** A draft and the stage that sends it, as the call's trace names it. */
+export type StagedLunaDraft = {
+	readonly stage: string;
+	readonly draft: LunaDraft;
+};
+
 /**
  * The most tokens Luna may write in one exchange. Like a deadline, it
  * bounds the exchange, not what is asked: it travels beside the request,

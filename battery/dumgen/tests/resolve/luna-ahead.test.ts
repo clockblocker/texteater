@@ -2,8 +2,11 @@ import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { defaultLunaConfiguration, type LunaAsk } from "../../src/luna.js";
-import { canonicalRequestAhead } from "../../src/resolve/canonical-ahead.js";
 import { canonicalOutputLimit } from "../../src/resolve/de/canonical-form.js";
+import {
+	lunaAheadStages,
+	lunaRequestAhead,
+} from "../../src/resolve/luna-ahead.js";
 import type { ResolveGrammarInput } from "../../src/resolve/types.js";
 import {
 	lunaRequestKey,
@@ -20,8 +23,9 @@ import {
 	unitOf,
 } from "./support.js";
 
-// The canonical request a click sends before jev answers, asked ahead
-// through a batch and answered from it (#1351).
+// The Luna request a click sends before jev answers, the canonical guess
+// or code's emoji draft, asked ahead through a batch and answered from it
+// (#1351).
 
 const merkwürdige = {
 	language: "de",
@@ -32,7 +36,7 @@ const merkwürdige = {
 } satisfies ResolveGrammarInput;
 
 const ahead = (input: ResolveGrammarInput) =>
-	Effect.runSync(canonicalRequestAhead(input));
+	Effect.runSync(lunaRequestAhead(input));
 
 /** Stored answers by request key, as a host keeps a batch's. */
 async function storedFor(
@@ -77,6 +81,7 @@ test("the request asked ahead is the one the click sends before jev answers, wit
 	if (!sent) throw Error("Expected the click to ask Luna");
 	expect(sent.configuration).toEqual(defaultLunaConfiguration);
 	expect(asked).toEqual({
+		stage: "canonical",
 		request: sent,
 		maxOutputTokens: canonicalOutputLimit,
 	});
@@ -118,7 +123,7 @@ test("a click whose request has a stored answer asks Luna nothing, and its trace
 	]);
 	const { result, trace } = await clickOver(
 		storedLunaAsk(luna.ask, {
-			stages: new Set(["canonical"]),
+			stages: lunaAheadStages,
 			find: stored.find,
 		}),
 	);
@@ -174,7 +179,7 @@ test("a click with no stored answer for its request asks Luna, as a changed hint
 		{
 			jev: fakeJev({ aux_m0: "u0" }).ask,
 			luna: storedLunaAsk(luna.ask, {
-				stages: new Set(["canonical"]),
+				stages: lunaAheadStages,
 				find: stored.find,
 			}),
 		},
@@ -191,7 +196,7 @@ test("a stored answer its check refuses, or one that cannot be read, is dropped 
 		const stored = await storedFor([{ input: merkwürdige, body }]);
 		const { result, trace } = await clickOver(
 			storedLunaAsk(luna.ask, {
-				stages: new Set(["canonical"]),
+				stages: lunaAheadStages,
 				find: stored.find,
 			}),
 		);
@@ -218,7 +223,7 @@ test("a lookup that fails, or a stage that is not stored, asks Luna", async () =
 	const luna = fakeLuna();
 	const looked: string[] = [];
 	const ask = storedLunaAsk(luna.ask, {
-		stages: new Set(["canonical"]),
+		stages: lunaAheadStages,
 		find: async (key) => {
 			looked.push(key);
 			throw Error("the store is down");
@@ -236,4 +241,80 @@ test("a lookup that fails, or a stage that is not stored, asks Luna", async () =
 	});
 	await clickOver(other);
 	expect(luna.sent).toHaveLength(2);
+});
+
+// Aber0 _1 es2 _3 regnet4 .5: code writes the conjunction's headword, and
+// with no stored or authored Reading of aber, Luna drafts its Emoji
+// Description beside jev with the standalone prompt.
+const aber = {
+	...merkwürdige,
+	sentence: sentenceOf("Aber es regnet."),
+	unit: unitOf([0], "Lexeme/CCONJ"),
+} satisfies ResolveGrammarInput;
+
+const storedAber: Dumling.Lemma<"de"> = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "CCONJ",
+	canonicalForm: "aber",
+	coreFeatures: {},
+};
+
+test("a unit whose headword code writes has its emoji draft ahead, the request the click sends beside jev", async () => {
+	const luna = fakeLuna(() => "➕");
+	await clickOver(luna.ask, aber);
+	const [sent] = luna.sent;
+	if (!sent) throw Error("Expected the click to draft with Luna");
+	expect(luna.sent).toHaveLength(1);
+	expect(luna.caps[0]).toBeGreaterThan(0);
+	expect(ahead(aber)).toEqual({
+		stage: "emojiDescription",
+		request: sent,
+		maxOutputTokens: luna.caps[0],
+	});
+	expect(sent.input).toEqual({
+		markedSentence: "<TARGET>Aber</TARGET> es regnet.",
+		lemma: "aber",
+	});
+});
+
+test("a unit whose headword code writes, where a stored Lemma's Readings may exist, has no request ahead", async () => {
+	const stored = {
+		...aber,
+		lemmaCandidates: [{ lemma: storedAber, foundUnder: ["Aber"] }],
+	};
+	const luna = fakeLuna(() => "➕");
+	await clickOver(luna.ask, stored);
+	expect(luna.sent).toEqual([]);
+	expect(ahead(stored)).toBeUndefined();
+});
+
+test("a click whose emoji draft has a stored answer asks Luna nothing, and keeps the stored draft", async () => {
+	const luna = fakeLuna(() => "🔁");
+	const stored = await storedFor([
+		{
+			input: aber,
+			body: completedResponse("➕", {
+				input_tokens: 400,
+				output_tokens: 4,
+			}),
+		},
+	]);
+	const { result, trace } = await clickOver(
+		storedLunaAsk(luna.ask, { stages: lunaAheadStages, find: stored.find }),
+		aber,
+	);
+	expect(attested(result).surface.lemma.canonicalForm).toBe("aber");
+	expect(result).toMatchObject({ drafted: "➕" });
+	expect(luna.sent).toEqual([]);
+	const drafted = trace?.calls.filter(
+		({ stage }) => stage === "emojiDescription",
+	);
+	expect(drafted).toHaveLength(1);
+	expect(drafted?.[0]).toMatchObject({
+		storedAnswer: "batch_1",
+		inputTokens: 0,
+		outputTokens: 0,
+	});
 });

@@ -9,19 +9,22 @@
  * of a Lemma with no stored or authored Reading, Luna drafts its Emoji
  * Description beside jev with the standalone generation prompt, as the
  * Canonical Form call would have drafted it (ADR 0031). A looked-up Lemma
- * is stored, so its Readings are judged first.
+ * is stored, so its Readings are judged first. Either request, the guess
+ * or the draft, is known before jev answers, so a host may ask it ahead
+ * of the click (#1351).
  */
 
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
 import type { CallLog } from "../../../call.js";
-import type { LunaDraft } from "../../../luna.js";
+import type { LunaDraft, StagedLunaDraft } from "../../../luna.js";
 import type { Write } from "../../../luna-call.js";
 import type { AskFailure } from "../../../segment/ask.js";
 import {
 	draftsEmojiDescription,
 	emojiDescriptionRequest,
+	emojiDescriptionStage,
 	markedSentence,
 } from "../../reading.js";
 import type { LemmaCandidate } from "../../types.js";
@@ -46,27 +49,25 @@ export type HeadwordOnceJudged = (
 ) => Effect.Effect<Written, AskFailure>;
 
 /**
- * The Emoji Description the standalone generation prompt drafts for a
- * headword code wrote; a draft that is no Emoji Description is dropped
- * once the Lemma is known.
+ * The standalone Emoji Description request for a headword code wrote: the
+ * Sentence with the unit marked, and the headword.
  */
-const draftOf = (target: Target, lemma: string, luna: Write) =>
-	luna(
-		"emojiDescription",
-		emojiDescriptionRequest({
-			markedSentence: markedSentence(
-				target.segments,
-				target.members.map(({ segment }) => segment),
-			),
-			lemma,
-		}),
-		(output) => (typeof output === "string" ? output.trim() : undefined),
-	);
+const draftRequest = (target: Target, lemma: string) =>
+	emojiDescriptionRequest({
+		markedSentence: markedSentence(
+			target.segments,
+			target.members.map(({ segment }) => segment),
+		),
+		lemma,
+	});
 
 /**
  * Who may write the click's headword, as known before jev answers: code,
- * a stored Lemma, or Luna on a guess at jev's answers (`guessed`), and the
- * Canonical Form request a judgment makes.
+ * a stored Lemma, or Luna on a guess at jev's answers (`guessed`); the
+ * Canonical Form request a judgment makes; and the Emoji Description
+ * request Luna drafts beside jev for a headword code wrote of a Lemma with
+ * no stored or authored Reading (`draft`). `guessed` and `draft` exclude
+ * each other, as a guess is made only where code writes no headword.
  */
 function headwordPlan(
 	target: Target,
@@ -83,21 +84,30 @@ function headwordPlan(
 		planned.questionnaire.empty || coded || looked?.likely
 			? undefined
 			: guessedJudgment(target, planned);
-	return { drafts, request, coded, looked, guessed };
+	const draft =
+		coded &&
+		drafts &&
+		!readingsMayExist(target, coded.written.canonicalForm, hints)
+			? draftRequest(target, coded.written.canonicalForm)
+			: undefined;
+	return { request, coded, looked, guessed, draft };
 }
 
 /**
- * The Canonical Form request the click sends before jev answers, on its
- * guess at jev's answers, or none where code or a stored Lemma is to write
- * the headword: what a host may ask ahead of the click (#1351).
+ * The Luna request the click sends before jev answers: the Canonical Form
+ * request on its guess at jev's answers, or the Emoji Description draft of
+ * a headword code wrote; none where a stored Lemma is to write the
+ * headword, or code writes one whose Readings may exist. What a host may
+ * ask ahead of the click (#1351).
  */
-export function canonicalGuessRequest(
+export function headwordRequestAhead(
 	target: Target,
 	planned: Plan,
 	hints: readonly LemmaCandidate[],
-): LunaDraft | undefined {
-	const { request, guessed } = headwordPlan(target, planned, hints);
-	return guessed ? request(guessed) : undefined;
+): StagedLunaDraft | undefined {
+	const { request, guessed, draft } = headwordPlan(target, planned, hints);
+	if (guessed) return { stage: canonicalStage, draft: request(guessed) };
+	return draft ? { stage: emojiDescriptionStage, draft } : undefined;
 }
 
 /**
@@ -113,24 +123,26 @@ export const startHeadword = Effect.fnUntraced(function* (
 	luna: Write,
 	log: CallLog["Service"],
 ): Effect.fn.Return<HeadwordOnceJudged, never, Scope.Scope> {
-	const { drafts, request, coded, looked, guessed } = headwordPlan(
-		target,
-		planned,
-		hints,
-	);
+	const {
+		request,
+		coded,
+		looked,
+		guessed,
+		draft: drafted,
+	} = headwordPlan(target, planned, hints);
 	const write = (judged: Judged) =>
 		luna(canonicalStage, request(judged), (output) =>
 			checkWritten(target, judged, output),
 		);
-	const draft =
-		coded &&
-		drafts &&
-		!readingsMayExist(target, coded.written.canonicalForm, hints)
-			? yield* Effect.forkScoped(
-					draftOf(target, coded.written.canonicalForm, luna),
-					{ startImmediately: true },
-				)
-			: undefined;
+	// A draft that is no Emoji Description is dropped once the Lemma is known.
+	const draft = drafted
+		? yield* Effect.forkScoped(
+				luna(emojiDescriptionStage, drafted, (output) =>
+					typeof output === "string" ? output.trim() : undefined,
+				),
+				{ startImmediately: true },
+			)
+		: undefined;
 	const guess = guessed
 		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
 		: undefined;

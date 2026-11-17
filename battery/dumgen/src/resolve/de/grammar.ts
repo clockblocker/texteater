@@ -17,7 +17,7 @@ import * as Result from "effect/Result";
 import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
 import { type Jev, stageAsk } from "../../jev-call.js";
-import type { LunaDraft } from "../../luna.js";
+import type { StagedLunaDraft } from "../../luna.js";
 import type { Luna } from "../../luna-call.js";
 import type { Ask } from "../../segment/ask.js";
 import type { Route } from "../../segment/segmented-sentence.js";
@@ -31,7 +31,7 @@ import {
 	type OpenAnswer,
 } from "./closed-class.js";
 import type { MatchedRealization } from "./closed-realizations.js";
-import { openRouteCanonicalAhead, resolveOpenRoute } from "./open-route.js";
+import { openRouteLunaAhead, resolveOpenRoute } from "./open-route.js";
 import { Answered, type Unresolved } from "./questions.js";
 import { type Target, targetOf, targetState } from "./target.js";
 
@@ -168,22 +168,24 @@ function realizationOf(
 }
 
 /**
- * The Canonical Form request a click on the unit sends to Luna before jev
- * answers, as `resolveGermanGrammar` would send it, or none: for an
- * Unresolved unit, one the authored identities resolve, and one whose
- * headword code or a stored Lemma is to write (#1351). A host asks it
- * ahead of the click; the click's own request is the one that counts.
+ * The Luna request a click on the unit sends before jev answers, as
+ * `resolveGermanGrammar` would send it, with its stage: the Canonical Form
+ * guess, or the Emoji Description draft of a headword code wrote. None for
+ * an Unresolved unit, one the authored identities resolve, one whose
+ * headword a stored Lemma is to write, and one whose headword code writes
+ * where its Readings may exist (#1351). A host asks it ahead of the click;
+ * the click's own request is the one that counts.
  */
-export function germanCanonicalAhead(
+export function germanLunaAhead(
 	input: ResolveGrammarInput,
-): LunaDraft | undefined {
+): StagedLunaDraft | undefined {
 	const { unit } = input;
 	if (unit.route === "Unresolved") return undefined;
 	const route: Route = unit.route;
 	const target = targetOf(input.sentence, unit, route);
 	if (authoredFirst(route) && authoredPlan(target, input) !== undefined)
 		return undefined;
-	return openRouteCanonicalAhead(target, input.lemmaCandidates);
+	return openRouteLunaAhead(target, input.lemmaCandidates);
 }
 
 /**

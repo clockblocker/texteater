@@ -199,6 +199,9 @@ export const emojiDescriptionSchema = {
 	description: generation.schema,
 } as const;
 
+/** The stage of Luna's Emoji Description call, as its trace and a host's stored answers name it. */
+export const emojiDescriptionStage = "emojiDescription";
+
 /**
  * The most tokens the Emoji Description call may write: at most 25 over
  * 9,113 cached answers, and four emoji in ZWJ sequences stay well under.
@@ -501,7 +504,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 	const emojiDescription =
 		markedDraft ??
 		(yield* askLuna(
-			"emojiDescription",
+			emojiDescriptionStage,
 			emojiDescriptionRequest(state),
 			(output) =>
 				parsedDescription(
@@ -511,7 +514,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 						: output,
 				) ??
 				new InvalidModelOutput({
-					stage: "emojiDescription",
+					stage: emojiDescriptionStage,
 					message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
 				}),
 		));

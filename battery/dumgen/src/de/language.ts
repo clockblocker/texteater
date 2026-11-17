@@ -10,7 +10,7 @@ import { produceGermanKnowledge } from "../knowledge/de/produce.js";
 import type { LanguageModule } from "../language-module.js";
 import type { LanguageOptions } from "../languages.js";
 import {
-	germanCanonicalAhead,
+	germanLunaAhead,
 	resolveGermanGrammar,
 } from "../resolve/de/grammar.js";
 import { germanConstituents } from "../segment/de/breakdown/constituents.js";
@@ -39,7 +39,7 @@ export function germanLanguage(options: LanguageOptions): LanguageModule {
 			morphemes: germanMorphemes,
 		},
 		resolveGrammar: resolveGermanGrammar,
-		canonicalAhead: germanCanonicalAhead,
+		lunaAhead: germanLunaAhead,
 		produceKnowledge: produceGermanKnowledge,
 		accumulateTranslations: accumulateGermanTranslations,
 	};
