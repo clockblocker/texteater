@@ -9,8 +9,6 @@
  */
 
 import type * as analysisStripping from "../analysisStripping.js";
-import type * as canonicalBatchActions from "../canonicalBatchActions.js";
-import type * as canonicalBatches from "../canonicalBatches.js";
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as crons from "../crons.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
@@ -32,6 +30,8 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as library from "../library.js";
 import type * as libraryFixtures from "../libraryFixtures.js";
+import type * as lunaAheadBatchActions from "../lunaAheadBatchActions.js";
+import type * as lunaAheadBatches from "../lunaAheadBatches.js";
 import type * as model_breakdownParts from "../model/breakdownParts.js";
 import type * as model_clickOrchestrator from "../model/clickOrchestrator.js";
 import type * as model_codex from "../model/codex.js";
@@ -72,11 +72,11 @@ import type * as model_scrollAnalysisStripping from "../model/scrollAnalysisStri
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_sourceDirection from "../model/sourceDirection.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
-import type * as model_tables_canonicalBatches from "../model/tables/canonicalBatches.js";
 import type * as model_tables_dictionary from "../model/tables/dictionary.js";
 import type * as model_tables_explanations from "../model/tables/explanations.js";
 import type * as model_tables_inspection from "../model/tables/inspection.js";
 import type * as model_tables_knowledge from "../model/tables/knowledge.js";
+import type * as model_tables_lunaAheadBatches from "../model/tables/lunaAheadBatches.js";
 import type * as model_tables_relationPublication from "../model/tables/relationPublication.js";
 import type * as model_tables_resolution from "../model/tables/resolution.js";
 import type * as model_tables_scrolls from "../model/tables/scrolls.js";
@@ -133,8 +133,6 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   analysisStripping: typeof analysisStripping;
-  canonicalBatchActions: typeof canonicalBatchActions;
-  canonicalBatches: typeof canonicalBatches;
   catalogGrowthSignals: typeof catalogGrowthSignals;
   crons: typeof crons;
   definitionTextActions: typeof definitionTextActions;
@@ -156,6 +154,8 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   library: typeof library;
   libraryFixtures: typeof libraryFixtures;
+  lunaAheadBatchActions: typeof lunaAheadBatchActions;
+  lunaAheadBatches: typeof lunaAheadBatches;
   "model/breakdownParts": typeof model_breakdownParts;
   "model/clickOrchestrator": typeof model_clickOrchestrator;
   "model/codex": typeof model_codex;
@@ -196,11 +196,11 @@ declare const fullApi: ApiFromModules<{
   "model/shadows": typeof model_shadows;
   "model/sourceDirection": typeof model_sourceDirection;
   "model/storedSegments": typeof model_storedSegments;
-  "model/tables/canonicalBatches": typeof model_tables_canonicalBatches;
   "model/tables/dictionary": typeof model_tables_dictionary;
   "model/tables/explanations": typeof model_tables_explanations;
   "model/tables/inspection": typeof model_tables_inspection;
   "model/tables/knowledge": typeof model_tables_knowledge;
+  "model/tables/lunaAheadBatches": typeof model_tables_lunaAheadBatches;
   "model/tables/relationPublication": typeof model_tables_relationPublication;
   "model/tables/resolution": typeof model_tables_resolution;
   "model/tables/scrolls": typeof model_tables_scrolls;

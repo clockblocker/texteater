@@ -24,7 +24,7 @@ import { clickGrammarInputOf } from "../../server/clickGrammarInput";
 import { dumgenGrammarInput } from "../../server/dumgenClickResolution";
 import type { TestConvexDb } from "./convex";
 
-/* A fake OpenAI Batch API, Luna and jev for the canonical batch (#1351). */
+/* A fake OpenAI Batch API, Luna and jev for the Luna ahead batch (#1351). */
 
 /** A completed Responses API body whose output is `{"value": value}`. */
 export const responseBody = (value: unknown) =>
@@ -96,7 +96,7 @@ export function fakeLunaBatch() {
 	};
 }
 
-/** The member texts a canonical request asks about. */
+/** The member texts a canonical request asks about; an emoji draft asks about none. */
 export const membersOf = (request: LunaRequest) =>
 	(
 		(request.input as { members?: readonly { text: string }[] }).members ??
@@ -126,14 +126,24 @@ const firstOptionJev: JevAsk = async (request) => ({
 	usage: { input_tokens: 10, output_tokens: 1 },
 });
 
-/** A Luna that writes each member as it stands, and records each stage it was asked. */
+/** Whether the request is the standalone Emoji Description draft of a headword code wrote. */
+export const isEmojiDraft = (request: LunaRequest) =>
+	"markedSentence" in (request.input as object) &&
+	membersOf(request).length === 0;
+
+/**
+ * A Luna that writes each member as it stands, drafts 🔁 as an Emoji
+ * Description, and records each stage it was asked.
+ */
 function recordingLuna() {
 	const stages: string[] = [];
 	const ask: LunaAsk = async (request, { stage }) => {
 		stages.push(stage);
 		const members = membersOf(request);
 		return {
-			output: { canonicalForm: members.join(" "), members },
+			output: isEmojiDraft(request)
+				? "🔁"
+				: { canonicalForm: members.join(" "), members },
 			metadata: { usage: { input_tokens: 1500, output_tokens: 20 } },
 		};
 	};
@@ -154,7 +164,8 @@ export function fakeDeployment(batch: LunaBatch | undefined) {
 /**
  * A click's Grammar on the Segment, as a click's action runs it: its
  * Resolution Context loaded, its input built, under the click's Dumgen
- * whose canonical request is answered from the stored batch answers.
+ * whose Luna requests asked ahead are answered from the stored batch
+ * answers. Returns its trace, and its calls of each stage asked ahead.
  */
 export async function clickGrammar(
 	t: TestConvexDb,
@@ -180,15 +191,20 @@ export async function clickGrammar(
 			Effect.provide(
 				clickDumgen(
 					async (requestKey) =>
-						(await t.query(internal.canonicalBatches.storedAnswer, {
+						(await t.query(internal.lunaAheadBatches.storedAnswer, {
 							requestKey,
 						})) ?? undefined,
 				),
 			),
 		),
 	);
-	const canonical = (traces[0]?.calls ?? []).filter(
-		({ stage }) => stage === "canonical",
-	);
-	return { result, canonical };
+	const [trace] = traces;
+	const calls = (stage: string) =>
+		(trace?.calls ?? []).filter((call) => call.stage === stage);
+	return {
+		result,
+		trace,
+		canonical: calls("canonical"),
+		emojiDescription: calls("emojiDescription"),
+	};
 }

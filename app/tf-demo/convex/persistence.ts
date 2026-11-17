@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "./_generated/server";
-import { scheduleCanonicalBatch } from "./canonicalBatches";
+import { scheduleLunaAheadBatch } from "./lunaAheadBatches";
 import {
 	occurrenceCommitArgs,
 	openOccurrenceCommit,
@@ -65,10 +65,10 @@ export const persistSubmittedScroll = internalMutation({
 			ctx,
 			input,
 		);
-		// A paste or link is processed whole: its canonical requests are
-		// asked ahead of its clicks (#1351).
+		// A paste or link is processed whole: the Luna requests its clicks
+		// send before jev answers are asked ahead (#1351).
 		if (!persisted.deduplicated)
-			await scheduleCanonicalBatch(ctx, { scrollId: persisted.scrollId });
+			await scheduleLunaAheadBatch(ctx, { scrollId: persisted.scrollId });
 		return persisted;
 	},
 });

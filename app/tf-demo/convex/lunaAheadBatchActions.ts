@@ -5,7 +5,8 @@ import { v } from "convex/values";
 import {
 	type BatchLine,
 	type BatchRequest,
-	canonicalRequestAhead,
+	type LunaRequestAhead,
+	lunaRequestAhead,
 	lunaRequestKey,
 	lunaTokens,
 } from "dumgen";
@@ -19,10 +20,11 @@ import { parsedResolutionContext } from "./model/clickOrchestrator";
 import { modelTransports } from "./model/deploymentDumgen";
 
 /*
- * The canonical requests asked ahead of the clicks (#1351): once Intake
- * has processed a Folio, or a paste or link whole, `submit` builds the
- * Luna `canonical` request a click on each unit there would send before
- * jev answers, from the Resolution Context the click would load, and sends
+ * The Luna requests asked ahead of the clicks (#1351): once Intake has
+ * processed a Folio, or a paste or link whole, `submit` builds the Luna
+ * request a click on each unit there would send before jev answers (the
+ * `canonical` guess, or the `emojiDescription` draft of a headword code
+ * writes), from the Resolution Context the click would load, and sends
  * those not answered before as one OpenAI batch; `poll` looks at it on
  * Convex's scheduler until it ends, and stores a completed batch's answers
  * by request key, where the click's Luna transport finds them. Nothing
@@ -74,31 +76,35 @@ const chunks = <T>(items: readonly T[], size: number): T[][] =>
 		items.slice(index * size, (index + 1) * size),
 	);
 
+/** A request asked ahead, under its key, with its stage beside it. */
+type StagedBatchRequest = BatchRequest & Pick<LunaRequestAhead, "stage">;
+
 /**
- * The canonical request a click on the Segment would send before jev
- * answers, built from the context the click would load, or none: a unit
- * already attested, one the authored identities resolve, one whose
- * headword code or a stored Lemma writes, one whose context cannot be read.
+ * The Luna request a click on the Segment would send before jev answers,
+ * built from the context the click would load, or none: a unit already
+ * attested, one the authored identities resolve, one whose headword a
+ * stored Lemma writes, one whose headword code writes where its Readings
+ * may exist, one whose context cannot be read.
  */
 async function requestAhead(
 	ctx: ActionCtx,
 	unit: { sentenceId: Id<"sentences">; clickedSegmentIndex: number },
-): Promise<BatchRequest | undefined> {
+): Promise<StagedBatchRequest | undefined> {
 	try {
 		const context = parsedResolutionContext(
-			await ctx.runQuery(internal.canonicalBatches.unitContext, unit),
+			await ctx.runQuery(internal.lunaAheadBatches.unitContext, unit),
 		);
 		if (context.reusable || !context.sentence) return undefined;
 		const input = dumgenGrammarInput(
 			clickGrammarInputOf(context, unit.clickedSegmentIndex),
 		);
-		const asked = input && Effect.runSync(canonicalRequestAhead(input));
+		const asked = input && Effect.runSync(lunaRequestAhead(input));
 		if (!asked) return undefined;
 		const key = await lunaRequestKey(asked.request);
 		return { customId: key, ...asked };
 	} catch (error) {
 		console.warn(
-			`canonical batch: no request for Segment ${unit.clickedSegmentIndex} of ${unit.sentenceId}: ${messageOf(error)}`,
+			`Luna ahead batch: no request for Segment ${unit.clickedSegmentIndex} of ${unit.sentenceId}: ${messageOf(error)}`,
 		);
 		return undefined;
 	}
@@ -107,15 +113,15 @@ async function requestAhead(
 /** The requests of `requests` with no stored answer yet. */
 async function unanswered(
 	ctx: ActionCtx,
-	requests: readonly BatchRequest[],
-): Promise<BatchRequest[]> {
+	requests: readonly StagedBatchRequest[],
+): Promise<StagedBatchRequest[]> {
 	const answered = new Set<string>();
 	for (const keys of chunks(
 		requests.map(({ customId }) => customId),
 		KEY_CHECK_CHUNK,
 	))
 		for (const key of await ctx.runQuery(
-			internal.canonicalBatches.answeredKeys,
+			internal.lunaAheadBatches.answeredKeys,
 			{ requestKeys: keys },
 		))
 			answered.add(key);
@@ -133,10 +139,10 @@ export const submit = internalAction({
 		const lunaBatch = modelTransports().lunaBatch;
 		if (!lunaBatch) return null;
 		const units = await ctx.runQuery(
-			internal.canonicalBatches.unitsAhead,
+			internal.lunaAheadBatches.unitsAhead,
 			args,
 		);
-		const requests = new Map<string, BatchRequest>();
+		const requests = new Map<string, StagedBatchRequest>();
 		let unitCount = 0;
 		await eachLimited(units, CONTEXT_CONCURRENCY, async (unit) => {
 			const request = await requestAhead(ctx, unit);
@@ -147,7 +153,7 @@ export const submit = internalAction({
 		const fresh = await unanswered(ctx, [...requests.values()]);
 		if (fresh.length === 0) {
 			console.log(
-				`canonical batch: nothing to ask for ${args.folioId ?? args.scrollId} (${unitCount} units)`,
+				`Luna ahead batch: nothing to ask for ${args.folioId ?? args.scrollId} (${unitCount} units)`,
 			);
 			return null;
 		}
@@ -155,19 +161,27 @@ export const submit = internalAction({
 		const parts = chunks(fresh, MAX_BATCH_REQUESTS);
 		for (const part of parts) {
 			const { id } = await batch.submit(
-				part,
+				part.map(({ stage: _stage, ...request }) => request),
 				AbortSignal.timeout(OPENAI_DEADLINE_MS),
 			);
-			await ctx.runMutation(internal.canonicalBatches.recordSubmitted, {
+			const stageCounts: Record<string, number> = {};
+			for (const { stage } of part)
+				stageCounts[stage] = (stageCounts[stage] ?? 0) + 1;
+			await ctx.runMutation(internal.lunaAheadBatches.recordSubmitted, {
 				...args,
 				openAIBatchId: id,
 				// A batch sent in parts counts its units on the first.
 				unitCount: part === parts[0] ? unitCount : 0,
 				requestCount: part.length,
+				stageCounts,
 				firstPollAfterMs: pollWaitMs(0),
 			});
 			console.log(
-				`canonical batch: submitted ${id}, ${part.length} requests for ${unitCount} units`,
+				`Luna ahead batch: submitted ${id}, ${part.length} requests (${Object.entries(
+					stageCounts,
+				)
+					.map(([stage, count]) => `${count} ${stage}`)
+					.join(", ")}) for ${unitCount} units`,
 			);
 		}
 		return null;
@@ -191,14 +205,14 @@ function tokensOf(body: string) {
 /** Stores a completed batch's usable lines and records what came of it. */
 async function storeCompleted(
 	ctx: ActionCtx,
-	batchId: Id<"canonicalBatches">,
+	batchId: Id<"lunaAheadBatches">,
 	lines: readonly BatchLine[],
 ) {
 	const answers = lines.flatMap((line) =>
 		line.ok ? [{ requestKey: line.customId, body: line.body }] : [],
 	);
 	for (const part of chunks(answers, ANSWER_CHUNK))
-		await ctx.runMutation(internal.canonicalBatches.storeAnswers, {
+		await ctx.runMutation(internal.lunaAheadBatches.storeAnswers, {
 			batchId,
 			answers: part,
 		});
@@ -209,7 +223,7 @@ async function storeCompleted(
 		tokens.cachedInput += spent.cachedInputTokens;
 		tokens.output += spent.outputTokens;
 	}
-	await ctx.runMutation(internal.canonicalBatches.recordSettled, {
+	await ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 		batchId,
 		state: "Completed",
 		answerCount: answers.length,
@@ -225,19 +239,19 @@ const endedStates = {
 } as const;
 
 export const poll = internalAction({
-	args: { batchId: v.id("canonicalBatches") },
+	args: { batchId: v.id("lunaAheadBatches") },
 	returns: v.null(),
 	handler: async (ctx, { batchId }) => {
-		const row = await ctx.runQuery(internal.canonicalBatches.batch, {
+		const row = await ctx.runQuery(internal.lunaAheadBatches.batch, {
 			batchId,
 		});
 		if (row?.state !== "Submitted") return null;
 		const lunaBatch = modelTransports().lunaBatch;
 		const giveUp = (failure: string) => {
 			console.warn(
-				`canonical batch: ${row.openAIBatchId} dropped: ${failure}`,
+				`Luna ahead batch: ${row.openAIBatchId} dropped: ${failure}`,
 			);
-			return ctx.runMutation(internal.canonicalBatches.recordSettled, {
+			return ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 				batchId,
 				state: "Expired",
 				failure,
@@ -257,15 +271,15 @@ export const poll = internalAction({
 					batchId,
 					await batch.lines(state, signal),
 				);
-				console.log(`canonical batch: ${row.openAIBatchId} completed`);
+				console.log(`Luna ahead batch: ${row.openAIBatchId} completed`);
 				return null;
 			}
 			if (state.final) {
 				const failure = `OpenAI ended the batch ${state.status}${state.errors ? `: ${state.errors}` : ""}`;
 				console.warn(
-					`canonical batch: ${row.openAIBatchId} dropped: ${failure}`,
+					`Luna ahead batch: ${row.openAIBatchId} dropped: ${failure}`,
 				);
-				await ctx.runMutation(internal.canonicalBatches.recordSettled, {
+				await ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 					batchId,
 					state:
 						state.status in endedStates
@@ -279,14 +293,14 @@ export const poll = internalAction({
 			}
 		} catch (error) {
 			console.warn(
-				`canonical batch: polling ${row.openAIBatchId} failed: ${messageOf(error)}`,
+				`Luna ahead batch: polling ${row.openAIBatchId} failed: ${messageOf(error)}`,
 			);
 		}
 		if (Date.now() - row.submittedAt > GIVE_UP_AFTER_MS) {
 			await giveUp("No final status within 25 hours");
 			return null;
 		}
-		await ctx.runMutation(internal.canonicalBatches.recordPolled, {
+		await ctx.runMutation(internal.lunaAheadBatches.recordPolled, {
 			batchId,
 			nextPollAfterMs: pollWaitMs(row.polls + 1),
 		});

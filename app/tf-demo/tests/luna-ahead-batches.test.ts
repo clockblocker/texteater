@@ -1,26 +1,29 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import { pollWaitMs } from "../convex/canonicalBatchActions";
+import { pollWaitMs } from "../convex/lunaAheadBatchActions";
+import { operationSteps } from "../server/inspectionCapture";
 import type { StoredUnit } from "../server/storedSegments";
 import { foliosOf, requestAndRun, submitBook } from "./support/books";
-import {
-	clickGrammar,
-	fakeDeployment,
-	fakeLunaBatch,
-	membersOf,
-	responseBody,
-} from "./support/canonical-batches";
 import {
 	createTestConvex,
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import {
+	clickGrammar,
+	fakeDeployment,
+	fakeLunaBatch,
+	isEmojiDraft,
+	membersOf,
+	responseBody,
+} from "./support/luna-ahead-batches";
 
 /**
- * Once Intake has processed a Folio, or a paste or link whole, the
- * canonical request of every unit whose click would send one is asked
- * ahead through OpenAI's Batch API, and a click finds its answer stored
+ * Once Intake has processed a Folio, or a paste or link whole, the Luna
+ * request every unit's click sends before jev answers (the canonical
+ * guess, or the emoji draft of a headword code writes) is asked ahead
+ * through OpenAI's Batch API, and a click finds its answer stored
  * (#1351). Scheduled functions stay unrun (fake timers): each test runs
  * the submission and the polls itself.
  */
@@ -37,7 +40,7 @@ afterEach(() => {
 	restore = undefined;
 });
 
-const de = (family: "Lexeme", kind: "ADJ" | "NOUN" | "PRON") =>
+const de = (family: "Lexeme", kind: "ADJ" | "CCONJ" | "NOUN" | "PRON") =>
 	({ language: "de", family, kind }) as const;
 
 // Er0 _1 liest2 _3 eine4 _5 merkwürdige6 _7 Geschichte8 .9
@@ -70,7 +73,7 @@ const paste = (t: TestConvexDb) =>
 	submitText(t, [sentence], { units: [units] });
 
 const batches = (t: TestConvexDb) =>
-	t.run((ctx) => ctx.db.query("canonicalBatches").collect());
+	t.run((ctx) => ctx.db.query("lunaAheadBatches").collect());
 
 const scheduled = (t: TestConvexDb, name: string) =>
 	t.run(async (ctx) =>
@@ -81,7 +84,7 @@ const scheduled = (t: TestConvexDb, name: string) =>
 
 /** Submits the paste's batch and returns its row. */
 async function submitted(t: TestConvexDb, scrollId: Id<"scrolls">) {
-	await t.action(internal.canonicalBatchActions.submit, { scrollId });
+	await t.action(internal.lunaAheadBatchActions.submit, { scrollId });
 	const [row] = await batches(t);
 	if (!row) throw Error("Expected a batch");
 	return row;
@@ -96,22 +99,22 @@ const writesMembers = (request: Parameters<typeof membersOf>[0]) => {
 test("a paste stored whole schedules its batch; a re-submission does not", async () => {
 	const t = createTestConvex();
 	await paste(t);
-	expect(await scheduled(t, "canonicalBatchActions")).toHaveLength(1);
+	expect(await scheduled(t, "lunaAheadBatchActions")).toHaveLength(1);
 	await paste(t);
-	expect(await scheduled(t, "canonicalBatchActions")).toHaveLength(1);
+	expect(await scheduled(t, "lunaAheadBatchActions")).toHaveLength(1);
 });
 
 test("a Folio Intake has processed schedules its own batch, over its Sentences alone", async () => {
 	const t = createTestConvex();
 	const [, scrollId] = await submitBook(t);
 	if (!scrollId) throw Error("Expected a chapter Scroll");
-	expect(await scheduled(t, "canonicalBatchActions")).toHaveLength(0);
+	expect(await scheduled(t, "lunaAheadBatchActions")).toHaveLength(0);
 	const [folio] = await foliosOf(t, scrollId);
 	if (!folio) throw Error("Expected a Folio");
 	await requestAndRun(t, folio._id);
-	const [job] = await scheduled(t, "canonicalBatchActions:submit");
+	const [job] = await scheduled(t, "lunaAheadBatchActions:submit");
 	expect(job?.args).toEqual([{ scrollId, folioId: folio._id }]);
-	const ahead = await t.query(internal.canonicalBatches.unitsAhead, {
+	const ahead = await t.query(internal.lunaAheadBatches.unitsAhead, {
 		scrollId,
 		folioId: folio._id,
 	});
@@ -150,9 +153,10 @@ test("the batch holds the canonical request of each open-route unit, and none fo
 		openAIBatchId: "batch_1",
 		unitCount: 2,
 		requestCount: 2,
+		stageCounts: { canonical: 2 },
 		polls: 0,
 	});
-	expect(await scheduled(t, "canonicalBatchActions:poll")).toHaveLength(1);
+	expect(await scheduled(t, "lunaAheadBatchActions:poll")).toHaveLength(1);
 });
 
 test("a click whose canonical request the completed batch answered asks Luna nothing, and its trace says so", async () => {
@@ -163,10 +167,10 @@ test("a click whose canonical request the completed batch answered asks Luna not
 	const { scrollId, sentenceIds } = await paste(t);
 	const row = await submitted(t, scrollId);
 	// Still running: the poll counts the look and comes again later.
-	await t.action(internal.canonicalBatchActions.poll, { batchId: row._id });
+	await t.action(internal.lunaAheadBatchActions.poll, { batchId: row._id });
 	expect((await batches(t))[0]?.polls).toBe(1);
 	fake.end("completed", writesMembers);
-	await t.action(internal.canonicalBatchActions.poll, { batchId: row._id });
+	await t.action(internal.lunaAheadBatchActions.poll, { batchId: row._id });
 	expect((await batches(t))[0]).toMatchObject({
 		state: "Completed",
 		answerCount: 2,
@@ -185,8 +189,93 @@ test("a click whose canonical request the completed batch answered asks Luna not
 		outputTokens: 0,
 	});
 	// A second paste of the same units asks nothing already answered.
-	await t.action(internal.canonicalBatchActions.submit, { scrollId });
+	await t.action(internal.lunaAheadBatchActions.submit, { scrollId });
 	expect(fake.sent).toHaveLength(1);
+});
+
+// Aber0 _1 die2 _3 Geschichte4 _5 endet6 .7: code writes the
+// conjunction's headword, and with no stored or authored Reading of aber
+// its click drafts the Emoji Description beside jev.
+const coded = (t: TestConvexDb) =>
+	submitText(
+		t,
+		[["Aber", " ", "die", " ", "Geschichte", " ", "endet", "."]],
+		{
+			units: [
+				[
+					{ segments: [0], route: de("Lexeme", "CCONJ") },
+					{ segments: [2], route: "Unresolved" },
+					{ segments: [4], route: de("Lexeme", "NOUN") },
+					{ segments: [6], route: "Unresolved" },
+				],
+			],
+		},
+	);
+
+test("a unit whose headword code writes has its emoji draft asked ahead, and its click drafts from the stored answer", async () => {
+	const fake = fakeLunaBatch();
+	const deployment = fakeDeployment(fake.batch);
+	restore = deployment.restore;
+	const t = createTestConvex();
+	const { scrollId, sentenceIds } = await coded(t);
+	const row = await submitted(t, scrollId);
+	expect(row).toMatchObject({
+		unitCount: 2,
+		requestCount: 2,
+		stageCounts: { canonical: 1, emojiDescription: 1 },
+	});
+	const draft = fake.sent[0]?.find(({ request }) => isEmojiDraft(request));
+	expect(draft?.request.input).toEqual({
+		markedSentence: "<TARGET>Aber</TARGET> die Geschichte endet.",
+		lemma: "aber",
+	});
+	expect(draft?.maxOutputTokens).toBe(128);
+	fake.end("completed", (request) =>
+		isEmojiDraft(request) ? responseBody("➕") : writesMembers(request),
+	);
+	await t.action(internal.lunaAheadBatchActions.poll, { batchId: row._id });
+	expect((await batches(t))[0]).toMatchObject({
+		state: "Completed",
+		answerCount: 2,
+	});
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw Error("Expected the Sentence");
+	const { result, trace, emojiDescription, canonical } = await clickGrammar(
+		t,
+		sentenceId,
+		0,
+	);
+	expect(result).toMatchObject({ _tag: "Resolved", drafted: "➕" });
+	expect(deployment.luna.stages).toEqual([]);
+	expect(canonical).toEqual([]);
+	expect(emojiDescription).toHaveLength(1);
+	expect(emojiDescription[0]).toMatchObject({
+		storedAnswer: "batch_1",
+		inputTokens: 0,
+		outputTokens: 0,
+	});
+	if (!trace) throw Error("Expected the click's trace");
+	expect(operationSteps(trace).map(({ name }) => name)).toContain(
+		"emojiDescription · stored answer",
+	);
+	// The noun's click finds its canonical guess stored too.
+	const noun = await clickGrammar(t, sentenceId, 4);
+	expect(noun.canonical[0]?.storedAnswer).toBe("batch_1");
+	expect(deployment.luna.stages).toEqual([]);
+});
+
+test("a click whose emoji draft has no stored answer drafts with Luna", async () => {
+	const fake = fakeLunaBatch();
+	const deployment = fakeDeployment(fake.batch);
+	restore = deployment.restore;
+	const t = createTestConvex();
+	const { sentenceIds } = await coded(t);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw Error("Expected the Sentence");
+	const { result, emojiDescription } = await clickGrammar(t, sentenceId, 0);
+	expect(result).toMatchObject({ _tag: "Resolved", drafted: "🔁" });
+	expect(deployment.luna.stages).toEqual(["emojiDescription"]);
+	expect(emojiDescription[0]?.storedAnswer).toBeUndefined();
 });
 
 test("a click with no stored answer, or an unusable one, asks Luna", async () => {
@@ -209,7 +298,7 @@ test("a click with no stored answer, or an unusable one, asks Luna", async () =>
 			? responseBody({ canonicalForm: "zwei\nZeilen", members: [] })
 			: undefined,
 	);
-	await t.action(internal.canonicalBatchActions.poll, { batchId: row._id });
+	await t.action(internal.lunaAheadBatchActions.poll, { batchId: row._id });
 	expect((await batches(t))[0]).toMatchObject({
 		answerCount: 1,
 		failedCount: 1,
@@ -243,19 +332,17 @@ test("a failed or expired batch is dropped with nothing stored, and its polls st
 		const { scrollId } = await paste(t);
 		const row = await submitted(t, scrollId);
 		fake.end(ended, () => responseBody({}));
-		await t.action(internal.canonicalBatchActions.poll, {
+		await t.action(internal.lunaAheadBatchActions.poll, {
 			batchId: row._id,
 		});
 		const [settled] = await batches(t);
 		expect(settled?.state).toBe(state);
 		expect(settled?.failure).toContain(ended);
 		expect(
-			await t.run((ctx) =>
-				ctx.db.query("canonicalBatchAnswers").collect(),
-			),
+			await t.run((ctx) => ctx.db.query("lunaAheadAnswers").collect()),
 		).toEqual([]);
 		// Only the first poll the submission scheduled was ever pending.
-		expect(await scheduled(t, "canonicalBatchActions:poll")).toHaveLength(
+		expect(await scheduled(t, "lunaAheadBatchActions:poll")).toHaveLength(
 			1,
 		);
 	}
@@ -265,7 +352,7 @@ test("a deployment without an OpenAI key asks nothing ahead", async () => {
 	restore = fakeDeployment(undefined).restore;
 	const t = createTestConvex();
 	const { scrollId } = await paste(t);
-	await t.action(internal.canonicalBatchActions.submit, { scrollId });
+	await t.action(internal.lunaAheadBatchActions.submit, { scrollId });
 	expect(await batches(t)).toEqual([]);
 });
 

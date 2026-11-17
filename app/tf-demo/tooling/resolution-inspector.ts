@@ -244,14 +244,14 @@ export function listRecentResolutionInspections(
 	return runReadonlyInspection(source, options);
 }
 
-/** The latest batches of canonical requests asked ahead of the clicks (#1351). */
-export function listCanonicalBatches(
+/** The latest batches of Luna requests asked ahead of the clicks, each with its requests by stage (#1351). */
+export function listLunaAheadBatches(
 	limit = 20,
 	options?: DeploymentOptions,
 ): Promise<void> {
 	const source = `
 		return await ctx.db
-			.query("canonicalBatches")
+			.query("lunaAheadBatches")
 			.withIndex("by_submitted_at")
 			.order("desc")
 			.take(${literal(limit)});
@@ -259,20 +259,20 @@ export function listCanonicalBatches(
 	return runReadonlyInspection(source, options);
 }
 
-/** One batch of canonical requests, by its row or its OpenAI id, and how many answers it stored. */
-export function inspectCanonicalBatch(
+/** One batch of Luna requests asked ahead, by its row or its OpenAI id, and how many answers it stored. */
+export function inspectLunaAheadBatch(
 	batchId: string,
 	options?: DeploymentOptions,
 ): Promise<void> {
 	const source = `
 		const id = ${literal(batchId)};
-		const normalized = ctx.db.normalizeId("canonicalBatches", id);
+		const normalized = ctx.db.normalizeId("lunaAheadBatches", id);
 		const batch = normalized
 			? await ctx.db.get(normalized)
-			: (await ctx.db.query("canonicalBatches").collect()).find((row) => row.openAIBatchId === id) ?? null;
-		if (!batch) throw new Error("Canonical batch not found: " + id);
+			: (await ctx.db.query("lunaAheadBatches").collect()).find((row) => row.openAIBatchId === id) ?? null;
+		if (!batch) throw new Error("Luna ahead batch not found: " + id);
 		const answers = await ctx.db
-			.query("canonicalBatchAnswers")
+			.query("lunaAheadAnswers")
 			.withIndex("by_batch_id", (q) => q.eq("batchId", batch._id))
 			.collect();
 		return { batch, storedAnswers: answers.length };
@@ -289,7 +289,7 @@ function usage(): never {
   bun run resolution_inspector segment <segmentId>
   bun run resolution_inspector recent [limit]
   bun run resolution_inspector batches [limit]
-  bun run resolution_inspector batch <canonicalBatchId | openAIBatchId>
+  bun run resolution_inspector batch <lunaAheadBatchId | openAIBatchId>
 
 Options:
   --prod
@@ -332,11 +332,11 @@ if (import.meta.main) {
 	else if (command === "segment" && identifier)
 		await inspectSegment(identifier, options);
 	else if (command === "batch" && identifier)
-		await inspectCanonicalBatch(identifier, options);
+		await inspectLunaAheadBatch(identifier, options);
 	else if (command === "batches") {
 		const limit = identifier === undefined ? 20 : Number(identifier);
 		if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) usage();
-		await listCanonicalBatches(limit, options);
+		await listLunaAheadBatches(limit, options);
 	} else if (command === "recent") {
 		const limit = identifier === undefined ? 20 : Number(identifier);
 		if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) usage();

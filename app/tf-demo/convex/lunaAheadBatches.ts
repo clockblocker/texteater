@@ -7,7 +7,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { canonicalBatchStates } from "./model/tables/canonicalBatches";
+import { lunaAheadBatchStates } from "./model/tables/lunaAheadBatches";
 import { literalUnion } from "./model/validators";
 import {
 	loadResolutionContext,
@@ -15,20 +15,21 @@ import {
 } from "./resolutionContext";
 
 /*
- * The storage side of the canonical requests asked ahead of the clicks
- * (#1351): which units a batch covers, the batch's row, and the answers a
- * click finds by its request's key. `canonicalBatchActions.ts` submits and
+ * The storage side of the Luna requests asked ahead of the clicks
+ * (#1351), each the canonical guess or the emoji draft a click sends
+ * before jev answers: which units a batch covers, the batch's row, and the answers a
+ * click finds by its request's key. `lunaAheadBatchActions.ts` submits and
  * polls the batch.
  */
 
 /** Asks Intake's processed Folio, or a whole paste or link, ahead of its clicks. */
-export async function scheduleCanonicalBatch(
+export async function scheduleLunaAheadBatch(
 	ctx: MutationCtx,
 	args: { scrollId: Id<"scrolls">; folioId?: Id<"folios"> },
 ): Promise<void> {
 	await ctx.scheduler.runAfter(
 		0,
-		internal.canonicalBatchActions.submit,
+		internal.lunaAheadBatchActions.submit,
 		args,
 	);
 }
@@ -100,7 +101,7 @@ export const answeredKeys = internalQuery({
 		for (const requestKey of requestKeys)
 			if (
 				await ctx.db
-					.query("canonicalBatchAnswers")
+					.query("lunaAheadAnswers")
 					.withIndex("by_request_key", (q) =>
 						q.eq("requestKey", requestKey),
 					)
@@ -120,7 +121,7 @@ export const storedAnswer = internalQuery({
 	),
 	handler: async (ctx, { requestKey }) => {
 		const answer = await ctx.db
-			.query("canonicalBatchAnswers")
+			.query("lunaAheadAnswers")
 			.withIndex("by_request_key", (q) => q.eq("requestKey", requestKey))
 			.first();
 		return answer
@@ -131,12 +132,12 @@ export const storedAnswer = internalQuery({
 
 /** The batch's row, for its poll. */
 export const batch = internalQuery({
-	args: { batchId: v.id("canonicalBatches") },
+	args: { batchId: v.id("lunaAheadBatches") },
 	returns: v.union(
 		v.null(),
 		v.object({
 			openAIBatchId: v.string(),
-			state: literalUnion(canonicalBatchStates),
+			state: literalUnion(lunaAheadBatchStates),
 			submittedAt: v.number(),
 			polls: v.number(),
 		}),
@@ -162,11 +163,12 @@ export const recordSubmitted = internalMutation({
 		openAIBatchId: v.string(),
 		unitCount: v.number(),
 		requestCount: v.number(),
+		stageCounts: v.record(v.string(), v.number()),
 		firstPollAfterMs: v.number(),
 	},
-	returns: v.id("canonicalBatches"),
+	returns: v.id("lunaAheadBatches"),
 	handler: async (ctx, { firstPollAfterMs, ...batch }) => {
-		const batchId = await ctx.db.insert("canonicalBatches", {
+		const batchId = await ctx.db.insert("lunaAheadBatches", {
 			...batch,
 			state: "Submitted",
 			submittedAt: Date.now(),
@@ -174,7 +176,7 @@ export const recordSubmitted = internalMutation({
 		});
 		await ctx.scheduler.runAfter(
 			firstPollAfterMs,
-			internal.canonicalBatchActions.poll,
+			internal.lunaAheadBatchActions.poll,
 			{ batchId },
 		);
 		return batchId;
@@ -183,7 +185,7 @@ export const recordSubmitted = internalMutation({
 
 /** Counts one look at a batch still running, and schedules the next. */
 export const recordPolled = internalMutation({
-	args: { batchId: v.id("canonicalBatches"), nextPollAfterMs: v.number() },
+	args: { batchId: v.id("lunaAheadBatches"), nextPollAfterMs: v.number() },
 	returns: v.null(),
 	handler: async (ctx, { batchId, nextPollAfterMs }) => {
 		const row = await ctx.db.get(batchId);
@@ -191,7 +193,7 @@ export const recordPolled = internalMutation({
 		await ctx.db.patch(batchId, { polls: row.polls + 1 });
 		await ctx.scheduler.runAfter(
 			nextPollAfterMs,
-			internal.canonicalBatchActions.poll,
+			internal.lunaAheadBatchActions.poll,
 			{ batchId },
 		);
 		return null;
@@ -201,7 +203,7 @@ export const recordPolled = internalMutation({
 /** Stores some of a completed batch's answers; a key answered before keeps its answer. */
 export const storeAnswers = internalMutation({
 	args: {
-		batchId: v.id("canonicalBatches"),
+		batchId: v.id("lunaAheadBatches"),
 		answers: v.array(
 			v.object({ requestKey: v.string(), body: v.string() }),
 		),
@@ -212,13 +214,13 @@ export const storeAnswers = internalMutation({
 		if (row?.state !== "Submitted") return null;
 		for (const { requestKey, body } of answers) {
 			const stored = await ctx.db
-				.query("canonicalBatchAnswers")
+				.query("lunaAheadAnswers")
 				.withIndex("by_request_key", (q) =>
 					q.eq("requestKey", requestKey),
 				)
 				.first();
 			if (!stored)
-				await ctx.db.insert("canonicalBatchAnswers", {
+				await ctx.db.insert("lunaAheadAnswers", {
 					requestKey,
 					batchId,
 					openAIBatchId: row.openAIBatchId,
@@ -232,8 +234,8 @@ export const storeAnswers = internalMutation({
 /** Ends a batch: Completed with its counts and tokens, or how it failed. */
 export const recordSettled = internalMutation({
 	args: {
-		batchId: v.id("canonicalBatches"),
-		state: literalUnion(canonicalBatchStates),
+		batchId: v.id("lunaAheadBatches"),
+		state: literalUnion(lunaAheadBatchStates),
 		answerCount: v.optional(v.number()),
 		failedCount: v.optional(v.number()),
 		tokens: v.optional(

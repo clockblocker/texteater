@@ -68,12 +68,12 @@ export async function pendingScheduled(t: TestConvexDb) {
 	const jobs = await t.run((ctx) =>
 		ctx.db.system.query("_scheduled_functions").collect(),
 	);
-	// The canonical batch a stored paste schedules is Intake's, not a click's (#1351).
+	// The Luna ahead batch a stored paste schedules is Intake's, not a click's (#1351).
 	return jobs
 		.filter(
 			(job) =>
 				job.state.kind === "pending" &&
-				!job.name.startsWith("canonicalBatchActions:"),
+				!job.name.startsWith("lunaAheadBatchActions:"),
 		)
 		.map((job) => ({ name: job.name, args: job.args[0] }));
 }

@@ -256,12 +256,12 @@ test("an inspected click on a unit intake left Unresolved settles at selection, 
 		"Settle the unresolved unit [Code · app/tf-demo · resolutionSessions.selectSegment · Success]",
 	]);
 	// No run, and no Reading, so no Knowledge attempt either; the stored
-	// paste's canonical batch is Intake's (#1351).
+	// paste's Luna ahead batch is Intake's (#1351).
 	const jobs = await t.run((ctx) =>
 		ctx.db.system.query("_scheduled_functions").collect(),
 	);
 	expect(
-		jobs.filter(({ name }) => !name.startsWith("canonicalBatchActions:")),
+		jobs.filter(({ name }) => !name.startsWith("lunaAheadBatchActions:")),
 	).toEqual([]);
 });
 

@@ -4,7 +4,7 @@ import { cutFolios, savesOf, windowsOf } from "../../server/folios";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../_generated/server";
-import { scheduleCanonicalBatch } from "../canonicalBatches";
+import { scheduleLunaAheadBatch } from "../lunaAheadBatches";
 import { assertAnalyzedSentence } from "../modules/scroll/submission";
 import { sentenceInputValidator } from "./validators";
 
@@ -111,8 +111,9 @@ export async function nextFolioWindow(
 			state: "Processed",
 			updatedAt: Date.now(),
 		});
-		// The Folio's canonical requests are asked ahead of its clicks (#1351).
-		await scheduleCanonicalBatch(ctx, {
+		// The Luna requests the Folio's clicks send before jev answers are
+		// asked ahead (#1351).
+		await scheduleLunaAheadBatch(ctx, {
 			scrollId: folio.scrollId,
 			folioId: folio._id,
 		});

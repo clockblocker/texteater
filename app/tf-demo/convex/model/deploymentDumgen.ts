@@ -1,7 +1,6 @@
 "use node";
 
 import {
-	canonicalAheadStage,
 	createOpenAILunaBatch,
 	DumgenLive,
 	InvalidModelOutput,
@@ -10,6 +9,7 @@ import {
 	type Luna,
 	type LunaBatch,
 	LunaTransport,
+	lunaAheadStages,
 	type OperationTrace,
 	operations,
 	ProviderFailure,
@@ -46,8 +46,8 @@ export type CallPolicy = {
 /**
  * The model transports a deployment has, each made under a `CallPolicy`:
  * jev through TypeSafe where `TYPESAFE_API_KEY` is set, Luna through OpenAI
- * where `OPENAI_API_KEY` is, and there Luna's Batch API too, which asks a
- * click's canonical request ahead (#1351). jev has no prompt cache to ask
+ * where `OPENAI_API_KEY` is, and there Luna's Batch API too, which asks
+ * the Luna request a click sends before jev answers ahead (#1351). jev has no prompt cache to ask
  * for.
  */
 export type ModelTransports = {
@@ -127,7 +127,8 @@ export type FindStoredAnswer = (
 ) => Promise<StoredLunaAnswer | undefined>;
 
 /**
- * `luna` with its canonical requests answered from `find` where it holds
+ * `luna` with each request of a stage asked ahead (`lunaAheadStages`: the
+ * canonical guess and the emoji draft) answered from `find` where it holds
  * one (`storedLunaAsk`, #1351); every other request, and one with no
  * stored answer, goes to `luna`.
  */
@@ -141,7 +142,7 @@ const answeringStored = (
 			const { ask } = yield* LunaTransport;
 			return {
 				ask: storedLunaAsk(ask, {
-					stages: new Set([canonicalAheadStage]),
+					stages: lunaAheadStages,
 					find,
 				}),
 			};
@@ -152,8 +153,8 @@ const answeringStored = (
  * `DumgenLive` over the deployment's transports, made under `policy`. A
  * transport the deployment lacks fails each call that needs it, so an
  * action that cannot run without one checks first; intake never asks
- * Luna. With `stored`, Luna's canonical requests are answered from the
- * answers a batch asked ahead where there is one. Traces go where the
+ * Luna. With `stored`, Luna's requests of the stages asked ahead are
+ * answered from the answers a batch asked ahead where there is one. Traces go where the
  * action's `TraceSink` says.
  */
 export function deploymentDumgen(
@@ -206,8 +207,9 @@ export function clickCallDeadlineMs(
 /**
  * The click's Dumgen: jev and Luna at the click deadline, read when the
  * Layer is built, so a bad deadline fails the click's run, with Luna's
- * prompts cached, and its canonical request answered from the answers a
- * batch asked ahead, found by `stored` (#1351). A click that needs no
+ * prompts cached, and the Luna request it sends before jev answers
+ * answered from the answers a batch asked ahead, found by `stored`
+ * (#1351). A click that needs no
  * model needs no key: its operations `requireJev` when they run.
  */
 export const clickDumgen = (
