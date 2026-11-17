@@ -4,7 +4,8 @@
  * auxiliaries, reflexives, expletive es, governed prepositions, a noun's
  * idiom verb) and the spans a Saying could cover; `pair-candidates.ts`
  * finds the pairs that could be one unit. The judge only picks a host
- * among a bounded window, or `none`, and weighs the pairs and spans.
+ * among a bounded window, which a verb's bracket stretches, or `none`, and
+ * weighs the pairs and spans.
  */
 import {
 	type AuthoredRealization,
@@ -238,6 +239,25 @@ const window = (
 /** Marks a verb's bracket never reaches past. */
 const sentenceBreak = /[.;:!?]/u;
 
+/** Marks that only open an insert, so a word before one closes nothing. */
+const opener = /^[„‚([{]$/u;
+
+/** Whether a mark that ends the sentence's clause chain stands between two pieces. */
+const chainBreaks = (sentence: Sentence, early: Piece, late: Piece) =>
+	sentence.segments
+		.slice(early.segment + 1, late.segment)
+		.some(
+			(segment) =>
+				segment.kind === "Punctuation" &&
+				sentenceBreak.test(segment.text),
+		);
+
+/** The first Segment after a piece that is no whitespace, if any. */
+const nextMark = (sentence: Sentence, piece: Piece) =>
+	sentence.segments
+		.slice(piece.segment + 1)
+		.find((segment) => segment.kind !== "Whitespace");
+
 /**
  * The words past `reach` after a finite verb that may close its bracket:
  * lowercase words standing right before a punctuation mark or at the end,
@@ -249,26 +269,43 @@ const sentenceBreak = /[.;:!?]/u;
 function bracketEnds(sentence: Sentence, verb: Piece, reach: number): Piece[] {
 	const ends: Piece[] = [];
 	for (const piece of sentence.pieces.slice(verb.id)) {
-		const between = sentence.segments.slice(
-			verb.segment + 1,
-			piece.segment,
-		);
-		if (
-			between.some(
-				(segment) =>
-					segment.kind === "Punctuation" &&
-					sentenceBreak.test(segment.text),
-			)
-		)
-			break;
+		if (chainBreaks(sentence, verb, piece)) break;
 		if (piece.id <= verb.id + reach || !/^\p{Ll}/u.test(piece.text))
 			continue;
-		const next = sentence.segments
-			.slice(piece.segment + 1)
-			.find((segment) => segment.kind !== "Whitespace");
+		const next = nextMark(sentence, piece);
 		if (!next || next.kind === "Punctuation") ends.push(piece);
 	}
 	return ends;
+}
+
+/**
+ * The words past `reach` before a separable particle that may open its
+ * bracket, when the particle closes one (stands right before a punctuation
+ * mark that opens no insert, or at the end): lowercase words, and the
+ * first word of the sentence's clause chain, back to the mark that ends
+ * the chain before it. A finite verb takes its particle however long the
+ * middle field runs (reichte Hans Castorp ihm Handtasche und Wintermantel,
+ * … ›Ocean steamships‹ hinaus), and a list's commas stand inside it.
+ */
+function bracketStarts(
+	sentence: Sentence,
+	particle: Piece,
+	reach: number,
+): Piece[] {
+	const next = nextMark(sentence, particle);
+	if (next && (next.kind !== "Punctuation" || opener.test(next.text)))
+		return [];
+	const starts: Piece[] = [];
+	for (const piece of sentence.pieces
+		.slice(0, Math.max(particle.id - reach - 1, 0))
+		.reverse()) {
+		if (chainBreaks(sentence, piece, particle)) break;
+		const previous = sentence.pieces[piece.id - 2];
+		const opensChain =
+			previous === undefined || chainBreaks(sentence, previous, piece);
+		if (/^\p{Ll}/u.test(piece.text) || opensChain) starts.unshift(piece);
+	}
+	return starts;
 }
 
 /** A form of der or ein; a fused word's article piece (`m` of `im`) stands for its article. */
@@ -325,9 +362,13 @@ export function slotsOf(
 			slots.push({
 				kind: "particle",
 				piece,
-				hosts: sentence.pieces.filter(
-					(other) => other.id < piece.id && other.id >= piece.id - 15,
-				),
+				hosts: [
+					...bracketStarts(sentence, piece, 15),
+					...sentence.pieces.filter(
+						(other) =>
+							other.id < piece.id && other.id >= piece.id - 15,
+					),
+				],
 			});
 		if (inventory.isAuxiliary(text))
 			slots.push({
