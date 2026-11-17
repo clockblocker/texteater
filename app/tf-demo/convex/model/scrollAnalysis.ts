@@ -19,6 +19,7 @@ import {
 } from "../../server/intakeRun";
 import { logged } from "../../server/logging";
 import { textSubmissionLimitViolation } from "../../server/textSubmissionLimits";
+import { saveTrace } from "../../server/traceWrite";
 import type { ScrollLanguage } from "../../shared/supported-target-language";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
@@ -116,11 +117,13 @@ export async function analyzeScroll(
 		: undefined;
 	const requestId = crypto.randomUUID();
 	if (inspectionVisitorId) {
-		await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
-			requestId,
-			visitorId: inspectionVisitorId,
-			sourceText: submission.sourceText,
-		});
+		await saveTrace(`The analysis trace of ${requestId}`, () =>
+			ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
+				requestId,
+				visitorId: inspectionVisitorId,
+				sourceText: submission.sourceText,
+			}),
+		);
 	}
 	const inspection = inspectionFor(
 		ctx,
@@ -199,12 +202,15 @@ export async function analyzeScroll(
 		throw visitorErrorIn(cause) ?? Cause.squash(cause);
 	} finally {
 		await inspection?.flush();
-		if (inspectionVisitorId) {
-			await ctx.runMutation(
-				internal.resolutionInspection.finishAnalysis,
-				{ requestId, state },
+		// The trace's writes come after the outcome is settled: a refused
+		// one is logged, never thrown over the Visitor's result.
+		if (inspectionVisitorId)
+			await saveTrace(`The analysis outcome of ${requestId}`, () =>
+				ctx.runMutation(internal.resolutionInspection.finishAnalysis, {
+					requestId,
+					state,
+				}),
 			);
-		}
 		await recordIntakeRun(
 			(record) => ctx.runMutation(internal.intakeRuns.record, record),
 			run.summary({

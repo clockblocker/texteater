@@ -3,6 +3,7 @@ import {
 	createInspectionCapture,
 	type InspectionCapture,
 } from "../../server/inspectionCapture";
+import { saveTrace } from "../../server/traceWrite";
 import { internal } from "../_generated/api";
 import type { ActionCtx } from "../_generated/server";
 import type { CapturedInspectionStep } from "./inspection";
@@ -57,21 +58,19 @@ export function inspectionFor(
 	const capture = createInspectionCapture();
 	return Object.assign(capture, {
 		async flush() {
-			for (const steps of batches(capture.steps.splice(0))) {
-				await ctx
-					.runMutation(internal.resolutionInspection.recordSteps, {
-						requestId,
-						scope,
-						steps,
-					})
-					.catch(() =>
-						console.warn(
-							"Inspection steps could not be saved",
-							requestId,
-							steps.map((step) => step.id),
+			for (const steps of batches(capture.steps.splice(0)))
+				await saveTrace(
+					`Inspection steps of ${requestId} (${steps.length})`,
+					() =>
+						ctx.runMutation(
+							internal.resolutionInspection.recordSteps,
+							{
+								requestId,
+								scope,
+								steps,
+							},
 						),
-					);
-			}
+				);
 		},
 	});
 }

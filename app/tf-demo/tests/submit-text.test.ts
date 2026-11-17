@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from "bun:test";
-import { ConvexError } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { api } from "../convex/_generated/api";
+import { internalMutation } from "../convex/_generated/server";
 import { replaceModelTransports } from "../convex/model/deploymentDumgen";
 import {
 	GERMAN_ONLY_MESSAGE,
@@ -8,7 +9,11 @@ import {
 } from "../server/intake";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import { visitorErrorMessage } from "../src/lib/visitor-error";
-import { createTestConvex, type TestConvexDb } from "./support/convex";
+import {
+	createTestConvex,
+	createTestConvexWith,
+	type TestConvexDb,
+} from "./support/convex";
 import {
 	asksAbout,
 	fakeJev,
@@ -352,6 +357,40 @@ test("with DEV inspection on, intake's segment.inUnits renders as inspection row
 		).toHaveLength(1);
 		// The payload carries no credential.
 		expect(JSON.stringify(payloads)).not.toContain("fixture");
+	} finally {
+		if (previous === undefined) delete process.env.TF_INSPECTION;
+		else process.env.TF_INSPECTION = previous;
+	}
+});
+
+test("with DEV inspection on, a trace write Convex refuses after the Scroll is stored leaves the submission Accepted and its run recorded", async () => {
+	typeSafe();
+	const previous = process.env.TF_INSPECTION;
+	process.env.TF_INSPECTION = "1";
+	try {
+		// The analysis outcome is the trace's last write, after intake succeeded;
+		// the write-rate retry has its own tests in trace-write.test.ts.
+		const t = createTestConvexWith({
+			"resolutionInspection.ts": async () => ({
+				...(await import("../convex/resolutionInspection")),
+				finishAnalysis: internalMutation({
+					args: { requestId: v.string(), state: v.string() },
+					returns: v.null(),
+					handler: async () => {
+						throw new Error("The trace could not be written.");
+					},
+				}),
+			}),
+		});
+		const result = await t.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
+			submissionKey: "refused-trace",
+			sourceText: "Er gibt auf.",
+			inspectionVisitorId: "visitor-1",
+		});
+		expect(result.status).toBe("Accepted");
+		expect(await sentences(t)).toHaveLength(1);
+		expect(await intakeRuns(t)).toMatchObject([{ outcome: "Accepted" }]);
 	} finally {
 		if (previous === undefined) delete process.env.TF_INSPECTION;
 		else process.env.TF_INSPECTION = previous;
