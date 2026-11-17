@@ -242,7 +242,7 @@ export function LibraryView() {
 								<Textarea
 									id="library-source-text"
 									name="text"
-									className="min-h-36 resize-y"
+									className="min-h-36 max-h-[40vh] resize-y"
 									value={sourceText}
 									onChange={(event) =>
 										setSourceText(event.target.value)
