@@ -4,6 +4,7 @@ import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { routeNoteQueryArgs } from "@/lib/note-queries";
 import { NotFoundView } from "@/views/not-found-view";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { PlacedNote, PlacedNoteSkeleton } from "@/workspace/note-part";
@@ -174,44 +175,6 @@ function PaginatedRouteNote({
 			}}
 		/>
 	);
-}
-
-/** The `routeNotes.get` arguments a Route Note asks with, but for the Visitor. */
-export function routeNoteQueryArgs(
-	target: RouteNoteTarget,
-	activeAnalysisKey?: Id<"surfaces">,
-	activeReadingId?: Id<"readings">,
-) {
-	switch (target.kind) {
-		case "Lemma":
-			return {
-				target: {
-					kind: "Lemma" as const,
-					lemmaId: target.lemmaId,
-				},
-			};
-		case "Surface":
-			return {
-				target: {
-					kind: "Surface" as const,
-					language: target.language,
-					normalizedSurface: target.normalizedSurface,
-					...(activeAnalysisKey !== undefined
-						? { activeAnalysisKey }
-						: {}),
-					...(activeReadingId !== undefined
-						? { activeReadingId }
-						: {}),
-				},
-			};
-		case "Attestation":
-			return {
-				target: {
-					kind: "Attestation" as const,
-					attestationId: target.attestationId,
-				},
-			};
-	}
 }
 
 function routeNoteCapabilities(

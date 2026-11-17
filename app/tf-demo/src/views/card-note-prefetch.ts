@@ -1,7 +1,9 @@
 import { convexQuery } from "@convex-dev/react-query";
 import type { QueryClient } from "@tanstack/react-query";
-import { readingBlockLayoutQuery } from "@/notes";
-import { routeNoteQueryArgs } from "@/views/route-note-view";
+import {
+	readingBlockLayoutQuery,
+	routeNoteQueryArgs,
+} from "@/lib/note-queries";
 import type { WorkspaceCardTarget } from "@/workspace/workspace-controller";
 import {
 	activeAnalysisKeyOf,

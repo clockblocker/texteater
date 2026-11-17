@@ -1,13 +1,12 @@
-import { convexQuery } from "@convex-dev/react-query";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { readingBlockLayoutQuery } from "@/lib/note-queries";
 import type {
 	NotePresentationContext,
 	WorkspaceTarget,
 } from "@/workspace/workspace-subject";
-import { api } from "../../convex/_generated/api";
 import { citationFor, registeredBlockMap } from "./renderer-registry";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";
 import type { NoteData, NoteDataFor } from "./universal/note/data";
@@ -132,25 +131,6 @@ const acquireConfiguredLayout: LayoutAdapter = (
 		/>
 	);
 };
-
-/** The stored Block layout a Reading of `lemma`'s Family and Kind is laid out by. */
-export function readingBlockLayoutQuery(
-	visitorId: string,
-	lemma: {
-		readonly language: string;
-		readonly family: string;
-		readonly kind: string;
-	},
-) {
-	return convexQuery(api.readingBlockLayouts.getFamilyKind, {
-		visitorId,
-		route: {
-			targetLanguage: lemma.language as "de",
-			family: lemma.family,
-			kind: lemma.kind,
-		},
-	});
-}
 
 function ReadingWithConfiguredLayout({
 	input,
