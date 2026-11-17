@@ -163,7 +163,9 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	// anstelle, aufgrund, aufseiten, mithilfe, vonseiten, zugunsten,
 	// zulasten, zuseiten and zuungunsten may be written as two words
 	// (germanSpelledApartPrepositions). Before von they take no case of
-	// their own: in aufgrund von Problemen, von takes the dative.
+	// their own: in aufgrund von Problemen, von takes the dative. The same
+	// holds for any preposition here that takes the genitive (innerhalb
+	// von zwei Tagen), so an occurrence before von or vom records no case.
 	anstelle: prep(only("Gen")),
 	aufgrund: prep(only("Gen")),
 	aufseiten: prep(only("Gen")),
