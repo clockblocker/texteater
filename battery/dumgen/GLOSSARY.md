@@ -137,6 +137,16 @@ Sentence and stores nothing, unlike Knowledge Production's `translations`,
 a Reading's dictionary equivalents.
 _Avoid_: Sentence Knowledge, translations aspect, for a Sentence's translation
 
+**`explain.pronoun`**:
+The writer that picks what one pronoun refers to: among the noun and
+proper-noun units the host marks in a passage ending with the pronoun's
+Sentence, the Antecedents, or none. It stores nothing.
+
+**Antecedent**:
+A noun or proper-noun unit a pronoun refers to, one per referent, named in
+the pronoun's Sentence or the context before it.
+_Avoid_: referent (the person or thing itself), target
+
 **Evaluation Run**:
 One recorded execution of a linguistic experiment, with its effective model
 settings, case outputs, failures and evaluation results.

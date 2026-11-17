@@ -9,6 +9,8 @@
 import type * as Effect from "effect/Effect";
 import { runOperation } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
+import { explainPronoun } from "./explain/pronoun.js";
+import type { Antecedent, ExplainPronounInput } from "./explain/types.js";
 import type { Jev } from "./jev-call.js";
 import { accumulateTranslations } from "./knowledge/accumulate.js";
 import { produceKnowledge } from "./knowledge/produce.js";
@@ -134,6 +136,19 @@ export const operations = {
 			input: TranslateSentenceInput,
 		): Effect.Effect<string, ModelFailure, Luna> =>
 			runOperation("translate.sentence", translateSentence(input)),
+	},
+	explain: {
+		/**
+		 * What one pronoun refers to among the noun units the host offers
+		 * in its passage: those candidates, each once, picked by Luna in one
+		 * call, or none, with no call when there is no candidate. Interrupting
+		 * it aborts the call. Another language than German, a pronoun outside
+		 * the passage's last Sentence or overlapping candidates are a Defect.
+		 */
+		pronoun: (
+			input: ExplainPronounInput,
+		): Effect.Effect<readonly Antecedent[], ModelFailure, Luna> =>
+			runOperation("explain.pronoun", explainPronoun(input)),
 	},
 	knowledge: {
 		/**

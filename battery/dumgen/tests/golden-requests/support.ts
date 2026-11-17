@@ -1,7 +1,7 @@
 /**
  * Golden requests (#1271): the operations no evaluate experiment's request
  * diff covers (`language.detect`, `translate.sentence`,
- * `knowledge.accumulateTranslations`) run on fixed inputs against fake
+ * `explain.pronoun`, `knowledge.accumulateTranslations`) run on fixed inputs against fake
  * transports that record every request they are sent, whole, and answer
  * it deterministically. Each scenario's requests, in sorted order, and its
  * result are kept in `fixtures/<operation>.json`.

@@ -32,7 +32,8 @@ export type DumgenOptions = {
 	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
 	 * Forms and spelling corrections with it and drafts Emoji Descriptions
 	 * in the same call, `resolve.reading` writes those no draft supplies
-	 * (#862), `translate.sentence` a Sentence's translation, and
+	 * (#862), `translate.sentence` a Sentence's translation, `explain.pronoun`
+	 * the nouns a pronoun refers to, and
 	 * `knowledge.produce` Knowledge text, plural and Präteritum forms,
 	 * frames and relation candidates. Segmentation never
 	 * receives it. `LunaTransport.openAI` in production,

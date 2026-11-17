@@ -14,7 +14,8 @@
  * resolves a stored unit's Attestation with jev judging and Luna writing;
  * `resolve.reading`, which picks a stored Emoji Description of the
  * Attestation's Lemma or writes a new one; `translate.sentence`, which
- * translates one Sentence with Luna (#1210); `knowledge.produce`,
+ * translates one Sentence with Luna (#1210); `explain.pronoun`, which
+ * picks the nouns a pronoun refers to with Luna; `knowledge.produce`,
  * which fills the resolved Reading's missing Knowledge aspect by aspect;
  * and `knowledge.accumulateTranslations`, which adds the translations a
  * later occurrence needs to a Reading's stored ones (ADR 0047).
@@ -38,6 +39,10 @@ export {
 export { TracePayloads, TraceSink } from "./call.js";
 export { DumgenLive } from "./dumgen-live.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
+export type {
+	ExplainPronounInput,
+	PassageSentence,
+} from "./explain/types.js";
 export { Jev, JevTransport } from "./jev-call.js";
 export type {
 	AccumulateTranslationsInput,
