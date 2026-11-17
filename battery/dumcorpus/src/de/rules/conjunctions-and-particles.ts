@@ -46,6 +46,18 @@ export const conjunctionsAndParticles: Rule[] = [
 		],
 	},
 	{
+		id: "de/two-word-conjunction",
+		statement:
+			"Two adjacent words that open a clause or add a phrase only together, in a sense neither has alone, are one Locution over both words, and what they introduce resolves on its own: als ob, als wenn, auch wenn 'even though', nur dass 'except that' and kaum dass 'no sooner than' are SCONJ, as their clause is verb-final; und zwar is CCONJ, adding a specification (Sie kommt morgen, und zwar früh). dumcorpus lists them in germanConjunctionLocutions. Split by a comma, the words are their own units: Er hilft auch, wenn es regnet gives [auch] ADV and [wenn] SCONJ.",
+		adrs: ["ADR-0039"],
+		routes: locution("SCONJ", "CCONJ"),
+		records: [
+			"de/er-tat-als-ob-er-die-nachricht-nicht-gehoert-haette",
+			"de/sie-sah-mich-an-als-wenn-sie-eine-erklaerung-erwartete",
+			"de/sie-kommt-morgen-und-zwar-frueh",
+		],
+	},
+	{
 		id: "de/bare-infinitive-zu",
 		statement:
 			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART with partType Inf and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB. Where a Locution's or Saying's Canonical Form spells zu (alle Hände voll zu tun haben), zu is that unit's member.",

@@ -222,3 +222,99 @@ test("anchors: a rejected spelled-apart pair leaves auf and Grund to the route C
 	expect(units.map(({ segments }) => segments)).toContainEqual([6]);
 	expect(units.map(({ segments }) => segments)).toContainEqual([8]);
 });
+
+/** A two-word conjunction's sentence, its accepted pair and its unit. */
+type TwoWordCase = {
+	readonly text: string;
+	readonly pair: string;
+	readonly segments: readonly number[];
+	readonly route: ReturnType<typeof route>;
+};
+
+const twoWordConjunctions: readonly TwoWordCase[] = [
+	{
+		// Er0 _1 tat2 ,3 _4 als5 _6 ob7 …
+		text: "Er tat, als ob er die Nachricht nicht gehört hätte.",
+		pair: "3_4",
+		segments: [5, 7],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Sie0 _1 sah2 _3 mich4 _5 an6 ,7 _8 als9 _10 wenn11 …
+		text: "Sie sah mich an, als wenn sie eine Erklärung erwartete.",
+		pair: "5_6",
+		segments: [9, 11],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Auch0 _1 wenn2 …
+		text: "Auch wenn es regnet, gehen wir.",
+		pair: "1_2",
+		segments: [0, 2],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Er0 _1 sagte2 _3 nichts4 ,5 _6 nur7 _8 dass9 …
+		text: "Er sagte nichts, nur dass er müde sei.",
+		pair: "4_5",
+		segments: [7, 9],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Kaum0 _1 dass2 …
+		text: "Kaum dass er ankam, regnete es.",
+		pair: "1_2",
+		segments: [0, 2],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Alles0 _1 lief2 _3 gut4 ,5 _6 außer7 _8 dass9 … (de/dass-conjunction)
+		text: "Alles lief gut, außer dass es regnete.",
+		pair: "4_5",
+		segments: [7, 9],
+		route: route("Locution", "SCONJ"),
+	},
+	{
+		// Sie0 _1 kommt2 _3 morgen4 ,5 _6 und7 _8 zwar9 …
+		text: "Sie kommt morgen, und zwar früh.",
+		pair: "4_5",
+		segments: [7, 9],
+		route: route("Locution", "CCONJ"),
+	},
+];
+
+test("anchors: a two-word conjunction's adjacent words route the Kind de/two-word-conjunction names, whichever route the route Choice picks", async () => {
+	for (const entry of twoWordConjunctions)
+		for (const key of allRoutes)
+			expect(
+				await routeOf(entry.text, entry.segments, {
+					[`c_${entry.pair}`]: noul(0.9),
+					[`r_${entry.pair}`]: heard(key),
+				}),
+			).toEqual(entry.route);
+});
+
+test("anchors: auch and wenn split by a comma, though joined, are left to the route Choice", async () => {
+	// Er0 _1 hilft2 _3 auch4 ,5 _6 wenn7 _8 es9 _10 regnet11 .12
+	const text = "Er hilft auch, wenn es regnet.";
+	for (const [family, kind] of [
+		["Locution", "ADV"],
+		["Locution", "CCONJ"],
+	] as const)
+		expect(
+			await routeOf(text, [4, 7], {
+				c_3_4: noul(0.9),
+				r_3_4: heard(`${family}/${kind}`),
+			}),
+		).toEqual(route(family, kind));
+});
+
+test("anchors: a rejected two-word conjunction leaves both words apart", async () => {
+	const units = await unitsOf("Auch wenn es regnet, gehen wir.", {
+		c_1_2: noul(0.3),
+	});
+	const grouped = units.map((unit) => unit.segments.join());
+	expect(grouped).toContain("0");
+	expect(grouped).toContain("2");
+	expect(grouped).not.toContain("0,2");
+});

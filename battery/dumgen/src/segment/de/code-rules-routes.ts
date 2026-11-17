@@ -103,6 +103,13 @@ const dassConjunctions: ReadonlySet<string> = new Set(
 const zuInfinitives: ReadonlySet<string> = new Set(
 	germanConjunctionLocutions.zuInfinitive,
 );
+/** The two-word conjunctions whose words stand side by side (de/two-word-conjunction). */
+const adjacentSubordinators: ReadonlySet<string> = new Set(
+	germanConjunctionLocutions.adjacentSubordinators,
+);
+const adjacentCoordinators: ReadonlySet<string> = new Set(
+	germanConjunctionLocutions.adjacentCoordinators,
+);
 const coordinatingCorrelators: ReadonlySet<string> = new Set([
 	"entweder … oder",
 	"weder … noch",
@@ -124,17 +131,21 @@ const adverbialCorrelators: ReadonlySet<string> = new Set([
 /**
  * The Kind each anchored unit takes, by the name of the correlator or
  * conjunction it forms: de/correlator-anchors's CCONJ, SCONJ and ADV, the
- * zu-infinitive and X-dass conjunctions' Locution SCONJ, and so dass's
+ * zu-infinitive and X-dass conjunctions' Locution SCONJ, the two-word
+ * conjunctions' SCONJ and CCONJ, and so dass's
  * Lexeme SCONJ sodass (de/dass-conjunction). So and dass side by side
  * (`adjacent`) are sodass's spelling, whichever name proposed them: the
- * correlator so … dass is proposed for any two pieces so and dass. A name
- * no Rule gives a Kind (als ob, und zwar, kaum dass) is left to the route
- * Choice.
+ * correlator so … dass is proposed for any two pieces so and dass. A
+ * two-word conjunction (de/two-word-conjunction) is Locution SCONJ, or
+ * CCONJ for und zwar, only while its words stand side by side: auch, wenn
+ * across a comma is left to the route Choice.
  */
 function anchoredRoute(name: string, adjacent: boolean): RouteKey | undefined {
 	const spelled = name.replace("daß", "dass");
 	if (adjacent && (spelled === "so dass" || spelled === "so … dass"))
 		return "Lexeme/SCONJ";
+	if (adjacent && adjacentSubordinators.has(spelled)) return "Locution/SCONJ";
+	if (adjacent && adjacentCoordinators.has(spelled)) return "Locution/CCONJ";
 	if (
 		dassConjunctions.has(spelled) ||
 		zuInfinitives.has(spelled) ||

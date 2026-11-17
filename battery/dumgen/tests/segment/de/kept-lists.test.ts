@@ -56,8 +56,12 @@ test("every circumposition in dumcorpus's ADP Case Table is a pair Dumgen propos
 	}
 });
 
-test("every dass Locution is an adjacent conjunction Dumgen proposes by its name", () => {
-	for (const name of germanConjunctionLocutions.dass) {
+test("every dass Locution and two-word conjunction is an adjacent conjunction Dumgen proposes by its name", () => {
+	for (const name of [
+		...germanConjunctionLocutions.dass,
+		...germanConjunctionLocutions.adjacentSubordinators,
+		...germanConjunctionLocutions.adjacentCoordinators,
+	]) {
 		const [first, second] = name.split(" ");
 		if (!first || !second) throw Error(`Not a two-word name: ${name}`);
 		expect(correlatorNames(first, second)).toContain(name);

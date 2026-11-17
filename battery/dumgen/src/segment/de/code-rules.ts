@@ -16,13 +16,15 @@
  *   judge rejected the pair: Da kann ich nichts für gives [Da, für],
  *   a Lexeme ADV.
  * - `anchors` (de/correlator-anchors, de/dass-conjunction,
- *   de/complex-preposition): an accepted correlator, X-dass subordinator or
+ *   de/two-word-conjunction, de/complex-preposition): an accepted correlator, X-dass subordinator or
  *   circumposition is one Locution of its anchors only, the auch and nur of
  *   sowohl … als auch and nicht nur … sondern auch included. The words they
  *   connect or govern stay outside. A unit of exactly those anchors routes
  *   the Kind its Rule names: CCONJ entweder … oder, SCONJ je … desto and
- *   um … zu, ADV teils … teils, and Lexeme SCONJ for so dass, the
- *   spelling of sodass (de/dass-conjunction). A unit of exactly an
+ *   um … zu, ADV teils … teils, Lexeme SCONJ for so dass, the
+ *   spelling of sodass (de/dass-conjunction), and for two words side by
+ *   side SCONJ als ob, auch wenn or kaum dass and CCONJ und zwar
+ *   (de/two-word-conjunction). A unit of exactly an
  *   accepted circumposition's two pieces that no zu-infinitive conjunction
  *   names routes Locution ADP (de/bracket-particle-or-circumposition,
  *   #1162). An accepted one-word preposition written as two words

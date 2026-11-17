@@ -27,8 +27,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/two-word-conjunction", "hash": "ab69c269ed61f585" }
+		],
 		"references": []
 	},
 	"targets": [
