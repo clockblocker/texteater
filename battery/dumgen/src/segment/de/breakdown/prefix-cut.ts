@@ -130,9 +130,10 @@ function testedPrefix(analysis: WordAnalysis | undefined) {
 /**
  * The analysis question's options and pick once every analysis that cuts
  * an affix-tested prefix off the word passes the affix test: asked, one
- * request per prefix and base, only when such an analysis is the pick or
- * one of its contenders (`word-senses.ts`). One that fails leaves the
- * options, and when it was the pick, the heaviest option left is.
+ * request per prefix and base, all at once, only when such an analysis is
+ * the pick or one of its contenders (`word-senses.ts`). One that fails
+ * leaves the options, and when it was the pick, the heaviest option left
+ * is.
  */
 export const withTestedPrefixes = Effect.fnUntraced(function* (
 	options: readonly Weighed[],
@@ -154,17 +155,23 @@ export const withTestedPrefixes = Effect.fnUntraced(function* (
 		const cut = testedPrefix(analysis);
 		if (cut !== undefined) cuts.set(`${cut.prefix} ${cut.base}`, cut);
 	}
-	const failed = new Set<string>();
-	for (const [id, { prefix, base }] of cuts)
-		if (
-			!(yield* prefixCutConfirmed(
-				prefix,
-				{ letters: base, noun: word.kind === "NOUN" },
-				word.whole,
-				ask,
-			))
-		)
-			failed.add(id);
+	const confirmed = yield* Effect.forEach(
+		cuts,
+		([id, { prefix, base }]) =>
+			Effect.map(
+				prefixCutConfirmed(
+					prefix,
+					{ letters: base, noun: word.kind === "NOUN" },
+					word.whole,
+					ask,
+				),
+				(passed) => ({ id, passed }),
+			),
+		{ concurrency: "unbounded" },
+	);
+	const failed = new Set(
+		confirmed.flatMap(({ id, passed }) => (passed ? [] : [id])),
+	);
 	if (failed.size === 0) return { options, picked };
 	const fails = (analysis: WordAnalysis | undefined) => {
 		const cut = testedPrefix(analysis);

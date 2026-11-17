@@ -154,7 +154,8 @@ const testedPrefixOf = (split: Split) => {
 
 /**
  * The splits without those whose fossil-prone prefix jev weighs
- * unconfirmed, one request per prefix, which names the word it leaves.
+ * unconfirmed, one request per prefix, all at once, each naming the word
+ * it leaves.
  */
 const withoutUnconfirmedPrefixes = Effect.fnUntraced(function* (
 	splits: readonly Split[],
@@ -169,20 +170,26 @@ const withoutUnconfirmedPrefixes = Effect.fnUntraced(function* (
 			return cut === undefined ? [] : [[cut.prefix, cut.letters]];
 		}),
 	);
-	const failed = new Set<string>();
-	for (const [prefix, letters] of prefixes)
-		if (
-			!(yield* prefixCutConfirmed(
-				prefix,
-				{
-					letters: word.form.slice(letters.length),
-					noun: word.kind === "NOUN",
-				},
-				{ key: "word", state },
-				ask,
-			))
-		)
-			failed.add(prefix);
+	const confirmed = yield* Effect.forEach(
+		prefixes,
+		([prefix, letters]) =>
+			Effect.map(
+				prefixCutConfirmed(
+					prefix,
+					{
+						letters: word.form.slice(letters.length),
+						noun: word.kind === "NOUN",
+					},
+					{ key: "word", state },
+					ask,
+				),
+				(passed) => ({ prefix, passed }),
+			),
+		{ concurrency: "unbounded" },
+	);
+	const failed = new Set(
+		confirmed.flatMap(({ prefix, passed }) => (passed ? [] : [prefix])),
+	);
 	return splits.filter((split) => {
 		const cut = testedPrefixOf(split);
 		return cut === undefined || !failed.has(cut.prefix);

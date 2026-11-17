@@ -4,7 +4,8 @@
  * answers, in the stage `breakdown-senses`, whether each contending
  * analysis gives the sense the Reading's emoji names, one yes or no each in
  * one request, and, when two or more analyses contend, which of these
- * splits gives it, one choice over them in a second request. The
+ * splits gives it, one choice over them in a second request sent
+ * alongside the first. The
  * questions name the word with its article and the emoji, and carry a
  * concrete test or claim written by code from each analysis's shape
  * (`sense-prompts.ts`).
@@ -141,8 +142,8 @@ export function bestContender(
 /**
  * The analysis a word breaks down by once its sense is checked: `picked`,
  * the analysis question's pick, unless the word is contested, then the
- * contender with the best score; in one request, and a second when two or
- * more analyses contend.
+ * contender with the best score; in one request, and a second alongside
+ * it when two or more analyses contend.
  */
 export const senseChecked = Effect.fnUntraced(function* (
 	options: readonly Weighed[],
@@ -167,16 +168,22 @@ export const senseChecked = Effect.fnUntraced(function* (
 			noul(senseQuestion(analysis, word.cited, emoji, word.kind)),
 		]),
 	);
-	const answers = yield* ask({
-		stage: "breakdown-senses",
-		state: word.whole.state,
-		questions,
-	});
+	// The choice reads none of the yes-or-no answers, so both go out at once.
+	const [answers, shares] = yield* Effect.all(
+		[
+			ask({
+				stage: "breakdown-senses",
+				state: word.whole.state,
+				questions,
+			}),
+			splitShares(analyses, { ...word, emoji }, ask),
+		],
+		{ concurrency: "unbounded" },
+	);
 	const gives = Math.max(
 		0,
 		...analyses.map((_, index) => noulOf(answers, `s_${index}`)),
 	);
-	const shares = yield* splitShares(analyses, { ...word, emoji }, ask);
 	const fitOf = (analysis: WordAnalysis | undefined) =>
 		analysis === undefined
 			? 1 - gives
