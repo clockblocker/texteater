@@ -21,7 +21,7 @@ import {
 	type LunaAsk,
 	LunaConfiguration,
 	type LunaDraft,
-	type LunaRequest,
+	lunaRequestOf,
 } from "./luna.js";
 import { createOpenAILuna, type OpenAILunaOptions } from "./openai-luna.js";
 
@@ -33,7 +33,10 @@ export class LunaTransport extends Context.Service<
 	/** Luna through the OpenAI Responses API (`createOpenAILuna`); an empty key is a Defect when it is built. */
 	static readonly openAI = (options: OpenAILunaOptions) =>
 		Layer.sync(LunaTransport, () => ({ ask: createOpenAILuna(options) }));
-	/** The host's own `LunaAsk`: the lab's cache or batch, or a test's fake. */
+	/**
+	 * The host's own `LunaAsk`: the lab's cache or batch, a host's stored
+	 * batch answers in front of OpenAI (`storedLunaAsk`), or a test's fake.
+	 */
 	static readonly fromAsk = (ask: LunaAsk) =>
 		Layer.succeed(LunaTransport, { ask });
 }
@@ -96,38 +99,68 @@ export class Luna extends Context.Service<
 			const configuration = yield* LunaConfiguration;
 			return Luna.of({
 				ask: (stage, draft, check) => {
-					const { maxOutputTokens, ...asked } = draft;
-					const request: LunaRequest = { ...asked, configuration };
-					return callModel(budget, {
-						stage,
-						executor: "luna",
-						request,
-						send: (signal) =>
-							transport.ask(request, {
-								stage,
-								signal,
-								...(maxOutputTokens === undefined
-									? {}
-									: { maxOutputTokens }),
-							}),
-						tokens: (response) => lunaTokens(response.metadata),
-						check: (response) => {
-							const problem = isRecord(response.metadata)
-								? response.metadata.problem
-								: undefined;
-							return response.output === undefined &&
-								typeof problem === "string"
-								? new InvalidModelOutput({
-										stage,
-										message: problem,
-									})
-								: check(response.output);
-						},
+					const { request, maxOutputTokens } = lunaRequestOf(
+						draft,
+						configuration,
+					);
+					const exchange = (live: boolean) => {
+						let stored: string | undefined;
+						const asked = callModel(budget, {
+							stage,
+							executor: "luna",
+							request,
+							send: async (signal) => {
+								const response = await transport.ask(request, {
+									stage,
+									signal,
+									...(maxOutputTokens === undefined
+										? {}
+										: { maxOutputTokens }),
+									...(live ? { live } : {}),
+								});
+								stored = storedAnswerOf(response.metadata);
+								return response;
+							},
+							tokens: (response) => lunaTokens(response.metadata),
+							storedAnswer: (response) =>
+								storedAnswerOf(response.metadata),
+							check: (response) => {
+								const problem = isRecord(response.metadata)
+									? response.metadata.problem
+									: undefined;
+								return response.output === undefined &&
+									typeof problem === "string"
+									? new InvalidModelOutput({
+											stage,
+											message: problem,
+										})
+									: check(response.output);
+							},
+						});
+						return { asked, stored: () => stored };
+					};
+					// A stored answer its check refuses is dropped: Luna is asked.
+					return Effect.suspend(() => {
+						const first = exchange(false);
+						return first.asked.pipe(
+							Effect.catchIf(
+								(failure) =>
+									failure._tag === "InvalidModelOutput" &&
+									first.stored() !== undefined,
+								() => exchange(true).asked,
+							),
+						);
 					});
 				},
 			});
 		}),
 	);
+}
+
+/** The source a transport names in a response's metadata when it answered from a stored answer. */
+function storedAnswerOf(metadata: unknown): string | undefined {
+	const source = isRecord(metadata) ? metadata.storedAnswer : undefined;
+	return typeof source === "string" ? source : undefined;
 }
 
 /** Sends one Luna request under the request budget and checks its output. */

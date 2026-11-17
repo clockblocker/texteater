@@ -7,10 +7,10 @@
 import { relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { LunaAsk } from "../../src/luna.js";
+import type { LunaBatch } from "../../src/luna-batch.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { CaseFilter } from "../run-directory.js";
 import { type FrozenSet, isFrozen } from "./frozen-sets.js";
-import type { LunaBatch } from "./luna-batch.js";
 import type {
 	CachedModels,
 	GrammarCaps,

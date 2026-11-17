@@ -60,18 +60,38 @@ export type LunaResponse = {
 
 /**
  * Sends one request to Luna. Like `JevAsk`, it must settle promptly once
- * `signal` aborts, and anything it throws is a `ProviderFailure`.
+ * `signal` aborts, and anything it throws is a `ProviderFailure`. A
+ * transport may answer from answers it stored (`storedLunaAsk`) unless
+ * `live` asks for the model's own: the `Luna` service asks so when a stored
+ * answer failed its check.
  */
 export type LunaAsk = (
 	request: LunaRequest,
 	context: {
 		readonly stage: string;
 		readonly signal: AbortSignal;
+		readonly live?: boolean;
 	} & OutputLimit,
 ) => Promise<LunaResponse>;
 
 /** The model and settings of a Luna request. */
 export type LunaConfiguration = LunaRequest["configuration"];
+
+/**
+ * The request a draft becomes under `configuration`, and its output limit
+ * beside it, as the `Luna` service sends it; a host asking a request ahead
+ * of its click builds it the same way (#1351).
+ */
+export function lunaRequestOf(
+	draft: LunaDraft,
+	configuration: LunaConfiguration,
+): { readonly request: LunaRequest } & OutputLimit {
+	const { maxOutputTokens, ...asked } = draft;
+	return {
+		request: { ...asked, configuration },
+		...(maxOutputTokens === undefined ? {} : { maxOutputTokens }),
+	};
+}
 
 /**
  * The Luna configuration Dumgen's writing calls use unless the host passes

@@ -17,6 +17,7 @@ import * as Result from "effect/Result";
 import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
 import { type Jev, stageAsk } from "../../jev-call.js";
+import type { LunaDraft } from "../../luna.js";
 import type { Luna } from "../../luna-call.js";
 import type { Ask } from "../../segment/ask.js";
 import type { Route } from "../../segment/segmented-sentence.js";
@@ -30,7 +31,7 @@ import {
 	type OpenAnswer,
 } from "./closed-class.js";
 import type { MatchedRealization } from "./closed-realizations.js";
-import { resolveOpenRoute } from "./open-route.js";
+import { openRouteCanonicalAhead, resolveOpenRoute } from "./open-route.js";
 import { Answered, type Unresolved } from "./questions.js";
 import { type Target, targetOf, targetState } from "./target.js";
 
@@ -44,39 +45,63 @@ type Outcome =
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /**
- * A closed DET or PRON unit, or a Locution DET or PRON an inventory
- * authors: the authored cells its spelling realizes, and the cell
- * question when several remain. None realized on a Closed Route is a
- * Catalog Miss (ADR 0021); a Locution none realizes is left to the open
- * route (`undefined`).
+ * What the authored identities make of a closed unit, or a Locution DET or
+ * PRON, before anything is asked: a Catalog Miss, the cells its spelling
+ * realizes, or `undefined` for a Locution none realizes, which the open
+ * route resolves. None realized on a Closed Route is a Catalog Miss (ADR
+ * 0021).
  */
-const resolveAuthored = Effect.fnUntraced(function* (
-	target: Target,
-	input: ResolveGrammarInput,
-	ask: Ask,
-): Effect.fn.Return<Outcome | undefined, ProviderFailure | InvalidModelOutput> {
+function authoredPlan(target: Target, input: ResolveGrammarInput) {
 	const { kind, family } = target.route;
 	const closed = closedRoute(target.route);
 	if (kind !== "DET" && kind !== "PRON")
 		return {
-			_tag: "CatalogMiss",
+			_tag: "CatalogMiss" as const,
 			message: `No authored identity resolves a ${kind} unit`,
 		};
 	const { options, lemma } = authoredOptions(
 		target,
 		family === "Lexeme" ? input.unit.identity : undefined,
 	);
+	if (options.length > 0) return { _tag: "Options" as const, options, lemma };
+	return closed
+		? {
+				_tag: "CatalogMiss" as const,
+				message:
+					target.members.length === 1 && !input.unit.identity
+						? `No authored identity was stored for this ${kind} unit`
+						: `No authored ${kind} ${lemma} is spelled ${target.members.map(({ text }) => text).join(" ")}`,
+			}
+		: undefined;
+}
+
+/**
+ * Whether a unit on `route` is first offered to the authored identities. A
+ * Locution DET or PRON an inventory authors resolves as authored too. A
+ * PART, closed as well, is closed on the open route: its spelling or
+ * Luna's headword must name an authored particle.
+ */
+const authoredFirst = (route: Route) =>
+	(closedRoute(route) && route.kind !== "PART") ||
+	route.kind === "DET" ||
+	route.kind === "PRON";
+
+/**
+ * A closed DET or PRON unit, or a Locution DET or PRON an inventory
+ * authors: the authored cells its spelling realizes, and the cell
+ * question when several remain (`authoredPlan`); `undefined` leaves it to
+ * the open route.
+ */
+const resolveAuthored = Effect.fnUntraced(function* (
+	target: Target,
+	input: ResolveGrammarInput,
+	ask: Ask,
+): Effect.fn.Return<Outcome | undefined, ProviderFailure | InvalidModelOutput> {
+	const planned = authoredPlan(target, input);
+	if (planned?._tag !== "Options") return planned;
+	const { options, lemma } = planned;
 	const [only] = options;
-	if (!only)
-		return closed
-			? {
-					_tag: "CatalogMiss",
-					message:
-						target.members.length === 1 && !input.unit.identity
-							? `No authored identity was stored for this ${kind} unit`
-							: `No authored ${kind} ${lemma} is spelled ${target.members.map(({ text }) => text).join(" ")}`,
-				}
-			: undefined;
+	if (!only) throw Error("An authored plan lists its options");
 	if (options.length === 1)
 		return {
 			_tag: "Attestation",
@@ -143,6 +168,25 @@ function realizationOf(
 }
 
 /**
+ * The Canonical Form request a click on the unit sends to Luna before jev
+ * answers, as `resolveGermanGrammar` would send it, or none: for an
+ * Unresolved unit, one the authored identities resolve, and one whose
+ * headword code or a stored Lemma is to write (#1351). A host asks it
+ * ahead of the click; the click's own request is the one that counts.
+ */
+export function germanCanonicalAhead(
+	input: ResolveGrammarInput,
+): LunaDraft | undefined {
+	const { unit } = input;
+	if (unit.route === "Unresolved") return undefined;
+	const route: Route = unit.route;
+	const target = targetOf(input.sentence, unit, route);
+	if (authoredFirst(route) && authoredPlan(target, input) !== undefined)
+		return undefined;
+	return openRouteCanonicalAhead(target, input.lemmaCandidates);
+}
+
+/**
  * Resolves one click on a German Sentence that segmented. A unit that is no
  * unit of its Sentence is bad input, a Defect raised before anything is
  * asked.
@@ -163,15 +207,9 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 	const route: Route = unit.route;
 	const target = targetOf(input.sentence, unit, route);
 	const ask = yield* stageAsk;
-	// A Locution DET or PRON an inventory authors resolves as authored too.
-	// A PART, closed as well, is closed on the open route: its spelling or
-	// Luna's headword must name an authored particle.
-	const authored =
-		(closedRoute(route) && route.kind !== "PART") ||
-		route.kind === "DET" ||
-		route.kind === "PRON"
-			? yield* resolveAuthored(target, input, ask)
-			: undefined;
+	const authored = authoredFirst(route)
+		? yield* resolveAuthored(target, input, ask)
+		: undefined;
 	const outcome: Outcome =
 		authored ??
 		(yield* resolveOpenRoute(

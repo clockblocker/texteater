@@ -4,7 +4,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { isRecord } from "common-utils";
 import { guardGrammarBudget } from "../../../cli/evaluate.js";
-import { createOpenAILunaBatch } from "../../../lab/evaluation/luna-batch.js";
 import {
 	freezeGrammarSets,
 	type GrammarCase,
@@ -24,6 +23,7 @@ import {
 	wilson,
 } from "../../../lab/evaluation/resolve-grammar/scoring.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import { createOpenAILunaBatch } from "../../../src/luna-batch.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { completedResponse, fakeOpenAI, userInputOf } from "./fake-openai.js";

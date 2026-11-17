@@ -1,6 +1,7 @@
 /**
- * Luna requests sent through OpenAI's Batch API, for evaluation runs only
- * (#891); production clicks stay synchronous through `createOpenAILuna`.
+ * Luna requests sent through OpenAI's Batch API: an evaluation's (#891),
+ * and a host's requests asked ahead of the clicks that will send them
+ * (#1351); a click itself stays synchronous through `createOpenAILuna`.
  *
  * One batch is one JSONL file of `/v1/responses` lines, each
  * `{custom_id, method: "POST", url: "/v1/responses", body}`, uploaded to
@@ -19,12 +20,14 @@
  * `lunaResponseOf`, so a cache filled by a batch replays as one filled
  * synchronously does. Nothing is retried: a line that failed, or that the
  * batch never ran, comes back as a failure for its request alone.
+ *
+ * `settle` waits for a batch in one process, as an evaluation does; a host
+ * that cannot wait, such as a Convex action, looks at the batch once per
+ * scheduled run with `check`, and reads a final batch's lines with `lines`.
  */
-import { messageOf } from "common-utils";
-import { z } from "zod";
-import type { LunaRequest, LunaResponse } from "../../src/luna.js";
-import { lunaResponseOf, lunaResponsesBody } from "../../src/openai-luna.js";
-import { parseStoredJson } from "../stored-json.js";
+import { isRecord, messageOf } from "common-utils";
+import type { LunaRequest, LunaResponse } from "./luna.js";
+import { lunaResponseOf, lunaResponsesBody } from "./openai-luna.js";
 
 /** The HTTP calls a batch makes; the runtime's `fetch` fits. */
 export type BatchFetch = (
@@ -68,12 +71,47 @@ type SettledBatch = {
 	readonly usage?: unknown;
 };
 
-/** Sends a batch of Luna requests and waits for its answers. */
+/** A batch as one look at it finds it. */
+export type BatchState = {
+	readonly id: string;
+	readonly status: string;
+	/** Whether the status is final: `completed`, `failed`, `expired` or `cancelled`. */
+	readonly final: boolean;
+	readonly outputFileId?: string;
+	readonly errorFileId?: string;
+	/** What OpenAI's batch object reports: request counts and token usage. */
+	readonly requestCounts?: unknown;
+	readonly usage?: unknown;
+	/** The batch's own errors, joined; empty when it reports none. */
+	readonly errors: string;
+};
+
+/**
+ * One line of a final batch's output or error file: the Responses API body
+ * as JSON, to be read by `lunaResponseOf` with the request it answers, or
+ * why the line has none.
+ */
+export type BatchLine =
+	| { readonly customId: string; readonly ok: true; readonly body: string }
+	| {
+			readonly customId: string;
+			readonly ok: false;
+			readonly message: string;
+	  };
+
+/** Sends a batch of Luna requests and reads its answers. */
 export type LunaBatch = {
 	submit(
 		requests: readonly BatchRequest[],
 		signal: AbortSignal,
 	): Promise<SubmittedBatch>;
+	/** One look at the batch, with no wait. */
+	check(id: string, signal: AbortSignal): Promise<BatchState>;
+	/** A final batch's output and error lines, in the files' order. */
+	lines(
+		batch: BatchState,
+		signal: AbortSignal,
+	): Promise<readonly BatchLine[]>;
 	/** Polls until the batch is final, then reads its output and error files. */
 	settle(
 		id: string,
@@ -124,45 +162,66 @@ type OutputLine = {
 	} | null;
 };
 
-const batchObjectSchema = z.object({
-	id: z.string().optional(),
-	status: z.string().optional(),
-	output_file_id: z.string().nullable().optional(),
-	error_file_id: z.string().nullable().optional(),
-	request_counts: z.unknown().optional(),
-	usage: z.unknown().optional(),
-	errors: z
-		.object({
-			data: z
-				.array(z.object({ message: z.string().optional() }))
-				.optional(),
-		})
-		.nullable()
-		.optional(),
-}) satisfies z.ZodType<BatchObject>;
+/** A check of one parsed JSON value: whether it has the expected shape. */
+type Shape<T> = (value: unknown) => value is T;
 
-const outputLineSchema = z.object({
-	custom_id: z.string().optional(),
-	response: z
-		.object({
-			status_code: z.number().optional(),
-			body: z.unknown().optional(),
-		})
-		.nullable()
-		.optional(),
-	error: z
-		.object({
-			code: z.string().optional(),
-			message: z.string().optional(),
-		})
-		.nullable()
-		.optional(),
-}) satisfies z.ZodType<OutputLine>;
+const optional =
+	<T>(shape: Shape<T>) =>
+	(value: unknown): value is T | undefined =>
+		value === undefined || shape(value);
+const nullable =
+	<T>(shape: Shape<T>) =>
+	(value: unknown): value is T | null | undefined =>
+		value === null || optional(shape)(value);
+const isString = (value: unknown): value is string => typeof value === "string";
+const isNumber = (value: unknown): value is number => typeof value === "number";
 
-const uploadedFileSchema = z.object({ id: z.string().optional() });
+const isBatchObject: Shape<BatchObject> = (value): value is BatchObject => {
+	if (!isRecord(value)) return false;
+	const { id, status, output_file_id, error_file_id, errors } = value;
+	if (
+		!optional(isString)(id) ||
+		!optional(isString)(status) ||
+		!nullable(isString)(output_file_id) ||
+		!nullable(isString)(error_file_id)
+	)
+		return false;
+	if (errors === undefined || errors === null) return true;
+	if (!isRecord(errors)) return false;
+	const { data } = errors;
+	return (
+		data === undefined ||
+		(Array.isArray(data) &&
+			data.every(
+				(entry) => isRecord(entry) && optional(isString)(entry.message),
+			))
+	);
+};
+
+const isOutputLine: Shape<OutputLine> = (value): value is OutputLine => {
+	if (!isRecord(value)) return false;
+	const { custom_id, response, error } = value;
+	if (!optional(isString)(custom_id)) return false;
+	if (
+		response !== undefined &&
+		response !== null &&
+		!(isRecord(response) && optional(isNumber)(response.status_code))
+	)
+		return false;
+	return (
+		error === undefined ||
+		error === null ||
+		(isRecord(error) &&
+			optional(isString)(error.code) &&
+			optional(isString)(error.message))
+	);
+};
+
+const isUploadedFile = (value: unknown): value is { readonly id?: string } =>
+	isRecord(value) && optional(isString)(value.id);
 
 /** The JSONL line one request becomes. */
-function batchLineOf(
+function inputLineOf(
 	{ customId, request }: BatchRequest,
 	options: { readonly promptCaching?: boolean } = {},
 ): string {
@@ -178,10 +237,13 @@ function batchLineOf(
 	});
 }
 
-/** One output or error line's answer for its request. */
-function answerOf(line: OutputLine, request: LunaRequest): BatchAnswer {
+/** One output or error line as a `BatchLine`, or nothing without its custom_id. */
+function batchLineOf(line: OutputLine): BatchLine | undefined {
+	const customId = line.custom_id;
+	if (customId === undefined) return undefined;
 	if (line.error)
 		return {
+			customId,
 			ok: false,
 			message: `OpenAI batch line failed: ${line.error.code ?? "error"}: ${line.error.message ?? ""}`,
 		};
@@ -189,15 +251,70 @@ function answerOf(line: OutputLine, request: LunaRequest): BatchAnswer {
 	const body = JSON.stringify(line.response?.body ?? null);
 	if (status === undefined || status < 200 || status >= 300)
 		return {
+			customId,
 			ok: false,
 			message: `OpenAI answered ${status ?? "no status"}: ${body.slice(0, 200)}`,
 		};
+	return { customId, ok: true, body };
+}
+
+/** One line's answer for its request. */
+function answerOf(line: BatchLine, request: LunaRequest): BatchAnswer {
+	if (!line.ok) return { ok: false, message: line.message };
 	try {
-		return { ok: true, response: lunaResponseOf(body, request) };
+		return { ok: true, response: lunaResponseOf(line.body, request) };
 	} catch (error) {
 		return { ok: false, message: messageOf(error) };
 	}
 }
+
+/** JSON `text`, checked by `shape`; one it rejects throws, naming `what`. */
+function parsedJson<T>(shape: Shape<T>, text: string, what: string): T {
+	let value: unknown;
+	try {
+		value = JSON.parse(text);
+	} catch {
+		throw Error(`${what} is not JSON: ${text.slice(0, 200)}`);
+	}
+	if (!shape(value))
+		throw Error(`${what} is not as expected: ${text.slice(0, 200)}`);
+	return value;
+}
+
+/** What one look at a batch object finds. */
+function stateOf(id: string, batch: BatchObject): BatchState {
+	const status = batch.status ?? "unknown";
+	return {
+		id,
+		status,
+		final: finalStatuses.has(status),
+		...(batch.output_file_id ? { outputFileId: batch.output_file_id } : {}),
+		...(batch.error_file_id ? { errorFileId: batch.error_file_id } : {}),
+		...(batch.request_counts === undefined
+			? {}
+			: { requestCounts: batch.request_counts }),
+		...(batch.usage === undefined ? {} : { usage: batch.usage }),
+		errors:
+			batch.errors?.data
+				?.map(({ message }) => message)
+				.filter(Boolean)
+				.join("; ") ?? "",
+	};
+}
+
+/** Waits `ms`, or rejects once `signal` aborts. */
+const pause = (ms: number, signal: AbortSignal) =>
+	new Promise<void>((resolve, reject) => {
+		const timer = setTimeout(resolve, ms);
+		signal.addEventListener(
+			"abort",
+			() => {
+				clearTimeout(timer);
+				reject(Error("Polling the OpenAI batch was aborted"));
+			},
+			{ once: true },
+		);
+	});
 
 export function createOpenAILunaBatch(
 	options: OpenAILunaBatchOptions,
@@ -237,23 +354,35 @@ export function createOpenAILunaBatch(
 			);
 		return text;
 	};
-	const batchOf = async (id: string, signal: AbortSignal) =>
-		parseStoredJson(
-			batchObjectSchema,
-			await call(`/batches/${id}`, { method: "GET" }, signal),
-			`OpenAI's batch ${id}`,
+	const check = async (id: string, signal: AbortSignal) =>
+		stateOf(
+			id,
+			parsedJson(
+				isBatchObject,
+				await call(`/batches/${id}`, { method: "GET" }, signal),
+				`OpenAI's batch ${id}`,
+			),
 		);
-	const lines = async (fileId: string, signal: AbortSignal) =>
+	const fileLines = async (fileId: string, signal: AbortSignal) =>
 		(await call(`/files/${fileId}/content`, { method: "GET" }, signal))
 			.split("\n")
 			.filter((line) => line.trim())
-			.map((line, index) =>
-				parseStoredJson(
-					outputLineSchema,
-					line,
-					`Line ${index + 1} of OpenAI's file ${fileId}`,
-				),
-			);
+			.flatMap((line, index) => {
+				const read = batchLineOf(
+					parsedJson(
+						isOutputLine,
+						line,
+						`Line ${index + 1} of OpenAI's file ${fileId}`,
+					),
+				);
+				return read ? [read] : [];
+			});
+	const lines = async (batch: BatchState, signal: AbortSignal) => {
+		const read: BatchLine[] = [];
+		for (const fileId of [batch.outputFileId, batch.errorFileId])
+			if (fileId) read.push(...(await fileLines(fileId, signal)));
+		return read;
+	};
 	return {
 		async submit(requests, signal) {
 			if (requests.length === 0) throw Error("A batch needs a request");
@@ -263,7 +392,7 @@ export function createOpenAILunaBatch(
 				);
 			const jsonl = `${requests
 				.map((request) =>
-					batchLineOf(
+					inputLineOf(
 						request,
 						options.promptCaching ? { promptCaching: true } : {},
 					),
@@ -276,14 +405,14 @@ export function createOpenAILunaBatch(
 				new Blob([jsonl], { type: "application/jsonl" }),
 				"luna-batch.jsonl",
 			);
-			const file = parseStoredJson(
-				uploadedFileSchema,
+			const file = parsedJson(
+				isUploadedFile,
 				await call("/files", { method: "POST", body: form }, signal),
 				"OpenAI's file upload",
 			);
 			if (!file.id) throw Error("OpenAI's file upload returned no id");
-			const batch = parseStoredJson(
-				batchObjectSchema,
+			const batch = parsedJson(
+				isBatchObject,
 				await call(
 					"/batches",
 					{
@@ -306,60 +435,36 @@ export function createOpenAILunaBatch(
 				throw Error("OpenAI's batch creation returned no id");
 			return { id: batch.id, inputFileId: file.id };
 		},
-		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+		check,
+		lines,
 		async settle(id, requests, signal) {
-			let batch = await batchOf(id, signal);
-			while (!finalStatuses.has(batch.status ?? "")) {
-				await new Promise<void>((resolve, reject) => {
-					const timer = setTimeout(resolve, pollMs);
-					signal.addEventListener(
-						"abort",
-						() => {
-							clearTimeout(timer);
-							reject(
-								Error("Polling the OpenAI batch was aborted"),
-							);
-						},
-						{ once: true },
-					);
-				});
-				batch = await batchOf(id, signal);
+			let batch = await check(id, signal);
+			while (!batch.final) {
+				await pause(pollMs, signal);
+				batch = await check(id, signal);
 			}
 			const byId = new Map(
 				requests.map((request) => [request.customId, request.request]),
 			);
 			const answers = new Map<string, BatchAnswer>();
-			for (const fileId of [batch.output_file_id, batch.error_file_id])
-				if (fileId)
-					for (const line of await lines(fileId, signal)) {
-						const request =
-							line.custom_id === undefined
-								? undefined
-								: byId.get(line.custom_id);
-						if (request && line.custom_id !== undefined)
-							answers.set(
-								line.custom_id,
-								answerOf(line, request),
-							);
-					}
-			const why =
-				batch.errors?.data
-					?.map(({ message }) => message)
-					.filter(Boolean)
-					.join("; ") ?? "";
+			for (const line of await lines(batch, signal)) {
+				const request = byId.get(line.customId);
+				if (request)
+					answers.set(line.customId, answerOf(line, request));
+			}
 			for (const { customId } of requests)
 				if (!answers.has(customId))
 					answers.set(customId, {
 						ok: false,
-						message: `The OpenAI batch ${id} ended ${batch.status} without an answer for this request${why ? ` (${why})` : ""}`,
+						message: `The OpenAI batch ${id} ended ${batch.status} without an answer for this request${batch.errors ? ` (${batch.errors})` : ""}`,
 					});
 			return {
 				id,
-				status: batch.status ?? "unknown",
+				status: batch.status,
 				answers,
-				...(batch.request_counts === undefined
+				...(batch.requestCounts === undefined
 					? {}
-					: { requestCounts: batch.request_counts }),
+					: { requestCounts: batch.requestCounts }),
 				...(batch.usage === undefined ? {} : { usage: batch.usage }),
 			};
 		},

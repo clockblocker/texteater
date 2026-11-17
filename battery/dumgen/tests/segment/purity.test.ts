@@ -11,8 +11,8 @@ import { operations } from "../../src/operations.js";
  * host has no file system (a Convex action, a short-lived isolate). None of
  * it may import `node:*`, read files or the environment, or reach the
  * evaluator and the jev lab under `lab/`, and it imports packages only from
- * the list here. Only the TypeSafe ask and the OpenAI Luna touch the
- * network; the stages reach jev and Luna through their ports, and
+ * the list here. Only the TypeSafe ask, the OpenAI Luna and its Batch API
+ * runner (#1351) touch the network; the stages reach jev and Luna through their ports, and
  * segmentation never Luna. No production file imports Zod; the Extracted
  * Text schema that did moved to Dumtext with its readers (#1294). Time comes from Effect's
  * `Clock`, so a `TestClock` pins every trace. The models are services
@@ -64,7 +64,11 @@ const forbidden = [
 	/\bperformance\.now\b/u,
 ];
 const network = /\bfetch\(/u;
-const networkFiles = new Set(["segment/typesafe-ask.ts", "openai-luna.ts"]);
+const networkFiles = new Set([
+	"segment/typesafe-ask.ts",
+	"openai-luna.ts",
+	"luna-batch.ts",
+]);
 
 const files = readdirSync(src, { recursive: true, withFileTypes: true })
 	.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))

@@ -5,6 +5,7 @@
 import type { JsonValue } from "@typesafe-ai/sdk";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import type { LunaAsk } from "../../src/luna.js";
+import type { LunaBatch } from "../../src/luna-batch.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { TransportRecord } from "../segmentation/harness/jev-cache.js";
 import type { Spend } from "../segmentation/harness/ledger.js";
@@ -14,7 +15,6 @@ import type {
 } from "../segmentation/harness/pricing.js";
 import type { PricedProjection } from "../segmentation/harness/round.js";
 import type { LabRuntime } from "./lab-runtime.js";
-import type { LunaBatch } from "./luna-batch.js";
 import type { RequestRun } from "./request-diff.js";
 import type {
 	GrammarEvaluated,

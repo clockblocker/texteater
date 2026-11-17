@@ -16,6 +16,7 @@ import type {
 	ProduceKnowledgeInput,
 	TranslationAccumulation,
 } from "./knowledge/types.js";
+import type { LunaDraft } from "./luna.js";
 import type { Luna } from "./luna-call.js";
 import type {
 	GrammarResolution,
@@ -89,6 +90,13 @@ export type LanguageModule = {
 		ProviderFailure | InvalidModelOutput,
 		Needs
 	>;
+	/**
+	 * The Luna request `resolveGrammar` sends for the click before jev
+	 * answers, if any, so a host may ask it ahead (#1351).
+	 */
+	readonly canonicalAhead: (
+		input: ResolveGrammarInput,
+	) => LunaDraft | undefined;
 	/** The body of `knowledge.produce` for a Reading of the language. */
 	readonly produceKnowledge: <E>(
 		input: ProduceKnowledgeInput<E>,

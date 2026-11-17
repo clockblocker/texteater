@@ -20,6 +20,12 @@ export type CallTrace = {
 	/** The Sentence it asked about, counted across the Text from 0. */
 	readonly sentence?: number;
 	readonly executor: "jev" | "luna";
+	/**
+	 * Where the answer came from when the transport answered from a stored
+	 * one instead of asking the model (#1351): its source, such as the
+	 * batch that asked it ahead. Such a call spends no tokens.
+	 */
+	readonly storedAnswer?: string;
 	/** Zero when no answer came back. */
 	readonly inputTokens: number;
 	readonly outputTokens: number;

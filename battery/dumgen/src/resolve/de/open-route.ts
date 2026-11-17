@@ -24,6 +24,7 @@ import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
 import type * as Scope from "effect/Scope";
 import { CallLog } from "../../call.js";
+import type { LunaDraft } from "../../luna.js";
 import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
 import type { LemmaCandidate, ResolveGrammarInput } from "../types.js";
@@ -32,7 +33,10 @@ import { openAttestation } from "./open-route/attestation.js";
 import { judgedOf, plan, readFirst } from "./open-route/first-request.js";
 import { headwordOutside, outsideSurface } from "./open-route/governed.js";
 import { canonicalFormOf } from "./open-route/headword.js";
-import { startHeadword } from "./open-route/headword-writer.js";
+import {
+	canonicalGuessRequest,
+	startHeadword,
+} from "./open-route/headword-writer.js";
 import { reportJudged } from "./open-route/judged-report.js";
 import { nominalCells } from "./open-route/nominal-cells.js";
 import {
@@ -54,6 +58,22 @@ export type OpenOutcome =
 	  }
 	| Unresolved
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
+
+/**
+ * The Canonical Form request a click on a unit on an open route sends
+ * before jev answers, from the plan and hints `resolveOpenRoute` makes;
+ * none when the click sends none then (#1351).
+ */
+export function openRouteCanonicalAhead(
+	target: Target,
+	candidates: readonly LemmaCandidate[],
+): LunaDraft | undefined {
+	return canonicalGuessRequest(
+		target,
+		plan(target),
+		hintsFor(target, candidates),
+	);
+}
 
 /**
  * Resolves a unit on an open route: the grammar request, with the

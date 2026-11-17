@@ -63,6 +63,43 @@ const draftOf = (target: Target, lemma: string, luna: Write) =>
 	);
 
 /**
+ * Who may write the click's headword, as known before jev answers: code,
+ * a stored Lemma, or Luna on a guess at jev's answers (`guessed`), and the
+ * Canonical Form request a judgment makes.
+ */
+function headwordPlan(
+	target: Target,
+	planned: Plan,
+	hints: readonly LemmaCandidate[],
+) {
+	const drafts = draftsEmojiDescription(target.route);
+	const request = (judged: Judged) =>
+		canonicalFormRequest(target, judged, hints, drafts);
+	const coded = codeHeadword(target);
+	const looked = coded ? undefined : lookupHeadword(target, planned, hints);
+	// With nothing to ask jev there is no guess.
+	const guessed =
+		planned.questionnaire.empty || coded || looked?.likely
+			? undefined
+			: guessedJudgment(target, planned);
+	return { drafts, request, coded, looked, guessed };
+}
+
+/**
+ * The Canonical Form request the click sends before jev answers, on its
+ * guess at jev's answers, or none where code or a stored Lemma is to write
+ * the headword: what a host may ask ahead of the click (#1351).
+ */
+export function canonicalGuessRequest(
+	target: Target,
+	planned: Plan,
+	hints: readonly LemmaCandidate[],
+): LunaDraft | undefined {
+	const { request, guessed } = headwordPlan(target, planned, hints);
+	return guessed ? request(guessed) : undefined;
+}
+
+/**
  * Starts the click's headword before jev answers: code's draft of its
  * Emoji Description, or Luna's call on a guess, either ending with the
  * scope unless it is joined. Returns how the headword is had once jev
@@ -75,15 +112,15 @@ export const startHeadword = Effect.fnUntraced(function* (
 	luna: Write,
 	log: CallLog["Service"],
 ): Effect.fn.Return<HeadwordOnceJudged, never, Scope.Scope> {
-	const drafts = draftsEmojiDescription(target.route);
-	const request = (judged: Judged) =>
-		canonicalFormRequest(target, judged, hints, drafts);
+	const { drafts, request, coded, looked, guessed } = headwordPlan(
+		target,
+		planned,
+		hints,
+	);
 	const write = (judged: Judged) =>
 		luna("canonical", request(judged), (output) =>
 			checkWritten(target, judged, output),
 		);
-	const coded = codeHeadword(target);
-	const looked = coded ? undefined : lookupHeadword(target, planned, hints);
 	const draft =
 		coded &&
 		drafts &&
@@ -93,11 +130,6 @@ export const startHeadword = Effect.fnUntraced(function* (
 					{ startImmediately: true },
 				)
 			: undefined;
-	// With nothing to ask jev there is no guess.
-	const guessed =
-		planned.questionnaire.empty || coded || looked?.likely
-			? undefined
-			: guessedJudgment(target, planned);
 	const guess = guessed
 		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
 		: undefined;

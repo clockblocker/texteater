@@ -33,6 +33,7 @@ import { z } from "zod";
 import { DumgenCore } from "../../../src/dumgen-live.js";
 import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import type { LunaBatch } from "../../../src/luna-batch.js";
 import { LunaTransport } from "../../../src/luna-call.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
 import { operations } from "../../../src/operations.js";
@@ -51,7 +52,6 @@ import {
 	onLabRuntime,
 	runOn,
 } from "../lab-runtime.js";
-import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,

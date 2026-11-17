@@ -3,7 +3,6 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { z } from "zod";
-import { createOpenAILunaBatch } from "../../../lab/evaluation/luna-batch.js";
 import { lunaChars } from "../../../lab/evaluation/resolve-grammar/model-pricing.js";
 import type { LunaBatchEvent } from "../../../lab/evaluation/resolve-grammar/models.js";
 import {
@@ -11,6 +10,7 @@ import {
 	readingMetrics,
 } from "../../../lab/evaluation/resolve-reading/experiment.js";
 import { lunaRequestSchema } from "../../../lab/stored-json.js";
+import { createOpenAILunaBatch } from "../../../src/luna-batch.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
 import { completedResponse, fakeOpenAI, userInputOf } from "./fake-openai.js";
 import {

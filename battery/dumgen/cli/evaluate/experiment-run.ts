@@ -25,9 +25,7 @@ const packageRoot = resolve(import.meta.dir, "../..");
 
 /** The transports and the lab harness a run loads, in the order it loads them. */
 async function loadRunModules() {
-	const { createOpenAILunaBatch } = await import(
-		"../../lab/evaluation/luna-batch.js"
-	);
+	const { createOpenAILunaBatch } = await import("../../src/luna-batch.js");
 	const { git } = await import("../../lab/git.js");
 	const { transportText } = await import(
 		"../../lab/segmentation/harness/jev-cache.js"

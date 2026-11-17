@@ -131,6 +131,8 @@ export type Exchange<Response, Output> = {
 	readonly request: unknown;
 	send(signal: AbortSignal): Promise<Response>;
 	tokens(response: Response): CallTokens;
+	/** The stored answer the response is, by its source, when the model was not asked. */
+	storedAnswer?(response: Response): string | undefined;
 	/** The output, or why the response cannot be used. */
 	check(response: Response): Output | InvalidModelOutput;
 };
@@ -313,10 +315,14 @@ export function callModel<Response, Output>(
 					exit,
 					settled?.ok === false ? settled.error : undefined,
 				);
+				const stored = settled?.ok
+					? exchange.storedAnswer?.(settled.response)
+					: undefined;
 				log.settled(index, {
 					stage,
 					...(sentence === undefined ? {} : { sentence }),
 					executor,
+					...(stored === undefined ? {} : { storedAnswer: stored }),
 					...(settled?.ok
 						? exchange.tokens(settled.response)
 						: { inputTokens: 0, outputTokens: 0 }),

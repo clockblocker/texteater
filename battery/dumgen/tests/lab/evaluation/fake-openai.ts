@@ -5,7 +5,7 @@
  * filled either way holds the same answers. No request leaves the process.
  */
 import { isRecord } from "common-utils";
-import type { BatchFetch } from "../../../lab/evaluation/luna-batch.js";
+import type { BatchFetch } from "../../../src/luna-batch.js";
 import type { Fetch } from "../../../src/segment/typesafe-ask.js";
 
 /** A Responses API answer to one request body: its HTTP status and body. */

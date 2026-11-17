@@ -47,10 +47,18 @@ export type {
 	DetectedLanguage,
 	LanguagedText,
 } from "./language/detect.js";
-export type { LunaAsk } from "./luna.js";
-export { Luna, LunaTransport } from "./luna-call.js";
+export type { LunaAsk, LunaRequest } from "./luna.js";
+export {
+	type BatchLine,
+	type BatchRequest,
+	type BatchState,
+	createOpenAILunaBatch,
+	type LunaBatch,
+} from "./luna-batch.js";
+export { Luna, LunaTransport, lunaTokens } from "./luna-call.js";
 export type { OperationTrace } from "./operation-trace.js";
 export { operations } from "./operations.js";
+export { canonicalRequestAhead } from "./resolve/canonical-ahead.js";
 export type {
 	GrammarResolution,
 	JudgedGrammar,
@@ -67,4 +75,9 @@ export type {
 	Unit,
 } from "./segment/segmented-sentence.js";
 export { stitchedText } from "./segment/stitched-text.js";
+export {
+	lunaRequestKey,
+	type StoredLunaAnswer,
+	storedLunaAsk,
+} from "./stored-luna.js";
 export type { TranslateSentenceInput } from "./translate/types.js";
