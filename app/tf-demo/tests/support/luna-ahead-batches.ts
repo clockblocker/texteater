@@ -6,6 +6,7 @@ import {
 	JevTransport,
 	type LunaAsk,
 	type LunaBatch,
+	type LunaBodyAsk,
 	type LunaRequest,
 	LunaTransport,
 	type OperationTrace,
@@ -150,15 +151,42 @@ function recordingLuna() {
 	return { ask, stages };
 }
 
-/** The deployment's transports: the fakes, until `restore`. */
-export function fakeDeployment(batch: LunaBatch | undefined) {
+/**
+ * Luna's exchange asked ahead live: `answer` writes a request's body, or
+ * undefined for an exchange that fails. Keeps each request as it is sent.
+ */
+function fakeLunaBody(answer: (request: LunaRequest) => string | undefined) {
+	const asked: { request: LunaRequest; maxOutputTokens?: number }[] = [];
+	const ask: LunaBodyAsk = async (request, { maxOutputTokens }) => {
+		asked.push({
+			request,
+			...(maxOutputTokens === undefined ? {} : { maxOutputTokens }),
+		});
+		const body = answer(request);
+		if (body === undefined) throw Error("OpenAI answered 500: down");
+		return body;
+	};
+	return { ask, asked };
+}
+
+/**
+ * The deployment's transports: the fakes, until `restore`. With `live`,
+ * the first stretch's requests are asked live through a fake exchange
+ * that answers with it; without, none are, as before a key had one.
+ */
+export function fakeDeployment(
+	batch: LunaBatch | undefined,
+	live?: (request: LunaRequest) => string | undefined,
+) {
 	const luna = recordingLuna();
+	const body = live && fakeLunaBody(live);
 	const restore = replaceModelTransports({
 		jev: () => JevTransport.fromAsk(firstOptionJev),
 		luna: () => LunaTransport.fromAsk(luna.ask),
+		...(body ? { lunaBody: () => body.ask } : {}),
 		...(batch ? { lunaBatch: () => batch } : {}),
 	});
-	return { luna, restore };
+	return { luna, live: body?.asked ?? [], restore };
 }
 
 /**

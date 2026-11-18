@@ -1,7 +1,12 @@
 import { expect, test } from "bun:test";
 import { defaultLunaConfiguration, type LunaRequest } from "../src/luna.js";
 import { lunaTokens } from "../src/luna-call.js";
-import { createOpenAILuna, lunaResponsesBody } from "../src/openai-luna.js";
+import {
+	createOpenAILuna,
+	createOpenAILunaBodyAsk,
+	lunaResponseOf,
+	lunaResponsesBody,
+} from "../src/openai-luna.js";
 import type { Fetch } from "../src/segment/typesafe-ask.js";
 
 const completed = (text: string) =>
@@ -110,6 +115,33 @@ test("sends each request once, and its deadline or the caller's signal ends it",
 	caller.abort();
 	await expect(pending).rejects.toThrow("was aborted");
 	expect(() => createOpenAILuna({ apiKey: " " })).toThrow("API key");
+});
+
+test("the exchange behind it sends the same request and keeps the answer's body unread, which reads as its answer", async () => {
+	const answer = completed('{"value":{"canonicalForm":"Haus"}}');
+	const replies = [
+		{ status: 200, body: answer },
+		{ status: 200, body: answer },
+		{ status: 500, body: "down" },
+	];
+	const { fetch, sent } = fakeFetch(replies);
+	const options = { apiKey: "key-1", fetch, promptCaching: true };
+	const body = await createOpenAILunaBodyAsk(options)(request, {
+		signal: new AbortController().signal,
+		maxOutputTokens: 64,
+	});
+	expect(body).toBe(answer);
+	const live = await createOpenAILuna(options)(request, {
+		...context(),
+		maxOutputTokens: 64,
+	});
+	expect(sent[0]?.init.body).toBe(sent[1]?.init.body);
+	expect(lunaResponseOf(body, request)).toEqual(live);
+	await expect(
+		createOpenAILunaBodyAsk(options)(request, {
+			signal: new AbortController().signal,
+		}),
+	).rejects.toThrow("OpenAI answered 500");
 });
 
 test("JSON wrapped under another single key is unwrapped and marked; JSON without its value or a refusal keeps no output and says why", async () => {

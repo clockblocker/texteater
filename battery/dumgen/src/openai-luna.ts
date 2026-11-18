@@ -27,7 +27,9 @@
  * An exchange's `maxOutputTokens` goes as `max_output_tokens`; an answer
  * cut there is incomplete and throws. The body and the reading of an
  * answer are exported so an evaluation's
- * Batch API lines are sent and read exactly as these requests are.
+ * Batch API lines are sent and read exactly as these requests are, and the
+ * exchange itself, its answer body unread (`createOpenAILunaBodyAsk`), so a
+ * host can keep an answer it asked ahead (#1351).
  */
 
 import { isRecord, messageOf } from "common-utils";
@@ -285,7 +287,21 @@ function responseOf(
 	};
 }
 
-export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
+/**
+ * Sends one Luna request and returns OpenAI's Responses API answer body
+ * unread, as `createOpenAILuna` sends it: for a host that keeps the body
+ * to answer the request later (#1351), read then by `lunaResponseOf` as a
+ * live answer is. A failed exchange throws as `createOpenAILuna`'s does.
+ */
+export type LunaBodyAsk = (
+	request: LunaRequest,
+	context: { readonly signal: AbortSignal } & OutputLimit,
+) => Promise<string>;
+
+/** The `LunaBodyAsk` behind `createOpenAILuna`: the same request, the body unread. */
+export function createOpenAILunaBodyAsk(
+	options: OpenAILunaOptions,
+): LunaBodyAsk {
 	if (!options.apiKey.trim())
 		throw Error("createOpenAILuna needs an OpenAI API key");
 	const url = `${(options.baseUrl ?? "https://api.openai.com/v1").replace(/\/+$/u, "")}/responses`;
@@ -327,6 +343,18 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 		}
 		if (!ok)
 			throw Error(`OpenAI answered ${status}: ${text.slice(0, 200)}`);
-		return lunaResponseOf(text, request);
+		return text;
 	};
+}
+
+export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
+	const ask = createOpenAILunaBodyAsk(options);
+	return async (request, { signal, maxOutputTokens }) =>
+		lunaResponseOf(
+			await ask(request, {
+				signal,
+				...(maxOutputTokens === undefined ? {} : { maxOutputTokens }),
+			}),
+			request,
+		);
 }

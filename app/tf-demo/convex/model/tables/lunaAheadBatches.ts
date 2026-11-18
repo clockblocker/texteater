@@ -4,9 +4,10 @@ import { literalUnion } from "../validators";
 
 /**
  * How a batch of Luna requests asked ahead stands (#1351): Submitted while
- * OpenAI runs it; Completed once its answers are stored; Failed, Expired
- * or Cancelled as OpenAI ended it, with nothing stored. Expired also
- * marks one that reached no final status within a day and was given up.
+ * OpenAI runs it, or while its requests are asked live; Completed once its
+ * answers are stored; Failed, Expired or Cancelled as OpenAI ended it,
+ * with nothing stored. Expired also marks one that reached no final status
+ * within a day and was given up.
  */
 export const lunaAheadBatchStates = [
 	"Submitted",
@@ -19,17 +20,19 @@ export const lunaAheadBatchStates = [
 /**
  * The Luna requests asked ahead of the clicks (#1351): once Intake has
  * processed a Folio, or a paste or link whole, the request every unit
- * there sends before jev answers, if any, goes to OpenAI's Batch API: the
- * `canonical` guess, or the `emojiDescription` draft of a headword code
- * writes. Each answer is kept under its request's key until a click sends
- * that request.
+ * there sends before jev answers, if any: the `canonical` guess, or the
+ * `emojiDescription` draft of a headword code writes. The first stretch a
+ * reader sees is asked live at once, as one batch with no OpenAI batch,
+ * and the rest goes to OpenAI's Batch API. Each answer is kept under its
+ * request's key until a click sends that request.
  */
 export const lunaAheadBatchTables = {
 	lunaAheadBatches: defineTable({
 		scrollId: v.id("scrolls"),
 		/** The Folio Intake processed; absent for a paste or link, processed whole. */
 		folioId: v.optional(v.id("folios")),
-		openAIBatchId: v.string(),
+		/** The OpenAI batch that asks the requests; absent where they are asked live. */
+		openAIBatchId: v.optional(v.string()),
 		state: literalUnion(lunaAheadBatchStates),
 		/** Units whose click would send a Luna request before jev answers. */
 		unitCount: v.number(),
@@ -38,7 +41,7 @@ export const lunaAheadBatchTables = {
 		/** The requests sent, counted by their Luna stage. */
 		stageCounts: v.record(v.string(), v.number()),
 		submittedAt: v.number(),
-		/** Looks at the batch so far. */
+		/** Looks at the OpenAI batch so far; none at requests asked live. */
 		polls: v.number(),
 		settledAt: v.optional(v.number()),
 		/** Requests answered usably and stored, and those that were not. */
@@ -62,8 +65,11 @@ export const lunaAheadBatchTables = {
 		/** The request's key (`lunaRequestKey`): the SHA-256 of its canonical JSON. */
 		requestKey: v.string(),
 		batchId: v.id("lunaAheadBatches"),
-		/** The batch's id at OpenAI, which the click's trace names. */
-		openAIBatchId: v.string(),
+		/**
+		 * The batch's id at OpenAI, which the click's trace names; absent
+		 * for an answer asked live, whose trace names the batch's row.
+		 */
+		openAIBatchId: v.optional(v.string()),
 		/** The Responses API body, as JSON, read as a live answer is. */
 		body: v.string(),
 	})

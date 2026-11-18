@@ -17,10 +17,43 @@ import {
 /*
  * The storage side of the Luna requests asked ahead of the clicks
  * (#1351), each the canonical guess or the emoji draft a click sends
- * before jev answers: which units a batch covers, the batch's row, and the answers a
- * click finds by its request's key. `lunaAheadBatchActions.ts` submits and
- * polls the batch.
+ * before jev answers: which units are asked, live or batched, a batch's
+ * row, and the answers a click finds by its request's key.
+ * `lunaAheadBatchActions.ts` asks the live ones, and submits and polls the
+ * batch.
  */
+
+/**
+ * How much of a processed text a reader sees first, in characters: one
+ * laptop screenful of the reader's column (48rem of text-lg at 1.52
+ * leading: about 25 lines of 80 characters), counted from the first
+ * Sentence of the paste, link or Folio. A Folio is processed when the
+ * Learner asks for it from its control at its start, so its opening is
+ * where they read on. The units of the Sentences that start inside it are
+ * asked live, so a click there is answered from storage before the batch
+ * of the rest lands; a Sentence that starts inside it is asked whole.
+ */
+export const FIRST_STRETCH_CHARACTERS = 2_000;
+
+/** Of Sentences in reading order, how many start within the first `characters`. */
+export function firstStretchLength(
+	sentences: readonly { readonly stitchedText: string }[],
+	characters: number = FIRST_STRETCH_CHARACTERS,
+): number {
+	let offset = 0;
+	let count = 0;
+	for (const { stitchedText } of sentences) {
+		if (offset >= characters) break;
+		count++;
+		offset += stitchedText.length + 1;
+	}
+	return count;
+}
+
+const unitAheadValidator = v.object({
+	sentenceId: v.id("sentences"),
+	clickedSegmentIndex: v.number(),
+});
 
 /** Asks Intake's processed Folio, or a whole paste or link, ahead of its clicks. */
 export async function scheduleLunaAheadBatch(
@@ -36,23 +69,24 @@ export async function scheduleLunaAheadBatch(
 
 /**
  * The first Segment of every routed unit of the Folio's Sentences, or of
- * the whole Scroll's: where a click on it lands. German Sentences only,
- * and none whose segmentation failed; Unresolved units are left out.
+ * the whole Scroll's, in reading order: where a click on it lands, those
+ * of the first stretch a reader sees (`FIRST_STRETCH_CHARACTERS`) apart
+ * from the rest. German Sentences only, and none whose segmentation
+ * failed; Unresolved units are left out.
  */
 export const unitsAhead = internalQuery({
 	args: {
 		scrollId: v.id("scrolls"),
 		folioId: v.optional(v.id("folios")),
 	},
-	returns: v.array(
-		v.object({
-			sentenceId: v.id("sentences"),
-			clickedSegmentIndex: v.number(),
-		}),
-	),
+	returns: v.object({
+		firstStretch: v.array(unitAheadValidator),
+		rest: v.array(unitAheadValidator),
+	}),
 	handler: async (ctx, { scrollId, folioId }) => {
 		const folio = folioId ? await ctx.db.get(folioId) : null;
-		if (folioId && folio?.scrollId !== scrollId) return [];
+		if (folioId && folio?.scrollId !== scrollId)
+			return { firstStretch: [], rest: [] };
 		const sentences = await ctx.db
 			.query("sentences")
 			.withIndex("by_scroll_id_and_position", (q) =>
@@ -64,21 +98,27 @@ export const unitsAhead = internalQuery({
 					: q.eq("scrollId", scrollId),
 			)
 			.take(MAX_SENTENCES_PER_SCROLL);
-		return sentences.flatMap((sentence) =>
-			sentence.language !== "de" || sentence.segmentationFailed
-				? []
-				: (sentence.units ?? []).flatMap(({ route, segments }) => {
-						const [first] = segments;
-						return route === "Unresolved" || first === undefined
-							? []
-							: [
-									{
-										sentenceId: sentence._id,
-										clickedSegmentIndex: first,
-									},
-								];
-					}),
-		);
+		const unitsOf = (some: typeof sentences) =>
+			some.flatMap((sentence) =>
+				sentence.language !== "de" || sentence.segmentationFailed
+					? []
+					: (sentence.units ?? []).flatMap(({ route, segments }) => {
+							const [first] = segments;
+							return route === "Unresolved" || first === undefined
+								? []
+								: [
+										{
+											sentenceId: sentence._id,
+											clickedSegmentIndex: first,
+										},
+									];
+						}),
+			);
+		const stretch = firstStretchLength(sentences);
+		return {
+			firstStretch: unitsOf(sentences.slice(0, stretch)),
+			rest: unitsOf(sentences.slice(stretch)),
+		};
 	},
 });
 
@@ -124,8 +164,12 @@ export const storedAnswer = internalQuery({
 			.query("lunaAheadAnswers")
 			.withIndex("by_request_key", (q) => q.eq("requestKey", requestKey))
 			.first();
+		// An answer asked live names the row of the requests asked with it.
 		return answer
-			? { body: answer.body, source: answer.openAIBatchId }
+			? {
+					body: answer.body,
+					source: answer.openAIBatchId ?? answer.batchId,
+				}
 			: null;
 	},
 });
@@ -136,7 +180,7 @@ export const batch = internalQuery({
 	returns: v.union(
 		v.null(),
 		v.object({
-			openAIBatchId: v.string(),
+			openAIBatchId: v.optional(v.string()),
 			state: literalUnion(lunaAheadBatchStates),
 			submittedAt: v.number(),
 			polls: v.number(),
@@ -146,7 +190,9 @@ export const batch = internalQuery({
 		const row = await ctx.db.get(batchId);
 		return row
 			? {
-					openAIBatchId: row.openAIBatchId,
+					...(row.openAIBatchId === undefined
+						? {}
+						: { openAIBatchId: row.openAIBatchId }),
 					state: row.state,
 					submittedAt: row.submittedAt,
 					polls: row.polls,
@@ -183,6 +229,25 @@ export const recordSubmitted = internalMutation({
 	},
 });
 
+/** Records the requests of a first stretch being asked live: no OpenAI batch, nothing to poll. */
+export const recordAskedLive = internalMutation({
+	args: {
+		scrollId: v.id("scrolls"),
+		folioId: v.optional(v.id("folios")),
+		unitCount: v.number(),
+		requestCount: v.number(),
+		stageCounts: v.record(v.string(), v.number()),
+	},
+	returns: v.id("lunaAheadBatches"),
+	handler: (ctx, asked) =>
+		ctx.db.insert("lunaAheadBatches", {
+			...asked,
+			state: "Submitted",
+			submittedAt: Date.now(),
+			polls: 0,
+		}),
+});
+
 /** Counts one look at a batch still running, and schedules the next. */
 export const recordPolled = internalMutation({
 	args: { batchId: v.id("lunaAheadBatches"), nextPollAfterMs: v.number() },
@@ -200,7 +265,10 @@ export const recordPolled = internalMutation({
 	},
 });
 
-/** Stores some of a completed batch's answers; a key answered before keeps its answer. */
+/**
+ * Stores some of a completed batch's answers, or one answer asked live as
+ * it comes; a key answered before keeps its answer.
+ */
 export const storeAnswers = internalMutation({
 	args: {
 		batchId: v.id("lunaAheadBatches"),
@@ -223,7 +291,9 @@ export const storeAnswers = internalMutation({
 				await ctx.db.insert("lunaAheadAnswers", {
 					requestKey,
 					batchId,
-					openAIBatchId: row.openAIBatchId,
+					...(row.openAIBatchId === undefined
+						? {}
+						: { openAIBatchId: row.openAIBatchId }),
 					body,
 				});
 		}

@@ -25,7 +25,9 @@ import {
  * guess, or the emoji draft of a headword code writes) is asked ahead
  * through OpenAI's Batch API, and a click finds its answer stored
  * (#1351). Scheduled functions stay unrun (fake timers): each test runs
- * the submission and the polls itself.
+ * the submission and the polls itself. The deployments here have no live
+ * exchange, so the first stretch is batched too; `luna-ahead-live.test.ts`
+ * asks it live.
  */
 
 let restore: (() => void) | undefined;
@@ -120,7 +122,7 @@ test("a Folio Intake has processed schedules its own batch, over its Sentences a
 	});
 	const positions = await t.run((ctx) =>
 		Promise.all(
-			ahead.map(
+			[...ahead.firstStretch, ...ahead.rest].map(
 				async ({ sentenceId }) =>
 					(await ctx.db.get(sentenceId))?.position,
 			),
@@ -349,11 +351,16 @@ test("a failed or expired batch is dropped with nothing stored, and its polls st
 });
 
 test("a deployment without an OpenAI key asks nothing ahead", async () => {
-	restore = fakeDeployment(undefined).restore;
+	const deployment = fakeDeployment(undefined);
+	restore = deployment.restore;
 	const t = createTestConvex();
 	const { scrollId } = await paste(t);
 	await t.action(internal.lunaAheadBatchActions.submit, { scrollId });
 	expect(await batches(t)).toEqual([]);
+	expect(
+		await t.run((ctx) => ctx.db.query("lunaAheadAnswers").collect()),
+	).toEqual([]);
+	expect(deployment.luna.stages).toEqual([]);
 });
 
 test("polls back off from a minute to ten", () => {

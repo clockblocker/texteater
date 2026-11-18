@@ -5,6 +5,8 @@ import { v } from "convex/values";
 import {
 	type BatchLine,
 	type BatchRequest,
+	type LunaBatch,
+	type LunaBodyAsk,
 	type LunaRequestAhead,
 	lunaRequestAhead,
 	lunaRequestKey,
@@ -24,15 +26,25 @@ import { modelTransports } from "./model/deploymentDumgen";
  * processed a Folio, or a paste or link whole, `submit` builds the Luna
  * request a click on each unit there would send before jev answers (the
  * `canonical` guess, or the `emojiDescription` draft of a headword code
- * writes), from the Resolution Context the click would load, and sends
- * those not answered before as one OpenAI batch; `poll` looks at it on
- * Convex's scheduler until it ends, and stores a completed batch's answers
- * by request key, where the click's Luna transport finds them. Nothing
- * waits on it, and a deployment without an OpenAI key skips it.
+ * writes), from the Resolution Context the click would load. Those of the
+ * first stretch a reader sees (`FIRST_STRETCH_CHARACTERS`) not answered
+ * before are asked live at once, in reading order, each answer stored as
+ * it comes; the rest not answered before go as one OpenAI batch, which
+ * `poll` looks at on Convex's scheduler until it ends, storing a completed
+ * batch's answers. Each request is asked once, live or batched, and its
+ * answer stored by request key, where the click's Luna transport finds it.
+ * Nothing waits on either: a click whose answer is not stored yet asks
+ * Luna itself. A deployment without an OpenAI key skips both.
  */
 
 /** Contexts loaded at once while the requests are built. */
 const CONTEXT_CONCURRENCY = 8;
+/**
+ * Requests of the first stretch asked live at once: at about a second
+ * each, the first Sentence's are stored within a few seconds, and a
+ * screenful's (some 150 requests) within half a minute.
+ */
+const LIVE_CONCURRENCY = 8;
 /**
  * The most requests one batch file holds: about 8 KB a line, so a file
  * stays near 16 MB, well inside OpenAI's 200 MB and the action's memory. A
@@ -55,7 +67,7 @@ const GIVE_UP_AFTER_MS = 25 * 60 * 60_000;
 export const pollWaitMs = (polls: number) =>
 	Math.min(FIRST_POLL_AFTER_MS * 2 ** polls, LONGEST_POLL_WAIT_MS);
 
-/** Runs `work` over `items`, `limit` at a time. */
+/** Runs `work` over `items`, `limit` at a time, starting them in order. */
 async function eachLimited<T>(
 	items: readonly T[],
 	limit: number,
@@ -110,6 +122,49 @@ async function requestAhead(
 	}
 }
 
+/**
+ * The requests the units send, in the units' order, each once: one that
+ * several units send stands where the first sends it. `unitCount` counts
+ * the units that send one.
+ */
+async function requestsOf(
+	ctx: ActionCtx,
+	units: readonly {
+		sentenceId: Id<"sentences">;
+		clickedSegmentIndex: number;
+	}[],
+) {
+	const built: (StagedBatchRequest | undefined)[] = [];
+	await eachLimited(
+		units.map((unit, index) => ({ unit, index })),
+		CONTEXT_CONCURRENCY,
+		async ({ unit, index }) => {
+			built[index] = await requestAhead(ctx, unit);
+		},
+	);
+	const requests = new Map<string, StagedBatchRequest>();
+	let unitCount = 0;
+	for (const request of built) {
+		if (!request) continue;
+		unitCount++;
+		if (!requests.has(request.customId))
+			requests.set(request.customId, request);
+	}
+	return { requests: [...requests.values()], unitCount };
+}
+
+/** The requests counted by their Luna stage. */
+function stageCountsOf(requests: readonly StagedBatchRequest[]) {
+	const counts: Record<string, number> = {};
+	for (const { stage } of requests) counts[stage] = (counts[stage] ?? 0) + 1;
+	return counts;
+}
+
+const describedStages = (counts: Record<string, number>) =>
+	Object.entries(counts)
+		.map(([stage, count]) => `${count} ${stage}`)
+		.join(", ");
+
 /** The requests of `requests` with no stored answer yet. */
 async function unanswered(
 	ctx: ActionCtx,
@@ -128,6 +183,97 @@ async function unanswered(
 	return requests.filter(({ customId }) => !answered.has(customId));
 }
 
+type Submission = { scrollId: Id<"scrolls">; folioId?: Id<"folios"> };
+
+/**
+ * Asks the first stretch's requests live, `LIVE_CONCURRENCY` at a time in
+ * reading order, through the exchange the click's Luna transport makes,
+ * and stores each answer as it comes. A request that fails is left to its
+ * click; the row records what came of them all.
+ */
+async function askLive(
+	ctx: ActionCtx,
+	submission: Submission,
+	requests: readonly StagedBatchRequest[],
+	unitCount: number,
+	ask: LunaBodyAsk,
+) {
+	const stageCounts = stageCountsOf(requests);
+	const batchId = await ctx.runMutation(
+		internal.lunaAheadBatches.recordAskedLive,
+		{
+			...submission,
+			unitCount,
+			requestCount: requests.length,
+			stageCounts,
+		},
+	);
+	console.log(
+		`Luna ahead: asking ${requests.length} requests (${describedStages(stageCounts)}) of the first stretch live for ${unitCount} units`,
+	);
+	const bodies: string[] = [];
+	await eachLimited(
+		requests,
+		LIVE_CONCURRENCY,
+		async ({ customId, request, maxOutputTokens }) => {
+			try {
+				const body = await ask(request, {
+					signal: AbortSignal.timeout(OPENAI_DEADLINE_MS),
+					...(maxOutputTokens === undefined
+						? {}
+						: { maxOutputTokens }),
+				});
+				await ctx.runMutation(internal.lunaAheadBatches.storeAnswers, {
+					batchId,
+					answers: [{ requestKey: customId, body }],
+				});
+				bodies.push(body);
+			} catch (error) {
+				console.warn(
+					`Luna ahead: a live request of ${batchId} failed: ${messageOf(error)}`,
+				);
+			}
+		},
+	);
+	await ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
+		batchId,
+		state: "Completed",
+		answerCount: bodies.length,
+		failedCount: requests.length - bodies.length,
+		tokens: tokensOfBodies(bodies),
+	});
+}
+
+/** Sends the requests as OpenAI batches, recording each and scheduling its polls. */
+async function submitBatches(
+	ctx: ActionCtx,
+	submission: Submission,
+	requests: readonly StagedBatchRequest[],
+	unitCount: number,
+	batch: LunaBatch,
+) {
+	const parts = chunks(requests, MAX_BATCH_REQUESTS);
+	for (const part of parts) {
+		const { id } = await batch.submit(
+			part.map(({ stage: _stage, ...request }) => request),
+			AbortSignal.timeout(OPENAI_DEADLINE_MS),
+		);
+		const stageCounts = stageCountsOf(part);
+		await ctx.runMutation(internal.lunaAheadBatches.recordSubmitted, {
+			...submission,
+			openAIBatchId: id,
+			// A batch sent in parts counts its units on the first.
+			unitCount: part === parts[0] ? unitCount : 0,
+			requestCount: part.length,
+			stageCounts,
+			firstPollAfterMs: pollWaitMs(0),
+		});
+		console.log(
+			`Luna ahead batch: submitted ${id}, ${part.length} requests (${describedStages(stageCounts)}) for ${unitCount} units`,
+		);
+	}
+}
+
 export const submit = internalAction({
 	args: {
 		scrollId: v.id("scrolls"),
@@ -135,54 +281,64 @@ export const submit = internalAction({
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
+		const { lunaBody, lunaBatch } = modelTransports();
 		// Without an OpenAI key there is no Luna to ask ahead.
-		const lunaBatch = modelTransports().lunaBatch;
-		if (!lunaBatch) return null;
+		if (!lunaBody && !lunaBatch) return null;
 		const units = await ctx.runQuery(
 			internal.lunaAheadBatches.unitsAhead,
 			args,
 		);
-		const requests = new Map<string, StagedBatchRequest>();
-		let unitCount = 0;
-		await eachLimited(units, CONTEXT_CONCURRENCY, async (unit) => {
-			const request = await requestAhead(ctx, unit);
-			if (!request) return;
-			unitCount++;
-			requests.set(request.customId, request);
-		});
-		const fresh = await unanswered(ctx, [...requests.values()]);
-		if (fresh.length === 0) {
-			console.log(
-				`Luna ahead batch: nothing to ask for ${args.folioId ?? args.scrollId} (${unitCount} units)`,
+		// Where nothing is asked live, the first stretch is batched too.
+		const stretch = await requestsOf(
+			ctx,
+			lunaBody ? units.firstStretch : [],
+		);
+		const live = await unanswered(ctx, stretch.requests);
+		// Nothing waits on the live requests: the rest is built and
+		// batched while they are asked.
+		const askingLive =
+			lunaBody && live.length > 0
+				? askLive(
+						ctx,
+						args,
+						live,
+						stretch.unitCount,
+						lunaBody({ promptCaching: true }),
+					).catch((error: unknown) => {
+						console.warn(
+							`Luna ahead: asking ${args.folioId ?? args.scrollId}'s first stretch live failed: ${messageOf(error)}`,
+						);
+					})
+				: Promise.resolve();
+		try {
+			const rest = await requestsOf(
+				ctx,
+				lunaBody ? units.rest : [...units.firstStretch, ...units.rest],
 			);
-			return null;
-		}
-		const batch = lunaBatch();
-		const parts = chunks(fresh, MAX_BATCH_REQUESTS);
-		for (const part of parts) {
-			const { id } = await batch.submit(
-				part.map(({ stage: _stage, ...request }) => request),
-				AbortSignal.timeout(OPENAI_DEADLINE_MS),
+			// A request the first stretch sends too is asked there alone.
+			const inStretch = new Set(
+				stretch.requests.map(({ customId }) => customId),
 			);
-			const stageCounts: Record<string, number> = {};
-			for (const { stage } of part)
-				stageCounts[stage] = (stageCounts[stage] ?? 0) + 1;
-			await ctx.runMutation(internal.lunaAheadBatches.recordSubmitted, {
-				...args,
-				openAIBatchId: id,
-				// A batch sent in parts counts its units on the first.
-				unitCount: part === parts[0] ? unitCount : 0,
-				requestCount: part.length,
-				stageCounts,
-				firstPollAfterMs: pollWaitMs(0),
-			});
-			console.log(
-				`Luna ahead batch: submitted ${id}, ${part.length} requests (${Object.entries(
-					stageCounts,
-				)
-					.map(([stage, count]) => `${count} ${stage}`)
-					.join(", ")}) for ${unitCount} units`,
+			const batched = await unanswered(
+				ctx,
+				rest.requests.filter(
+					({ customId }) => !inStretch.has(customId),
+				),
 			);
+			if (lunaBatch && batched.length > 0)
+				await submitBatches(
+					ctx,
+					args,
+					batched,
+					rest.unitCount,
+					lunaBatch(),
+				);
+			if (live.length === 0 && batched.length === 0)
+				console.log(
+					`Luna ahead batch: nothing to ask for ${args.folioId ?? args.scrollId} (${stretch.unitCount + rest.unitCount} units)`,
+				);
+		} finally {
+			await askingLive;
 		}
 		return null;
 	},
@@ -202,6 +358,18 @@ function tokensOf(body: string) {
 	}
 }
 
+/** The tokens stored answers' bodies report together. */
+function tokensOfBodies(bodies: readonly string[]) {
+	const tokens = { input: 0, cachedInput: 0, output: 0 };
+	for (const body of bodies) {
+		const spent = tokensOf(body);
+		tokens.input += spent.inputTokens;
+		tokens.cachedInput += spent.cachedInputTokens;
+		tokens.output += spent.outputTokens;
+	}
+	return tokens;
+}
+
 /** Stores a completed batch's usable lines and records what came of it. */
 async function storeCompleted(
 	ctx: ActionCtx,
@@ -216,19 +384,12 @@ async function storeCompleted(
 			batchId,
 			answers: part,
 		});
-	const tokens = { input: 0, cachedInput: 0, output: 0 };
-	for (const { body } of answers) {
-		const spent = tokensOf(body);
-		tokens.input += spent.inputTokens;
-		tokens.cachedInput += spent.cachedInputTokens;
-		tokens.output += spent.outputTokens;
-	}
 	await ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 		batchId,
 		state: "Completed",
 		answerCount: answers.length,
 		failedCount: lines.length - answers.length,
-		tokens,
+		tokens: tokensOfBodies(answers.map(({ body }) => body)),
 	});
 }
 
@@ -245,11 +406,14 @@ export const poll = internalAction({
 		const row = await ctx.runQuery(internal.lunaAheadBatches.batch, {
 			batchId,
 		});
-		if (row?.state !== "Submitted") return null;
+		// Requests asked live have no OpenAI batch to look at.
+		if (row?.state !== "Submitted" || row.openAIBatchId === undefined)
+			return null;
+		const { openAIBatchId } = row;
 		const lunaBatch = modelTransports().lunaBatch;
 		const giveUp = (failure: string) => {
 			console.warn(
-				`Luna ahead batch: ${row.openAIBatchId} dropped: ${failure}`,
+				`Luna ahead batch: ${openAIBatchId} dropped: ${failure}`,
 			);
 			return ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 				batchId,
@@ -264,20 +428,20 @@ export const poll = internalAction({
 		const batch = lunaBatch();
 		const signal = AbortSignal.timeout(OPENAI_DEADLINE_MS);
 		try {
-			const state = await batch.check(row.openAIBatchId, signal);
+			const state = await batch.check(openAIBatchId, signal);
 			if (state.final && state.status === "completed") {
 				await storeCompleted(
 					ctx,
 					batchId,
 					await batch.lines(state, signal),
 				);
-				console.log(`Luna ahead batch: ${row.openAIBatchId} completed`);
+				console.log(`Luna ahead batch: ${openAIBatchId} completed`);
 				return null;
 			}
 			if (state.final) {
 				const failure = `OpenAI ended the batch ${state.status}${state.errors ? `: ${state.errors}` : ""}`;
 				console.warn(
-					`Luna ahead batch: ${row.openAIBatchId} dropped: ${failure}`,
+					`Luna ahead batch: ${openAIBatchId} dropped: ${failure}`,
 				);
 				await ctx.runMutation(internal.lunaAheadBatches.recordSettled, {
 					batchId,
@@ -293,7 +457,7 @@ export const poll = internalAction({
 			}
 		} catch (error) {
 			console.warn(
-				`Luna ahead batch: polling ${row.openAIBatchId} failed: ${messageOf(error)}`,
+				`Luna ahead batch: polling ${openAIBatchId} failed: ${messageOf(error)}`,
 			);
 		}
 		if (Date.now() - row.submittedAt > GIVE_UP_AFTER_MS) {

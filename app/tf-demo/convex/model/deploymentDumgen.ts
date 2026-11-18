@@ -2,12 +2,14 @@
 
 import {
 	createOpenAILunaBatch,
+	createOpenAILunaBodyAsk,
 	DumgenLive,
 	InvalidModelOutput,
 	type Jev,
 	JevTransport,
 	type Luna,
 	type LunaBatch,
+	type LunaBodyAsk,
 	LunaTransport,
 	lunaAheadStages,
 	type OperationTrace,
@@ -46,13 +48,16 @@ export type CallPolicy = {
 /**
  * The model transports a deployment has, each made under a `CallPolicy`:
  * jev through TypeSafe where `TYPESAFE_API_KEY` is set, Luna through OpenAI
- * where `OPENAI_API_KEY` is, and there Luna's Batch API too, which asks
- * the Luna request a click sends before jev answers ahead (#1351). jev has no prompt cache to ask
- * for.
+ * where `OPENAI_API_KEY` is, and there the two ways the Luna request a
+ * click sends before jev answers is asked ahead of the click (#1351): one
+ * at a time through Luna's own exchange, its answer body kept unread
+ * (`lunaBody`), and through Luna's Batch API. jev has no prompt cache to
+ * ask for.
  */
 export type ModelTransports = {
 	readonly jev?: (policy: CallPolicy) => Layer.Layer<JevTransport>;
 	readonly luna?: (policy: CallPolicy) => Layer.Layer<LunaTransport>;
+	readonly lunaBody?: (policy: CallPolicy) => LunaBodyAsk;
 	readonly lunaBatch?: () => LunaBatch;
 };
 
@@ -77,6 +82,14 @@ function environmentTransports(): ModelTransports {
 			? {
 					luna: (policy: CallPolicy) =>
 						LunaTransport.openAI({
+							apiKey: lunaKey,
+							...deadline(policy),
+							...(policy.promptCaching
+								? { promptCaching: true }
+								: {}),
+						}),
+					lunaBody: (policy: CallPolicy) =>
+						createOpenAILunaBodyAsk({
 							apiKey: lunaKey,
 							...deadline(policy),
 							...(policy.promptCaching

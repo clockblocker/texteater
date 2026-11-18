@@ -61,6 +61,10 @@ export {
 	type LunaBatch,
 } from "./luna-batch.js";
 export { Luna, LunaTransport, lunaTokens } from "./luna-call.js";
+export {
+	createOpenAILunaBodyAsk,
+	type LunaBodyAsk,
+} from "./openai-luna.js";
 export type { OperationTrace } from "./operation-trace.js";
 export { operations } from "./operations.js";
 export {

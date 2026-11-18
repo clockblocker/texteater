@@ -244,22 +244,35 @@ export function listRecentResolutionInspections(
 	return runReadonlyInspection(source, options);
 }
 
-/** The latest batches of Luna requests asked ahead of the clicks, each with its requests by stage (#1351). */
+/** How a row's requests were asked: live, a first stretch's, or through an OpenAI batch. */
+const transportExpression = (rowVariable: string) =>
+	`(${rowVariable}.openAIBatchId === undefined ? "Live" : "Batch")`;
+
+/**
+ * The latest batches of Luna requests asked ahead of the clicks, each with
+ * how it was asked (a first stretch's, Live, or an OpenAI Batch) and its
+ * requests by stage (#1351).
+ */
 export function listLunaAheadBatches(
 	limit = 20,
 	options?: DeploymentOptions,
 ): Promise<void> {
 	const source = `
-		return await ctx.db
+		const rows = await ctx.db
 			.query("lunaAheadBatches")
 			.withIndex("by_submitted_at")
 			.order("desc")
 			.take(${literal(limit)});
+		return rows.map((row) => ({ transport: ${transportExpression("row")}, ...row }));
 	`;
 	return runReadonlyInspection(source, options);
 }
 
-/** One batch of Luna requests asked ahead, by its row or its OpenAI id, and how many answers it stored. */
+/**
+ * One batch of Luna requests asked ahead, by its row (which a click's
+ * trace names for an answer asked live) or its OpenAI id, how it was
+ * asked, and how many answers it stored.
+ */
 export function inspectLunaAheadBatch(
 	batchId: string,
 	options?: DeploymentOptions,
@@ -275,7 +288,7 @@ export function inspectLunaAheadBatch(
 			.query("lunaAheadAnswers")
 			.withIndex("by_batch_id", (q) => q.eq("batchId", batch._id))
 			.collect();
-		return { batch, storedAnswers: answers.length };
+		return { batch: { transport: ${transportExpression("batch")}, ...batch }, storedAnswers: answers.length };
 	`;
 	return runReadonlyInspection(source, options);
 }
