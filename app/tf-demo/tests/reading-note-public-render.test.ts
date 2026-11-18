@@ -44,7 +44,10 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	);
 	expect(markup).not.toMatch(/<button[^>]*>A <\/button>/);
 	expect(markup).toContain("relation to Unit Shadow traurig");
-	expect(markup).toContain("en: to be happy");
+	// A Sheet's translations are a row per language: `en`, then its words.
+	expect(markup).toContain(
+		'>en</dt><dd lang="en" class="text-pretty">to be happy</dd>',
+	);
 	expect(markup).toContain("To experience happiness.");
 	expect(markup).toContain("Remember the reflexive form.");
 	expect(markup.match(/<textarea/g)).toHaveLength(1);

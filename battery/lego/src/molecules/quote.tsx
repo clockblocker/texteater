@@ -5,12 +5,15 @@ import { type LinkTone, linkToneClasses } from "./link-tone";
 
 /* The passage starts 1.75rem in, where a Mark's word does: a Mark is at
    least 1rem with 0.75rem after it. The static quote draws its bar on
-   itself, so its padding gives the bar's width back. */
+   itself, so its padding gives the bar's width back. In comfortable
+   density the passage is set a step softer than body ink and holds a
+   reading measure, so the lit member words are what stand out. */
 const passage =
-	"py-1 ps-7 text-start leading-[1.55] font-[430] tracking-[-0.012em] compact:ps-3";
+	"max-w-[38rem] py-0.5 ps-7 text-start leading-[1.55] font-[430] tracking-[-0.012em] text-ink-soft text-pretty compact:max-w-none compact:py-1 compact:ps-3 compact:text-ink compact:text-wrap";
 
+/* A fine bar in comfortable density; a Card keeps its heavier one. */
 const bar =
-	"border-s-[3px] border-line transition-colors duration-150 motion-reduce:transition-none";
+	"border-s-2 border-line transition-colors duration-150 motion-reduce:transition-none compact:border-s-[3px]";
 
 /**
  * A quoted passage from a source Text. The passage itself is ordinary,
@@ -44,7 +47,7 @@ export function Quote({
 					linkToneClasses[tone],
 					bar,
 					passage,
-					"ps-[calc(1.75rem_-_3px)]",
+					"ps-[calc(1.75rem_-_2px)]",
 					"has-[[data-slot=reader-segment]:hover]:border-link has-[[data-slot=reader-segment]:focus-visible]:border-link",
 					className,
 				)}

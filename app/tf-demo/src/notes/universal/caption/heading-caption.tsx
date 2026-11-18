@@ -41,7 +41,7 @@ export function CaptionedHeading({
 		: null;
 	return (
 		<header className="min-w-0 flex-1">
-			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5">
+			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5 compact:justify-start compact:gap-x-1.5">
 				{title}
 				{tokens ? (
 					<span

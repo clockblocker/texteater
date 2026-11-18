@@ -3,18 +3,19 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 /**
- * A titled block of a Note. Comfortable density shows the label on the
- * column's start edge, with a dashed rule running on from it; compact
- * density drops the label and keeps a rule on top.
+ * A titled block of a Note. Comfortable density sets a quiet label on the
+ * column's start edge and groups with space alone: no rule. Compact density
+ * drops the label and keeps a dashed rule on top.
  *
- * A section after another section takes twice the air it keeps under its
- * label, so a label belongs to what follows it. The first section keeps
- * less, and stays with the title above it. In a Card, a section that opens
- * the body keeps none: the Heading row above it already leaves the title
- * its room.
+ * A section after another section takes more than four times the air it
+ * keeps under its label, so a label belongs to what follows it. The first
+ * section keeps less, and stays with the title above it. In a Card, a
+ * section that opens the body keeps none: the Heading row above it already
+ * leaves the title its room.
  *
  * Every block passes a `label`. Pass `""` on purpose for the rare body-only
- * block, and the section draws the separating rule itself.
+ * block: space sets it apart in comfortable density, and in compact density
+ * the section draws the separating rule itself.
  *
  * Pass `labelFor` with a control id when the block is a form field, and the
  * label renders as a `<label>` for it instead of a heading.
@@ -34,7 +35,7 @@ export function NoteSection({
 		<section
 			data-slot="note-section"
 			className={cn(
-				"min-w-0 pt-4 compact:pt-3 compact:first:pt-0 [section+&]:pt-8 compact:[section+&]:pt-3",
+				"min-w-0 pt-3 compact:pt-3 compact:first:pt-0 [section+&]:pt-9 compact:[section+&]:pt-3",
 				!headless &&
 					"compact:before:mb-2 compact:before:block compact:before:border-t compact:before:border-dashed compact:before:border-line compact:before:content-['']",
 				className,
@@ -44,7 +45,7 @@ export function NoteSection({
 			{headless ? (
 				<hr
 					data-slot="note-rule"
-					className="mb-3 border-0 border-t border-dashed border-line"
+					className="mb-3 hidden border-0 border-t border-dashed border-line compact:block"
 				/>
 			) : (
 				<NoteSectionLabel htmlFor={labelFor}>{label}</NoteSectionLabel>
@@ -54,12 +55,19 @@ export function NoteSection({
 	);
 }
 
-const noteSectionLabelClassName =
-	"mb-3 flex items-center font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase after:ms-2 after:flex-1 after:border-t after:border-dashed after:border-line after:content-[''] compact:hidden";
+/**
+ * The Note's micro-label: small, spaced caps in a muted ink. A section's
+ * label wears it, and so does a tag that names a row, such as a
+ * translation's language. Write the words in natural case.
+ */
+export const noteLabelClassName =
+	"text-[0.6875rem] leading-4 font-medium tracking-[0.08em] text-ink-muted uppercase";
+
+const noteSectionLabelClassName = `mb-2 block ${noteLabelClassName} compact:hidden`;
 
 /**
- * Small monospaced caps set into a dashed rule. Renders a heading, or a
- * `<label>` when `htmlFor` names the control it titles.
+ * A section's micro-label. Renders a heading, or a `<label>` when `htmlFor`
+ * names the control it titles.
  */
 function NoteSectionLabel({
 	children,

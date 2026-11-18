@@ -1,13 +1,10 @@
-import { Button, IconSwap, LinkButton, NoteSection } from "lego";
-import {
-	BrushCleaningIcon,
-	ChevronDownIcon,
-	LoaderCircleIcon,
-} from "lucide-react";
+import { IconSwap, LinkButton, NoteSection } from "lego";
+import { BrushCleaningIcon, LoaderCircleIcon } from "lucide-react";
 
 import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
+import { LoadMore } from "../../common/load-more";
 import { RelationMark } from "../../common/relation-mark";
 import { RouteMark } from "../../common/route-mark";
 
@@ -136,28 +133,11 @@ function ShadowRelations({
 						))}
 					</ul>
 					{!isCard && references.hasMore ? (
-						<Button
-							variant="outline"
-							size="sm"
-							className="mt-4 w-fit"
-							disabled={
-								references.isLoading ||
-								references.loadMore === null
-							}
-							onClick={() => void references.loadMore?.()}
-						>
-							<IconSwap
-								data-icon="inline-start"
-								active={references.isLoading}
-								idle={<ChevronDownIcon />}
-								busy={
-									<LoaderCircleIcon className="animate-spin" />
-								}
-							/>
-							{references.isLoading
-								? "Loading…"
-								: "Load more references"}
-						</Button>
+						<LoadMore
+							label="Load more references"
+							isLoading={references.isLoading}
+							loadMore={references.loadMore}
+						/>
 					) : null}
 					{references.error ? (
 						<p

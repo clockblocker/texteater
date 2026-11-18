@@ -246,7 +246,7 @@ export function MorphemesLine({
 	return (
 		<div
 			data-breakdown-line="morphemes"
-			className="pt-[0.2em] text-[1.2em] tracking-[0.02em]"
+			className="text-[1.2em] tracking-[0.02em] compact:pt-[0.2em]"
 		>
 			<div
 				ref={lineRef}

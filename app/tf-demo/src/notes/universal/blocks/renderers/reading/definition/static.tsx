@@ -8,6 +8,12 @@ type DefinitionText =
 	Parameters<ReadingDefaultRenderer>[0]["noteData"]["definitionText"];
 
 /**
+ * The definition's prose: body size on a reading measure of about 70
+ * characters. A Card is narrower than the measure, so it shows no cap.
+ */
+const DEFINITION_PROSE = "max-w-[36rem] leading-relaxed text-pretty";
+
+/**
  * The Reading's definition. In a Sheet it reads like a Sentence: every word
  * selects the way the reader's words do. A Source Context that came from this
  * definition opens its Definition Text instead (tf-demo ADR 0005). A Card
@@ -35,7 +41,7 @@ export const renderReadingDefinition = (({
 				aria-busy="true"
 			>
 				<NoteLinesSkeleton
-					className="py-1"
+					className="max-w-[36rem] compact:py-1"
 					widths={
 						presentation === "Card"
 							? ["w-full", "w-2/3"]
@@ -82,7 +88,9 @@ export const renderReadingDefinition = (({
 
 	return (
 		<NoteSection aria-label="Definition" label="Definition">
-			<p className="py-1 leading-relaxed text-ink text-pretty">{text}</p>
+			<p className={`text-ink compact:py-1 ${DEFINITION_PROSE}`}>
+				{text}
+			</p>
 		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;
@@ -95,10 +103,7 @@ function DefinitionSentence({
 	readonly capabilities: DefinitionCapabilities;
 }) {
 	return (
-		<div
-			data-slot="definition-sentence"
-			className="py-1 leading-relaxed text-pretty"
-		>
+		<div data-slot="definition-sentence" className={DEFINITION_PROSE}>
 			<ReaderSentence
 				sentence={sentence}
 				className="text-reader__sentence"

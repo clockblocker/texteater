@@ -7,7 +7,8 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { foldedAt } from "./form";
+import { remPx } from "./deck-geometry";
+import { coverFoldRem, foldedAt } from "./form";
 import { RestingControls } from "./resting-controls";
 import { COVER_GUTTER_REM } from "./skin";
 
@@ -19,10 +20,10 @@ import { COVER_GUTTER_REM } from "./skin";
  * As a Cover the Heading is the Cover's bar: ← in the column's inline-start
  * gutter, × in its inline-end one, and the title on the body's own
  * column, so the Heading's first letter is the Blocks' first letter. It
- * folds on scroll: while the body rests at its top it is the Notes page's
- * title row, with room above it and no rule of its own; once the body
- * scrolls it folds to the Pane bar's height, and the divider arrives with
- * the fold.
+ * folds on scroll: while the body rests at its top it is the page's
+ * headword, set large with room above it and no rule of its own; once the
+ * body scrolls it folds to the Pane bar's height and the bar's type, and
+ * the divider arrives with the fold.
  */
 
 /** How a Heading's title reads a press. */
@@ -65,7 +66,15 @@ export function useFolded(
 			root.current?.querySelector<HTMLElement>("[data-scroller]");
 		if (!scroller) return;
 		const update = () =>
-			setFolded((was) => foldedAt(was, scroller.scrollTop));
+			setFolded((was) =>
+				foldedAt(
+					was,
+					scroller.scrollTop,
+					scroller.scrollHeight -
+						scroller.clientHeight -
+						coverFoldRem() * remPx(),
+				),
+			);
 		update();
 		scroller.addEventListener("scroll", update, { passive: true });
 		return () => scroller.removeEventListener("scroll", update);
@@ -89,6 +98,40 @@ const STILL_LINKS =
 /** One line in every design: the row's height is fixed, so the title truncates. */
 const ONE_LINE_TITLE =
 	"[&_[data-slot=note-title-row]]:flex-nowrap [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:truncate";
+/**
+ * One line in a Sheet's chrome. The title is a row of its own parts, an
+ * emoji or an icon and then its words, and only the words give way: they
+ * end in an ellipsis, where a title that truncated as a whole would swap a
+ * linked headword for the ellipsis alone. The title's row is one line tall
+ * and clips, so an aside that finds no room beside the title, such as a
+ * transcription, wraps under it and is not drawn, rather than being cut
+ * off mid-word. The title clips, so a linked headword draws its focus ring
+ * inside its own box, which is a little wider than its words.
+ */
+const ONE_LINE_SHEET_TITLE =
+	"[&_[data-slot=note-title-row]]:max-h-[1lh] [&_[data-slot=note-title-row]]:overflow-hidden [&_[data-slot=note-title]]:flex [&_[data-slot=note-title]]:max-w-full [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:overflow-hidden [&_[data-slot=note-title]>*]:shrink-0 [&_[data-slot=note-title]>*:last-child]:min-w-0 [&_[data-slot=note-title]>*:last-child]:shrink [&_[data-slot=note-title]>*:last-child]:truncate [&_[data-slot=note-title-link]]:-ms-1 [&_[data-slot=note-title-link]]:px-1 [&_[data-slot=note-title-link]]:focus-visible:ring-inset";
+
+/**
+ * A Note's title in a Cover takes its size from its row, so it can change
+ * with the fold: the title inherits what the row is given, and the row is
+ * one line of that size tall. A title that is no Note's, such as a
+ * Scroll's, keeps its own type. The change rides the fold's own clock,
+ * `HEADING_RESIZE`, as the Heading's height does. Reduced motion ends
+ * every CSS transition at once, so the type snaps. The line keeps the
+ * title's own leading at both sizes: a tighter one would clip the rule a
+ * linked headword draws under itself.
+ */
+const COVER_TITLE =
+	"[&_[data-slot=note-title-row]]:leading-[1.4] [&_[data-slot=note-title-row]]:transition-[font-size] [&_[data-slot=note-title-row]]:duration-200 [&_[data-slot=note-title-row]]:ease-[cubic-bezier(0.23,1,0.32,1)] [&_[data-slot=note-title]]:text-[length:inherit] [&_[data-slot=note-title]]:transition-[font-weight,letter-spacing] [&_[data-slot=note-title]]:duration-200 [&_[data-slot=note-title]]:ease-[cubic-bezier(0.23,1,0.32,1)]";
+/**
+ * The page's headword: a Note's title in a Cover while its Body rests at
+ * its top. It is 1.75rem where the column has the room and gives a little
+ * in a narrow Pane, so a phone shows a headword of several words whole.
+ */
+const LARGE_TITLE =
+	"[&_[data-slot=note-title-row]]:text-[length:clamp(1.375rem,5.5cqi,1.75rem)] [&_[data-slot=note-title]]:font-[600] [&_[data-slot=note-title]]:tracking-[-0.03em]";
+/** The bar's title: the size a Note's title has in a Card. */
+const BAR_TITLE = "[&_[data-slot=note-title-row]]:text-base";
 
 /**
  * A Sheet's chrome: ← in the column's inline-start gutter, × in its
@@ -103,6 +146,7 @@ export function SheetChrome({
 	maxWidth,
 	back,
 	clear,
+	large,
 	children,
 }: {
 	/** A divider along the bottom edge, edge to edge. */
@@ -111,6 +155,12 @@ export function SheetChrome({
 	maxWidth: string;
 	back: HeadingControl | null;
 	clear: HeadingControl | null;
+	/**
+	 * A Cover's title: a Note's is set large as the page's headword, or at
+	 * the bar's size once the Cover folds. Left out, the title keeps the
+	 * type its words bring, as a Pane bar's does.
+	 */
+	large?: boolean;
 	children: ReactNode;
 }) {
 	const { linksDrag } = useHeadingDesign();
@@ -119,7 +169,8 @@ export function SheetChrome({
 		<>
 			<div className="absolute inset-0 flex">
 				<div
-					className="mx-auto grid h-full w-full min-w-0 items-end pb-2"
+					/* the column is the container a large title sizes against */
+					className="@container mx-auto grid h-full w-full min-w-0 items-end pb-2"
 					style={{ maxWidth }}
 				>
 					<div
@@ -144,7 +195,7 @@ export function SheetChrome({
 						<div
 							data-heading-title=""
 							data-links={linksDrag ? "drag" : "still"}
-							className={`col-start-2 row-start-1 min-w-0 ${ONE_LINE_TITLE} ${linksDrag ? "" : STILL_LINKS}`}
+							className={`col-start-2 row-start-1 min-w-0 ${ONE_LINE_SHEET_TITLE} ${large === undefined ? "" : `${COVER_TITLE} ${large ? LARGE_TITLE : BAR_TITLE}`} ${linksDrag ? "" : STILL_LINKS}`}
 						>
 							{children}
 						</div>
@@ -260,6 +311,9 @@ export function CardTitleRow({
 }) {
 	return (
 		<div
+			/* a Card's Heading is part of the Card: its words are set in
+			   the Card's density, as its Blocks are */
+			data-density="compact"
 			className="relative flex h-full w-full min-w-0 items-end"
 			style={{ maxWidth: column }}
 		>

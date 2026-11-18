@@ -1,9 +1,9 @@
-import { Button, IconSwap, NoteQuoteSkeleton, NoteSection } from "lego";
-import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
+import { NoteQuoteSkeleton, NoteSection } from "lego";
 import type { ReactNode } from "react";
 
 import type { NoteDataFor } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
+import { LoadMore } from "../../common/load-more";
 import { citedOrigin, SourceQuote } from "../../common/source-quote";
 
 type SourceContext = NoteDataFor<"Reading">["sourceContexts"]["page"][number];
@@ -81,26 +81,12 @@ export function readingSourceContextsRenderer(
 					</ul>
 				) : null}
 				{sourceContexts.hasMore ? (
-					<Button
-						variant="outline"
-						size="sm"
-						className="mt-4 w-fit"
-						disabled={
-							sourceContexts.isLoading ||
-							sourceContexts.loadMore === null
-						}
-						onClick={() => void sourceContexts.loadMore?.()}
-					>
-						<IconSwap
-							data-icon="inline-start"
-							active={sourceContexts.isLoading}
-							idle={<ChevronDownIcon />}
-							busy={<LoaderCircleIcon className="animate-spin" />}
-						/>
-						{sourceContexts.isLoading
-							? "Loading…"
-							: "Load more Source Contexts"}
-					</Button>
+					<LoadMore
+						label="Load more Source Contexts"
+						isLoading={sourceContexts.isLoading}
+						loadMore={sourceContexts.loadMore}
+						card={PresentationCapabilities.presentation === "Card"}
+					/>
 				) : null}
 				{sourceContexts.error ? (
 					<p className="mt-2 text-sm text-destructive" role="alert">

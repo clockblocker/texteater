@@ -2,7 +2,11 @@ import type * as React from "react";
 
 import { cn } from "../utils";
 
-/** A phonetic transcription set quietly beside a headword. */
+/**
+ * A phonetic transcription set quietly beside a headword: upright, as IPA
+ * is printed, and never broken mid-transcription. Compact density keeps
+ * its slanted, breakable form.
+ */
 export function Ipa({
 	transcription,
 	className,
@@ -14,7 +18,7 @@ export function Ipa({
 		<span
 			data-slot="ipa"
 			className={cn(
-				"text-sm text-ink-muted italic [overflow-wrap:anywhere]",
+				"text-sm whitespace-nowrap text-ink-muted compact:whitespace-normal compact:italic compact:[overflow-wrap:anywhere]",
 				className,
 			)}
 			{...props}

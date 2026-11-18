@@ -1,9 +1,9 @@
-import { Button, IconSwap, LinkButton, NoteSection } from "lego";
-import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
+import { LinkButton, NoteSection } from "lego";
 
 import type { SurfaceDefaultRenderer } from "../../../renderer";
 import { featureSummary, genderTone } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
+import { LoadMore } from "../../common/load-more";
 import { RouteMark } from "../../common/route-mark";
 
 /**
@@ -83,23 +83,11 @@ export const renderDefaultSurfaceRoutes = (({
 				</p>
 			) : null}
 			{!isCard && pagination?.hasMore ? (
-				<Button
-					variant="outline"
-					size="sm"
-					className="mt-4 w-fit"
-					disabled={
-						pagination.isLoading || pagination.loadMore === null
-					}
-					onClick={() => void pagination.loadMore?.()}
-				>
-					<IconSwap
-						data-icon="inline-start"
-						active={pagination.isLoading}
-						idle={<ChevronDownIcon />}
-						busy={<LoaderCircleIcon className="animate-spin" />}
-					/>
-					{pagination.isLoading ? "Loading…" : "Load more analyses"}
-				</Button>
+				<LoadMore
+					label="Load more analyses"
+					isLoading={pagination.isLoading}
+					loadMore={pagination.loadMore}
+				/>
 			) : null}
 			{pagination?.error ? (
 				<p className="mt-2 text-sm text-destructive" role="alert">

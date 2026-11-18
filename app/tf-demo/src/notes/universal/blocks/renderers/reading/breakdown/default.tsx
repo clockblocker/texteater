@@ -29,7 +29,9 @@ function ReadingBreakdown({
 	if (!constituents && !morphemes && sourceLinks.length === 0) return null;
 	return (
 		<NoteSection aria-label="Breakdown" label="Breakdown">
-			<div className="grid gap-1.5">
+			{/* the morphemes line keeps room above its letters for the school
+			    marks, and that room is the gap: the lines read as one block */}
+			<div className="grid gap-0.5 compact:gap-1.5">
 				{constituents ? (
 					<ConstituentsLine
 						pieces={constituents}

@@ -43,6 +43,12 @@ test("an unwatched Cover reports unfolded on the render that unwatches it", () =
 		view.container.querySelector<HTMLElement>("[data-scroller]");
 	if (!scroller) throw new Error("The probe renders a scroller.");
 
+	/* happy-dom lays nothing out, so the Body is given its scroll range: a
+	   Heading folds only where the Body still scrolls once folded */
+	Object.defineProperties(scroller, {
+		scrollHeight: { value: 2000 },
+		clientHeight: { value: 600 },
+	});
 	scroller.scrollTop = 100;
 	act(() => {
 		fireEvent.scroll(scroller);

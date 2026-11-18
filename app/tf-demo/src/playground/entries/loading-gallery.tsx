@@ -1,7 +1,7 @@
 import { NoteSkeletonFor } from "@/notes";
 import { ScrollViewSkeleton } from "@/views/scroll-view";
 import { applicationRenderer } from "@/workspace/application-renderer";
-import { HeadingSkeleton } from "@/workspace/note-part";
+import { HeadingSkeleton, NoteHeadingSkeleton } from "@/workspace/note-part";
 import {
 	Stage,
 	type StagedParts,
@@ -32,7 +32,7 @@ const NOTE_COLUMN_REM = applicationRenderer.columnRem({
 
 /** A Note of `kind` while it loads, as the app splits it: the Heading's bone, and the Body's. */
 function loadingNote(kind: NoteKind): StagedParts {
-	const heading = <HeadingSkeleton />;
+	const heading = <NoteHeadingSkeleton />;
 	return {
 		label: `Loading ${kind}`,
 		columnRem: NOTE_COLUMN_REM,

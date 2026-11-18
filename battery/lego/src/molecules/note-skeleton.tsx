@@ -10,7 +10,7 @@ import { NoteTitleRow, noteTitleVariants } from "./note-title";
 
 /**
  * The loading form of a Note. It keeps the Note's own structure (headword
- * row, dashed rules, route marks, quote bar, tag footer) and fills only the
+ * row, section labels, route marks, quote bar, tag footer) and fills only the
  * places where words will appear with quiet bones, so a Note that is still
  * on its way already reads as the kind of Note it is about to become.
  *
@@ -116,7 +116,7 @@ export function NoteSectionSkeleton({
 	return (
 		<NoteSection
 			data-slot="note-section-skeleton"
-			label={<NoteBone className="h-[0.62rem] w-14 rounded-[0.15rem]" />}
+			label={<NoteBone className="h-[0.5rem] w-14 rounded-[0.15rem]" />}
 			className={className}
 			{...props}
 		>
@@ -185,7 +185,7 @@ export function NoteQuoteSkeleton({
 		<div
 			data-slot="note-quote-skeleton"
 			className={cn(
-				"border-s-[3px] border-line py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] compact:ps-3",
+				"max-w-[38rem] border-s-2 border-line py-0.5 ps-[calc(1.75rem_-_2px)] compact:max-w-none compact:border-s-[3px] compact:py-1 compact:ps-3",
 				className,
 			)}
 			{...props}
@@ -206,7 +206,10 @@ export function NoteTagsSkeleton({
 	return (
 		<NoteTags
 			data-slot="note-tags-skeleton"
-			className={cn("items-center", className)}
+			className={cn(
+				"items-center gap-x-5 [&>*:not(:last-child)]:after:content-none",
+				className,
+			)}
 			{...props}
 		>
 			{Array.from({ length: count }, (_, index) => (

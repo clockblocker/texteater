@@ -70,9 +70,11 @@ const STILL: ContentDrawing = {
 
 /**
  * A Sheet's Heading is its bar, so its Note's first Block keeps only the
- * air it keeps under one.
+ * air it keeps under one: the loaded Note's, and its skeleton's, so a
+ * Block lands where its bone was.
  */
-const SHEET_BODY_UNDER_BAR = "[&_[data-note-presentation]>article]:pt-0";
+const SHEET_BODY_UNDER_BAR =
+	"[&_[data-note-presentation]>article]:pt-0 [&_[data-slot=note-skeleton]>div]:pt-0";
 
 /**
  * What a Presentation's box holds, in one of its forms (tf-demo ADR
@@ -83,8 +85,8 @@ const SHEET_BODY_UNDER_BAR = "[&_[data-note-presentation]>article]:pt-0";
  *
  * As a Card the Heading is the one-line title row, at the lower edge when
  * the Card is folded below the open one. As a Cover it is the Cover's
- * bar: ← and × around the title, folding to the bar's height once the
- * Body scrolls. As a Ground it folds shut, because the Pane bar carries
+ * bar: ← and × around the title, set large as the page's headword and
+ * folding to the bar's height and type once the Body scrolls. As a Ground it folds shut, because the Pane bar carries
  * the label. The row is one element in every form; only its words change.
  */
 export function PresentationContent({
@@ -164,6 +166,7 @@ export function PresentationContent({
 													children: (
 														<SheetChrome
 															ruled={folded}
+															large={!folded}
 															maxWidth={
 																coverWidth
 															}

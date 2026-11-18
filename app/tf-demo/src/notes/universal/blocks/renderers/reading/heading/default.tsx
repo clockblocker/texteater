@@ -85,10 +85,12 @@ export function ReadingHeading({
 						/>
 					) : (
 						<span
+							/* `pre` keeps the space after the emoji where the
+							   title lays its parts out in a row */
 							className={
 								pending?.emojiArrived
-									? "note-arrival text-ink"
-									: "text-ink"
+									? "note-arrival whitespace-pre text-ink"
+									: "whitespace-pre text-ink"
 							}
 						>
 							{note.reading.emojiDescription}{" "}

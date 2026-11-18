@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { BAR_REM, HEADER_REM } from "compass";
 import {
 	cardForm,
+	coverFoldRem,
 	coverHeadingRem,
 	foldedAt,
 	formLayout,
@@ -88,6 +89,15 @@ describe("the Heading row", () => {
 		expect(foldedAt(true, 10)).toBe(true);
 		expect(foldedAt(true, 0)).toBe(false);
 	});
+
+	test("stays tall where the Body would fit once it folded", () => {
+		/* the fold would hand the Body all it scrolls by, send it back to
+		   its top and unfold: a flicker on every scroll */
+		expect(foldedAt(false, 30, 0)).toBe(false);
+		expect(foldedAt(false, 30, -12)).toBe(false);
+		expect(foldedAt(false, 30, 1)).toBe(true);
+		expect(coverFoldRem()).toBe(coverHeadingRem(false) - BAR_REM);
+	});
 });
 
 describe("the paper skin", () => {
@@ -136,8 +146,10 @@ describe("the paper skin", () => {
 			gutterRem: 1,
 			column: "26rem",
 		});
+		/* and stops at the Notes page's column, where the Blocks stop, so
+		   a title set on it starts where they do in a wide Pane too */
 		expect(sheetColumn(50, true)).toEqual({
-			body: "53rem",
+			body: "min(53rem, var(--container-note))",
 			gutterRem: 2.5,
 			column: "50rem",
 		});

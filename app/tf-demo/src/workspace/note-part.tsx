@@ -1,4 +1,4 @@
-import { Skeleton } from "lego";
+import { NoteTitleRow, Skeleton } from "lego";
 import { createContext, type ReactElement, useContext } from "react";
 import { NoteSkeletonFor, renderNote, renderNoteParts } from "@/notes";
 
@@ -47,7 +47,7 @@ export function PlacedNoteSkeleton({
 	readonly presentation: "Card" | "Sheet";
 }): ReactElement {
 	const part = useNotePart();
-	if (part === "heading") return <HeadingSkeleton />;
+	if (part === "heading") return <NoteHeadingSkeleton />;
 	return (
 		<NoteSkeletonFor
 			kind={kind}
@@ -63,7 +63,20 @@ export function HeadingSkeleton() {
 		<Skeleton
 			role="status"
 			aria-label="Loading"
-			className="h-5 w-32 max-w-full"
+			className="h-[1.25em] max-h-6 w-[8em] max-w-full"
 		/>
+	);
+}
+
+/**
+ * A Note's Heading before its words arrive: the bone on the title's row,
+ * so it takes the size the title will have, a Card's or a Cover's large
+ * one.
+ */
+export function NoteHeadingSkeleton() {
+	return (
+		<NoteTitleRow>
+			<HeadingSkeleton />
+		</NoteTitleRow>
 	);
 }

@@ -70,52 +70,59 @@ function Hop({ hop }: { hop: RouteHop }) {
 }
 
 function ReadingNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const isCard = presentation === "Card";
-	return (
-		<NoteSkeleton
-			density={densityFor(presentation)}
-			label="Loading Reading Note"
-		>
-			{part === "Note" ? (
-				<NoteTitleSkeleton>
-					<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
-					<NoteBone tone="headword" className="h-[0.8em] w-28" />
-				</NoteTitleSkeleton>
-			) : null}
-			<NoteSection label="">
-				<NoteLinesSkeleton
-					className="px-2"
-					widths={
-						isCard
-							? ["w-full", "w-2/3"]
-							: ["w-full", "w-11/12", "w-1/2"]
-					}
-				/>
-			</NoteSection>
-			{isCard ? null : (
-				<NoteSectionSkeleton>
-					<NoteRouteRowsSkeleton
-						mark={
-							<RelationMark
-								relation="nearSynonym"
-								className="text-ink-faint"
-							/>
-						}
-						widths={["w-24", "w-32"]}
+	const title =
+		part === "Note" ? (
+			<NoteTitleSkeleton>
+				<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
+				<NoteBone tone="headword" className="h-[0.8em] w-28" />
+			</NoteTitleSkeleton>
+		) : null;
+	if (presentation === "Card")
+		return (
+			<NoteSkeleton density="compact" label="Loading Reading Note">
+				{title}
+				<NoteSection label="">
+					<NoteLinesSkeleton
+						className="px-2"
+						widths={["w-full", "w-2/3"]}
 					/>
-				</NoteSectionSkeleton>
-			)}
-			<NoteSectionSkeleton className="compact:before:hidden">
-				<div className="grid gap-5 compact:gap-3">
+				</NoteSection>
+				<NoteSectionSkeleton className="compact:before:hidden">
 					<NoteQuoteSkeleton />
-					{isCard ? null : (
-						<NoteQuoteSkeleton
-							widths={["w-full", "w-5/6", "w-2/5"]}
-						/>
-					)}
+				</NoteSectionSkeleton>
+				<NoteTagsSkeleton count={4} />
+			</NoteSkeleton>
+		);
+	/* a Sheet keeps the Blocks of a loaded Reading in their order: its
+	   Source Contexts, its Relations, its Definition */
+	return (
+		<NoteSkeleton density="comfortable" label="Loading Reading Note">
+			{title}
+			<NoteSectionSkeleton>
+				<div className="grid gap-3">
+					<NoteQuoteSkeleton />
+					<NoteQuoteSkeleton widths={["w-full", "w-5/6", "w-2/5"]} />
 				</div>
 			</NoteSectionSkeleton>
-			<NoteTagsSkeleton count={4} />
+			<NoteSectionSkeleton>
+				<NoteRouteRowsSkeleton
+					className="gap-1"
+					mark={
+						<RelationMark
+							relation="nearSynonym"
+							className="text-ink-faint"
+						/>
+					}
+					widths={["w-24", "w-32"]}
+				/>
+			</NoteSectionSkeleton>
+			<NoteSectionSkeleton>
+				<NoteLinesSkeleton
+					className="max-w-[36rem] leading-relaxed"
+					widths={["w-full", "w-1/2"]}
+				/>
+			</NoteSectionSkeleton>
+			<NoteTagsSkeleton count={3} />
 		</NoteSkeleton>
 	);
 }

@@ -113,13 +113,14 @@ for (const motion of ["no-preference", "reduce"] as const) {
 			await frame.locator('[data-presentation="card"]').dblclick();
 			const cover = frame.locator('[data-presentation="cover"]');
 			await expect(cover).toBeVisible();
-			/* the bar grows and the Card's fade lifts as the Cover lands */
+			/* the bar grows and the Card's fade lifts as the Cover lands; a
+			   Cover's Heading is 5.5rem, room for the title set large */
 			await expect
 				.poll(async () => {
 					const { heading, fade } = await presentationMetrics(cover);
 					return [heading.height, fade.opacity];
 				})
-				.toEqual([72, "0"]);
+				.toEqual([88, "0"]);
 			const app = await presentationMetrics(cover);
 			await openGallery(page);
 			const gallery = await presentationMetrics(
@@ -182,7 +183,7 @@ for (const motion of ["no-preference", "reduce"] as const) {
 					const { heading, fade } = await presentationMetrics(cover);
 					return [heading.height, fade.opacity];
 				})
-				.toEqual([72, "0"]);
+				.toEqual([88, "0"]);
 			const opened = await presentationMetrics(cover);
 			await openGallery(page, "🏦");
 			const gallery = await presentationMetrics(
@@ -194,7 +195,46 @@ for (const motion of ["no-preference", "reduce"] as const) {
 				title: metrics.title && { ...metrics.title, left: 0 },
 			});
 			expect(sized(opened)).toEqual(sized(gallery));
-			expect(opened.heading.height).toBe(72);
+			expect(opened.heading.height).toBe(88);
+		});
+
+		test("a Cover's title is the page's headword, on its Blocks' leading edge", async ({
+			page,
+		}) => {
+			await openGallery(page);
+			const cover = page.locator('[data-presentation="cover"]');
+			const read = () =>
+				cover.evaluate((element) => {
+					const at = (selector: string) => {
+						const found = element.querySelector(selector);
+						if (!found) throw new Error(`Missing ${selector}`);
+						return found;
+					};
+					const title = at("[data-heading] [data-slot=note-title]");
+					const start = (node: Element) =>
+						Math.round(node.getBoundingClientRect().left);
+					return {
+						title: start(title),
+						block: start(at("[data-slot=note-section-label]")),
+						tags: start(at("[data-slot=note-tags]")),
+						back: start(at('[data-heading-chrome="back"]')),
+						size: getComputedStyle(title).fontSize,
+					};
+				});
+			/* the Stage is wider than the Notes page's column here, which is
+			   where a title once started 2.5rem before its Blocks */
+			const wide = await read();
+			expect(wide.title).toBe(wide.block);
+			expect(wide.tags).toBe(wide.block);
+			expect(wide.back).toBeLessThan(wide.title);
+			expect(wide.size).toBe("28px");
+			/* a phone's Pane: the same edge, and a headword that gives a
+			   little so several words fit */
+			await page.setViewportSize({ width: 724, height: 1100 });
+			const narrow = await read();
+			expect(narrow.title).toBe(narrow.block);
+			expect(Number.parseFloat(narrow.size)).toBeLessThan(28);
+			expect(Number.parseFloat(narrow.size)).toBeGreaterThanOrEqual(22);
 		});
 
 		test("a dealt Deck rests in the same pile in the app and in Deck interactions", async ({

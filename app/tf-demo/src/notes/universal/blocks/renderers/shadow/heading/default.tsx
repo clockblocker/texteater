@@ -21,7 +21,7 @@ export const renderDefaultShadowHeading = (({ noteData }) => {
 						aria-label="Not in the dictionary yet"
 						className="size-[0.8em] shrink-0"
 					/>
-					{descriptor.canonicalForm}
+					<span>{descriptor.canonicalForm}</span>
 				</NoteTitle>
 				<span className="text-sm text-ink-muted">
 					{inspection.candidates.length === 0

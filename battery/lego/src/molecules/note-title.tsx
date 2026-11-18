@@ -56,7 +56,11 @@ export function NoteTitleLink({
 	);
 }
 
-/** Lays a title and its aside (for example a transcription) on one baseline. */
+/**
+ * Lays a title and its aside (for example a transcription) on one baseline,
+ * the aside right after the title it belongs to. In compact density the
+ * aside sits at the row's far end.
+ */
 export function NoteTitleRow({
 	className,
 	...props
@@ -65,7 +69,7 @@ export function NoteTitleRow({
 		<div
 			data-slot="note-title-row"
 			className={cn(
-				"flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2",
+				"flex flex-wrap items-baseline gap-x-3 gap-y-1 compact:justify-between compact:gap-x-6 compact:gap-y-2",
 				className,
 			)}
 			{...props}

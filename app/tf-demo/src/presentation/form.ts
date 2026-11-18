@@ -71,8 +71,11 @@ export function formLayout(form: PresentationForm): FormLayout {
 	};
 }
 
-/** A Cover's Heading while its Body rests at its top: a title row with air above it. */
-const COVER_HEADING_REM = 4.5;
+/**
+ * A Cover's Heading while its Body rests at its top: the Note's title set
+ * large, as the page's headword, with air above it.
+ */
+const COVER_HEADING_REM = 5.5;
 /** A Cover's Heading folds this far into its Body, and unfolds only at its top. */
 const FOLD_AT_PX = 24;
 
@@ -85,9 +88,24 @@ export function coverHeadingRem(folded: boolean): number {
  * Whether a Heading is folded: its Sheet's Body has scrolled past
  * `FOLD_AT_PX`. It unfolds only back at the top, so the height the fold
  * gives the Body cannot scroll it back under the line and flicker.
+ *
+ * `roomOnceFolded` is how far the Body could still scroll after the fold,
+ * in px: its scroll range less the height the Heading gives up
+ * (`coverFoldRem`). A Body with none would fit once folded, scroll back
+ * to its top and unfold again on every scroll, so its Heading stays
+ * tall.
  */
-export function foldedAt(was: boolean, scrollTop: number): boolean {
-	return was ? scrollTop > 0 : scrollTop > FOLD_AT_PX;
+export function foldedAt(
+	was: boolean,
+	scrollTop: number,
+	roomOnceFolded = Number.POSITIVE_INFINITY,
+): boolean {
+	return was ? scrollTop > 0 : scrollTop > FOLD_AT_PX && roomOnceFolded > 0;
+}
+
+/** The height a Cover's Heading gives its Body when it folds, in rem. */
+export function coverFoldRem(): number {
+	return COVER_HEADING_REM - BAR_REM;
 }
 
 /** The Heading row's height in `form`, in rem; nothing where it folds shut. */

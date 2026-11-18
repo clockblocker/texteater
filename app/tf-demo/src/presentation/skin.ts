@@ -77,13 +77,19 @@ export const COVER_GUTTER_REM = 2.5;
  * becomes a Sheet and the column widens with them, so the text keeps its
  * measure and its place. `columnRem` is the Subject's Sheet column; a
  * Card's is `CARD_WIDTH_REM`.
+ *
+ * A Sheet's Blocks never lay out wider than the Notes page's column
+ * (`--container-note`), however much room `columnRem` asks the Pane for,
+ * so `body` stops there too. Without that cap a Note's title started
+ * 2.5rem before its Blocks in any Pane wider than the Notes page's column.
  */
 export function sheetColumn(columnRem: number, sheet: boolean) {
 	const column = sheet ? columnRem : CARD_WIDTH_REM;
 	const gutterRem = sheet ? COVER_GUTTER_REM : 1;
+	const width = `${(column + 2 * (gutterRem - 1)).toString()}rem`;
 	return {
 		/** The Blocks' column, gutters included: a CSS width. */
-		body: `${(column + 2 * (gutterRem - 1)).toString()}rem`,
+		body: sheet ? `min(${width}, var(--container-note))` : width,
 		/** The padding either side of the Blocks, inside `body`, in rem. */
 		gutterRem,
 		/** The Card's title row is centred at this width. */

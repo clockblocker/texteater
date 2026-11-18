@@ -344,14 +344,19 @@ test("the heading and the translations print a preposition and a slot in the sam
 	expect(markup).toContain(
 		`${preposition("mit")} ${slot("jM")} zu tun haben`,
 	);
+	// A Sheet sets one row per language: its tag, then its translations.
+	const row = (language: string) =>
+		`>${language}</dt><dd lang="${language}" class="text-pretty">`;
 	expect(markup).toContain(
-		`en: have to do ${preposition("with")} ${slot("something")}`,
+		`${row("en")}have to do ${preposition("with")} ${slot("something")}`,
 	);
 	expect(markup).toContain(
-		`ru: иметь отношение ${preposition("к")} ${slot("чему-то")}`,
+		`${row("ru")}иметь отношение ${preposition("к")} ${slot("чему-то")}`,
 	);
-	// A translation with no valency stays plain.
-	expect(markup).toContain("en: concern</span>");
+	// A translation with no valency stays plain, a middle dot after the first.
+	expect(markup).toContain(
+		'<span class="text-ink-faint"> · </span>concern</dd>',
+	);
 });
 
 test("a free slot's preposition takes the preposition style", () => {

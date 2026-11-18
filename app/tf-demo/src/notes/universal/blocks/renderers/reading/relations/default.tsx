@@ -35,7 +35,10 @@ export const renderDefaultReadingRelations = (({
 	return (
 		<NoteSection aria-label="Relations" label="Relations">
 			{relations.length > 0 || pendingRelations.length > 0 ? (
-				<ul className="grid gap-2" aria-label="Semantic relations">
+				<ul
+					className="grid gap-1 compact:gap-2"
+					aria-label="Semantic relations"
+				>
 					{relations.map((relation) => (
 						<li
 							key={`${relation.relation}:${
@@ -98,7 +101,7 @@ export const renderDefaultReadingRelations = (({
 			) : null}
 			{grammaticalAlternatives.length > 0 ? (
 				<ul
-					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
+					className="grid gap-1 compact:gap-2 [p+&]:mt-2 [ul+&]:mt-2"
 					aria-label="Grammatical alternatives"
 				>
 					{grammaticalAlternatives.map((alternative) => (
