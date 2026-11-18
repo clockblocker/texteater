@@ -1,7 +1,9 @@
 /**
  * The pairs code proposes as one unit, for the judge to weigh: split
  * adverbs, correlators, circumpositions, multiword names and a one-word
- * preposition written as two words.
+ * preposition written as two words. No pair crosses a span (`Piece.span`):
+ * the clause-bounded kinds stay inside one already, and a correlator's
+ * parts stand in one.
  */
 import { germanSpelledApartPrepositions } from "dumcorpus/inventories";
 import { nounLike, splitAdverbForm } from "./candidates.js";
@@ -115,7 +117,11 @@ export function pairCandidatesOf(
 		const right = pieces[index + 1];
 		if (!right) continue;
 		for (const [first, second] of adjacentConjunctions)
-			if (lower(left) === first && lower(right) === second)
+			if (
+				lower(left) === first &&
+				lower(right) === second &&
+				left.span === right.span
+			)
 				pairs.push({
 					kind: "correlator",
 					left,
@@ -180,7 +186,8 @@ export function pairCandidatesOf(
 				if (
 					head === first &&
 					tail === second &&
-					right.id - left.id <= 20
+					right.id - left.id <= 20 &&
+					right.span === left.span
 				)
 					pairs.push({ kind: "correlator", left, right, name });
 		}
@@ -197,6 +204,7 @@ export function oldSpellingCorrelators(sentence: Sentence): PairCandidate[] {
 				if (
 					right.id > left.id + 1 &&
 					right.id - left.id <= 20 &&
+					right.span === left.span &&
 					lower(right) === "daß"
 				)
 					pairs.push({

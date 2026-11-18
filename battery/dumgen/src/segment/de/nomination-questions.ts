@@ -9,6 +9,7 @@ import type { Questions } from "@typesafe-ai/sdk";
 import { choice, noul } from "../ask.js";
 import {
 	idiomHosts,
+	nounLike,
 	type Slot,
 	type SlotKind,
 	wasFuerId,
@@ -124,12 +125,19 @@ export function finalQuestions(
 	options: FinalOptions,
 ): Questions {
 	const questions: Questions = {};
-	for (const slot of slots) {
-		if (slot.kind !== "idiom") continue;
-		const hosts = idiomHosts(sentence, slot.piece);
-		if (hosts.length === slot.hosts.length) continue;
-		questions[reaskedIdiomId(slot.piece.id)] = choice(
-			`In \`sentence\`, is ${ref(slot.piece)} a fixed part of an idiom or a support-verb collocation together with a verb (den Faden verlieren, den Kopf in den Sand stecken, eine Entscheidung treffen, Kritik üben, einen Antrag stellen, zur Verfügung stellen, Angst haben)? If so, which piece is that verb? Choose none for an ordinary noun the verb merely takes as its object or complement, and for a name.`,
+	// A noun whose span holds no verb has no idiom slot, yet its re-asked
+	// hosts may hold one (Ausbilder: „Herzlichen Glückwunsch, Nina!“).
+	const slotHosts = new Map(
+		slots
+			.filter((slot) => slot.kind === "idiom")
+			.map((slot) => [slot.piece.id, slot.hosts.length]),
+	);
+	for (const piece of sentence.pieces) {
+		if (!nounLike(piece)) continue;
+		const hosts = idiomHosts(sentence, piece);
+		if (hosts.length === (slotHosts.get(piece.id) ?? 0)) continue;
+		questions[reaskedIdiomId(piece.id)] = choice(
+			`In \`sentence\`, is ${ref(piece)} a fixed part of an idiom or a support-verb collocation together with a verb (den Faden verlieren, den Kopf in den Sand stecken, eine Entscheidung treffen, Kritik üben, einen Antrag stellen, zur Verfügung stellen, Angst haben)? If so, which piece is that verb? Choose none for an ordinary noun the verb merely takes as its object or complement, and for a name.`,
 			{
 				...Object.fromEntries(
 					hosts.map((host) => [`p${host.id}`, host.text]),

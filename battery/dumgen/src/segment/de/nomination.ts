@@ -9,7 +9,8 @@
  *    `final`'s Saying Choice, which production membership and the route
  *    batches both read (#1341).
  * 2. `expressions`: a Noul per pair of the pieces most likely fixed, whether
- *    they belong to one expression.
+ *    they belong to one expression. A pair's two pieces stand in one span
+ *    (`Piece.span`): no pair crosses . ; : ! ? or a parenthesis.
  * 3. `final`: step 0 asks a noun's idiom host again with clause-initial
  *    verbs among the hosts, and the old-spelling `so … daß`; the Saying
  *    Choice weighs each Saying span as a whole saying, a fragment of one, a
@@ -324,7 +325,10 @@ export const candidatesPlan = (proposal: Proposal): Plan<Candidates> => {
 	};
 };
 
-/** The `expressions` request, over the pieces `candidates` heard most likely fixed. */
+/**
+ * The `expressions` request, over the pieces `candidates` heard most likely
+ * fixed: each pair of them that stands in one span.
+ */
 export const expressionsPlan = (candidates: Candidates): Plan<Expressions> => {
 	const { sentence, fixed, ref } = candidates;
 	const flagged = sentence.pieces
@@ -332,23 +336,26 @@ export const expressionsPlan = (candidates: Candidates): Plan<Expressions> => {
 		.sort((a, b) => (fixed.get(b.id) ?? 0) - (fixed.get(a.id) ?? 0))
 		.slice(0, 14)
 		.sort((a, b) => a.id - b.id);
+	const pairs = flagged.flatMap((a, position) =>
+		flagged
+			.slice(position + 1)
+			.filter((b) => b.span === a.span)
+			.map((b) => [a, b] as const),
+	);
 	const questions: Questions = {};
-	for (const [position, a] of flagged.entries())
-		for (const b of flagged.slice(position + 1))
-			questions[expressionId(a.id, b.id)] = noul(
-				`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
-			);
+	for (const [a, b] of pairs)
+		questions[expressionId(a.id, b.id)] = noul(
+			`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
+		);
 	return {
 		questions,
 		read: (second) => ({
 			second,
-			links: flagged.flatMap((a, position) =>
-				flagged.slice(position + 1).map((b) => ({
-					left: a.id,
-					right: b.id,
-					probability: noulOf(second, expressionId(a.id, b.id)),
-				})),
-			),
+			links: pairs.map(([a, b]) => ({
+				left: a.id,
+				right: b.id,
+				probability: noulOf(second, expressionId(a.id, b.id)),
+			})),
 		}),
 	};
 };

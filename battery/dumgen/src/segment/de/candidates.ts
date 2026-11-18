@@ -5,7 +5,8 @@
  * idiom verb) and the spans a Saying could cover; `pair-candidates.ts`
  * finds the pairs that could be one unit. The judge only picks a host
  * among a bounded window, which a verb's bracket stretches, or `none`, and
- * weighs the pairs and spans.
+ * weighs the pairs and spans. No host stands outside its piece's span
+ * (`Piece.span`): a host never crosses . ; : ! ? or a parenthesis.
  */
 import {
 	type AuthoredRealization,
@@ -233,7 +234,8 @@ const window = (
 		(other) =>
 			other.id !== piece.id &&
 			other.id >= piece.id - before &&
-			other.id <= piece.id + after,
+			other.id <= piece.id + after &&
+			other.span === piece.span,
 	);
 
 /** Marks a verb's bracket never reaches past. */
@@ -260,17 +262,21 @@ const nextMark = (sentence: Sentence, piece: Piece) =>
 
 /**
  * The words past `reach` after a finite verb that may close its bracket:
- * lowercase words standing right before a punctuation mark or at the end,
- * up to the first mark that ends the sentence's clause chain. A participle
- * or infinitive closes the bracket however long the middle field runs
- * (Gelegentlich werden kleine Speckbrocken, … Feldsalat hinzugefügt), and
- * a list's commas stand inside it.
+ * lowercase words of its span standing right before a punctuation mark or
+ * at the end, up to the first mark that ends the sentence's clause chain.
+ * A participle or infinitive closes the bracket however long the middle
+ * field runs (Gelegentlich werden kleine Speckbrocken, … Feldsalat
+ * hinzugefügt), and a list's commas stand inside it.
  */
 function bracketEnds(sentence: Sentence, verb: Piece, reach: number): Piece[] {
 	const ends: Piece[] = [];
 	for (const piece of sentence.pieces.slice(verb.id)) {
 		if (chainBreaks(sentence, verb, piece)) break;
-		if (piece.id <= verb.id + reach || !/^\p{Ll}/u.test(piece.text))
+		if (
+			piece.id <= verb.id + reach ||
+			piece.span !== verb.span ||
+			!/^\p{Ll}/u.test(piece.text)
+		)
 			continue;
 		const next = nextMark(sentence, piece);
 		if (!next || next.kind === "Punctuation") ends.push(piece);
@@ -300,6 +306,7 @@ function bracketStarts(
 		.slice(0, Math.max(particle.id - reach - 1, 0))
 		.reverse()) {
 		if (chainBreaks(sentence, piece, particle)) break;
+		if (piece.span !== particle.span) continue;
 		const previous = sentence.pieces[piece.id - 2];
 		const opensChain =
 			previous === undefined || chainBreaks(sentence, previous, piece);
@@ -364,10 +371,7 @@ export function slotsOf(
 				piece,
 				hosts: [
 					...bracketStarts(sentence, piece, 15),
-					...sentence.pieces.filter(
-						(other) =>
-							other.id < piece.id && other.id >= piece.id - 15,
-					),
+					...window(sentence, piece, 15, 0),
 				],
 			});
 		if (inventory.isAuxiliary(text))

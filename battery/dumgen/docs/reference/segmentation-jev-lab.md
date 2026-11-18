@@ -13,7 +13,8 @@ it and score it against frozen gold. Results live in the lab tickets
   cached jev as that port. `src/segment/de/segments.ts` is the Segment
   stage: it stitches a Sentence and cuts it into Segments.
   `src/segment/de/units.ts` is the unit stage. Nomination
-  (`nomination.ts`) asks what jev judges about code's candidates,
+  (`nomination.ts`) asks what jev judges about code's candidates, none of
+  whose hosts or pairs crosses a span (`. ; : ! ?` or a parenthesis);
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
   candidates4's maxim+closed policy (#843) with the code rules of X3, X5,

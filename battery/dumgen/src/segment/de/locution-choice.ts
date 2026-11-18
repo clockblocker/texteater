@@ -130,16 +130,21 @@ function mergeCandidates(
 			right: second,
 		});
 	};
-	for (const slot of nomination.slots) {
-		if (slot.kind !== "idiom") continue;
+	// A noun's idiom answers: its slot's, and its re-asked hosts', which a
+	// noun without a slot may have too.
+	for (const piece of nomination.sentence.pieces) {
+		const slot = nomination.slots.find(
+			(candidate) =>
+				candidate.kind === "idiom" && candidate.piece.id === piece.id,
+		);
 		for (const answer of [
-			nomination.first[slotId(slot)],
-			nomination.final[reaskedIdiomId(slot.piece.id)],
+			slot && nomination.first[slotId(slot)],
+			nomination.final[reaskedIdiomId(piece.id)],
 		]) {
 			if (answer?.type !== "choice") continue;
 			const top = argmaxBesideNone(answer.probabilities);
 			if (top && top.share >= idiomFlag)
-				flag(slot.piece.id, Number(top.key.slice(1)));
+				flag(piece.id, Number(top.key.slice(1)));
 		}
 	}
 	for (const link of memberLinks(nomination))

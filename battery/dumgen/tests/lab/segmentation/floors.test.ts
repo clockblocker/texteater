@@ -59,6 +59,7 @@ const piece = (id: number, text: string): Piece => ({
 	surface: text,
 	word: text,
 	clause: 0,
+	span: 0,
 });
 
 test("a satellite host must beat none by the margin; an idiom host only beats none", () => {

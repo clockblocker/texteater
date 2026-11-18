@@ -31,6 +31,12 @@ export type Piece = {
 	readonly fusedWord?: string;
 	/** Clauses are split at punctuation; used only for candidate windows. */
 	readonly clause: number;
+	/**
+	 * The span the piece stands in, which no host and no link crosses. A
+	 * span ends at . ; : ! ?, and a parenthesis or bracket is a span of its
+	 * own, after which the span it interrupted resumes.
+	 */
+	readonly span: number;
 };
 
 export type Sentence = {
@@ -40,6 +46,7 @@ export type Sentence = {
 };
 
 const clauseBreak = /[,;:.!?–—"„“”«»‚‘’()[\]]/u;
+const spanBreak = /[;:.!?]/u;
 
 export function sentenceOf(input: {
 	readonly segments: readonly Segment[];
@@ -47,9 +54,22 @@ export function sentenceOf(input: {
 	const { segments } = input;
 	const pieces: Piece[] = [];
 	let clause = 0;
+	let spans = 0;
+	// The spans open at this point: an insert's on top of the one it interrupts.
+	const open: number[] = [0];
 	for (const [index, segment] of segments.entries()) {
-		if (segment.kind === "Punctuation" && clauseBreak.test(segment.text))
-			clause++;
+		if (segment.kind === "Punctuation") {
+			if (clauseBreak.test(segment.text)) clause++;
+			if (segment.text === "(" || segment.text === "[")
+				open.push(++spans);
+			else if (
+				(segment.text === ")" || segment.text === "]") &&
+				open.length > 1
+			)
+				open.pop();
+			else if (spanBreak.test(segment.text))
+				open[open.length - 1] = ++spans;
+		}
 		if (segment.kind !== "ResolvableText") continue;
 		const surface = segment.surface ?? segment.text;
 		const role = fusedPieceAt(germanFusionTable, segments, index)?.role;
@@ -61,6 +81,7 @@ export function sentenceOf(input: {
 			word:
 				role === "Verb" || role === "Pronoun" ? surface : segment.text,
 			clause,
+			span: open[open.length - 1] ?? 0,
 		});
 	}
 	// A run of ResolvableText Segments with nothing between them is one
