@@ -45,7 +45,8 @@
 		"request-baselines": "bun cli/request-baselines.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",
 		"segment-in-units-lab": "bun --env-file=../../.env.local cli/segment-in-units-lab.ts",
-		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts"
+		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts",
+		"valency-notation": "bun --env-file=../../.env.local lab/evaluation/valency-notation/bench.ts"
 	},
 	"dependencies": {
 		"@typesafe-ai/sdk": "^0.6.0",
@@ -63,6 +64,7 @@
 		"bun-types": "1.4.2",
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",
+		"gpt-tokenizer": "^4.1.2",
 		"knip": "^6.29.0",
 		"promptsmith": "workspace:^",
 		"typescript": "^7.0.2"
