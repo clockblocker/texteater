@@ -1,0 +1,52 @@
+{
+	"files": [
+		"batch-2026-11-19T07-19-20-165Z.jsonl"
+	],
+	"set": "heldout",
+	"spentUsd": 0.012263234999999994,
+	"rows": [
+		{
+			"revision": "production",
+			"calls": 162,
+			"batchReps": 3,
+			"accuracy": 58.6,
+			"accuracyPerRep": [
+				59.3,
+				59.3,
+				57.4
+			],
+			"unreadable": 0,
+			"outputTokens": 16,
+			"cachedInputTokens": 2024.4,
+			"inputTokens": 2117,
+			"usdPer1kFast": 0.1519,
+			"usdPer1kBatch": 0.038,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 1
+		},
+		{
+			"revision": "letters@r4",
+			"calls": 162,
+			"batchReps": 3,
+			"accuracy": 55.6,
+			"accuracyPerRep": [
+				55.6,
+				55.6,
+				55.6
+			],
+			"unreadable": 0,
+			"outputTokens": 13.4,
+			"cachedInputTokens": 2022,
+			"inputTokens": 2102,
+			"usdPer1kFast": 0.1451,
+			"usdPer1kBatch": 0.0363,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 0,
+			"vsBaseline": "0/15"
+		}
+	]
+}

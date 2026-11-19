@@ -23,7 +23,12 @@ import { lunaUsd } from "../resolve-grammar/pricing.js";
 import { type ValencyCase, valencyCases } from "./gold.js";
 import { requestOf } from "./harness.js";
 import { type BenchCase, type Job, runBatch, runLatency } from "./live.js";
-import { revisionPrompt, revisions } from "./revisions.js";
+import {
+	revisionAnswer,
+	revisionInput,
+	revisionPrompt,
+	revisions,
+} from "./revisions.js";
 import { readRuns, scoreCalls, summarize, table } from "./score.js";
 
 const evidence = fileURLToPath(
@@ -44,6 +49,7 @@ const { positionals, values } = parseArgs({
 		limit: { type: "string" },
 		misses: { type: "string" },
 		baseline: { type: "string", default: "production" },
+		"ignore-referent": { type: "boolean", default: false },
 	},
 });
 const [command, ...files] = positionals;
@@ -64,7 +70,11 @@ async function benchCases(set: string): Promise<Entry[]> {
 const asked = (values.revisions ?? "")
 	.split(",")
 	.filter(Boolean)
-	.map((revision) => ({ revision, systemPrompt: revisionPrompt(revision) }));
+	.map((revision) => ({
+		revision,
+		systemPrompt: revisionPrompt(revision),
+		...revisionInput(revision),
+	}));
 
 const stats = (values: readonly number[]) => {
 	const sorted = [...values].sort((a, b) => a - b);
@@ -104,39 +114,48 @@ async function tokens() {
 
 /** A round's worst-case price: no cache hit, every gold answer padded by a third. */
 function estimate(entries: readonly Entry[], reps: number, latency: number) {
-	const perRevision = asked.map(({ revision, systemPrompt }) => {
-		const sum = entries
-			.map((entry) => {
-				const body = lunaResponsesBody({
-					...entry.bench.request,
-					systemPrompt,
-				});
-				return {
-					inputTokens:
-						countTokens(JSON.stringify(body.input)) +
-						countTokens(JSON.stringify(body.text)),
-					outputTokens: Math.round(
-						1.3 *
-							(countTokens(
-								printGermanFrame(entry.frame, entry.context),
-							) +
-								10),
-					),
-				};
-			})
-			.reduce(
-				(total, next) => ({
-					inputTokens: total.inputTokens + next.inputTokens,
-					outputTokens: total.outputTokens + next.outputTokens,
-				}),
-				{ inputTokens: 0, outputTokens: 0 },
-			);
-		return {
-			revision,
-			batchUsd: lunaUsd(sum, "batch") * reps,
-			latencyUsd: (lunaUsd(sum, "fast") / entries.length) * (latency + 1),
-		};
-	});
+	const perRevision = asked.map(
+		({ revision, systemPrompt, input, schema }) => {
+			const sum = entries
+				.map((entry) => {
+					const body = lunaResponsesBody({
+						...entry.bench.request,
+						systemPrompt,
+						...(input
+							? { input: input(entry.bench.request.input) }
+							: {}),
+					});
+					return {
+						inputTokens:
+							countTokens(JSON.stringify(body.input)) +
+							countTokens(JSON.stringify(body.text)),
+						outputTokens: Math.round(
+							1.3 *
+								(countTokens(
+									printGermanFrame(
+										entry.frame,
+										entry.context,
+									),
+								) +
+									10),
+						),
+					};
+				})
+				.reduce(
+					(total, next) => ({
+						inputTokens: total.inputTokens + next.inputTokens,
+						outputTokens: total.outputTokens + next.outputTokens,
+					}),
+					{ inputTokens: 0, outputTokens: 0 },
+				);
+			return {
+				revision,
+				batchUsd: lunaUsd(sum, "batch") * reps,
+				latencyUsd:
+					(lunaUsd(sum, "fast") / entries.length) * (latency + 1),
+			};
+		},
+	);
 	const total = perRevision.reduce(
 		(sum, { batchUsd, latencyUsd }) => sum + batchUsd + latencyUsd,
 		0,
@@ -206,7 +225,13 @@ else if (command === "estimate") {
 		file.includes("/") ? file : join(evidence, "runs", file),
 	);
 	const records = readRuns(paths).filter((record) => byId.has(record.caseId));
-	const scored = scoreCalls(records, byId);
+	const scored = scoreCalls(records, byId, {
+		ignoreReferent: values["ignore-referent"] ?? false,
+		adapt: (revision, output) =>
+			revisions[revision] === undefined
+				? output
+				: revisionAnswer(revision).adapt(output),
+	});
 	const rows = summarize(scored, values.baseline);
 	const name = paths
 		.map((path) => basename(path, ".jsonl"))
@@ -214,7 +239,10 @@ else if (command === "estimate") {
 		.slice(0, 150);
 	const spent = records.reduce((sum, record) => sum + record.usd, 0);
 	writeFileSync(
-		join(evidence, `score-${values.set}-${name}.json`),
+		join(
+			evidence,
+			`score-${values.set}${values["ignore-referent"] ? "-noreferent" : ""}-${name}.json`,
+		),
 		`${JSON.stringify({ files: paths.map((path) => basename(path)), set: values.set, spentUsd: spent, rows }, null, "\t")}\n`,
 	);
 	console.log(table(rows));

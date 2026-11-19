@@ -1,0 +1,113 @@
+{
+	"files": [
+		"batch-2026-11-19T06-26-58-904Z.jsonl"
+	],
+	"set": "dev",
+	"spentUsd": 0.09342245499999995,
+	"rows": [
+		{
+			"revision": "production",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 62.7,
+			"accuracyPerRep": [
+				62.7,
+				62.7
+			],
+			"unreadable": 0,
+			"outputTokens": 16.2,
+			"cachedInputTokens": 2026.4,
+			"inputTokens": 2133.2,
+			"usdPer1kFast": 0.1588,
+			"usdPer1kBatch": 0.0397,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 10
+		},
+		{
+			"revision": "rules@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 64.8,
+			"accuracyPerRep": [
+				64.8,
+				64.8
+			],
+			"unreadable": 0,
+			"outputTokens": 16.2,
+			"cachedInputTokens": 2346.9,
+			"inputTokens": 2449.2,
+			"usdPer1kFast": 0.1715,
+			"usdPer1kBatch": 0.0429,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 12,
+			"vsBaseline": "49/33"
+		},
+		{
+			"revision": "examples@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 60.1,
+			"accuracyPerRep": [
+				59.6,
+				60.6
+			],
+			"unreadable": 0,
+			"outputTokens": 16.7,
+			"cachedInputTokens": 3082,
+			"inputTokens": 3186.2,
+			"usdPer1kFast": 0.2021,
+			"usdPer1kBatch": 0.0505,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 12,
+			"vsBaseline": "42/62"
+		},
+		{
+			"revision": "rules-examples@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 60.1,
+			"accuracyPerRep": [
+				60.6,
+				59.6
+			],
+			"unreadable": 0.5,
+			"outputTokens": 16.7,
+			"cachedInputTokens": 3397.2,
+			"inputTokens": 3502.2,
+			"usdPer1kFast": 0.2148,
+			"usdPer1kBatch": 0.0537,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 8,
+			"vsBaseline": "43/63"
+		},
+		{
+			"revision": "native@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 59.6,
+			"accuracyPerRep": [
+				59.1,
+				60.1
+			],
+			"unreadable": 0,
+			"outputTokens": 17,
+			"cachedInputTokens": 3058.1,
+			"inputTokens": 3162.2,
+			"usdPer1kFast": 0.202,
+			"usdPer1kBatch": 0.0505,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 10,
+			"vsBaseline": "46/70"
+		}
+	]
+}

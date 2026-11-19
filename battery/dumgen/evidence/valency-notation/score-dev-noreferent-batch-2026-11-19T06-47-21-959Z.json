@@ -1,0 +1,92 @@
+{
+	"files": [
+		"batch-2026-11-19T06-47-21-959Z.jsonl"
+	],
+	"set": "dev",
+	"spentUsd": 0.06674892000000003,
+	"rows": [
+		{
+			"revision": "production",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 72.3,
+			"accuracyPerRep": [
+				73.6,
+				71
+			],
+			"unreadable": 0.3,
+			"outputTokens": 16,
+			"cachedInputTokens": 2021.2,
+			"inputTokens": 2127.7,
+			"usdPer1kFast": 0.1581,
+			"usdPer1kBatch": 0.0395,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 9
+		},
+		{
+			"revision": "rules@r2",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 72,
+			"accuracyPerRep": [
+				70.5,
+				73.6
+			],
+			"unreadable": 0,
+			"outputTokens": 16,
+			"cachedInputTokens": 2459.6,
+			"inputTokens": 2562.2,
+			"usdPer1kFast": 0.1756,
+			"usdPer1kBatch": 0.0439,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 12,
+			"vsBaseline": "41/43"
+		},
+		{
+			"revision": "rules@r3",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 71.5,
+			"accuracyPerRep": [
+				72,
+				71
+			],
+			"unreadable": 0.5,
+			"outputTokens": 15.9,
+			"cachedInputTokens": 2527.2,
+			"inputTokens": 2636.3,
+			"usdPer1kFast": 0.1782,
+			"usdPer1kBatch": 0.0446,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 20,
+			"vsBaseline": "36/42"
+		},
+		{
+			"revision": "nosentence@r3",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 68.7,
+			"accuracyPerRep": [
+				67.9,
+				69.4
+			],
+			"unreadable": 0,
+			"outputTokens": 16.3,
+			"cachedInputTokens": 2503.5,
+			"inputTokens": 2568.3,
+			"usdPer1kFast": 0.1628,
+			"usdPer1kBatch": 0.0407,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 7,
+			"vsBaseline": "57/85"
+		}
+	]
+}

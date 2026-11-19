@@ -44,6 +44,10 @@ export type RunRecord = {
 export type Job = {
 	readonly revision: string;
 	readonly systemPrompt: string;
+	/** What the revision makes of production's input, if it changes it. */
+	readonly input?: (input: unknown) => unknown;
+	/** The answer schema the revision asks under, if not production's. */
+	readonly schema?: Readonly<Record<string, unknown>>;
 	readonly benchCase: BenchCase;
 	readonly repetition: number;
 };
@@ -68,10 +72,17 @@ function ledger(evidence: string, entry: Readonly<Record<string, unknown>>) {
 	);
 }
 
-const requestOf = (job: Job): LunaRequest => ({
-	...job.benchCase.request,
-	systemPrompt: job.systemPrompt,
-});
+const requestOf = (job: Job): LunaRequest => {
+	const { request } = job.benchCase;
+	const asked = {
+		...request,
+		systemPrompt: job.systemPrompt,
+		...(job.input ? { input: job.input(request.input) } : {}),
+	};
+	return job.schema && asked.outputFormat !== "text"
+		? { ...asked, outputSchema: job.schema }
+		: asked;
+};
 
 /** A response's output, or the problem the transport named for keeping none. */
 function outcomeOf(
@@ -151,7 +162,7 @@ export async function runBatch(
  * revision, the order rotating so no revision always goes first.
  */
 export async function runLatency(
-	revisions: readonly { revision: string; systemPrompt: string }[],
+	revisions: readonly Omit<Job, "benchCase" | "repetition">[],
 	cases: readonly BenchCase[],
 	options: { readonly apiKey: string; readonly evidence: string },
 ): Promise<string> {

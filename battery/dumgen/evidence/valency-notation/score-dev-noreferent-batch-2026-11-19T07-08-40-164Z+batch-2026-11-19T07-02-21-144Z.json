@@ -1,0 +1,123 @@
+{
+	"files": [
+		"batch-2026-11-19T07-08-40-164Z.jsonl",
+		"batch-2026-11-19T07-02-21-144Z.jsonl"
+	],
+	"set": "dev",
+	"spentUsd": 0.14878818500000027,
+	"rows": [
+		{
+			"revision": "rules-noref@r2",
+			"calls": 965,
+			"batchReps": 5,
+			"accuracy": 73.6,
+			"accuracyPerRep": [
+				73.6,
+				73.1,
+				74.6,
+				74.6,
+				72
+			],
+			"unreadable": 0.1,
+			"outputTokens": 15.9,
+			"cachedInputTokens": 2371.1,
+			"inputTokens": 2472.2,
+			"usdPer1kFast": 0.1717,
+			"usdPer1kBatch": 0.0429,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 22
+		},
+		{
+			"revision": "letters@r4",
+			"calls": 965,
+			"batchReps": 5,
+			"accuracy": 73.8,
+			"accuracyPerRep": [
+				75.6,
+				74.1,
+				73.6,
+				73.6,
+				72
+			],
+			"unreadable": 0,
+			"outputTokens": 13.2,
+			"cachedInputTokens": 2017.8,
+			"inputTokens": 2118.2,
+			"usdPer1kFast": 0.151,
+			"usdPer1kBatch": 0.0377,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 25,
+			"vsBaseline": "197/187"
+		},
+		{
+			"revision": "grammis@r4",
+			"calls": 965,
+			"batchReps": 5,
+			"accuracy": 72.7,
+			"accuracyPerRep": [
+				74.6,
+				71.5,
+				71,
+				72,
+				74.6
+			],
+			"unreadable": 0,
+			"outputTokens": 15.2,
+			"cachedInputTokens": 2090.7,
+			"inputTokens": 2191.2,
+			"usdPer1kFast": 0.1587,
+			"usdPer1kBatch": 0.0397,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 19,
+			"vsBaseline": "129/169"
+		},
+		{
+			"revision": "production",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 72,
+			"accuracyPerRep": [
+				73.1,
+				71
+			],
+			"unreadable": 0.3,
+			"outputTokens": 16.1,
+			"cachedInputTokens": 2037,
+			"inputTokens": 2133.2,
+			"usdPer1kFast": 0.1585,
+			"usdPer1kBatch": 0.0396,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 14,
+			"vsBaseline": "73/103"
+		},
+		{
+			"revision": "person@r4",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 69.9,
+			"accuracyPerRep": [
+				68.9,
+				71
+			],
+			"unreadable": 0,
+			"outputTokens": 15.7,
+			"cachedInputTokens": 2137.4,
+			"inputTokens": 2239.2,
+			"usdPer1kFast": 0.162,
+			"usdPer1kBatch": 0.0405,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 14,
+			"vsBaseline": "47/117"
+		}
+	]
+}
