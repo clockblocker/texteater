@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { ReflexiveSlot } from "../../../../../../shared/reflexive-slot";
 import { type CitationPresenter, citationText } from "../../citation";
 import { linkMembers, type SourceSegment } from "./link-members";
+import { excerptSourceSentence } from "./source-excerpt";
 
 type StoredOrigin =
 	| { readonly kind: "Scroll" }
@@ -39,8 +40,9 @@ export function citedOrigin(
 }
 
 /**
- * One quoted Source Context. A Scroll occurrence is the bare sentence with its
- * members lit. A Definition occurrence is prefixed with the defined Reading
+ * One quoted Source Context. A Scroll occurrence is the sentence, or for a
+ * long one the excerpt around the occurrence (`excerptSourceSentence`), with
+ * its members lit. A Definition occurrence is prefixed with the defined Reading
  * as "{emoji} {headword}:" so the reader knows whose definition is quoted;
  * the prefix and the members lead to the same place.
  */
@@ -59,9 +61,10 @@ export function SourceQuote({
 		origin.kind === "Definition"
 			? `the definition of ${origin.citation}`
 			: "the source Text";
+	const excerpt = excerptSourceSentence(segments, memberSegmentIndices);
 	const members = linkMembers(
-		segments,
-		memberSegmentIndices,
+		excerpt.segments,
+		excerpt.memberSegmentIndices,
 		follow,
 		destination,
 	);
