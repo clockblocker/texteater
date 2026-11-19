@@ -21,7 +21,9 @@
  * occurrence's reflexive realized it where its evidence names the case,
  * which it does only where the form or the preposition shows it, else as
  * Luna proposed it: sich hides its case; a Reading
- * without 🪞 has no Required one, though an Optional one may stand. A
+ * without 🪞 has no Required one, though an Optional one may stand: a
+ * Required sich Luna proposes for it is the ordinary object it stands for
+ * (`sich wenden` ↪: an Acc object). A
  * Reflexive inside a fixed phrase names its preposition (`außer sein`:
  * `außer` + Dat).
  */
@@ -351,12 +353,44 @@ function attestedReflexive(
 }
 
 /**
+ * The ordinary object a Required sich becomes on a Reading without 🪞: no
+ * lexical reflexive, so the sich is an object another noun phrase could
+ * replace, an Either Case complement in its case (`sich wenden` ↪:
+ * jmdn./etw.). None for a fixed phrase's reflexive, or where the frame
+ * already has an object in that case.
+ */
+function ordinaryObject(
+	proposed: GermanSlot,
+	rest: readonly GermanSlot[],
+): GermanSlot | undefined {
+	const reflexive = reflexiveOf(proposed.complements);
+	if (!reflexive || reflexive.preposition !== undefined) return undefined;
+	const { governedCase } = reflexive;
+	const taken = rest.some(({ complements }) =>
+		complements.some(
+			(complement) =>
+				complement.kind === "Case" &&
+				complement.governedCase === governedCase,
+		),
+	);
+	return taken
+		? undefined
+		: {
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase, referent: "Either" },
+				],
+			};
+}
+
+/**
  * The frame with the Reflexive Slot the Reading's 🪞 settles (ADR 0052),
  * and the Slot it drops. A 🪞 Reading's Reflexive is Required and stands
  * right after the subject. The creating occurrence's goes first where its
  * evidence names the case (`attestedReflexive`), with any fixed phrase's
  * preposition, else Luna's, then the occurrence's. A Reading without 🪞
- * keeps no Required one. A 🪞 Reading neither names a Reflexive's case for
+ * keeps no Required one: its sich becomes the ordinary object
+ * (`ordinaryObject`). A 🪞 Reading neither names a Reflexive's case for
  * is a failure.
  */
 function settledReflexive(
@@ -378,16 +412,23 @@ function settledReflexive(
 		reading.emojiDescription.startsWith(reflexiveMarker);
 	const proposed = frame.find(isReflexiveSlot);
 	const rest = frame.filter((slot) => slot !== proposed);
-	if (!marked)
-		return proposed?.status === "Required"
+	if (!marked) {
+		if (proposed?.status !== "Required") return { frame: [...frame] };
+		const object = ordinaryObject(proposed, rest);
+		return object
 			? {
+					frame: frame.map((slot) =>
+						slot === proposed ? object : slot,
+					),
+				}
+			: {
 					frame: rest,
 					dropped: {
 						slot: proposed,
 						reason: `A Reading whose Emoji Description has no ${reflexiveMarker} has no Required Reflexive Slot`,
 					},
-				}
-			: { frame: [...frame] };
+				};
+	}
 	const attested = attestedReflexive(evidence);
 	const offered = proposed && reflexiveOf(proposed.complements);
 	const complement =

@@ -145,10 +145,26 @@ test("a 🪞 Reading whose Reflexive case nothing names fails its frame", async 
 	]);
 });
 
-test("a Reading without 🪞 drops a Required Reflexive Slot and keeps an Optional one", async () => {
-	const required = await frame("😳", [subject, reflexive("Acc")]);
-	expect(frameOf(required.result.changes)).toEqual([subject]);
-	expect(required.trace?.events).toContainEqual(
+test("a Reading without 🪞 makes a Required sich its ordinary object, drops it beside one, and keeps an Optional one", async () => {
+	const required = await frame("↪", [subject, reflexive("Acc")]);
+	expect(frameOf(required.result.changes)).toEqual([
+		subject,
+		{
+			status: "Required",
+			complements: [
+				{ kind: "Case", governedCase: "Acc", referent: "Either" },
+			],
+		},
+	]);
+	const object = {
+		status: "Required",
+		complements: [
+			{ kind: "Case", governedCase: "Acc", referent: "Something" },
+		],
+	} as const;
+	const beside = await frame("😳", [subject, reflexive("Acc"), object]);
+	expect(frameOf(beside.result.changes)).toEqual([subject, object]);
+	expect(beside.trace?.events).toContainEqual(
 		expect.objectContaining({ name: "DroppedValencySlots" }),
 	);
 	const optional = await frame("😳", [subject, reflexive("Acc", "Optional")]);
