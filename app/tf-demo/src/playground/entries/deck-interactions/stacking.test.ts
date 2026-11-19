@@ -56,7 +56,7 @@ describe("the stacking at rest", () => {
 
 describe("the pile's slots", () => {
 	const frame = { w: 1200, h: 900 };
-	test("only the open Card has the open scale, and every slot's box and drawn top stay put whichever Card is open", () => {
+	test("only the open Card has the open scale, and every slot's box and drawn top stay put whichever Card is open, the open one trimmed to end where its slot ends when Cards lie below it", () => {
 		const count = 4;
 		const dealt = pileSlotsAt(frame, count, count - 1, 16);
 		for (let openAt = 0; openAt < count; openAt++) {
@@ -67,7 +67,11 @@ describe("the pile's slots", () => {
 				expect(slot.s).toBe(index === openAt ? OPEN_SCALE : 1);
 				expect(slot.u).toBe(was.u);
 				expect(slot.w).toBe(was.w);
-				expect(slot.h).toBe(was.h);
+				const trimmed = index === openAt && index < count - 1;
+				expect(slot.h).toBeCloseTo(
+					trimmed ? was.h / OPEN_SCALE : was.h,
+					9,
+				);
 				/* scaled about its centre, its top edge is where the slot has it */
 				const top = (s: number, v: number, h: number) =>
 					v - ((s - 1) * h) / 2;
@@ -75,6 +79,12 @@ describe("the pile's slots", () => {
 					top(was.s, was.v, was.h),
 					9,
 				);
+				/* trimmed, its drawn bottom is its unscaled slot's: the Tail
+				   under it shows a whole Heading row */
+				if (trimmed)
+					expect(
+						top(slot.s, slot.v, slot.h) + slot.s * slot.h,
+					).toBeCloseTo(top(was.s, was.v, was.h) + was.h, 9);
 			});
 		}
 	});

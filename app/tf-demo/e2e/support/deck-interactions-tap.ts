@@ -383,7 +383,10 @@ export function restingAs(dealt: readonly Shown[], openAt: number): Shown[] {
 		const was = index === dealtAt ? OPEN_SCALE : 1;
 		const now = index === openAt ? OPEN_SCALE : 1;
 		const w = (own.w / was) * now;
-		const h = (own.h / was) * now;
+		/* an open Card with Cards below it is trimmed to its slot's height,
+		   drawn: the Tail under it shows a whole Heading row */
+		const trimmed = index === openAt && openAt < dealtAt;
+		const h = trimmed ? own.h / was : (own.h / was) * now;
 		const top = own.v - own.h / 2;
 		return { ...own, w, h, v: top + h / 2, z: zOf(index, openAt), o: 1 };
 	});

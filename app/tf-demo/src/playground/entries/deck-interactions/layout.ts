@@ -17,13 +17,14 @@ export type Frame = { readonly w: number; readonly h: number };
  * half of what its scale adds and its Card is drawn where the app draws
  * it: its top edge a whole Heading row below the Card Tail above it.
  */
-function engineSlot(slot: PileSlot, scale: number): Slot {
-	const scaled = { ...slot, scale };
+function engineSlot(slot: PileSlot, scale: number, trim: boolean): Slot {
+	const height = trim ? slot.height / scale : slot.height;
+	const scaled = { ...slot, height, scale };
 	return {
 		u: slot.inlineStart,
 		v: centreScaledTop(scaled),
 		w: slot.width,
-		h: slot.height,
+		h: height,
 		r: 0,
 		s: scale,
 	};
@@ -34,6 +35,9 @@ function engineSlot(slot: PileSlot, scale: number): Slot {
  * foundation's slots, which are the app's, with the frame as the Pane and
  * `rem` the root font size. Every Card keeps its slot by its index; only
  * the open one rests at `openScale`, as tf-demo's `restScale` has it.
+ * With Cards below it, the open one is trimmed to end where its slot
+ * ends once scaled, so the Card Tail under it shows a whole Heading row
+ * like every other Tail.
  */
 export function pileSlotsAt(
 	frame: Frame,
@@ -45,7 +49,11 @@ export function pileSlotsAt(
 	return pileSlotsIn({ width: frame.w, height: frame.h }, count, {
 		rem,
 		openScale,
-	}).map((slot, index) => engineSlot(slot, index === openAt ? openScale : 1));
+	}).map((slot, index) =>
+		index === openAt
+			? engineSlot(slot, openScale, index < count - 1)
+			: engineSlot(slot, 1, false),
+	);
 }
 
 /**

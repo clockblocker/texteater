@@ -353,10 +353,13 @@ export function useDeck({
 				card.z.set(restZOf(index, at));
 				const from = before[index];
 				const to = after[index];
-				if (!from || !to || from.s === to.s) return;
-				/* only the scale changes, about the Card's centre, so its
-				   top moves by what keeps its drawn top edge still */
+				if (!from || !to || (from.s === to.s && from.h === to.h))
+					return;
+				/* only the scale changes, and the trim of an open Card with
+				   Cards below it, about the Card's centre, so its top moves
+				   by what keeps its drawn top edge still */
 				card.s.jump(to.s);
+				card.h.jump(card.h.get() + to.h - from.h);
 				card.v.jump(card.v.get() + to.v - from.v);
 			});
 			setFront(id);
