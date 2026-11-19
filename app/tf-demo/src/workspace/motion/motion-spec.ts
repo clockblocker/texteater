@@ -2,9 +2,8 @@
  * The workspace's motion: how Notes, Decks and Pane bars move. Nothing in
  * tf-demo animates unless this file declares it, and motion-spec.test.ts
  * holds every file under `src` that imports Motion to that. The deck
- * runtime reads it through runtime-config.tsx, where the animation
- * workbench injects overrides. Durations are milliseconds here and
- * seconds at the Motion boundary.
+ * runtime reads it through runtime-config.tsx. Durations are milliseconds
+ * here and seconds at the Motion boundary.
  */
 
 /* ---------------------------------------------------------------- kinds */
@@ -12,7 +11,7 @@
 /**
  * A tween's curve: one of Motion's named easings, or a cubic bézier given
  * outright. `motionOf` passes either through verbatim — Motion takes a
- * four-number array as `ease`. Both playgrounds use this same adapter.
+ * four-number array as `ease`.
  *
  * Prefer a bézier. Motion's named curves are the browser's built-ins, and
  * those are too weak to read as deliberate: `easeOut` is

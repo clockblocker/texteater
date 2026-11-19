@@ -22,7 +22,6 @@ const playgroundSpecs = [
 	"deck-tricks.pw.ts",
 	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
-	"pokemon-cards.pw.ts",
 	"tabletop.pw.ts",
 ];
 

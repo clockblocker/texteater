@@ -7,7 +7,6 @@ import {
 	useRef,
 } from "react";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
-import type { DeckInteraction } from "./interaction-policy";
 import { findSheet, PREVIEW_PANE, topSheetOf } from "./sheets";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import type { PagePress } from "./use-drag";
@@ -45,7 +44,6 @@ export function useDismiss<S>({
 	press,
 	dragging,
 	swallowClick,
-	allows,
 	sweep,
 	clearCovers,
 	cancelDrag,
@@ -57,7 +55,6 @@ export function useDismiss<S>({
 	dragging: () => boolean;
 	/** A Lift started under this click: the click is not a click. */
 	swallowClick: RefObject<boolean>;
-	allows: (interaction: DeckInteraction) => boolean;
 	sweep: (sheetId: string) => void;
 	clearCovers: (paneId: string) => void;
 	cancelDrag: () => void;
@@ -82,7 +79,6 @@ export function useDismiss<S>({
 				cancelDrag();
 				return;
 			}
-			if (!allows("dismiss")) return;
 			const { layout, activePaneId } = current();
 			const pane = findPane(layout, activePaneId);
 			const top = pane ? topSheetOf(pane) : null;
@@ -166,7 +162,6 @@ export function useDismiss<S>({
 			if (!dismissOnClick.current) return;
 			const target = event.target as HTMLElement;
 			if (clearFromGap(target)) return;
-			if (!allows("dismiss")) return;
 			if (target.closest(DISMISS_EXEMPT_SELECTOR)) return;
 			const layout = current().layout;
 			const sheetId =

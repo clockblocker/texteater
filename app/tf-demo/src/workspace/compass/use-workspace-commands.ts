@@ -9,7 +9,6 @@ import {
 	restingCards,
 } from "compass";
 import { clearSentence } from "./clear-sentence";
-import type { DeckInteraction } from "./interaction-policy";
 import { findSheet, type SheetView, topSheetOf } from "./sheets";
 import type { KeyedCard } from "./subject";
 import type { CompassWorkspace } from "./use-compass-workspace";
@@ -20,13 +19,11 @@ import type { CompassWorkspace } from "./use-compass-workspace";
  */
 export function useWorkspaceCommands<S>({
 	workspace,
-	allows,
 	smooth,
 	deckTopOf,
 	sweepAway,
 }: {
 	workspace: CompassWorkspace<S>;
-	allows: (interaction: DeckInteraction) => boolean;
 	/** Scrolls may glide: motion is not reduced. */
 	smooth: boolean;
 	/** Where a Pane's Deck starts, in viewport px. */
@@ -99,7 +96,6 @@ export function useWorkspaceCommands<S>({
 			cards: readonly DealtCard<S>[],
 			from: HTMLElement,
 		) => {
-			if (!allows("deal")) return;
 			const layout = current().layout;
 			const pane = findPane(layout, paneId);
 			if (!pane || topSheetOf(pane).sheetId !== sheetId) return;
@@ -122,7 +118,6 @@ export function useWorkspaceCommands<S>({
 			});
 		},
 		bringToFront: (sheetId: string, card: Presentation<S>) => {
-			if (!allows("select")) return;
 			dispatch({
 				type: "BringToFront",
 				sheetId,
@@ -131,7 +126,6 @@ export function useWorkspaceCommands<S>({
 		},
 		/** A Link pushes a fresh Presentation as a Cover; Go to source is one. */
 		follow: (paneId: string, subject: S) => {
-			if (!allows("follow")) return;
 			dispatch({ type: "FollowLink", paneId, subject });
 		},
 		/** A Cover is a form, not a move: a dealt Card keeps its rank in its Deck. */
@@ -141,7 +135,7 @@ export function useWorkspaceCommands<S>({
 		/** A Card on a Deck opens over it at once: the keyboard's Expand. */
 		expandCard: (sheetId: string, card: Presentation<S>) => {
 			const sheet = findSheet(current().layout, sheetId);
-			if (!sheet || !allows("expand")) return;
+			if (!sheet) return;
 			const lifted = dispatch({
 				type: "LiftCard",
 				sheetId,
@@ -157,7 +151,7 @@ export function useWorkspaceCommands<S>({
 		/** The Pane bar's control: the Ground's ←, or a Floating Pane's X. */
 		back: (paneId: string) => {
 			const pane = findPane(current().layout, paneId);
-			if (!pane || !allows("collapse")) return;
+			if (!pane) return;
 			if (isRooted(pane)) {
 				if (!pane.covers.length) stepDown(paneId);
 			} else closePane(paneId);
@@ -166,13 +160,7 @@ export function useWorkspaceCommands<S>({
 		coverBack: (paneId: string, sheetId: string) => {
 			const pane = findPane(current().layout, paneId);
 			const top = pane ? topSheetOf(pane) : null;
-			if (
-				!top ||
-				top.ground ||
-				top.sheetId !== sheetId ||
-				!allows("collapse")
-			)
-				return;
+			if (!top || top.ground || top.sheetId !== sheetId) return;
 			leaveCover(top);
 		},
 		/**
@@ -181,7 +169,7 @@ export function useWorkspaceCommands<S>({
 		 */
 		clearCovers: (paneId: string) => {
 			const pane = findPane(current().layout, paneId);
-			if (!pane?.covers.length || !allows("collapse")) return;
+			if (!pane?.covers.length) return;
 			dispatch({ type: "ClearCovers", paneId });
 		},
 	};

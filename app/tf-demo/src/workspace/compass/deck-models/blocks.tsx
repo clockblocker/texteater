@@ -6,7 +6,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { useDeckInteractions } from "@/workspace/compass/interaction-policy";
 import type { Form as NoteForm } from "@/workspace/compass/subject";
 import { after, CONTEXT_PAGE } from "@/workspace/motion/motion-spec";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
@@ -79,7 +78,6 @@ export function ScrollBlock({
 	scroll,
 	focus,
 	form,
-	shown,
 	litWord,
 	onSegment,
 	onSegmentDown,
@@ -87,7 +85,6 @@ export function ScrollBlock({
 	scroll: DummyScroll;
 	focus: ScrollFocus | null;
 	form: NoteForm;
-	shown: boolean;
 	litWord: string | null;
 	onSegment: (word: string, element: HTMLElement) => void;
 	onSegmentDown: (
@@ -114,8 +111,7 @@ export function ScrollBlock({
 		const observer = new ResizeObserver(measure);
 		observer.observe(scroller);
 		return () => observer.disconnect();
-	}, [sheet, shown]);
-	if (!shown) return null;
+	}, [sheet]);
 	return (
 		<div
 			ref={block}
@@ -181,7 +177,6 @@ export function ContextsBlock({
 		make: () => Subject,
 	) => void;
 }) {
-	const allows = useDeckInteractions();
 	const { transition, CONTEXT_ITEM, contextDelayFor } = useDeckMotion();
 	const sheet = form === "sheet";
 	const [shown, setShown] = useState(CONTEXT_PAGE);
@@ -259,10 +254,8 @@ export function ContextsBlock({
 					type="button"
 					onClick={(event) => {
 						event.stopPropagation();
-						if (allows("contexts"))
-							setShown((n) => n + CONTEXT_PAGE);
+						setShown((n) => n + CONTEXT_PAGE);
 					}}
-					disabled={!allows("contexts")}
 					className="self-start text-[0.72rem] text-link underline-offset-2 hover:underline"
 				>
 					{`Load ${Math.min(more, CONTEXT_PAGE).toString()} more`}
@@ -308,7 +301,6 @@ export function LinksBlock({
 		make: () => Subject,
 	) => void;
 }) {
-	const allows = useDeckInteractions();
 	const live = form === "sheet";
 	return (
 		<ul
@@ -326,7 +318,6 @@ export function LinksBlock({
 							<button
 								type="button"
 								data-link={link.label}
-								disabled={!allows("follow")}
 								onPointerDown={(event) => {
 									event.stopPropagation();
 									onSegmentDown(event, () =>

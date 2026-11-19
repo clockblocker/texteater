@@ -230,8 +230,8 @@ export function flickOf<S>(
  * `commit` px toward inline-start or down is the dismiss zone, more than
  * `commit` px toward inline-end or up is the expand zone, and anywhere
  * nearer is back on the Deck. The zone the hand is in holds it
- * `hysteresis` px longer. A zone the scenario does not allow is never
- * chosen.
+ * `hysteresis` px longer. Without `dismisses`, the Deck's swipe-to-sweep
+ * switched off, there is no dismiss zone.
  */
 export function deckZoneOf<S>(
 	d: Drag<S>,
@@ -244,7 +244,6 @@ export function deckZoneOf<S>(
 		current,
 		paneId,
 		dismisses,
-		expands,
 	}: {
 		readonly tuning: ThrowTuning;
 		readonly commit: number;
@@ -253,8 +252,8 @@ export function deckZoneOf<S>(
 		readonly current: Destination | null;
 		/** The Pane the Card's Deck is in: the expand zone opens it there. */
 		readonly paneId: string;
+		/** Whether a swipe sweeps the Deck; see `CompassProps.sweeps`. */
 		readonly dismisses: boolean;
-		readonly expands: boolean;
 	},
 ): Destination {
 	const flick = flickOf(d, now, tuning, direction);
@@ -264,7 +263,7 @@ export function deckZoneOf<S>(
 	const line = (kind: Destination["kind"]) =>
 		current?.kind === kind ? commit - hysteresis : commit;
 	const away = dismisses ? Math.max(-along, dy) : 0;
-	const open = expands ? Math.max(along, -dy) : 0;
+	const open = Math.max(along, -dy);
 	if (away >= open && away > line("sweep"))
 		return { kind: "sweep", toward: "start" };
 	if (open > away && open > line("sheet")) return { kind: "sheet", paneId };

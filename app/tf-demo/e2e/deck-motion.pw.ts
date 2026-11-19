@@ -1,151 +1,72 @@
 /// <reference lib="dom" />
-import { expect, type Locator, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { SPLITS_PARKED } from "../src/workspace/compass/splits";
 import {
 	armFrames,
 	arrival,
-	cardState,
 	headingTravel,
 	openSheet,
-	selectedScale,
 	startDrag,
 	startHeadingDrag,
 } from "./support/deck";
 
 /**
- * The deck's motion on the real renderer: the workbench's specimens and
- * variants, reduced motion, and how a Card goes home. Gestures read as
+ * The deck's motion on the real renderer: a change of selection, the lean,
+ * reduced motion, and how a Card goes home. Gestures read as
  * swipes, throws and lifts are in `deck-gestures.pw.ts`.
  */
 
 test.use({ viewport: { width: 1600, height: 1100 } });
 
-for (const surface of ["deck-models", "animation-workbench/swap"]) {
-	test(`${surface}: selection, release and pointer cancellation use the real deck`, async ({
-		page,
-	}) => {
-		await page.goto(`/playground/${surface}`);
-		const frame = page.locator("[data-deck-frame]");
-		if (surface === "deck-models") {
-			await frame.locator('[data-word="noch"]').click();
-		}
-		const cards = frame.locator('[data-form="card"]');
-		await expect(cards).toHaveCount(4);
-		const first = cards.first();
-		const previous = frame.locator('[data-place="open"]');
-		const previousLabel = await previous.getAttribute("aria-label");
-		if (!previousLabel) throw new Error("Missing selected card label");
-		const frames = await armFrames(
-			frame.locator(`[aria-label="${previousLabel}"]`),
-			300,
-		);
-		await first.locator("[data-heading]").click();
-		await expect(first).toHaveAttribute("data-place", "open");
-		// Changing selected cards must not slide the old heading through its body.
-		expect(headingTravel(await frames())).toBeLessThan(1);
-
-		await startDrag(page, first, -110, 0);
-		if (surface === "deck-models")
-			await expect(first).toHaveAttribute("data-arm", "sweep");
-		else await expect(first).not.toHaveAttribute("data-arm");
-		await frame.dispatchEvent("pointercancel", {
-			pointerId: 1,
-			bubbles: true,
-		});
-		await page.mouse.up();
-		await expect(frame.locator("[data-held]")).toHaveCount(0);
-		await expect(cards).toHaveCount(4);
-
-		/* a swipe left sweeps the whole Deck: there is no per-Card removal */
-		await startDrag(page, first, -110, 0);
-		await page.mouse.up();
-		await expect(frame.locator("[data-held]")).toHaveCount(0);
-		await expect(cards).toHaveCount(surface === "deck-models" ? 0 : 4);
-	});
+/** The deck-models frame with a Deck of four dealt from its Scroll. */
+async function openDeck(page: Page) {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	return frame;
 }
 
-test("workbench baseline has the live deck's content and selected-card state", async ({
+test("selection, release and pointer cancellation use the real deck", async ({
 	page,
 }) => {
-	await page.goto("/playground/deck-models");
-	await page.locator('[data-word="noch"]').click();
-	const live = await cardState(page.locator("[data-deck-frame]"));
-	await page.goto("/playground/animation-workbench/swap");
-	await expect
-		.poll(() => cardState(page.locator('[data-specimen="baseline"]')))
-		.toEqual(live);
-});
+	const frame = await openDeck(page);
+	const cards = frame.locator('[data-form="card"]');
+	const first = cards.first();
+	const previous = frame.locator('[data-place="open"]');
+	const previousLabel = await previous.getAttribute("aria-label");
+	if (!previousLabel) throw new Error("Missing selected card label");
+	const frames = await armFrames(
+		frame.locator(`[aria-label="${previousLabel}"]`),
+		300,
+	);
+	await first.locator("[data-heading]").click();
+	await expect(first).toHaveAttribute("data-place", "open");
+	// Changing selected cards must not slide the old heading through its body.
+	expect(headingTravel(await frames())).toBeLessThan(1);
 
-test("injected parameters change the candidate renderer while baseline and Escape stay isolated", async ({
-	page,
-}) => {
-	await page.goto("/playground/animation-workbench/swap");
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	await page
-		.getByRole("button", { name: "Create variant", exact: true })
-		.click();
-	const baseline = page.locator('[data-specimen="baseline"]');
-	const candidate = page.locator('[data-specimen="candidate"]');
-	const scale = (specimen: Locator) =>
-		specimen
-			.locator('[data-place="open"]')
-			.evaluate(
-				(card) =>
-					card.getBoundingClientRect().width /
-					(card as HTMLElement).offsetWidth,
-			);
-	await expect.poll(() => scale(baseline)).toBeCloseTo(1.05, 2);
-	await page
-		.getByRole("spinbutton", { name: "Selected scale", exact: true })
-		.fill("1.15");
-	await expect.poll(() => scale(candidate)).toBeCloseTo(1.15, 2);
-	await expect.poll(() => scale(baseline)).toBeCloseTo(1.05, 2);
-	await page
-		.getByRole("button", { name: "Hide controls", exact: true })
-		.click();
-	await candidate
-		.locator('[data-form="card"]')
-		.first()
-		.locator("[data-heading]")
-		.click();
-	await page.keyboard.press("Escape");
-	await expect(candidate.locator('[data-form="card"]')).toHaveCount(4);
-	await expect(baseline.locator('[data-form="card"]')).toHaveCount(4);
-});
+	await startDrag(page, first, -110, 0);
+	await expect(first).toHaveAttribute("data-arm", "sweep");
+	await frame.dispatchEvent("pointercancel", {
+		pointerId: 1,
+		bubbles: true,
+	});
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect(cards).toHaveCount(4);
 
-test("sheet morph permits collapse but isolates the bar lift", async ({
-	page,
-}) => {
-	await page.goto("/playground/animation-workbench/sheet-morph");
-	const frame = page.locator("[data-deck-frame]");
-	await openSheet(page, frame);
-	const sheet = frame.locator('[data-form="sheet"]');
-	const pane = await sheet.getAttribute("data-pane");
-	/* the Note's own Heading is never a Sheet's handle */
-	await startDrag(page, sheet, -110, 0);
-	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	/* a swipe left sweeps the whole Deck: there is no per-Card removal */
+	await startDrag(page, first, -110, 0);
 	await page.mouse.up();
-	/* and the bar is, but only when the scenario allows a lift */
-	await startHeadingDrag(page, sheet, -110, 0);
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
-	await page.mouse.up();
-	await expect(sheet).toHaveCount(1);
-	await expect(sheet).toHaveAttribute("data-pane", pane ?? "");
-	/* the Cover hides the Deck it was lifted from; ← reveals it again */
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
-	await frame.getByRole("button", { name: "Collapse back to card" }).click();
-	await expect(sheet).toHaveCount(0);
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	await expect(cards).toHaveCount(0);
 });
 
 test("a free drag shows the real edge target and splits a pane on release", async ({
 	page,
 }) => {
 	test.skip(SPLITS_PARKED, "Splits are parked (tf-demo ADR 0013)");
-	await page.goto("/playground/animation-workbench/drop-zones");
-	const frame = page.locator("[data-deck-frame]");
+	const frame = await openDeck(page);
 	const box = await frame.boundingBox();
 	if (!box) throw new Error("Missing deck geometry");
 	await startDrag(page, frame.locator('[data-place="open"]'), 30, 0);
@@ -164,115 +85,6 @@ test("a free drag shows the real edge target and splits a pane on release", asyn
 	await frame.getByRole("button", { name: "Close pane" }).click();
 	await expect(frame.locator("[data-deck-pane]")).toHaveCount(1);
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
-});
-
-test("a heading movement variant animates the actual heading while the baseline remains instant", async ({
-	page,
-}) => {
-	await page.goto("/playground/animation-workbench/swap");
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	await page
-		.getByRole("button", { name: "Create variant", exact: true })
-		.click();
-	await page
-		.getByRole("spinbutton", { name: "Heading movement", exact: true })
-		.fill("600");
-	await page
-		.getByRole("button", { name: "Hide controls", exact: true })
-		.click();
-	for (const kind of ["candidate", "baseline"]) {
-		const specimen = page.locator(`[data-specimen="${kind}"]`);
-		const previousId = await specimen
-			.locator('[data-place="open"]')
-			.getAttribute("data-card-id");
-		/* armed before the click, so a slow click cannot eat the movement */
-		const frames = await armFrames(
-			specimen.locator(`[data-card-id="${previousId}"]`),
-			700,
-		);
-		await specimen
-			.locator('[data-form="card"]')
-			.first()
-			.locator("[data-heading]")
-			.click();
-		await expect(
-			specimen.locator('[data-form="card"]').first(),
-		).toHaveAttribute("data-place", "open");
-		const travel = headingTravel(await frames());
-		if (kind === "candidate") expect(travel).toBeGreaterThan(20);
-		else expect(travel).toBeLessThan(1);
-	}
-});
-
-test("a named variant survives reload and restores its effect on the real renderer", async ({
-	page,
-}) => {
-	await page.goto("/playground/animation-workbench/swap");
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	await page
-		.getByRole("button", { name: "Create variant", exact: true })
-		.click();
-	await page
-		.getByRole("textbox", { name: "Variant name" })
-		.fill("Larger selection");
-	await page
-		.getByRole("spinbutton", { name: "Selected scale", exact: true })
-		.fill("1.18");
-	await expect
-		.poll(() => selectedScale(page.locator('[data-specimen="candidate"]')))
-		.toBeCloseTo(1.18, 2);
-	await page.reload();
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	await page
-		.getByRole("combobox", { name: "Version" })
-		.selectOption({ label: "Larger selection" });
-	await expect(
-		page.getByRole("spinbutton", { name: "Selected scale", exact: true }),
-	).toHaveValue("1.18");
-	await expect
-		.poll(() => selectedScale(page.locator('[data-specimen="candidate"]')))
-		.toBeCloseTo(1.18, 2);
-	await expect
-		.poll(() => selectedScale(page.locator('[data-specimen="baseline"]')))
-		.toBeCloseTo(1.05, 2);
-});
-
-test("system reduced motion suppresses drag tilt in both specimens", async ({
-	page,
-}) => {
-	await page.emulateMedia({ reducedMotion: "reduce" });
-	await page.goto("/playground/animation-workbench/sweep");
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	await page
-		.getByRole("button", { name: "Create variant", exact: true })
-		.click();
-	await page
-		.getByRole("button", { name: "Hide controls", exact: true })
-		.click();
-	for (const kind of ["baseline", "candidate"]) {
-		const specimen = page.locator(`[data-specimen="${kind}"]`);
-		const card = specimen.locator('[data-place="open"]');
-		await startDrag(page, card, -60, 0);
-		await expect(card).toHaveAttribute("data-arm", "sweep");
-		const rotation = await card.evaluate((element) => {
-			const matrix = new DOMMatrixReadOnly(
-				getComputedStyle(element).transform,
-			);
-			return Math.atan2(matrix.b, matrix.a);
-		});
-		expect(rotation).toBeCloseTo(0, 3);
-		await page.keyboard.press("Escape");
-		await page.mouse.up();
-		await expect(specimen.locator("[data-held]")).toHaveCount(0);
-	}
 });
 
 /** The angle `element` is turned to, in degrees. */
@@ -337,31 +149,35 @@ test("under reduced motion nothing leans, and every zone still does what it show
 test("the deck closes over a returning card at the release", async ({
 	page,
 }) => {
-	await page.goto("/playground/animation-workbench/snap-back");
-	const card = page.locator('[data-deck-frame] [data-place="open"]');
+	const frame = await openDeck(page);
+	const card = frame.locator('[data-place="open"]');
 	const box = await card.boundingBox();
 	if (!box) throw new Error("Missing card geometry");
-	await startDrag(page, card, 180, 60);
+	/* short of every zone's line, and held still so the release is no
+	   flick: it sends the Card home */
+	await startDrag(page, card, 70, 30);
+	await page.waitForTimeout(200);
 	const frames = await armFrames(card, 700);
 	await page.mouse.up();
 	/* the Card gets its resting z back while it is still far from home,
 	   so it travels the last of its way under the Deck */
 	const { closedFrom, closedAt } = arrival(await frames(), box);
-	expect(closedFrom).toBeGreaterThan(50);
+	expect(closedFrom).toBeGreaterThan(Math.hypot(70, 30) / 3);
 	expect(closedAt).toBeLessThan(60);
 });
 
 test("a returning card does not cross its slot, however it was let go", async ({
 	page,
 }) => {
-	await page.goto("/playground/animation-workbench/snap-back");
-	const frame = page.locator("[data-deck-frame]");
+	const frame = await openDeck(page);
 	const card = frame.locator('[data-place="open"]');
 	const home = await card.boundingBox();
 	if (!home) throw new Error("Missing card geometry");
-	/* let go a long way out: the distance a spring with any bounce left
-	   in it rides past the slot before coming back */
-	await startDrag(page, card, 260, 130);
+	/* let go as far out as a release still sends it home, short of every
+	   zone's line: a spring with any bounce left in it rides past the
+	   slot before coming back. Held still, so the release is no flick. */
+	await startDrag(page, card, 70, 30);
+	await page.waitForTimeout(200);
 	const frames = await armFrames(card, 700);
 	await page.mouse.up();
 	const taken = (await frames())
@@ -377,14 +193,15 @@ test("a returning card does not cross its slot, however it was let go", async ({
 });
 
 test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
-	await page.goto("/playground/animation-workbench/sheet-lift");
-	const frame = page.locator("[data-deck-frame]");
+	const frame = await openDeck(page);
+	await openSheet(page, frame);
 	const sheet = frame.locator('[data-form="sheet"]');
 	const id = await sheet.getAttribute("data-card-id");
 	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
 	/* lift it by its bar and let go without going anywhere: the Note is
 	   in the hand, and its slot is a whole Sheet's height away */
 	await startHeadingDrag(page, sheet, 3, 3);
+	await expect(note).toHaveAttribute("data-held", "true");
 	const frames = await armFrames(note, 900);
 	await page.mouse.up();
 	const taken = await frames();
@@ -402,8 +219,7 @@ test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 test("a held card is drawn where it rests, whatever its resting scale", async ({
 	page,
 }) => {
-	await page.goto("/playground/animation-workbench/snap-back");
-	const frame = page.locator("[data-deck-frame]");
+	const frame = await openDeck(page);
 	/* the open Card rests at OPEN_SCALE, so it is the one a change of
 	   transform-origin between rest and hand would move */
 	const card = frame.locator('[data-place="open"]');
@@ -424,6 +240,8 @@ test("a held card is drawn where it rests, whatever its resting scale", async ({
 	   not a drag offset plus whatever a change of origin is worth */
 	expect(inHand.x - atRest.x).toBeCloseTo(160, 0);
 	expect(inHand.y - atRest.y).toBeCloseTo(40, 0);
+	/* it is in the expand zone there, so Escape is what sends it home */
+	await page.keyboard.press("Escape");
 	await page.mouse.up();
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
 	/* and home is home: nothing is left to fall into place once the

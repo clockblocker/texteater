@@ -26,7 +26,6 @@ import {
 	type Lift,
 	type NoteHandle,
 } from "./gesture";
-import type { DeckInteraction } from "./interaction-policy";
 import type { NoteMoves } from "./note-moves";
 import type { SheetView } from "./sheets";
 import type { CompassWorkspace } from "./use-compass-workspace";
@@ -44,7 +43,6 @@ export function useLift<S>({
 	gesture,
 	moves,
 	handles,
-	allows,
 	paneBoxes,
 	press,
 	deckColumnOf,
@@ -58,7 +56,6 @@ export function useLift<S>({
 	gesture: GestureState<S>;
 	moves: NoteMoves;
 	handles: RefObject<Map<string, NoteHandle>>;
-	allows: (interaction: DeckInteraction) => boolean;
 	paneBoxes: Readonly<Record<string, Box>>;
 	press: RefObject<PagePress | null>;
 	deckColumnOf: (paneId: string) => Box | null;
@@ -171,7 +168,7 @@ export function useLift<S>({
 		firstDestination: (d: Drag<S>) => Destination | null = (d) =>
 			destinationAt$(lift.x, lift.y, d, performance.now()),
 	) {
-		if (!allows("lift") || dragRef.current || settlingRef.current) return;
+		if (dragRef.current || settlingRef.current) return;
 		const card = sheet.presentation;
 		if (!card) return;
 		gesture.endReturn();
@@ -208,7 +205,7 @@ export function useLift<S>({
 		firstDestination: (d: Drag<S>) => Destination | null = (d) =>
 			destinationAt$(lift.x, lift.y, d, performance.now()),
 	) {
-		if (!allows("lift") || dragRef.current || settlingRef.current) return;
+		if (dragRef.current || settlingRef.current) return;
 		const pane = findPane(current().layout, sheet.paneId);
 		const card = sheet.presentation;
 		if (!pane || !card || pane.covers.length || pane.line.length < 2)
@@ -232,7 +229,7 @@ export function useLift<S>({
 		pending: PendingLift<S>,
 		event: ReactPointerEvent<HTMLElement>,
 	) {
-		if (!allows("drag") || dragRef.current || settlingRef.current) return;
+		if (dragRef.current || settlingRef.current) return;
 		const card = dispatch({
 			type: "LiftFresh",
 			paneId: pending.paneId,

@@ -10,9 +10,7 @@
 			"!!.convex",
 			"!!convex/_generated",
 			"!!convex/tsconfig.json",
-			"!!skills-lock.json",
-			"!!src/playground/entries/pokemon-cards/css",
-			"!!src/playground/entries/pokemon-cards/data"
+			"!!skills-lock.json"
 		]
 	}
 }

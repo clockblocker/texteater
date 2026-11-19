@@ -1,6 +1,6 @@
 import { CompassModel } from "@/workspace/compass/deck-models/drag-deck";
 
-/** The full reader uses the same renderer, gestures, and motion policy as the workbench. */
+/** The production Compass, its renderer, gestures and motion, on dummy Subjects. */
 export function DeckModelsGallery() {
 	return <CompassModel />;
 }

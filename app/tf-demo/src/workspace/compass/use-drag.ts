@@ -31,7 +31,6 @@ import {
 	sample,
 	type ThrowTuning,
 } from "./gesture";
-import type { DeckInteraction } from "./interaction-policy";
 import type { NoteMoves } from "./note-moves";
 import { findSheet, type SheetView, sheetsOf } from "./sheets";
 import { useBarHold } from "./use-bar-hold";
@@ -72,7 +71,7 @@ export function useDrag<S>({
 	moves,
 	commands,
 	handles,
-	allows,
+	sweeps,
 	direction,
 	paneBoxes,
 	tuning,
@@ -87,7 +86,8 @@ export function useDrag<S>({
 	moves: NoteMoves;
 	commands: WorkspaceCommands<S>;
 	handles: RefObject<Map<string, NoteHandle>>;
-	allows: (interaction: DeckInteraction) => boolean;
+	/** Whether a swipe sweeps the Deck; see `CompassProps.sweeps`. */
+	sweeps: boolean;
 	direction: WritingDirection;
 	paneBoxes: Readonly<Record<string, Box>>;
 	tuning: ThrowTuning;
@@ -135,7 +135,6 @@ export function useDrag<S>({
 		gesture,
 		moves,
 		handles,
-		allows,
 		paneBoxes,
 		press,
 		deckColumnOf,
@@ -271,7 +270,6 @@ export function useDrag<S>({
 				fromLink.heading,
 			);
 		}
-		if (!allows("drag")) return;
 		const pending = pendingLift.current;
 		if (pending && pending.pointerId === event.pointerId) {
 			if (
@@ -304,11 +302,7 @@ export function useDrag<S>({
 		   toward inline-start off a Deck it swipes the Deck toward its
 		   dismiss zone, any other way the Card is in hand */
 		if (d.phase === "pressed" && Math.hypot(dx, dy) > ARM_SLOP) {
-			if (
-				swipe.startsSwipe(dx, dy) &&
-				allows("sweep") &&
-				d.deckSheet !== null
-			) {
+			if (swipe.startsSwipe(dx, dy) && sweeps && d.deckSheet !== null) {
 				d.phase = "swiping";
 				gesture.setDrag({ ...d });
 			} else takeInHand(d);
@@ -447,7 +441,6 @@ export function useDrag<S>({
 			card: Presentation<S>,
 			sheet: SheetView<S>,
 		) {
-			if (!allows("drag") && !allows("select")) return;
 			if (
 				event.button !== 0 ||
 				dragRef.current ||
@@ -500,7 +493,6 @@ export function useDrag<S>({
 					ground?.presentation &&
 					!isRooted(pane) &&
 					!pane.covers.length &&
-					allows("lift") &&
 					linksDrag
 				)
 					pendingHeading.current = {
@@ -513,8 +505,7 @@ export function useDrag<S>({
 				return;
 			}
 			if (target.closest("button")) return;
-			if (!ground?.presentation || pane.covers.length || !allows("lift"))
-				return;
+			if (!ground?.presentation || pane.covers.length) return;
 			const lift = {
 				pointerId: event.pointerId,
 				x: event.clientX,

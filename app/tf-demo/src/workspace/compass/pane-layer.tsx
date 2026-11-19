@@ -12,7 +12,6 @@ import {
 } from "lego";
 import type { ReactNode } from "react";
 import { sheetColumn } from "@/presentation/skin";
-import type { DeckInteraction } from "./interaction-policy";
 import { GROUND_COLUMN_STYLE, GroundList, PaneBar } from "./pane-chrome";
 import type { SheetActions } from "./presentation-view";
 import { groundSheetOf, PREVIEW_PANE, rungLabel } from "./sheets";
@@ -34,7 +33,6 @@ export type PaneScope<S> = {
 	renderer: SubjectRenderer<S>;
 	menu: readonly MenuItem[];
 	renderMenuItem: (item: string, view: MenuItemView<S>) => ReactNode;
-	allows: (interaction: DeckInteraction) => boolean;
 	rem: number;
 	fold: ReturnType<typeof useGroundFold>;
 	drags: ReturnType<typeof useDrag<S>>;
@@ -54,7 +52,6 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 		renderer,
 		menu,
 		renderMenuItem,
-		allows,
 		rem,
 		fold,
 		drags,
@@ -71,7 +68,7 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 	const groundSheet = groundSheetOf(pane);
 	const covered = pane.covers.length > 0;
 	/* the bar is a handle only while its Ground is a Sheet and uncovered */
-	const lifts = ground.kind === "Sheet" && !covered && allows("lift");
+	const lifts = ground.kind === "Sheet" && !covered;
 	const below = pane.line.at(-2);
 	const barSelector = `[data-deck-pane="${pane.id}"] [data-pane-bar]`;
 	return (
@@ -113,10 +110,7 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 								label: below
 									? `Back to ${rungLabel(below, renderer, menu)}`
 									: "At the Menu",
-								enabled:
-									below !== undefined &&
-									!covered &&
-									allows("collapse"),
+								enabled: below !== undefined && !covered,
 								onPress: () => commands.back(pane.id),
 							}
 						: null
@@ -126,7 +120,7 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 						? null
 						: {
 								label: "Close pane",
-								enabled: allows("collapse"),
+								enabled: true,
 								onPress: () => commands.back(pane.id),
 							}
 				}

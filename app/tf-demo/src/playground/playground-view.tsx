@@ -1,7 +1,6 @@
 import { useAtom } from "@effect/atom-react";
 import {
 	BlocksIcon,
-	ClapperboardIcon,
 	ClubIcon,
 	FlipHorizontal2Icon,
 	GalleryHorizontalEndIcon,
@@ -10,12 +9,10 @@ import {
 	type LucideIcon,
 	Maximize2Icon,
 	PaletteIcon,
-	SparklesIcon,
 	StickyNoteIcon,
 	TableIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
-import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
 import { CardToCover } from "./entries/card-to-cover/card-to-cover";
 import { DeckInteractions } from "./entries/deck-interactions/deck-interactions";
@@ -24,7 +21,6 @@ import { DeckTricks } from "./entries/deck-tricks/deck-tricks";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
-import { PokemonCards } from "./entries/pokemon-cards/pokemon-cards";
 import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
 import { TabletopEntry } from "./entries/tabletop/tabletop";
 import { pathnameAtom } from "./pathname-atoms";
@@ -89,14 +85,6 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		render: () => <DeckModelsGallery />,
 	},
 	{
-		key: "animation-workbench",
-		title: "Animation workbench",
-		icon: ClapperboardIcon,
-		description:
-			"The deck’s live animations and gestures, isolated in scenarios. Compare the baseline with named parameter variants.",
-		render: (route) => <AnimationWorkbench route={route} />,
-	},
-	{
 		key: "deck-interactions",
 		title: "Deck interactions",
 		icon: GalleryHorizontalEndIcon,
@@ -127,14 +115,6 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"The tabletop battery end to end (#1317): Note Cards in a Deck on a Ground and a Pane beside it across a Split. Each Card is one Body resting in a CSS Slot and moved by Terms that decay to nothing. Tap one to grow it into a Cover, drag it home with your speed, drop it on the Pane, throw it away, or turn it over with F. Deal, Fan, Shuffle and Sort, the turn, slow-mo, reduced motion and RTL are in the inspector.",
 		render: () => <TabletopEntry />,
-	},
-	{
-		key: "pokemon-cards",
-		title: "Pokémon cards",
-		icon: SparklesIcon,
-		description:
-			"simeydotme's pokemon-cards-css, vendored and its Svelte Card ported to React: its page of holofoil effects, one section per rarity, where a card tilts under the pointer and pops out to the centre on a click. The effects' explanations and a jump-to-effect filter sit in the inspector.",
-		render: () => <PokemonCards />,
 	},
 	{
 		key: "palette",

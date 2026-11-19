@@ -11,7 +11,6 @@ import {
 	type NoteHandle,
 	sameDestination,
 } from "./gesture";
-import type { DeckInteraction } from "./interaction-policy";
 import type { NoteMoves } from "./note-moves";
 import type { SheetView } from "./sheets";
 import type { SubjectRenderer } from "./subject";
@@ -31,7 +30,6 @@ export function useKeyboardLift<S>({
 	moves,
 	handles,
 	renderer,
-	allows,
 	direction,
 	reading,
 }: {
@@ -41,7 +39,6 @@ export function useKeyboardLift<S>({
 	moves: NoteMoves;
 	handles: RefObject<Map<string, NoteHandle>>;
 	renderer: SubjectRenderer<S>;
-	allows: (interaction: DeckInteraction) => boolean;
 	direction: WritingDirection;
 	reading: (card: Presentation<S>) => DropReading<S>;
 }) {
@@ -146,8 +143,7 @@ export function useKeyboardLift<S>({
 		announcement,
 		/** A resting Card into the hand from its Deck. */
 		liftCard(card: Presentation<S>, sheet: SheetView<S>) {
-			if (!allows("drag") || dragRef.current || settlingRef.current)
-				return;
+			if (dragRef.current || settlingRef.current) return;
 			const h = handles.current.get(card.id);
 			if (!h) return;
 			gesture.endReturn();

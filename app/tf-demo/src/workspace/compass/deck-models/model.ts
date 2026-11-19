@@ -2,7 +2,6 @@ import * as Panes from "compass";
 import {
 	type DummyNote,
 	type DummyScroll,
-	deckFor,
 	FIRST_SCROLL,
 	type NoteLink,
 	noteById,
@@ -53,16 +52,15 @@ export function subjectOfLink(link: NoteLink): Subject {
 }
 
 /**
- * The opening scene. Every scene starts a Rooted Pane at the end of its
- * line, Menu › Library › Scroll, so ← has rungs to step down; a seeded scene
- * deals a Deck for "noch", and the Sheet scene opens its first Card.
+ * The opening workspace: a Rooted Pane at the end of its line, Menu ›
+ * Library › Scroll, so ← has rungs to step down.
  */
-export function initialWorkspace(scene: "empty" | "deck" | "sheet"): Workspace {
+export function initialWorkspace(): Workspace {
 	const reduce = (
 		state: Workspace,
 		...commands: Panes.WorkspaceCommand<Subject>[]
 	) => commands.reduce(Panes.workspaceReducer<Subject>, state);
-	const atScroll = reduce(
+	return reduce(
 		Panes.createWorkspace<Subject>({ paneId: ROOT_PANE }),
 		{
 			type: "StepUp",
@@ -78,27 +76,4 @@ export function initialWorkspace(scene: "empty" | "deck" | "sheet"): Workspace {
 			},
 		},
 	);
-	if (scene === "empty") return atScroll;
-	const ground = Panes.groundOf(rootOf(atScroll)).id;
-	const dealt = reduce(atScroll, {
-		type: "Deal",
-		sheetId: ground,
-		selection: "noch",
-		cards: deckFor("noch").map((note) => ({
-			subject: { kind: "Note", note },
-		})),
-	});
-	const first = Panes.groundOf(rootOf(dealt)).deck?.cards[0];
-	if (scene === "deck" || !first) return dealt;
-	return reduce(
-		dealt,
-		{ type: "LiftCard", sheetId: ground, presentationId: first.id },
-		{ type: "Expand", paneId: ROOT_PANE },
-	);
-}
-
-function rootOf(state: Workspace): Panes.PaneNode<Subject> {
-	const pane = Panes.findPane(state.layout, ROOT_PANE);
-	if (!pane) throw new Error("The root Pane is missing");
-	return pane;
 }

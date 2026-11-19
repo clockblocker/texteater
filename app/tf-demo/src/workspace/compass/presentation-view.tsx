@@ -18,7 +18,6 @@ import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import { useContentMotion } from "./content-motion";
 import type { Fate, NoteHandle } from "./gesture";
-import { useDeckInteractions } from "./interaction-policy";
 import type { Form, Place, SubjectRenderer, SubjectView } from "./subject";
 import { useNoteBox } from "./use-note-box";
 
@@ -190,7 +189,6 @@ export function PresentationView<S>({
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
 }) {
 	const { transition, MORPH, OPEN_SCALE, NOTE_BORDER } = useDeckMotion();
-	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
 	const design = useHeadingDesign();
 	const section = useRef<HTMLElement>(null);
@@ -302,7 +300,7 @@ export function PresentationView<S>({
 				}}
 				body={renderer.render(subject, view(form), "body")}
 				chrome={{ back, clear }}
-				grab={grabs && allows("lift")}
+				grab={grabs}
 				keys={
 					keys.length && !preview ? (
 						<KeyHandles controls={keys} />

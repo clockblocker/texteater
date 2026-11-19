@@ -27,12 +27,7 @@ const SCROLL_COLUMN_REM = 40;
 /** A ported Note lays out on the Notes page's column, `--container-note`. */
 const PORTED_COLUMN_REM = 50;
 
-export function playgroundRenderer({
-	showReader,
-}: {
-	/** A Scroll Ground with the reader hidden: the workbench's quiet scenes. */
-	showReader: boolean;
-}): SubjectRenderer<Subject> {
+export function playgroundRenderer(): SubjectRenderer<Subject> {
 	const columnRem = (subject: Subject) =>
 		subject.kind === "Scroll"
 			? SCROLL_COLUMN_REM
@@ -56,7 +51,6 @@ export function playgroundRenderer({
 					subject={subject}
 					view={view}
 					columnRem={columnRem(subject)}
-					showReader={showReader}
 				/>
 			),
 	};
@@ -127,12 +121,10 @@ function DummyBody({
 	subject,
 	view,
 	columnRem,
-	showReader,
 }: {
 	subject: Subject;
 	view: SubjectView<Subject>;
 	columnRem: number;
-	showReader: boolean;
 }) {
 	const sheet = view.form === "sheet";
 	const below = view.place === "below" && !sheet;
@@ -151,7 +143,6 @@ function DummyBody({
 					scroll={subject.scroll}
 					focus={subject.focus}
 					form={view.form}
-					shown={showReader}
 					litWord={view.lit}
 					onSegment={segments.onSegment}
 					onSegmentDown={segments.onSegmentDown}

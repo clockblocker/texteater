@@ -5,7 +5,7 @@ import { SPRINGS, type SpringSpec } from "./springs";
 /**
  * How a handled Body tilts toward the pointer over it (#1312): about its
  * own two axes, the side under the pointer coming up toward the reader as
- * pokemon-cards and vanilla-tilt do, with a glare lit on that Body alone.
+ * simeydotme's pokemon-cards-css and vanilla-tilt do, with a glare lit on that Body alone.
  * Off under reduced motion.
  */
 export type TiltFeel = {

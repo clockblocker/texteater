@@ -1,5 +1,6 @@
 import {
 	type Box,
+	DECK_TOP_REM,
 	dropRegions,
 	findPane,
 	HYSTERESIS_PX,
@@ -18,7 +19,6 @@ import {
 	deckZoneOf,
 	type ThrowTuning,
 } from "./gesture";
-import type { DeckInteraction } from "./interaction-policy";
 import { findSheet } from "./sheets";
 
 /** Everything a destination is read against, besides the pointer. */
@@ -38,12 +38,12 @@ export type DropReading<S> = {
 	/** The held Card's Sheet column; see `SubjectRenderer.columnRem`. */
 	readonly columnRem: number;
 	readonly barRemOf: (pane: PaneNode<S> | null) => number;
-	readonly allows: (interaction: DeckInteraction) => boolean;
+	/** Whether a swipe sweeps the Deck; see `CompassProps.sweeps`. */
+	readonly sweeps: boolean;
 	readonly tuning: ThrowTuning;
 	/** How far a Card off its Deck is carried, or thrown, to reach a zone. */
 	readonly commit: number;
 	readonly openScale: number;
-	readonly deckTopRem: number;
 };
 
 /**
@@ -66,8 +66,7 @@ export function destinationAt<S>(
 	current: Destination | null,
 	reading: DropReading<S>,
 ): Destination | null {
-	const { layout, rem, direction, narrow, splits, columnRem, allows } =
-		reading;
+	const { layout, rem, direction, narrow, splits, columnRem } = reading;
 	const holder = d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
 	if (holder?.deck && !d.lifted)
 		return deckZoneOf(d, now, {
@@ -77,10 +76,7 @@ export function destinationAt<S>(
 			direction,
 			current,
 			paneId: holder.paneId,
-			dismisses: allows("sweep"),
-			/* a scenario with drops but no Expand still opens a Card as a
-			   Cover over its Deck, as the keyboard's list does */
-			expands: allows("expand") || allows("drop"),
+			dismisses: reading.sweeps,
 		});
 	const holderBox = holder ? reading.paneBoxes[holder.paneId] : undefined;
 	if (
@@ -97,7 +93,7 @@ export function destinationAt<S>(
 		) &&
 		inside(
 			returnBandIn(holderBox, columnRem, rem, reading.openScale, {
-				topRem: reading.deckTopRem,
+				topRem: DECK_TOP_REM,
 				narrow,
 			}),
 			x,
@@ -105,7 +101,6 @@ export function destinationAt<S>(
 		)
 	)
 		return { kind: "return" };
-	if (!allows("drop")) return null;
 	/* no drop until the rest boxes describe the Panes drawn */
 	const { shown, restBoxes } = reading;
 	if (
@@ -160,28 +155,26 @@ export function keyboardDestinations<S>(
 		| "rem"
 		| "splits"
 		| "columnRem"
-		| "allows"
+		| "sweeps"
 	>,
 ): readonly Destination[] {
-	const { layout, allows } = reading;
+	const { layout } = reading;
 	const holder = d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
 	const homeAt = d.lifted && d.home !== "vanish" ? d.paneId : null;
 	if (holder?.deck && !d.lifted)
 		return [
 			{ kind: "return" },
-			...(allows("sweep")
+			...(reading.sweeps
 				? [{ kind: "sweep", toward: "start" } as const]
 				: []),
-			...(allows("expand") || allows("drop")
-				? [{ kind: "sheet", paneId: holder.paneId } as const]
-				: []),
+			{ kind: "sheet", paneId: holder.paneId },
 		];
 	const list: Destination[] = [];
 	if (homeAt && reading.shown.some((pane) => pane.id === homeAt))
 		list.push({ kind: "home", paneId: homeAt });
 	for (const pane of reading.shown) {
 		const edge = (side: "inline-start" | "inline-end"): Destination[] =>
-			!reading.splits || !allows("drop")
+			!reading.splits
 				? []
 				: [
 						{
@@ -195,7 +188,7 @@ export function keyboardDestinations<S>(
 							),
 						},
 					];
-		const opens = pane.id !== homeAt && allows("drop");
+		const opens = pane.id !== homeAt;
 		list.push(
 			...edge("inline-start"),
 			...(opens ? [{ kind: "sheet", paneId: pane.id } as const] : []),

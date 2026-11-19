@@ -43,16 +43,6 @@ export async function openSheet(page: Page, frame: Locator) {
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
 }
 
-export async function cardState(frame: Locator) {
-	return frame.locator('[data-form="card"]').evaluateAll((cards) =>
-		cards.map((card) => ({
-			label: card.getAttribute("aria-label"),
-			place: card.getAttribute("data-place"),
-			text: card.textContent,
-		})),
-	);
-}
-
 /** One frame of an element, as `armFrames` read it. */
 type Frame = {
 	/** ms from the release that `armFrames` waited for; negative before it. */
@@ -215,14 +205,4 @@ export function strokes(
 		{ length: n },
 		(_, i) => [(i + 1) * dx, (i + 1) * dy, ms] as const,
 	);
-}
-
-export async function selectedScale(specimen: Locator) {
-	return specimen
-		.locator('[data-place="open"]')
-		.evaluate(
-			(card) =>
-				card.getBoundingClientRect().width /
-				(card as HTMLElement).offsetWidth,
-		);
 }

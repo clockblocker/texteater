@@ -1,15 +1,10 @@
 import { useMemo, useState } from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { Compass } from "@/workspace/compass/compass";
-import {
-	ALL_INTERACTIONS,
-	type DeckInteraction,
-} from "@/workspace/compass/interaction-policy";
 import { GroundList } from "@/workspace/compass/pane-chrome";
 import { SPLITS_PARKED } from "@/workspace/compass/splits";
 import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
-import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
 import { stageWorkspaceAtom } from "./drag-deck-atoms";
 import { noteFor, SCROLLS, scrollById } from "./dummy";
 import { initialWorkspace, LIBRARY, ROOT_PANE, type Subject } from "./model";
@@ -25,9 +20,6 @@ import { playgroundRenderer } from "./subjects";
  * the Subjects, a toolbar of switches under study, and the rules.
  */
 
-/** Where the workbench's stage, with no Scroll above its Deck, puts the Deck's top. */
-const STAGE_DECK_TOP_REM = 3;
-
 const SETTINGS = "settings";
 
 const MENU: readonly MenuItem[] = [
@@ -35,34 +27,17 @@ const MENU: readonly MenuItem[] = [
 	{ key: SETTINGS, label: "Settings" },
 ];
 
-export type CompassModelProps = {
-	interactions?: readonly DeckInteraction[];
-	/** A workbench stage: no shell, a Deck dealt, and a Deck near the top. */
-	embedded?: boolean;
-	initialScene?: "empty" | "deck" | "sheet";
-	motion?: DeckMotionOverrides;
-	showZones?: boolean;
-	showReader?: boolean;
-};
-
-export function CompassModel(props: CompassModelProps = {}) {
-	const scene = props.initialScene ?? (props.embedded ? "deck" : "empty");
+export function CompassModel() {
 	return (
 		<FixtureNotesProvider>
-			<stageWorkspaceAtom.Provider value={scene}>
-				<CompassStage {...props} />
+			<stageWorkspaceAtom.Provider>
+				<CompassStage />
 			</stageWorkspaceAtom.Provider>
 		</FixtureNotesProvider>
 	);
 }
 
-function CompassStage({
-	interactions = ALL_INTERACTIONS,
-	embedded = false,
-	motion,
-	showZones = false,
-	showReader = !embedded,
-}: CompassModelProps) {
+function CompassStage() {
 	const workspace = useCompassWorkspace(stageWorkspaceAtom.use());
 	/** A fresh Compass after a reset, so no gesture outlives the workspace it was on. */
 	const [run, setRun] = useState(0);
@@ -73,21 +48,11 @@ function CompassStage({
 	 * sweep.
 	 */
 	const [swipeSweeps, setSwipeSweeps] = useState(true);
-	const [zonesVisible, setZonesVisible] = useState(showZones);
+	const [zonesVisible, setZonesVisible] = useState(false);
 	const [linksDrag, setLinksDrag] = useState(true);
 	/** Hebrew is coming: the whole workspace mirrors in right-to-left text. */
 	const [rtl, setRtl] = useState(false);
-	const renderer = useMemo(
-		() => playgroundRenderer({ showReader }),
-		[showReader],
-	);
-	const live = useMemo(
-		() =>
-			swipeSweeps
-				? interactions
-				: interactions.filter((interaction) => interaction !== "sweep"),
-		[interactions, swipeSweeps],
-	);
+	const renderer = useMemo(() => playgroundRenderer(), []);
 
 	function renderMenuItem(item: string, view: MenuItemView<Subject>) {
 		return item === SETTINGS ? (
@@ -117,14 +82,11 @@ function CompassStage({
 			renderer={renderer}
 			menu={MENU}
 			renderMenuItem={renderMenuItem}
-			interactions={live}
-			motion={motion}
+			sweeps={swipeSweeps}
 			linksDrag={linksDrag}
 			zonesShown={zonesVisible}
-			deckTopRem={embedded ? STAGE_DECK_TOP_REM : undefined}
 		/>
 	);
-	if (embedded) return compass;
 	const toggle = (
 		text: string,
 		checked: boolean,
@@ -146,7 +108,7 @@ function CompassStage({
 		<ModelShell
 			rules={RULES}
 			onReset={() => {
-				workspace.reset(initialWorkspace("empty"));
+				workspace.reset(initialWorkspace());
 				setRun((value) => value + 1);
 			}}
 			toolbar={

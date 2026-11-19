@@ -258,7 +258,7 @@ describe("a Card carried off its Deck", () => {
 		d: Drag<string>,
 		now: number,
 		direction: "ltr" | "rtl" = "ltr",
-		allowed = { dismisses: true, expands: true },
+		dismisses = true,
 	) =>
 		deckZoneOf(d, now, {
 			tuning: TUNING,
@@ -267,7 +267,7 @@ describe("a Card carried off its Deck", () => {
 			direction,
 			current: null,
 			paneId: "pane-1",
-			...allowed,
+			dismisses,
 		});
 	/** A hand carried (`dx`, `dy`) slowly, then held still: no throw left. */
 	const carried = (dx: number, dy: number) => {
@@ -334,21 +334,18 @@ describe("a Card carried off its Deck", () => {
 		expect(zone(left, 48)).toEqual({ kind: "sweep", toward: "start" });
 	});
 
-	test("never picks a zone the scenario does not allow", () => {
-		const none = { dismisses: false, expands: false };
-		expect(zone(carried(-120, 0), later, "ltr", none)).toEqual({
+	test("has no dismiss zone when a swipe does not sweep", () => {
+		expect(zone(carried(-120, 0), later, "ltr", false)).toEqual({
 			kind: "return",
 		});
-		expect(zone(carried(0, -120), later, "ltr", none)).toEqual({
+		/* down with no Sweep is no Expand either */
+		expect(zone(carried(0, 120), later, "ltr", false)).toEqual({
 			kind: "return",
 		});
-		/* down with no Sweep allowed is no Expand either */
-		expect(
-			zone(carried(0, 120), later, "ltr", {
-				dismisses: false,
-				expands: true,
-			}),
-		).toEqual({ kind: "return" });
+		expect(zone(carried(0, -120), later, "ltr", false)).toEqual({
+			kind: "sheet",
+			paneId: "pane-1",
+		});
 	});
 
 	test("holds the zone it is in a little longer than it took to enter", () => {
@@ -362,7 +359,6 @@ describe("a Card carried off its Deck", () => {
 				current,
 				paneId: "pane-1",
 				dismisses: true,
-				expands: true,
 			}).kind;
 		expect(at(null)).toBe("return");
 		expect(at({ kind: "sheet", paneId: "pane-1" })).toBe("sheet");
@@ -387,7 +383,7 @@ describe("keyboard destinations", () => {
 		rem: 16,
 		splits,
 		columnRem: 26,
-		allows: () => true,
+		sweeps: true,
 	});
 
 	test("a Card off its Deck has its three zones, splits or not", () => {

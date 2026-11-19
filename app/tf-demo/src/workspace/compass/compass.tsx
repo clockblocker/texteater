@@ -35,11 +35,7 @@ import {
 	HeadingDesignProvider,
 } from "@/presentation/heading";
 import { VELOCITY_SAMPLE_MS } from "@/workspace/motion/motion-spec";
-import {
-	type DeckMotionOverrides,
-	DeckMotionProvider,
-	useDeckMotion,
-} from "@/workspace/motion/runtime-config";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { DropReading } from "./destination";
 import { DropZones, ReturnZone } from "./drop-zones";
 import {
@@ -50,12 +46,6 @@ import {
 	type NoteHandle,
 	type ThrowTuning,
 } from "./gesture";
-import {
-	ALL_INTERACTIONS,
-	type DeckInteraction,
-	DeckInteractions,
-	useDeckInteractions,
-} from "./interaction-policy";
 import { useNoteMoves } from "./note-moves";
 import { type PaneScope, renderLayout } from "./pane-layer";
 import {
@@ -101,16 +91,16 @@ export type CompassProps<S> = {
 	menu: readonly MenuItem[];
 	/** What a Menu Item's rung shows; a selection there goes on the Ground. */
 	renderMenuItem: (item: string, view: MenuItemView<S>) => ReactNode;
-	/** The live interactions; a scenario restricts them. */
-	interactions?: readonly DeckInteraction[];
-	/** Motion parameters over the spec's, as the animation workbench tunes them. */
-	motion?: DeckMotionOverrides;
+	/**
+	 * Whether a swipe toward inline-start sweeps the whole Deck (issue
+	 * 479); without it only a dismissive click, Escape and a new selection
+	 * sweep.
+	 */
+	sweeps?: boolean;
 	/** Whether a link in a Heading's title lifts the Sheet when dragged. */
 	linksDrag?: boolean;
 	/** Draw the drop regions while a Card is in hand; they are read either way. */
 	zonesShown?: boolean;
-	/** How far below its Pane's top a Deck starts, for a stage with nothing above it. */
-	deckTopRem?: number;
 	/**
 	 * Filled with what cancels the gesture in progress, if any, for a
 	 * change that comes from outside, such as the browser's Back.
@@ -118,21 +108,13 @@ export type CompassProps<S> = {
 	cancelGestureRef?: RefObject<(() => void) | null>;
 };
 
-export function Compass<S>({
-	motion,
-	interactions = ALL_INTERACTIONS,
-	...props
-}: CompassProps<S>) {
+export function Compass<S>(props: CompassProps<S>) {
 	const { preference } = useMotionPreference();
 	return (
 		<MotionConfig
 			reducedMotion={preference === "ignore" ? "never" : "user"}
 		>
-			<DeckInteractions value={interactions}>
-				<DeckMotionProvider motion={motion}>
-					<CompassRuntime {...props} />
-				</DeckMotionProvider>
-			</DeckInteractions>
+			<CompassRuntime {...props} />
 		</MotionConfig>
 	);
 }
@@ -146,10 +128,9 @@ function CompassRuntime<S>({
 	renderMenuItem,
 	linksDrag = DEFAULT_HEADING_DESIGN.linksDrag,
 	zonesShown = false,
-	deckTopRem = DECK_TOP_REM,
+	sweeps = true,
 	cancelGestureRef,
-}: Omit<CompassProps<S>, "motion" | "interactions">) {
-	const allows = useDeckInteractions();
+}: CompassProps<S>) {
 	const {
 		OPEN_SCALE,
 		COMMIT,
@@ -188,7 +169,7 @@ function CompassRuntime<S>({
 
 	function deckColumnOf(paneId: string): Box | null {
 		const box = paneBoxes[paneId];
-		return box ? deckColumnIn(box, rem, OPEN_SCALE, deckTopRem) : null;
+		return box ? deckColumnIn(box, rem, OPEN_SCALE, DECK_TOP_REM) : null;
 	}
 	function reading(card: Presentation<S>): DropReading<S> {
 		return {
@@ -206,17 +187,15 @@ function CompassRuntime<S>({
 			splits,
 			columnRem: renderer.columnRem(card.subject),
 			barRemOf: fold.barRemOf,
-			allows,
+			sweeps,
 			tuning,
 			commit: COMMIT,
 			openScale: OPEN_SCALE,
-			deckTopRem,
 		};
 	}
 
 	const commands = useWorkspaceCommands({
 		workspace,
-		allows,
 		smooth: !moves.reduce,
 		deckTopOf: (paneId) => {
 			const frameBox = root.current?.getBoundingClientRect();
@@ -242,7 +221,7 @@ function CompassRuntime<S>({
 		moves,
 		commands,
 		handles,
-		allows,
+		sweeps,
 		direction,
 		paneBoxes,
 		tuning,
@@ -258,7 +237,6 @@ function CompassRuntime<S>({
 		moves,
 		handles,
 		renderer,
-		allows,
 		direction,
 		reading,
 	});
@@ -275,7 +253,6 @@ function CompassRuntime<S>({
 		press,
 		dragging: () => gesture.dragRef.current !== null,
 		swallowClick: drags.swallowClick,
-		allows,
 		sweep: commands.sweep,
 		clearCovers: commands.clearCovers,
 		cancelDrag: () => drags.cancelDrag(),
@@ -283,7 +260,7 @@ function CompassRuntime<S>({
 
 	/* --- render --- */
 
-	const showZones = allows("drop") && drag?.phase === "held";
+	const showZones = drag?.phase === "held";
 	/* nothing wears a label: the ghost says where a Card opens, the moving
 	   Deck says it is being swiped, and the Card's own border and ink say
 	   what letting go does to it */
@@ -375,7 +352,7 @@ function CompassRuntime<S>({
 			deck.cards.filter((card) => !open.has(card.id)),
 			deck.frontId,
 			OPEN_SCALE,
-			deckTopRem,
+			DECK_TOP_REM,
 		);
 		/* a swiped Deck moves as a stack: every Card keeps its z, and every
 		   Card wears the commit line */
@@ -425,14 +402,14 @@ function CompassRuntime<S>({
 						{
 							text: "Open",
 							label: `Open ${name} as a Cover`,
-							enabled: allows("expand") && drag === null,
+							enabled: drag === null,
 							onPress: () =>
 								commands.expandCard(sheet.sheetId, card),
 						},
 						{
 							text: "Lift",
 							label: `Lift ${name}`,
-							enabled: allows("drag") && drag === null,
+							enabled: drag === null,
 							onPress: () => keyboard.liftCard(card, sheet),
 						},
 					]}
@@ -476,7 +453,7 @@ function CompassRuntime<S>({
 				if (!ghost) rendered.add(card.id);
 				/* a Cover's Heading is its bar: the ← and the handle ride
 				   the Note's own box rather than sitting beside it */
-				const grabs = isTop && !ghost && allows("lift");
+				const grabs = isTop && !ghost;
 				const live = !ghost && isTop;
 				notes.push(
 					<PresentationView
@@ -513,7 +490,7 @@ function CompassRuntime<S>({
 										label: deckHolding(layout, card.id)
 											? "Collapse back to card"
 											: "Close cover",
-										enabled: live && allows("collapse"),
+										enabled: live,
 										onPress: () =>
 											commands.coverBack(
 												pane.id,
@@ -526,7 +503,7 @@ function CompassRuntime<S>({
 								? null
 								: {
 										label: "Close every Cover",
-										enabled: live && allows("collapse"),
+										enabled: live,
 										onPress: () =>
 											commands.clearCovers(pane.id),
 									}
@@ -592,7 +569,7 @@ function CompassRuntime<S>({
 							renderer.columnRem(drag.card.subject),
 							rem,
 							OPEN_SCALE,
-							{ topRem: deckTopRem, narrow },
+							{ topRem: DECK_TOP_REM, narrow },
 						)}
 						active={destination?.kind === "return"}
 						shown={zonesShown}
@@ -637,7 +614,6 @@ function CompassRuntime<S>({
 		renderer,
 		menu,
 		renderMenuItem,
-		allows,
 		rem,
 		fold,
 		drags,
