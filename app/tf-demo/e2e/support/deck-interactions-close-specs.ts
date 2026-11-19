@@ -6,7 +6,6 @@ import {
 	inspector,
 	landed,
 	reduceMotion,
-	setKnob,
 } from "./deck-interactions";
 import {
 	besideOf,
@@ -26,7 +25,9 @@ import {
 	landing,
 	movesFrom,
 	offBy,
+	offRest,
 	record,
+	restingAs,
 	restsAs,
 	type Shown,
 	shown,
@@ -40,8 +41,8 @@ import {
  * The Deck interactions spec's Cover close, declared into it by
  * `closeSpecs`: a Card closed from the Cover goes back into its place as
  * deck-of-cards' shuffle moves a Card, out beside the Deck, lifted, and in
- * under the Cards in front of it, restacking only where it overlaps none.
- * The front Card goes straight in. Reduced, it dissolves. Judged frame by
+ * under the Cards stacked over it, restacking only where it overlaps none.
+ * The open Card goes straight in. Reduced, it dissolves. Judged frame by
  * frame, in D, in both writing directions, and interrupted.
  */
 
@@ -152,7 +153,7 @@ async function closeAndJudge(page: Page, lead: number, reduce: boolean) {
 export function closeSpecs() {
 	for (const rtl of [false, true])
 		for (const reduce of [false, true])
-			test(`D in ${rtl ? "RTL" : "LTR"}${reduce ? ", reduced" : ""}: a Card behind the front one closes from the Cover into its place${reduce ? " as a dissolve" : ", out beside the Deck and in under the Cards in front, restacking clear of them all"}; the front Card goes straight in`, async ({
+			test(`D in ${rtl ? "RTL" : "LTR"}${reduce ? ", reduced" : ""}: a Card other than the open one closes from the Cover into its place${reduce ? " as a dissolve" : ", out beside the Deck and in under the Cards stacked over it, restacking clear of them all"}; the open Card goes straight in`, async ({
 				page,
 			}) => {
 				await open(page, "D", rtl, reduce);
@@ -160,11 +161,10 @@ export function closeSpecs() {
 				await closeAndJudge(page, 3, reduce);
 			});
 
-	test("D: a tap on a closing Card takes it on from where it shows, to the front", async ({
+	test("D: a tap on a closing Card opens it in the Deck and takes it on from where it shows, into its own slot", async ({
 		page,
 	}) => {
 		await open(page, "D");
-		await setKnob(page, "Tap shuffle duration", 400);
 		const rest = await shown(page);
 		const ids = rest.map((own) => own.id);
 		const id = ids[2] ?? "";
@@ -180,12 +180,22 @@ export function closeSpecs() {
 		});
 		await page.mouse.move(5, 5);
 		const frames = await done();
-		expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);
-		const order = [...ids.filter((other) => other !== id), id];
+		/* the closing Card goes on smoothly; the Card that was open gives up
+		   its scale at once, as a state, which is no jump of a move */
+		const closing = frames.map((sample) => ({
+			...sample,
+			cards: sample.cards.filter((own) => own.id === id),
+		}));
+		expect(worstJump(closing, 1)).toBeLessThanOrEqual(0);
+		const settled = restingAs(rest, 2);
 		const land = landing(frames);
-		expect(land.stacking).toEqual(order);
 		expect(land.drift).toBeLessThanOrEqual(0.01);
-		await expectRest(page, rest, order);
+		await landed(page);
+		const now = offRest(await shown(page), settled);
+		expect(now.dom).toEqual(ids);
+		expect(now.off).toBeLessThanOrEqual(0.01);
+		expect(now.stacked).toBe(true);
+		await expect(frame(page).locator("[data-expanded]")).toHaveCount(0);
 	});
 
 	test("D: a hand on another Card mid-close takes the closing Card on from where it shows, home", async ({

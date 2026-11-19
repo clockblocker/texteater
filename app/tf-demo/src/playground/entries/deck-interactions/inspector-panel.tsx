@@ -127,8 +127,9 @@ export function InspectorPanel({
 					inline-end it opens the Card too on a phone; on a wide
 					screen (md and up, or Width: wide) it opens the Card in the
 					other Pane, a stand-in at inline-end beside the Deck's own.
-					Tap a Card behind the front one to shuffle it to the front,
-					and double-tap a Card to open it.
+					Tap a Card to bring it to the front: at once and in its
+					place, as the app does it, it takes the open scale and the
+					top of the stack. Double-tap a Card to open it.
 				</p>
 			</InspectorSection>
 			<InspectorSection title="Variant">

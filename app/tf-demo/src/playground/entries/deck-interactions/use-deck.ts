@@ -17,7 +17,7 @@ import {
 	wait,
 } from "./motion-kit";
 import type { Readouts } from "./readouts";
-import { type PullOut, pullOutOf, type Side, tapShuffle } from "./tap-shuffle";
+import { openAtOf, restZOf } from "./stacking";
 
 /** One Card's motion values: its box in logical px, its lean and its lift. */
 export type CardValues = {
@@ -30,7 +30,7 @@ export type CardValues = {
 	readonly s: MotionValue<number>;
 	/** 0 at rest, 1 fully lifted: the shadow follows it. */
 	readonly lift: MotionValue<number>;
-	/** Only a deal, a reduced exit or a reduced reorder fades a Card; a Card in hand is solid. */
+	/** Only a deal or a reduced move fades a Card; a Card in hand is solid. */
 	readonly o: MotionValue<number>;
 	/**
 	 * 0 while another Card is open over the Deck, else 1: the Card shows at
@@ -85,8 +85,7 @@ async function dissolveTo(
 
 /** How long the rest of the Deck takes to fade out as a Card opens over it, and back in as it closes. */
 const VEIL_MS = 160;
-const BASE_Z = 10;
-/** A Card a tap or a close lifts off the Deck: above every Card in it, under the hand's. */
+/** A Card a close lifts off the Deck: above every Card in it, under the hand's. */
 const LIFTED_Z = 90;
 const HELD_Z = 100;
 const COVER_Z = 200;
@@ -96,19 +95,12 @@ export type DeckStatus = "dealt" | "leaving" | "gone";
 export type Deck = ReturnType<typeof useDeck>;
 
 /**
- * How a tap brings a Card to the front: "off" restacks it at once and lets
- * the reflow take it; `ms` 0 puts every Card in its new place at once.
- */
-export type TapShuffle = {
-	readonly pullOut: PullOut;
-	readonly side: Side;
-	readonly ms?: number;
-};
-
-/**
- * The Deck every variant drives: its order, whether it is dealt, gone or
- * has a Card in the Cover, each Card's motion values, and the moves they
- * share. A variant owns only the gesture.
+ * The Deck every variant drives: its order, which never changes, the
+ * Card open in it (`front`), whether it is dealt, gone or has a Card in
+ * the Cover, each Card's motion values, and the moves they share. As in
+ * tf-demo, every Card keeps its slot by its index, the open one at the
+ * open scale, and stacks by its distance from the open Card
+ * (`stacking.ts`). A variant owns only the gesture.
  */
 export function useDeck({
 	cards,
@@ -127,14 +119,22 @@ export function useDeck({
 	readonly frame: Frame;
 	readonly motion: MotionContext;
 	readonly readouts: Readouts;
-	readonly layout: (frame: Frame, count: number) => Slot[];
+	/** The pile's slots, back to front, with the Card at `openAt` open. */
+	readonly layout: (frame: Frame, count: number, openAt: number) => Slot[];
 	/** How the Cover's close plays: its defaults unless a variant's knobs say. */
 	readonly close?: CloseKnobs;
 	/** Whether the Cover fills its Pane, as on a phone; left out, the screen says, as the app reads it. */
 	readonly narrow?: boolean;
 }) {
-	const [initialOrder] = useState(() => cards.map((card) => card.id));
-	const [order, setOrder] = useState<readonly string[]>(initialOrder);
+	const [order] = useState<readonly string[]>(() =>
+		cards.map((card) => card.id),
+	);
+	/** The open Card; null is the dealt one, the last. */
+	const [front, setFront] = useState<string | null>(null);
+	/** The open Card as of now, for a call before the render. */
+	const frontRef = useRef<string | null>(front);
+	frontRef.current = front;
+	const openAt = openAtOf(order, front);
 	const [status, setStatus] = useState<DeckStatus>("dealt");
 	const [expanded, setExpanded] = useState<string | null>(null);
 	/** The Card open over the Deck as of now, for a call before the render. */
@@ -143,11 +143,12 @@ export function useDeck({
 	/** The whole Deck's opacity, as one flattened layer: only D's Close deck lowers it. */
 	const [opacity] = useState(() => motionValue(1));
 	const [values] = useState(() => {
-		const first = layout(frame, initialOrder.length);
+		const dealtAt = order.length - 1;
+		const first = layout(frame, order.length, dealtAt);
 		return new Map(
-			initialOrder.map((id, index) => [
+			order.map((id, index) => [
 				id,
-				makeValues(first[index], BASE_Z + index),
+				makeValues(first[index], restZOf(index, dealtAt)),
 			]),
 		);
 	});
@@ -157,20 +158,23 @@ export function useDeck({
 	const [beside, setBeside] = useState<string | null>(null);
 	const besideRef = useRef<string | null>(null);
 	const slots = useMemo(
-		() => layout(frame, order.length),
-		[layout, frame, order.length],
+		() => layout(frame, order.length, openAt),
+		[layout, frame, order.length, openAt],
 	);
 	const motionRef = useRef(motion);
 	motionRef.current = motion;
-	/* the order a tap reads: a second tap can come before the render */
-	const orderRef = useRef(order);
-	orderRef.current = order;
+	/* where the open Card is as of now: a second tap can come before the render */
+	const openAtNow = useCallback(
+		() => openAtOf(order, frontRef.current),
+		[order],
+	);
 	const [player] = useState(() =>
 		createCardMovePlayer({
 			valuesOf: (id) => values.get(id) ?? makeValues(),
-			zOf: (index) => BASE_Z + index,
+			zOf: (index) => restZOf(index, openAtOf(order, frontRef.current)),
 			liftedZ: LIFTED_Z,
-			restZ: (id) => BASE_Z + orderRef.current.indexOf(id),
+			restZ: (id) =>
+				restZOf(order.indexOf(id), openAtOf(order, frontRef.current)),
 		}),
 	);
 	/* a Deck switched away mid-move leaves nothing cued behind it */
@@ -189,10 +193,10 @@ export function useDeck({
 		(id: string) => busy.current.has(id) || player.has(id),
 		[player],
 	);
-	/** `id`'s stacking at rest, in the order as it now stands. */
+	/** `id`'s stacking at rest, by its distance from the Card open now. */
 	const restZ = useCallback(
-		(id: string) => BASE_Z + orderRef.current.indexOf(id),
-		[],
+		(id: string) => restZOf(order.indexOf(id), openAtNow()),
+		[order, openAtNow],
 	);
 
 	const place = useCallback(
@@ -286,12 +290,22 @@ export function useDeck({
 			const slot = slots[index];
 			const card = valuesOf(id);
 			if (!slot || isBusy(id) || id === expanded) return;
-			card.z.set(BASE_Z + index);
+			card.z.set(restZOf(index, openAt));
 			void place(id, slot, SPRINGS.reflow);
 		});
-	}, [slots, order, status, expanded, frame.w, place, valuesOf, isBusy]);
+	}, [
+		slots,
+		order,
+		openAt,
+		status,
+		expanded,
+		frame.w,
+		place,
+		valuesOf,
+		isBusy,
+	]);
 
-	/** The hand takes `id`, and with it the Deck: a shuffle or a close ends where every Card shows. */
+	/** The hand takes `id`, and with it the Deck: a close ends where every Card shows. */
 	const hold = useCallback(
 		(id: string) => {
 			player.takeAll();
@@ -309,63 +323,45 @@ export function useDeck({
 	}, []);
 
 	/**
-	 * Brings `id` to the front; a Card already there stays as it is. With a
-	 * pull-out, the Cards that change places play deck-of-cards' shuffle
-	 * from where they show; a Card a hand or the Cover has is left out.
-	 * "off" restacks at once and lets the reflow take the Cards there.
+	 * Opens `id` in the Deck, as tf-demo's tap does: a state, not a move.
+	 * No Card travels, fades or changes places. At once, in the frame
+	 * after the tap, `id` takes the open scale and the Card that was open
+	 * gives it up, each keeping its drawn top edge where its slot has it,
+	 * and every Card restacks by its distance from `id`. A Card a hand or
+	 * a Cover has is left out; one the Cover's close was moving is taken
+	 * from where it shows and goes on to its slot with the rest's reflow.
+	 * A tap on the open Card does nothing.
 	 */
 	const bringToFront = useCallback(
-		(id: string, tap?: TapShuffle) => {
-			const current = orderRef.current;
-			if (current.at(-1) === id || !current.includes(id)) return;
-			if (tap?.ms === 0) {
-				const next = [...current.filter((other) => other !== id), id];
-				orderRef.current = next;
-				player.takeAll();
-				next.forEach((other, index) => {
-					const slot = slots[index];
-					if (
-						!slot ||
-						busy.current.has(other) ||
-						other === expandedRef.current
-					)
-						return;
-					const card = valuesOf(other);
-					for (const key of GLIDING)
-						card[key].jump(key === "lift" ? 0 : slot[key]);
-					card.z.set(BASE_Z + index);
-				});
-				setOrder(next);
-				return;
-			}
-			const at = slots[current.indexOf(id)];
-			const out =
-				tap && at ? pullOutOf(tap.pullOut, tap.side, at.w) : null;
-			const plan =
-				out === null
-					? null
-					: tapShuffle({
-							order: current,
-							id,
-							slots,
-							out,
-							legMs:
-								tap?.ms === undefined ? undefined : tap.ms / 2,
-						});
-			const next = plan?.order ?? [
-				...current.filter((other) => other !== id),
-				id,
-			];
-			orderRef.current = next;
-			if (plan) {
-				player.play(
-					plan.moves.filter((move) => !busy.current.has(move.id)),
-					motionRef.current,
-				);
-			} else player.takeAll();
-			setOrder(next);
+		(id: string) => {
+			const at = order.indexOf(id);
+			const was = openAtNow();
+			if (at < 0 || at === was) return;
+			const before = layout(frame, order.length, was);
+			const after = layout(frame, order.length, at);
+			const moving = new Set(order.filter((other) => player.has(other)));
+			frontRef.current = id;
+			player.takeAll();
+			order.forEach((other, index) => {
+				if (
+					moving.has(other) ||
+					busy.current.has(other) ||
+					other === expandedRef.current
+				)
+					return;
+				const card = valuesOf(other);
+				card.z.set(restZOf(index, at));
+				const from = before[index];
+				const to = after[index];
+				if (!from || !to || from.s === to.s) return;
+				/* only the scale changes, about the Card's centre, so its
+				   top moves by what keeps its drawn top edge still */
+				card.s.jump(to.s);
+				card.v.jump(card.v.get() + to.v - from.v);
+			});
+			setFront(id);
 		},
-		[slots, player, valuesOf],
+		[order, openAtNow, layout, frame, player, valuesOf],
 	);
 
 	/**
@@ -376,11 +372,11 @@ export function useDeck({
 	 */
 	const veil = useCallback(
 		(open: string, to: 0 | 1) => {
-			for (const id of orderRef.current)
+			for (const id of order)
 				if (id !== open && id !== besideRef.current)
 					tweenTo(valuesOf(id).veil, to, VEIL_MS, motionRef.current);
 		},
-		[valuesOf],
+		[order, valuesOf],
 	);
 
 	/**
@@ -388,7 +384,8 @@ export function useDeck({
 	 * in one straight line to its slot, shrinking as it travels, on the
 	 * spring it opened on. It takes its place in the stacking as it sets
 	 * off, beside the Deck, where that shows nowhere, so it slides in
-	 * between its neighbours, under the Cards in front of it. Reduced, it
+	 * between its neighbours, under the Cards stacked over it: those nearer
+	 * the open Card. Reduced, it
 	 * dissolves back, as it dissolved there. Landed on a Deck another Card
 	 * is open over, it fades out with the rest of it. It stays busy until
 	 * it lands, or the re-layout would take it on its own spring; a hand
@@ -397,14 +394,14 @@ export function useDeck({
 	 */
 	const goHome = useCallback(
 		(id: string) => {
-			const index = orderRef.current.indexOf(id);
+			const index = order.indexOf(id);
 			const slot = slots[index];
 			if (!slot) {
 				busy.current.delete(id);
 				return;
 			}
 			const card = valuesOf(id);
-			card.z.set(BASE_Z + index);
+			card.z.set(restZOf(index, openAtNow()));
 			const to = { ...slot, r: slot.r ?? 0, s: slot.s ?? 1, lift: 0 };
 			void (
 				motionRef.current.reduce
@@ -416,7 +413,7 @@ export function useDeck({
 					tweenTo(card.veil, 0, VEIL_MS, motionRef.current);
 			});
 		},
-		[slots, valuesOf, glide],
+		[order, slots, valuesOf, glide, openAtNow],
 	);
 
 	/**
@@ -428,8 +425,8 @@ export function useDeck({
 	 * goes home as it comes; reduced, it dissolves into it. A Card open in
 	 * the other Pane leaves the Deck as it was, every other Card on it
 	 * free to be swiped, tapped and opened. Over the Deck, the rest of it
-	 * fades out once `uncovered` has: a swipe's panel, under the Cards in
-	 * front of the swiped one, which they would otherwise uncover.
+	 * fades out once `uncovered` has: a swipe's panel, under the Cards
+	 * stacked over the swiped one, which they would otherwise uncover.
 	 */
 	const expand = useCallback(
 		async (
@@ -500,7 +497,8 @@ export function useDeck({
 			veil(id, 1);
 			busy.current.delete(id);
 			const move = coverClose({
-				order: orderRef.current,
+				order,
+				openAt: openAtNow(),
 				id,
 				slots,
 				knobs: close,
@@ -514,7 +512,7 @@ export function useDeck({
 				readouts.set({ phase: "rest" }),
 			);
 		},
-		[readouts, slots, close, player, goHome, veil],
+		[readouts, order, openAtNow, slots, close, player, goHome, veil],
 	);
 
 	/**
@@ -536,7 +534,7 @@ export function useDeck({
 		[readouts, player],
 	);
 
-	/** Deals the Deck again, in its first order, rising into place. */
+	/** Deals the Deck again, rising into place, with its last Card open. */
 	const redeal = useCallback(() => {
 		const context = motionRef.current;
 		busy.current.clear();
@@ -545,13 +543,14 @@ export function useDeck({
 		setExpanded(null);
 		besideRef.current = null;
 		setBeside(null);
-		orderRef.current = initialOrder;
-		setOrder(initialOrder);
-		const fresh = layout(frame, initialOrder.length);
+		frontRef.current = null;
+		setFront(null);
+		const dealtAt = order.length - 1;
+		const fresh = layout(frame, order.length, dealtAt);
 		/* jumps, not sets: the Deck is gone, so nothing visibly teleports,
 		   and a set would hand the next spring the jump as velocity */
 		opacity.jump(1);
-		initialOrder.forEach((id, index) => {
+		order.forEach((id, index) => {
 			const card = valuesOf(id);
 			const slot = fresh[index];
 			if (!slot) return;
@@ -564,7 +563,7 @@ export function useDeck({
 			card.lift.jump(0);
 			card.o.jump(0);
 			card.veil.jump(1);
-			card.z.jump(BASE_Z + index);
+			card.z.jump(restZOf(index, dealtAt));
 			void wait(index * 40, context).then(() => {
 				if (busy.current.has(id)) return;
 				settle(card.v, slot.v, SPRINGS.settle, context);
@@ -573,7 +572,7 @@ export function useDeck({
 		});
 		setStatus("dealt");
 		readouts.set({ phase: "rest", zone: null });
-	}, [layout, frame, valuesOf, readouts, opacity, initialOrder, player]);
+	}, [layout, frame, valuesOf, readouts, opacity, order, player]);
 
 	const dealt = useRef(deal);
 	useEffect(() => {
@@ -585,6 +584,8 @@ export function useDeck({
 	return {
 		frame,
 		order,
+		front,
+		openAt,
 		status,
 		expanded,
 		beside,

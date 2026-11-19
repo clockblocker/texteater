@@ -1,3 +1,4 @@
+import type { Place } from "compass";
 import { motion, useTransform } from "motion/react";
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
 import type { PresentationForm } from "@/presentation/form";
@@ -36,6 +37,7 @@ export function CardView({
 	rtl,
 	held,
 	aside,
+	place,
 	highlight,
 	onPointerDown,
 }: {
@@ -53,6 +55,8 @@ export function CardView({
 	readonly held: boolean;
 	/** Whether it is open in another Pane, not over its Deck. */
 	readonly aside?: boolean;
+	/** Where it rests in its Deck, against the open Card, as tf-demo marks it. */
+	readonly place?: Place;
 	/** Whether hovering the Card lights its border while its layer is lit; left out, it never does. */
 	readonly highlight?: boolean;
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -77,6 +81,7 @@ export function CardView({
 			data-held={held || undefined}
 			data-expanded={expanded || undefined}
 			data-aside={aside || undefined}
+			data-place={expanded ? undefined : place}
 			onPointerDown={onPointerDown}
 			style={{
 				insetInlineStart: 0,

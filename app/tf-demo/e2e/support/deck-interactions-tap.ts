@@ -341,55 +341,13 @@ export function landing(samples: readonly Sample[]) {
 	};
 }
 
-/** The first frame in which Card `id` is stacked over every other. */
-export function topFrom(samples: readonly Sample[], id: string) {
-	return samples.findIndex((sample) => onTop(sample, id));
-}
-
-function onTop(sample: Sample, id: string) {
+/** Whether Card `id` is stacked over every other in `sample`. */
+export function onTop(sample: Sample, id: string) {
 	const own = sample.cards.find((card) => card.id === id);
 	return (
 		own !== undefined &&
 		sample.cards.every((card) => card.id === id || card.z < own.z)
 	);
-}
-
-/** Whether Card `id` is above every other Card in each frame from `from` on. */
-export function onTopFrom(
-	samples: readonly Sample[],
-	id: string,
-	from: number,
-) {
-	return samples.slice(from).every((sample) => onTop(sample, id));
-}
-
-/**
- * The tapped Card's path, from its first frame: how far toward inline-end
- * it went, the frame it went furthest in, whether it only went out and
- * then only came back, and the first frame its height moved.
- */
-export function pathOf(samples: readonly Sample[], id: string) {
-	const track = trackOf(samples, id);
-	const start = track[0];
-	if (!start) throw new Error("Nothing sampled");
-	const out = track.map((card) => card.u - start.u);
-	const peak = Math.max(...out);
-	const peakAt = out.indexOf(peak);
-	const outThenIn = out.every((value, index) => {
-		const before = out[index - 1];
-		if (before === undefined) return true;
-		return index <= peakAt
-			? value >= before - 0.01
-			: value <= before + 0.01;
-	});
-	return {
-		out,
-		peak,
-		peakAt,
-		outThenIn,
-		least: Math.min(...out),
-		dropsFrom: track.findIndex((card) => Math.abs(card.v - start.v) > 0.01),
-	};
 }
 
 /** The first frame in which Card `id` moved from its first frame, or -1. */
@@ -400,8 +358,70 @@ export function movesFrom(samples: readonly Sample[], id: string) {
 	return track.findIndex((card) => offBy(card, start) > 0.01);
 }
 
-/** The first frame in which Card `id`'s stacking differs from its first. */
-export function restacksFrom(samples: readonly Sample[], id: string) {
-	const track = trackOf(samples, id);
-	return track.findIndex((card) => card.z !== track[0]?.z);
+/** The open Card's resting scale, the app's `OPEN_SCALE`. */
+const OPEN_SCALE = 1.05;
+
+/**
+ * The stacking tf-demo's `deckSlots` gives slot `index` while the Card at
+ * `openAt` is open: rising toward it from both sides, one step per slot,
+ * the open Card over all of them.
+ */
+export function zOf(index: number, openAt: number) {
+	return 10 + Math.max(0, 9 - Math.abs(index - openAt));
+}
+
+/**
+ * Every Card where it rests with the Card at `openAt` open, read from
+ * `dealt`, the pile as dealt (back to front, its last Card open): each in
+ * its own slot, its drawn top edge and its middle along the inline axis
+ * where they were, only the open Card at the open scale, stacked by
+ * `zOf`, solid.
+ */
+export function restingAs(dealt: readonly Shown[], openAt: number): Shown[] {
+	const dealtAt = dealt.length - 1;
+	return dealt.map((own, index) => {
+		const was = index === dealtAt ? OPEN_SCALE : 1;
+		const now = index === openAt ? OPEN_SCALE : 1;
+		const w = (own.w / was) * now;
+		const h = (own.h / was) * now;
+		const top = own.v - own.h / 2;
+		return { ...own, w, h, v: top + h / 2, z: zOf(index, openAt), o: 1 };
+	});
+}
+
+/**
+ * The most `cards` are off `rest` (both back to front, as the DOM has
+ * them): their ids in that order, the most a box is off in px, and
+ * whether every stacking and opacity is the same.
+ */
+export function offRest(cards: readonly Shown[], rest: readonly Shown[]) {
+	return {
+		dom: cards.map((card) => card.id),
+		off: Math.max(
+			...rest.map((slot) => {
+				const card = cards.find((own) => own.id === slot.id);
+				return card ? offBy(card, slot) : Number.POSITIVE_INFINITY;
+			}),
+		),
+		stacked: rest.every(
+			(slot) =>
+				cards.find((own) => own.id === slot.id)?.z === slot.z &&
+				cards.find((own) => own.id === slot.id)?.o === slot.o,
+		),
+	};
+}
+
+/**
+ * Where a tap on `card` lands in the strip of it that shows: near its top
+ * when it is folded above the open Card or is it, near its foot when it
+ * is folded below it, as tf-demo marks it (`data-place`).
+ */
+export async function stripOf(card: Locator) {
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const below = (await card.getAttribute("data-place")) === "below";
+	return {
+		x: box.x + box.width / 2,
+		y: below ? box.y + box.height - 16 : box.y + 20,
+	};
 }

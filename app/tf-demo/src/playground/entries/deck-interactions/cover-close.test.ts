@@ -26,8 +26,8 @@ function slot(index: number): Slot {
 	return found;
 }
 
-function close(id: string, knobs = KNOBS) {
-	const move = coverClose({ order: ORDER, id, slots: SLOTS, knobs });
+function close(id: string, knobs = KNOBS, openAt = 3) {
+	const move = coverClose({ order: ORDER, openAt, id, slots: SLOTS, knobs });
 	if (!move) throw new Error(`No close for ${id}`);
 	return move;
 }
@@ -54,6 +54,7 @@ describe("the Cover's close", () => {
 		expect(
 			coverClose({
 				order: ORDER,
+				openAt: 3,
 				id: "x",
 				slots: SLOTS,
 				knobs: CLOSE_DEFAULTS,
@@ -61,14 +62,13 @@ describe("the Cover's close", () => {
 		).toBeNull();
 	});
 
-	test("a Card behind the front one goes out beside the Deck, lifted at its slot's size, then in, set down, restacking as the second leg starts", () => {
+	test("a Card other than the open one goes out beside the Deck, lifted at its slot's size, then in, set down, restacking as the second leg starts", () => {
 		const move = close("b");
 		const beside = besideOf(SLOTS, 1, KNOBS.closeGap);
 		if (!beside) throw new Error("No beside");
 		expect(move).toMatchObject({
 			index: 1,
 			startMs: 0,
-			reducedStartMs: 0,
 			ms: 560,
 			zAtMs: 300,
 			lifted: true,
@@ -82,7 +82,7 @@ describe("the Cover's close", () => {
 		expect(restOf(move)).toEqual({ ...slot(1), lift: 0 });
 	});
 
-	test("the front Card goes straight into its slot in one leg, restacking as it lands", () => {
+	test("the open Card goes straight into its slot in one leg, restacking as it lands", () => {
 		const move = close("d");
 		expect(move).toMatchObject({
 			index: 3,
@@ -94,6 +94,15 @@ describe("the Cover's close", () => {
 			expect(move.legs[channel]).toEqual([
 				{ at: 0, ms: 300, to: { ...slot(3), lift: 0 }[channel] },
 			]);
+	});
+
+	test("the open Card goes straight in wherever it is in the Deck, and the last, when another is open, goes out and in under the Cards stacked over it", () => {
+		const open = close("b", KNOBS, 1);
+		expect(open).toMatchObject({ index: 1, ms: 300, zAtMs: 300 });
+		expect(open.legs.u).toHaveLength(1);
+		const last = close("d", KNOBS, 1);
+		expect(last).toMatchObject({ index: 3, ms: 560, zAtMs: 300 });
+		expect(last.legs.u).toHaveLength(2);
 	});
 
 	test("the legs and the gap follow the knobs", () => {

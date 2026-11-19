@@ -9,6 +9,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 export const inspector = (page: Page) =>
 	page.getByRole("complementary", { name: "Inspector" });
 export const frame = (page: Page) => page.locator("[data-deck-frame]");
+/** The open Card as the Deck is dealt: the last. A tap opens another in its place (`data-place`). */
 export const front = (page: Page) =>
 	frame(page).locator("[data-card-id]").last();
 

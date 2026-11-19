@@ -224,7 +224,7 @@ describe("D's fold, on Motion's frame loop", () => {
 });
 
 describe("D's fold onto a Card from inside the Deck", () => {
-	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, the Deck fading with them, and no Card's z-index ever moves", async () => {
+	test("the Cards after it come up onto it and the ones before it down, whole at the threshold, the Deck fading with them, and no Card's z-index ever moves", async () => {
 		const pile = makePile({});
 		const [back, middle, front] = pile.map((card) => card.values);
 		if (!back || !middle || !front) throw new Error("Missing a Card");
@@ -256,7 +256,7 @@ describe("D's fold onto a Card from inside the Deck", () => {
 			expect(other.s.get()).toBeCloseTo(1, 6);
 		}
 		expect(stacked()).toEqual(before);
-		/* toward Open the Cards in front rest */
+		/* toward Open the Cards after it rest */
 		await pointerEvent(() => pull.set(20));
 		await nextFrame();
 		expect(front.v.get()).toBe(180);

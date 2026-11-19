@@ -156,11 +156,15 @@ for (const motion of ["no-preference", "reduce"] as const) {
 					),
 				).toEqual(front);
 				await openGallery(page, "🏦", "Attest");
-				expect(
-					await presentationMetrics(
-						page.locator('[data-presentation="card"]'),
-					),
-				).toEqual(back);
+				/* folded above the open Card it is a Card Tail, as in the
+				   app: the same Card, its Body only not scrolling */
+				const card = await presentationMetrics(
+					page.locator('[data-presentation="card"]'),
+				);
+				expect({
+					...card,
+					body: { ...card.body, overflowY: "hidden" },
+				}).toEqual(back);
 				expect(front.box.radius).toBe("14.4px");
 				expect(front.heading.height).toBe(48);
 			});

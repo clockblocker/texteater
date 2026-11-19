@@ -1,7 +1,6 @@
 import { CLOSE_DEFAULTS, CLOSE_KNOBS } from "./cover-close";
 import type { AnyKnob } from "./knobs";
 import { COLLAPSE_CURVES, type CollapseCurve } from "./swipe-gesture";
-import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
 
 /**
  * D's knobs and their tuned defaults. One threshold is the breakpoint for
@@ -20,7 +19,6 @@ import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
  * inline-end, and the Deck rests in the middle of what is left.
  */
 export const SWIPE_DEFAULTS = {
-	...TAP_DEFAULTS,
 	...CLOSE_DEFAULTS,
 	threshold: 96,
 	rubberLimit: 48,
@@ -58,7 +56,6 @@ function num(
 }
 
 export const SWIPE_KNOBS: readonly SwipeKnob[] = [
-	...TAP_KNOBS,
 	...CLOSE_KNOBS,
 	num("threshold", "Commit threshold", 40, 200, 2, "px"),
 	num("rubberLimit", "Rubber band", 0, 160, 2, "px"),

@@ -21,6 +21,9 @@ export type Panel = {
  */
 export type PanelBox = Pick<CardValues, "u" | "v" | "w" | "h" | "s" | "z">;
 
+/** A strip of a Card's box that shows, in px from its drawn top edge. */
+export type Strip = { readonly from: number; readonly size: number };
+
 /** The values a panel is drawn from; the variant animates them. */
 export type PanelValues = {
 	/** 1 while a release would commit: the colour floods in. */
@@ -119,12 +122,12 @@ export function SwipePanel({
 	reduce,
 }: {
 	readonly panel: Panel;
-	/** The swiped Card's values, or them held still: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
+	/** The swiped Card's values, or them held still: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card and the Cards stacked over it, and over the rest. */
 	readonly card: PanelBox;
 	/** Where a pull of 0 puts the Card: the panel lies there along the axis. */
 	readonly anchor: Anchor;
-	/** How much of the Card shows from its drawn top, in px, where the Cards in front hide the rest; null where all of it does. */
-	readonly shows: number | null;
+	/** The strip of the Card that shows, where the Cards stacked over it hide the rest; null where all of it does. */
+	readonly shows: Strip | null;
 	/** Once the hand has let go on Open: how much of the panel the Card had uncovered along the axis, in px; the panel shows only that strip. Null while the hand has the Card or brings it home. */
 	readonly kept: number | null;
 	readonly values: PanelValues;
@@ -164,8 +167,11 @@ export function SwipePanel({
 		[pull, card.s, card.h],
 		([p = 0, s = 1, h = 0]: number[]) => {
 			if (!inline) return alongOf(panel.sign, p, s, h, full) - BOX_H / 2;
-			const across = shows === null ? h - 2 * b : shows / s - b;
-			return across / 2 - BOX_H / 2;
+			if (shows === null) return (h - 2 * b) / 2 - BOX_H / 2;
+			/* the strip in the panel's own px, inside its box */
+			const start = Math.max(0, shows.from / s - b);
+			const end = Math.min(h - 2 * b, (shows.from + shows.size) / s - b);
+			return (start + end) / 2 - BOX_H / 2;
 		},
 	);
 	const scale = useTransform(

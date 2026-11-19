@@ -5,8 +5,8 @@ import type { Slot } from "./geometry";
  * A Card's move as a pure plan, in deck-of-cards' terms (`modules/shuffle`
  * of github.com/deck-of-cards/deck-of-cards, ported in tabletop's
  * `trick`): legs on cubicInOut per channel, and when the Card restacks.
- * A tap's shuffle and the Cover's close are each a set of these; the
- * Deck's player plays them on one clock from where each Card shows.
+ * The Cover's close is one of these; the Deck's player plays it from
+ * where the Card shows.
  */
 
 /** Each half of a reduced move's dissolve: out where it shows, then in at its rest. */
@@ -26,19 +26,13 @@ export type Leg = {
 	readonly to: number;
 };
 
-/** A Card's part of a tap's shuffle or of the Cover's close. */
+/** A Card's move, as the Cover's close plans it. */
 export type CardMove = {
 	readonly id: string;
-	/** Its new place, 0 the back: its stacking from `zAtMs` on. */
+	/** Its place, 0 the back: its stacking at rest there from `zAtMs` on. */
 	readonly index: number;
-	/** When it starts, in ms after the tap or the close. */
+	/** When it starts, in ms after the close; reduced, when it dissolves. */
 	readonly startMs: number;
-	/**
-	 * When it dissolves under reduced motion: for a shuffle, every Card on
-	 * the first beat, 2 ms × its new place apart, so the Deck shows its new
-	 * order at once.
-	 */
-	readonly reducedStartMs: number;
 	/** How long it runs from its start. */
 	readonly ms: number;
 	/** When, from its start, its stacking changes to its new place. */

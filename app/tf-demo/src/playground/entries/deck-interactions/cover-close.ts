@@ -1,6 +1,5 @@
 import { type CardMove, legsOf, poseOf } from "./card-move";
 import { drawn, type Slot } from "./geometry";
-import { TAP_LIFT } from "./tap-shuffle";
 
 /**
  * The Cover's close as deck-of-cards' shuffle moves a Card (`modules/
@@ -10,9 +9,10 @@ import { TAP_LIFT } from "./tap-shuffle";
  * lifted above the whole Deck, to beside its slot: out along the inline
  * axis toward inline-end until it is clear of every Card. As the second
  * starts it takes its place in the stacking, which shows nowhere, since
- * it overlaps no Card, and it slides in under the Cards in front of it,
- * set down as it lands. The front Card has none in front of it: it goes
- * straight into its slot in one leg. The other Cards don't move. Its
+ * it overlaps no Card, and it slides in under the Cards stacked over it,
+ * set down as it lands: those nearer the open Card, whose z rises toward
+ * it from both sides. The open Card has none over it: it goes straight
+ * into its slot in one leg. The other Cards don't move. Its
  * legs are longer than deck-of-cards' 200 ms, made for 62 px Cards: the
  * first shrinks a Cover. Reduced, the Deck's player dissolves it. Pure:
  * the Deck's player plays it, from where the Card shows.
@@ -44,8 +44,8 @@ function knob<K extends keyof CloseKnobs>(
 	return { kind: "number" as const, key, label, min, max, step, unit };
 }
 
-/** How high the Card rides on its way out: as high as a tapped Card does. */
-export const CLOSE_LIFT = TAP_LIFT;
+/** How high the Card rides on its way out, as a lift of 0 to 1: its shadow. */
+export const CLOSE_LIFT = 0.5;
 
 /**
  * Slot `index` of `slots`, moved toward inline-end until its drawn box is
@@ -67,16 +67,18 @@ export function besideOf(
 
 /**
  * The close that takes `id` from wherever it shows back into its place in
- * `order` (back to front) over a pile resting at `slots`: one move, or
- * null when `id` is not in the Deck.
+ * `order` (back to front) over a pile resting at `slots` with the Card at
+ * `openAt` open: one move, or null when `id` is not in the Deck.
  */
 export function coverClose({
 	order,
+	openAt,
 	id,
 	slots,
 	knobs,
 }: {
 	readonly order: readonly string[];
+	readonly openAt: number;
 	readonly id: string;
 	readonly slots: readonly Slot[];
 	readonly knobs: CloseKnobs;
@@ -86,12 +88,11 @@ export function coverClose({
 	if (index < 0 || !slot) return null;
 	const rest = poseOf(slot);
 	const beside = besideOf(slots, index, knobs.closeGap);
-	if (index === order.length - 1 || !beside)
+	if (index === openAt || !beside)
 		return {
 			id,
 			index,
 			startMs: 0,
-			reducedStartMs: 0,
 			ms: knobs.closeOutMs,
 			zAtMs: knobs.closeOutMs,
 			lifted: true,
@@ -101,7 +102,6 @@ export function coverClose({
 		id,
 		index,
 		startMs: 0,
-		reducedStartMs: 0,
 		ms: knobs.closeOutMs + knobs.closeInMs,
 		zAtMs: knobs.closeOutMs,
 		lifted: true,

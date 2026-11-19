@@ -12,39 +12,53 @@ import type { Width } from "./width";
 export type Frame = { readonly w: number; readonly h: number };
 
 /**
- * A slot of the foundation's pile in this engine's terms. A Card here is
- * scaled about its centre, so a scaled slot sits lower by half of what its
- * scale adds and its Card is drawn where the app draws it: its top edge a
- * whole Heading row below the Card Tail above it.
+ * A slot of the foundation's pile in this engine's terms, at `scale`. A
+ * Card here is scaled about its centre, so a scaled slot sits lower by
+ * half of what its scale adds and its Card is drawn where the app draws
+ * it: its top edge a whole Heading row below the Card Tail above it.
  */
-function engineSlot(slot: PileSlot): Slot {
+function engineSlot(slot: PileSlot, scale: number): Slot {
+	const scaled = { ...slot, scale };
 	return {
 		u: slot.inlineStart,
-		v: centreScaledTop(slot),
+		v: centreScaledTop(scaled),
 		w: slot.width,
 		h: slot.height,
 		r: 0,
-		s: slot.scale,
+		s: scale,
 	};
 }
 
-function pile(frame: Frame, count: number, openScale: number): PileSlot[] {
+/**
+ * The Deck's pile, back to front, with the Card at `openAt` open: the
+ * foundation's slots, which are the app's, with the frame as the Pane and
+ * `rem` the root font size. Every Card keeps its slot by its index; only
+ * the open one rests at `openScale`, as tf-demo's `restScale` has it.
+ */
+export function pileSlotsAt(
+	frame: Frame,
+	count: number,
+	openAt: number,
+	rem: number,
+	openScale = OPEN_SCALE,
+): Slot[] {
 	return pileSlotsIn({ width: frame.w, height: frame.h }, count, {
-		rem: remPx(),
+		rem,
 		openScale,
-	});
+	}).map((slot, index) => engineSlot(slot, index === openAt ? openScale : 1));
 }
 
 /**
- * The Deck's pile as it is dealt, back to front: the foundation's slots,
- * which are the app's, with the frame as the Pane.
+ * The Deck's pile with the Card at `openAt` open, by default the last, as
+ * it is dealt: `pileSlotsAt` at the page's root font size.
  */
 export function pileSlots(
 	frame: Frame,
 	count: number,
+	openAt = count - 1,
 	openScale = OPEN_SCALE,
 ): Slot[] {
-	return pile(frame, count, openScale).map(engineSlot);
+	return pileSlotsAt(frame, count, openAt, remPx(), openScale);
 }
 
 /**

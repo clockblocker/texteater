@@ -19,9 +19,9 @@ type Part = {
 };
 
 /**
- * Plays Card moves on the Deck's Cards: a tap's shuffle, or the Cover's
- * close. Each Card's part starts on Motion's frame loop at its `startMs`,
- * from where the Card shows, and all the parts of one play keep its one
+ * Plays Card moves on the Deck's Cards: the Cover's close. Each Card's
+ * part starts on Motion's frame loop at its `startMs`, from where the
+ * Card shows, and all the parts of one play keep its one
  * clock: a frame that comes late starts a part that far in. Each Card
  * runs on that clock alone: every channel is one keyframed tween started
  * in that frame, and its restack and its landing are cued from the same
@@ -29,10 +29,9 @@ type Part = {
  * every Card takes its new stacking in the frame its plan puts it. No
  * channel has a spring of its own to drift from the rest, and no
  * stacking waits on a promise. A part waiting to start leaves its Card
- * to whatever moves it until then; a part that replaces another (a
- * second tap, a tap on a closing Card) cancels the first as it starts.
- * Reduced, a part is a dissolve, a shuffle's all on the first beat: the
- * Card holds where it shows while it fades out in 100 ms, switches to its
+ * to whatever moves it until then; a part that replaces another
+ * cancels the first as it starts. Reduced, a part is a dissolve: the Card
+ * holds where it shows while it fades out in 100 ms, switches to its
  * rest and new stacking while hidden, and fades in there in 100 ms.
  *
  * Anything else that takes a Card (`take`, `takeAll`) ends its part where
@@ -172,7 +171,7 @@ export function createCardMovePlayer({
 			};
 			cues.push(
 				cue(
-					context.reduce ? move.reducedStartMs : move.startMs,
+					move.startMs,
 					(late) => {
 						before?.cancel();
 						before = undefined;

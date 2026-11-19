@@ -1,3 +1,4 @@
+import type { Place } from "compass";
 import { type MotionValue, motion } from "motion/react";
 import {
 	memo,
@@ -8,12 +9,14 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { cardForm } from "@/presentation/form";
 import { PresentationContent } from "@/presentation/presentation-content";
 import { CardView } from "./card-view";
 import type { DealtCard } from "./dealt-cards";
 import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
 import type { Readouts } from "./readouts";
+import { placeOf } from "./stacking";
 import type { CardValues, Deck } from "./use-deck";
 import type { Width } from "./width";
 
@@ -46,11 +49,11 @@ type Handlers = {
  * the Deck, or else the one in the other Pane. A Card in the other Pane
  * takes no press, and leaves the rest free to take theirs. Each Card is
  * memoised and its handlers stay the same across renders, so a render of
- * the Deck re-renders only the Cards whose own props change: a reorder
- * moves their elements and re-renders none of them. That is why every
- * Card on the Deck is drawn in the open Card's form, whichever is in
- * front: a Card Tail's form differs only in a Body that does not scroll,
- * under the Card in front of it.
+ * the Deck re-renders only the Cards whose own props change. As in
+ * tf-demo, a Card's place in the Deck says its form: the open Card's, a
+ * Card Tail folded above it, or one folded below it with its Heading at
+ * its lower edge, so the strip that shows under the Card before it is its
+ * title. A tap re-renders only the Cards whose place it changes.
  */
 export function DeckCards({
 	cards,
@@ -95,14 +98,15 @@ export function DeckCards({
 	}));
 	if (deck.status === "gone") return null;
 	return deck.order
-		.flatMap((id) => {
+		.flatMap((id, index) => {
 			const card = cards.find((dealt) => dealt.id === id);
-			return card ? [card] : [];
+			return card ? [{ card, place: placeOf(index, deck.openAt) }] : [];
 		})
-		.map((card) => (
+		.map(({ card, place }) => (
 			<DeckCard
 				key={card.id}
 				card={card}
+				place={place}
 				values={deck.valuesOf(card.id)}
 				rtl={rtl}
 				held={held === card.id}
@@ -116,6 +120,7 @@ export function DeckCards({
 
 const DeckCard = memo(function DeckCard({
 	card,
+	place,
 	values,
 	rtl,
 	held,
@@ -125,6 +130,8 @@ const DeckCard = memo(function DeckCard({
 	handlers,
 }: {
 	readonly card: DealtCard;
+	/** Where it rests in the Deck, against the open Card. */
+	readonly place: Place;
 	readonly values: CardValues;
 	readonly rtl: boolean;
 	readonly held: boolean;
@@ -140,6 +147,8 @@ const DeckCard = memo(function DeckCard({
 	   has it, so drawing it never holds a frame of the move */
 	const drawn = useDeferredValue(form);
 	const sheet = drawn === "cover";
+	/* a change of place is no move: its Tail's form is drawn with it, at once */
+	const content = sheet ? "cover" : cardForm(place);
 	return (
 		<CardView
 			id={id}
@@ -149,11 +158,12 @@ const DeckCard = memo(function DeckCard({
 			rtl={rtl}
 			held={held}
 			aside={aside}
+			place={place}
 			highlight={highlight}
 			onPointerDown={(event) => handlers.down(id, event)}
 		>
 			<PresentationContent
-				form={drawn}
+				form={content}
 				columnRem={parts.columnRem}
 				heading={parts.heading}
 				body={sheet ? parts.body.sheet : parts.body.card}

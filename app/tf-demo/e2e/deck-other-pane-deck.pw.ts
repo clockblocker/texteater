@@ -6,6 +6,7 @@ import {
 	movesFrom,
 	offBy,
 	record,
+	restingAs,
 	type Shown,
 	shown,
 	tailOf,
@@ -176,8 +177,9 @@ test("D wide: with a Card in the other Pane the rest of the Deck still opens ove
 	expect(Object.values(await opacities(page))).toEqual([1, 1, 1, 1]);
 	await stays();
 
-	/* a double-tap on a Card behind, which its first tap brings to the
-	   front, while the one in the other Pane keeps its place there */
+	/* a double-tap on a Card other than the open one, which its first tap
+	   opens in the Deck, at once and in its place, while the one in the
+	   other Pane keeps its place there */
 	const at = await tailOf(byId(page, third));
 	await tapAt(page, at);
 	await page.waitForTimeout(60);
@@ -201,8 +203,10 @@ test("D wide: with a Card in the other Pane the rest of the Deck still opens ove
 	const now = await shown(page);
 	const moved = now.find((own) => own.id === back);
 	expect(moved && inside(moved, await paneBox(page))).toBe(true);
+	/* the double-tapped Card is the open one now */
+	const opened = restingAs(rest, ids.indexOf(third));
 	now.forEach((card, index) => {
-		const slot = rest[index];
+		const slot = opened[index];
 		if (card.id !== back && slot)
 			expect(offBy(card, slot)).toBeLessThanOrEqual(0.5);
 	});
@@ -218,5 +222,5 @@ test("D wide: with a Card in the other Pane the rest of the Deck still opens ove
 	await page.keyboard.press("Escape");
 	await expect(cover(page)).toHaveCount(0);
 	expect(Object.values(await opacities(page))).toEqual([1, 1, 1, 1]);
-	await expectSlots(page, rest);
+	await expectSlots(page, opened);
 });

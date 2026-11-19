@@ -56,15 +56,15 @@ type Pile = Pick<
  * deck it is drawn from that base onto the Card by one shared share of
  * the collapse, so the Cards fold in together, never stop short to do
  * it, and are whole exactly at the threshold, where a release commits:
- * the ones behind come down onto it, the ones in front up. They aim at
+ * the ones before it in the order come down onto it, the ones after it
+ * up. They aim at
  * the Card's drawn top edge, and none ends bigger than the Card. The
  * Deck's opacity, one layer for every Card, goes by the same share from
  * its own base, opaque or on its way there, to `opacity` at the
  * threshold.
  *
- * No Card's z-index moves: the ones behind go under the Card and the ones
- * in front over it, so the folded stack shows the front Card it showed
- * before. A spring on `pull` takes them all home; a hand on it scrubs
+ * No Card's z-index moves: each stays stacked by its distance from the
+ * open Card, so the folded stack shows the open Card it showed before. A spring on `pull` takes them all home; a hand on it scrubs
  * them. A Card open in the other Pane is not on the Deck: the fold leaves
  * it where it is, and whatever is moving it.
  */

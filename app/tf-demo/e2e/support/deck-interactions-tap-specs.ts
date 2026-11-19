@@ -5,295 +5,155 @@ import {
 	frame,
 	inspector,
 	landed,
-	pull,
 	redeal,
 	reduceMotion,
-	setKnob,
 } from "./deck-interactions";
 import {
-	choose,
-	landing,
-	movesFrom,
-	onTopFrom,
-	pathOf,
+	offRest,
+	onTop,
 	record,
-	restacksFrom,
-	restsAs,
+	restingAs,
+	type Sample,
 	type Shown,
 	shown,
-	stackingOf,
-	tailOf,
+	stripOf,
 	tapAt,
-	topFrom,
-	trackOf,
-	worstJump,
 } from "./deck-interactions-tap";
 
 /**
  * The Deck interactions spec's taps, declared into it by `tapSpecs`: a tap
- * on a Card behind the front one plays deck-of-cards' shuffle, in D, in both writing directions, reduced, interrupted and retargeted.
+ * opens a Card in its Deck as tf-demo's does, a state and not a move. The
+ * order never changes and every Card keeps its slot; from the first frame
+ * after the tap the tapped Card has the open scale and is over every
+ * other, the rest stacked by their distance from it, none travelling or
+ * fading. In D, in both writing directions and reduced.
  */
-
-const VARIANTS = [["D", "D · Swipe actions"]] as const;
-type Variant = (typeof VARIANTS)[number][0];
 
 const card = (page: Page, index: number) =>
 	frame(page).locator("[data-card-id]").nth(index);
-const byId = (page: Page, id: string) =>
-	frame(page).locator(`[data-card-id="${id}"]`);
 
-/** Opens a variant in a writing direction, the pointer off the Deck. */
-async function open(page: Page, variant: Variant, rtl = false) {
-	const name = VARIANTS.find(([key]) => key === variant)?.[1] ?? "";
-	await chooseVariant(page, name);
+/** Opens D in a writing direction, reduced or not, the pointer off the Deck. */
+async function open(page: Page, rtl = false, reduce = false) {
+	await chooseVariant(page, "D · Swipe actions");
 	if (rtl)
 		await inspector(page)
 			.getByRole("button", { name: "RTL", exact: true })
 			.click();
-	/* these judge the shuffle's motion: deck-of-cards' 400 ms, not the default 0 */
-	await setKnob(page, "Tap shuffle duration", 400);
+	if (reduce) await reduceMotion(page);
 	await page.mouse.move(5, 5);
 	await landed(page);
 }
 
-/** The order a tap on `id` makes: `id` to the front. */
-function fronted(ids: readonly string[], id: string) {
-	return [...ids.filter((other) => other !== id), id];
+/** Expects `cards` to rest exactly as `rest` has them: in place, stacked, solid. */
+function expectAt(cards: readonly Shown[], rest: readonly Shown[], at: string) {
+	const now = offRest(cards, rest);
+	expect(now.dom, at).toEqual(rest.map((own) => own.id));
+	expect(now.off, at).toBeLessThanOrEqual(0.01);
+	expect(now.stacked, at).toBe(true);
 }
 
-/** Lands, then checks the Deck rests in `order` exactly, stacked so. */
-async function expectRest(page: Page, rest: Shown[], order: string[]) {
-	await landed(page);
-	const now = restsAs(await shown(page), rest, order);
-	expect(now.dom).toEqual(order);
-	expect(now.stacking).toEqual(order);
-	expect(now.off).toBeLessThanOrEqual(0.01);
+/** The frames from the first after the hand let go of its first press. */
+function afterTap(frames: readonly Sample[]) {
+	const from = frames.findIndex(
+		(sample) => sample.presses > 0 && !sample.down,
+	);
+	expect(from).toBeGreaterThanOrEqual(0);
+	return { before: frames.slice(0, from), after: frames.slice(from) };
 }
 
-/** Taps Card `lead` and judges the whole shuffle, frame by frame. */
-async function tapAndJudge(page: Page, lead: number) {
-	const rest = await shown(page);
-	const ids = rest.map((own) => own.id);
-	const id = ids[lead] ?? "";
-	const order = fronted(ids, id);
-	const done = await record(page, 900);
-	await tapAt(page, await tailOf(card(page, lead)));
+/**
+ * With the Card at `from` open, taps Card `lead` in the strip of it that
+ * shows and judges every frame: before the hand lets go the Deck rests as
+ * it did, and from the first frame after, exactly as it rests with `lead`
+ * open, `lead` over every other Card. Then the Deck stays so.
+ */
+async function tapAndJudge(
+	page: Page,
+	dealt: readonly Shown[],
+	from: number,
+	lead: number,
+) {
+	const was = restingAs(dealt, from);
+	const now = restingAs(dealt, lead);
+	const id = now[lead]?.id ?? "";
+	expectAt(await shown(page), was, "before the tap");
+	const done = await record(page, 400);
+	await tapAt(page, await stripOf(card(page, lead)));
 	await page.mouse.move(5, 5);
-	const frames = await done();
-	/* out sideways, half a Card toward inline-end, and back, never past */
-	const path = pathOf(frames, id);
-	const width = rest[lead]?.w ?? 0;
-	expect(path.peak).toBeGreaterThan(0.49 * width);
-	expect(path.peak).toBeLessThan(0.51 * width);
-	expect(path.outThenIn).toBe(true);
-	expect(path.least).toBeGreaterThanOrEqual(-0.01);
-	expect(Math.abs(path.out.at(-1) ?? 1)).toBeLessThanOrEqual(0.01);
-	/* under the Cards in front of it before the tap; lifted above every
-	   Card as it starts, in the frame it first moves or the one before,
-	   and above them all from then on: it never passes behind a Card, nor
-	   hops over one */
-	expect(stackingOf(rest).at(-1)).not.toBe(id);
-	const top = topFrom(frames, id);
-	const starts = movesFrom(frames, id);
-	expect(top).toBeGreaterThanOrEqual(0);
-	expect(starts - top).toBeGreaterThanOrEqual(0);
-	expect(starts - top).toBeLessThanOrEqual(1);
-	expect(onTopFrom(frames, id, top)).toBe(true);
-	/* the Cards in front of it restack no later than they move; the
-	   ones behind it never move */
-	for (const other of ids.slice(lead + 1)) {
-		const moves = movesFrom(frames, other);
-		expect(moves).toBeGreaterThan(0);
-		expect(moves).toBeGreaterThanOrEqual(restacksFrom(frames, other));
-	}
-	for (const other of ids.slice(0, lead))
-		expect(movesFrom(frames, other)).toBe(-1);
-	expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);
-	/* it lands at rest exactly, stacked in the new order from that frame */
-	const land = landing(frames);
-	expect(land.stacking).toEqual(order);
-	expect(land.drift).toBeLessThanOrEqual(0.01);
-	const last = frames.at(-1);
-	if (!last) throw new Error("Nothing sampled");
-	expect(restsAs(last.cards, rest, order).off).toBeLessThanOrEqual(0.01);
-	await expectRest(page, rest, order);
+	const { before, after } = afterTap(await done());
+	expect(after.length).toBeGreaterThan(5);
+	before.forEach((sample, index) => {
+		expectAt(sample.cards, was, `frame ${index}, hand down`);
+	});
+	after.forEach((sample, index) => {
+		expectAt(sample.cards, now, `frame ${index} after the tap`);
+		expect(onTop(sample, id), `frame ${index} after the tap`).toBe(true);
+	});
+	await expect(card(page, lead)).toHaveAttribute("data-place", "open");
+	await landed(page);
+	expectAt(await shown(page), now, "at rest");
 }
 
 export function tapSpecs() {
-	for (const [variant] of VARIANTS)
-		for (const rtl of [false, true])
-			test(`${variant} in ${rtl ? "RTL" : "LTR"}: a tap on a Card behind the front one shuffles it to the front: lifted above the Deck at once, out sideways and into the front slot, no Card jumping, at rest stacked in the new order`, async ({
+	for (const rtl of [false, true])
+		for (const reduce of [false, true])
+			test(`D in ${rtl ? "RTL" : "LTR"}${reduce ? ", reduced" : ""}: a tap opens a Card at once and in its place: from the first frame after it the tapped Card has the open scale and the top of the stack, z falling off by distance from it, and no Card moves, restacks out of turn or fades`, async ({
 				page,
 			}) => {
-				await open(page, variant, rtl);
-				await tapAndJudge(page, 0);
-				await redeal(page);
-				await page.mouse.move(5, 5);
-				await landed(page);
-				await tapAndJudge(page, 2);
+				await open(page, rtl, reduce);
+				const dealt = await shown(page);
+				expect(dealt).toHaveLength(4);
+				/* above the open Card, then one folded below it, then the
+				   last, below, then back to one above */
+				await tapAndJudge(page, dealt, 3, 0);
+				await tapAndJudge(page, dealt, 0, 2);
+				await tapAndJudge(page, dealt, 2, 3);
+				await tapAndJudge(page, dealt, 3, 1);
 			});
 
-	for (const [variant] of VARIANTS) {
-		test(`${variant}: under reduced motion a tap dissolves the Cards into their new places, none travelling`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			await reduceMotion(page);
-			const rest = await shown(page);
-			const ids = rest.map((own) => own.id);
-			const id = ids[0] ?? "";
-			const order = fronted(ids, id);
-			const done = await record(page, 600);
-			await tapAt(page, await tailOf(card(page, 0)));
-			await page.mouse.move(5, 5);
-			const frames = await done();
-			/* every Card shows at its old place or its new one, nowhere between */
-			for (const own of ids) {
-				const from = rest[ids.indexOf(own)];
-				const to = rest[order.indexOf(own)];
-				for (const at of trackOf(frames, own)) {
-					const off = (slot: Shown | undefined) =>
-						slot ? Math.hypot(at.u - slot.u, at.v - slot.v) : 1;
-					expect(Math.min(off(from), off(to))).toBeLessThanOrEqual(
-						0.01,
-					);
-				}
-			}
-			/* the tapped Card restacks while hidden */
-			const tapped = trackOf(frames, id);
-			const top = topFrom(frames, id);
-			expect(tapped[top]?.o ?? 1).toBeLessThanOrEqual(0.25);
-			expect(Math.min(...tapped.map((at) => at.o))).toBeLessThan(0.2);
-			const last = frames.at(-1);
-			expect(last?.cards.every((own) => own.o === 1)).toBe(true);
-			await expectRest(page, rest, order);
-		});
-
-		test(`${variant}: at a 0 ms tap shuffle a tap puts the Cards in their new places at once, none travelling or fading`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			await setKnob(page, "Tap shuffle duration", 0);
-			const rest = await shown(page);
-			const ids = rest.map((own) => own.id);
-			const order = fronted(ids, ids[0] ?? "");
-			const done = await record(page, 400);
-			await tapAt(page, await tailOf(card(page, 0)));
-			await page.mouse.move(5, 5);
-			const frames = await done();
-			for (const own of ids) {
-				const from = rest[ids.indexOf(own)];
-				const to = rest[order.indexOf(own)];
-				for (const at of trackOf(frames, own)) {
-					const off = (slot: Shown | undefined) =>
-						slot ? Math.hypot(at.u - slot.u, at.v - slot.v) : 1;
-					expect(Math.min(off(from), off(to))).toBeLessThanOrEqual(
-						0.01,
-					);
-					expect(at.o).toBe(1);
-				}
-			}
-			await expectRest(page, rest, order);
-		});
-
-		test(`${variant}: a double-tap on a Card behind the front one still opens it`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			const id = (await card(page, 0).getAttribute("data-card-id")) ?? "";
-			const at = await tailOf(card(page, 0));
-			await tapAt(page, at);
-			await page.waitForTimeout(80);
-			await tapAt(page, at);
-			await expect(
-				frame(page).locator("[data-expanded]"),
-			).toHaveAttribute("data-card-id", id);
-		});
-
-		test(`${variant}: a tap on the front Card moves and restacks nothing`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			const rest = await shown(page);
-			const ids = rest.map((own) => own.id);
-			const done = await record(page, 500);
-			await tapAt(page, await tailOf(card(page, 3)));
-			await page.mouse.move(5, 5);
-			const frames = await done();
-			for (const own of ids) {
-				const from = rest[ids.indexOf(own)];
-				for (const at of trackOf(frames, own)) {
-					expect(
-						Math.hypot(
-							at.u - (from?.u ?? 0),
-							at.v - (from?.v ?? 0),
-						),
-					).toBeLessThanOrEqual(0.01);
-					expect(at.z).toBe(from?.z);
-				}
-			}
-			await expectRest(page, rest, ids);
-		});
-
-		test(`${variant}: a second tap mid-shuffle takes the Cards on from where they show`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			const rest = await shown(page);
-			const ids = rest.map((own) => own.id);
-			const first = fronted(ids, ids[0] ?? "");
-			const order = fronted(first, first[0] ?? "");
-			const done = await record(page, 1200);
-			await tapAt(page, await tailOf(card(page, 0)));
-			await page.waitForTimeout(100);
-			/* near its inline-start end: the first Card, lifted over the Deck
-			   and half out toward inline-end, covers the middle of its tail */
-			await tapAt(page, await tailOf(byId(page, first[0] ?? ""), 0.15));
-			await page.mouse.move(5, 5);
-			const frames = await done();
-			expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);
-			const land = landing(frames);
-			expect(land.stacking).toEqual(order);
-			expect(land.drift).toBeLessThanOrEqual(0.01);
-			await expectRest(page, rest, order);
-		});
-
-		test(`${variant}: a Card taken by the hand mid-shuffle goes on from where it shows`, async ({
-			page,
-		}) => {
-			await open(page, variant);
-			const rest = await shown(page);
-			const ids = rest.map((own) => own.id);
-			const id = ids[0] ?? "";
-			const order = fronted(ids, id);
-			const done = await record(page, 1600);
-			await tapAt(page, await tailOf(card(page, 0)));
-			/* in its second leg: coming into the front slot */
-			await page.waitForTimeout(260);
-			await pull(page, byId(page, id), -60, 0);
-			await page.mouse.up();
-			const frames = await done();
-			expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);
-			await expectRest(page, rest, order);
-		});
-	}
-
-	test("off restacks at once and lets the reflow take the Card to the front, never sideways", async ({
+	test("D: a double-tap on a Card other than the open one still opens it", async ({
 		page,
 	}) => {
-		await open(page, "D");
-		await choose(page, "Tap shuffle pull-out", "off");
-		const rest = await shown(page);
-		const ids = rest.map((own) => own.id);
-		const id = ids[0] ?? "";
-		const done = await record(page, 900);
-		await tapAt(page, await tailOf(card(page, 0)));
+		await open(page);
+		const id = (await card(page, 0).getAttribute("data-card-id")) ?? "";
+		const at = await stripOf(card(page, 0));
+		await tapAt(page, at);
+		await page.waitForTimeout(80);
+		await tapAt(page, at);
+		await expect(frame(page).locator("[data-expanded]")).toHaveAttribute(
+			"data-card-id",
+			id,
+		);
+	});
+
+	test("D: a tap on the open Card moves and restacks nothing", async ({
+		page,
+	}) => {
+		await open(page);
+		const dealt = await shown(page);
+		const rest = restingAs(dealt, 3);
+		const done = await record(page, 400);
+		await tapAt(page, await stripOf(card(page, 3)));
+		await page.mouse.move(5, 5);
 		const frames = await done();
-		const start = trackOf(frames, id)[0];
-		for (const at of trackOf(frames, id))
-			expect(Math.abs(at.u - (start?.u ?? 0))).toBeLessThanOrEqual(0.5);
-		const last = frames.at(-1);
-		expect(stackingOf(last?.cards ?? [])).toEqual(fronted(ids, id));
-		await expectRest(page, rest, fronted(ids, id));
+		frames.forEach((sample, index) => {
+			expectAt(sample.cards, rest, `frame ${index}`);
+		});
+		await landed(page);
+		expectAt(await shown(page), rest, "at rest");
+	});
+
+	test("D: Re-deal opens the dealt Card again, the last", async ({
+		page,
+	}) => {
+		await open(page);
+		const dealt = await shown(page);
+		await tapAt(page, await stripOf(card(page, 1)));
+		await expect(card(page, 1)).toHaveAttribute("data-place", "open");
+		await redeal(page);
+		await page.mouse.move(5, 5);
+		await landed(page);
+		await expect(card(page, 3)).toHaveAttribute("data-place", "open");
+		expectAt(await shown(page), restingAs(dealt, 3), "re-dealt");
 	});
 }

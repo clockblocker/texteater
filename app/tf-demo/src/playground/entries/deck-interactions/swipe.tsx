@@ -26,6 +26,7 @@ import {
 	type Panel,
 	type PanelBox,
 	type PanelValues,
+	type Strip,
 	SwipePanel,
 } from "./swipe-panel";
 import { tapCard } from "./tap-card";
@@ -68,34 +69,49 @@ function along(axis: Axis, drag: Drag) {
 }
 
 /**
- * How much of a swiped Card shows from its slot's drawn top, in px, while
- * its panel shows: null where all of it does.
+ * Which strip of a swiped Card shows while its panel shows, in px from
+ * its slot's drawn top: null where all of it does.
  * The panel is always the Card's whole box and shares its z-index, so the
- * Cards in front hide it as they hide the Card. Across the block axis all
- * of the Card's width shows. Across the inline axis, toward Close deck,
- * they come onto the Card and uncover its box as they go, so its icon
- * sits in its middle, as on the front Card; toward Open or the other
- * Pane they stay put, and a Card behind shows only its strip above the
- * next Card: its icon sits in that strip.
+ * Cards stacked over it hide it as they hide the Card: those nearer the
+ * open Card. Across the block axis all of the Card's width shows. Across
+ * the inline axis, toward Close deck, they come onto the Card and uncover
+ * its box as they go, so its icon sits in its middle, as on the open
+ * Card; toward Open or the other Pane they stay put. A Card folded above
+ * the open one shows only its strip above the next Card, and one folded
+ * below it only its strip under the Card before: its icon sits in that
+ * strip.
  */
 function showsOf(
 	slots: readonly Slot[],
 	index: number,
+	openAt: number,
 	panel: Panel,
-): number | null {
+): Strip | null {
 	const slot = slots[index];
-	const next = slots[index + 1];
-	if (!slot || !next || panel.axis !== "inline" || panel.zone === "dismiss")
+	if (!slot || panel.axis !== "inline" || panel.zone === "dismiss")
 		return null;
-	return Math.max(0, drawn(next).v - drawn(slot).v);
+	const own = drawn(slot);
+	if (index < openAt) {
+		const next = slots[index + 1];
+		if (!next) return null;
+		return { from: 0, size: Math.max(0, drawn(next).v - own.v) };
+	}
+	if (index > openAt) {
+		const before = slots[index - 1];
+		if (!before) return null;
+		const covered = drawn(before);
+		const from = Math.max(0, covered.v + covered.h - own.v);
+		return { from, size: Math.max(0, own.h - from) };
+	}
+	return null;
 }
 
 /**
  * D, Swipe actions, as iOS Mail's full swipe: the Card slides on one axis
  * and uncovers an action under it, and toward Close deck the rest of the
- * Deck folds onto it, whichever Card it is, the Cards behind it coming
- * down under it and the ones in front coming up over it, each keeping its
- * place in the stack. Every Card takes every swipe the front one does,
+ * Deck folds onto it, whichever Card it is, the Cards before it coming
+ * down and the ones after it coming up, each keeping its place in the
+ * stack. Every Card takes every swipe the open one does,
  * along either axis. One value, the pull, drives all of it, and one
  * threshold is the breakpoint: there the Deck is whole, the colour floods
  * in, the icon is whole and stays put while the Card goes on, and a
@@ -170,9 +186,9 @@ export function SwipeVariant({
 
 	function begin(g: Gesture, axis: Axis, caught: boolean) {
 		const card = deck.valuesOf(g.id);
-		/* the Card keeps its place in the pile: one from behind slides out
-		   from between its neighbours, over its panel and under the rest;
-		   a tap's shuffle ends where every Card shows, at its new place */
+		/* the Card keeps its place in the pile: one other than the open one
+		   slides out from between its neighbours, over its panel and under
+		   the Cards stacked over it; a close ends where every Card shows */
 		deck.hold(g.id);
 		card.z.set(deck.restZ(g.id));
 		if (!caught) {
@@ -426,7 +442,7 @@ export function SwipeVariant({
 		const caught = bound?.lead === id && Math.abs(pull.get()) > 0.5;
 		/* a press that does not catch the swiped Card on its way home ends
 		   that swipe, and its panel goes with it: the hand uncovers it no
-		   more, and a tap's restack would carry its Card off it */
+		   more, and a tap that opens its Card would rescale it off it */
 		if (!caught) {
 			setPanel(null);
 			setKept(null);
@@ -436,7 +452,7 @@ export function SwipeVariant({
 			binding.current = null;
 		}
 		const card = deck.valuesOf(id);
-		/* a Card a tap's shuffle or a close is moving goes on moving under the press */
+		/* a Card a close is moving goes on moving under the press */
 		const moving = deck.isPlaying(id);
 		const g: Gesture = {
 			id,
@@ -485,7 +501,7 @@ export function SwipeVariant({
 				if (!moving) settle(card.lift, 0, SPRINGS.settle, motion);
 				setPressed(null);
 				readouts.set({ phase: "rest" });
-				tapCard(deck, taps, id, drag, knobs);
+				tapCard(deck, taps, id, drag);
 			},
 			cancel: () => {
 				if (g.axis) {
@@ -499,8 +515,8 @@ export function SwipeVariant({
 	}
 
 	const index = panel ? deck.order.indexOf(panel.id) : -1;
-	const shows = panel ? showsOf(deck.slots, index, panel) : null;
-	/* the panel is in the Deck's layer too, under the Cards in front of
+	const shows = panel ? showsOf(deck.slots, index, deck.openAt, panel) : null;
+	/* the panel is in the Deck's layer too, under the Cards stacked over
 	   its Card: faded with them, it never shows through one */
 	return (
 		<>
@@ -527,7 +543,7 @@ export function SwipeVariant({
 						tint={knobs.tint}
 						labels={
 							knobs.panelLabels &&
-							(shows === null || shows >= LABEL_ROOM_PX)
+							(shows === null || shows.size >= LABEL_ROOM_PX)
 						}
 						rtl={rtl}
 						reduce={motion.reduce}
