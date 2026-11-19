@@ -62,6 +62,7 @@ export function readingSourceContextsRenderer(
 									memberSegmentIndices={
 										sourceContext.memberSegmentIndices
 									}
+									language={noteData.reading.lemma.language}
 									origin={citedOrigin(
 										sourceContext.origin,
 										Citation,

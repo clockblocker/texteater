@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { ReflexiveSlot } from "../../../../../../shared/reflexive-slot";
 import { type CitationPresenter, citationText } from "../../citation";
 import { linkMembers, type SourceSegment } from "./link-members";
+import { phraseOpenersFor } from "./phrase-openers";
 import { excerptSourceSentence } from "./source-excerpt";
 
 type StoredOrigin =
@@ -49,11 +50,14 @@ export function citedOrigin(
 export function SourceQuote({
 	segments,
 	memberSegmentIndices,
+	language,
 	origin,
 	follow,
 }: {
 	readonly segments: readonly SourceSegment[];
 	readonly memberSegmentIndices: readonly number[];
+	/** The sentence's language, whose phrase openers an excerpt keeps whole. */
+	readonly language: string;
 	readonly origin: SourceOrigin;
 	readonly follow: () => void;
 }): ReactNode {
@@ -61,7 +65,11 @@ export function SourceQuote({
 		origin.kind === "Definition"
 			? `the definition of ${origin.citation}`
 			: "the source Text";
-	const excerpt = excerptSourceSentence(segments, memberSegmentIndices);
+	const excerpt = excerptSourceSentence(
+		segments,
+		memberSegmentIndices,
+		phraseOpenersFor(language),
+	);
 	const members = linkMembers(
 		excerpt.segments,
 		excerpt.memberSegmentIndices,

@@ -22,6 +22,8 @@ type ResolvingAttestation = {
 	readonly caption: Caption | null;
 	readonly segments: readonly SourceSegment[];
 	readonly memberSegmentIndices: readonly number[];
+	/** The sentence's language. */
+	readonly language: string;
 	/** The Session ended without an occurrence: nothing is on its way any more. */
 	readonly settled: boolean;
 	readonly presentation: "Card" | "Sheet";
@@ -82,6 +84,7 @@ function ResolvingAttestationBody({
 					<SourceQuote
 						segments={input.segments}
 						memberSegmentIndices={input.memberSegmentIndices}
+						language={input.language}
 						origin={{ kind: "Scroll" }}
 						follow={input.follow}
 					/>

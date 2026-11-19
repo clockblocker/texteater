@@ -178,6 +178,8 @@ function ResolvingAttestationNote({
 		caption: resolvingAttestationCaption(note),
 		segments: note.source.segments,
 		memberSegmentIndices: note.source.memberSegmentIndices,
+		// A Resolution Session resolves German.
+		language: "de",
 		settled: failedSession(note),
 		presentation,
 		follow: () =>

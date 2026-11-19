@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import type { SourceSegment } from "./link-members";
+import { phraseOpenersFor } from "./phrase-openers";
 import { excerptSourceSentence } from "./source-excerpt";
 
 /** Segments as the reader stores them: words, single spaces, single marks. */
@@ -29,7 +30,11 @@ function excerpt(sentence: string, members: readonly string[]): string {
 		if (index < 0) throw new Error(`No member ${member}`);
 		indices.push(index);
 	}
-	const result = excerptSourceSentence(segments, indices);
+	const result = excerptSourceSentence(
+		segments,
+		indices,
+		phraseOpenersFor("de"),
+	);
 	const lit = new Set(result.memberSegmentIndices);
 	return result.segments
 		.map((segment, index) =>
@@ -77,14 +82,44 @@ describe("excerptSourceSentence", () => {
 		).toBe("Er [reichte] … schließlich seinen Abschied [ein].");
 	});
 
-	test("cuts a piece without breaks by words around the member", () => {
+	test("cuts a piece without breaks by words, dropping the determiner and preposition it ends on", () => {
 		expect(
 			excerpt(
 				"Das Haus stand am Ende einer langen Allee von Linden deren Kronen sich über dem Weg zu einem grünen Gewölbe schlossen und in deren Schatten selbst an den heißesten Tagen des Sommers eine angenehme Kühle herrschte die den Wanderer zum Verweilen einlud.",
 				["Gewölbe"],
 			),
 		).toBe(
-			"… deren Kronen sich über dem Weg zu einem grünen [Gewölbe] schlossen und in deren Schatten selbst an den …",
+			"… deren Kronen sich über dem Weg zu einem grünen [Gewölbe] schlossen und in deren Schatten selbst …",
+		);
+	});
+
+	test("shares one budget among a scattered unit's parts, each growing toward the others", () => {
+		expect(
+			excerpt(
+				"Gleich zur Rechten, zwischen Haustor und Windfang, kam ein Bediensteter von französischem Typus, der, am Telephon sitzend, Zeitungen gelesen hatte, in der grauen Livree des hinkenden Mannes am Bahnhof ihnen entgegen und führte sie durch die gut beleuchtete Halle, an deren linker Seite die Gesellschaftsräume lagen.",
+				["kam", "entgegen"],
+			),
+		).toBe(
+			"Gleich zur Rechten, zwischen Haustor und Windfang, [kam] ein Bediensteter von französischem Typus … in der grauen Livree des hinkenden Mannes am Bahnhof ihnen [entgegen] …",
+		);
+		expect(
+			excerpt(
+				"Er nahm den Brief, den ihm der Diener auf einem silbernen Tablett gebracht hatte, mit einer Miene, als handle es sich um eine Rechnung, die er schon dreimal bezahlt zu haben glaubte und die man ihm nun aus purer Bosheit ein viertes Mal vorlegte, wortlos und mit spitzen Fingern entgegen, worauf er sich wieder seiner Zeitung zuwandte.",
+				["nahm", "entgegen"],
+			),
+		).toBe(
+			"Er [nahm] den Brief … wortlos und mit spitzen Fingern [entgegen], worauf er sich wieder seiner Zeitung zuwandte.",
+		);
+	});
+
+	test("keeps a clause-final particle spelled like a preposition", () => {
+		expect(
+			excerpt(
+				"Der Hauptmann, der seit dem frühen Morgen auf seinem Posten stand und die Straße, die von Norden her zwischen den kahlen Pappeln auf das Dorf zulief, mit dem Fernrohr absuchte, wandte sich endlich um und rief dem Wachtmeister zu, er möge die Leute antreten lassen.",
+				["Fernrohr"],
+			),
+		).toBe(
+			"… mit dem [Fernrohr] absuchte, wandte sich endlich um und rief dem Wachtmeister zu …",
 		);
 	});
 

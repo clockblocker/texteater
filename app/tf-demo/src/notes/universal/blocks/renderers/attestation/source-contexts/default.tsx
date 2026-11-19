@@ -20,6 +20,7 @@ export const renderDefaultAttestationSource = (({
 			<SourceQuote
 				segments={source.segments}
 				memberSegmentIndices={source.memberSegmentIndices}
+				language={noteData.presented.surface.language}
 				origin={citedOrigin(source.origin, Citation)}
 				follow={() => PresentationCapabilities.follow(source.target)}
 			/>
