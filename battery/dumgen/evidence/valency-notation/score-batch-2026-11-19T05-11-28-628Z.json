@@ -1,0 +1,51 @@
+{
+	"files": [
+		"batch-2026-11-19T05-11-28-628Z.jsonl"
+	],
+	"spentUsd": 0.04269257500000004,
+	"rows": [
+		{
+			"label": "json@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 54.9,
+			"accuracyPerRep": [
+				54.9,
+				54.9
+			],
+			"firstTryUnreadable": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 42.6,
+			"uncachedInputTokens": 96.2,
+			"inputTokens": 1863,
+			"usdPer1kFast": 0.2113,
+			"usdPer1kBatch": 0.0528,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 20
+		},
+		{
+			"label": "notation@r1",
+			"calls": 386,
+			"batchReps": 2,
+			"accuracy": 50.8,
+			"accuracyPerRep": [
+				51.3,
+				50.3
+			],
+			"firstTryUnreadable": 14,
+			"finalUnreadable": 5.4,
+			"outputTokens": 10.9,
+			"uncachedInputTokens": 110.8,
+			"inputTokens": 2318.8,
+			"usdPer1kFast": 0.1637,
+			"usdPer1kBatch": 0.0409,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 18,
+			"vsJson": "50/82"
+		}
+	]
+}

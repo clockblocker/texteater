@@ -1,0 +1,161 @@
+{
+	"files": [
+		"batch-2026-11-19T05-11-28-628Z.jsonl",
+		"batch-2026-11-19T05-11-32-248Z.jsonl",
+		"latency-2026-11-19T05-11-39-157Z.jsonl"
+	],
+	"spentUsd": 0.1455446050000001,
+	"rows": [
+		{
+			"label": "json@r1",
+			"calls": 599,
+			"batchReps": 3,
+			"accuracy": 54.7,
+			"accuracyPerRep": [
+				54.9,
+				54.9,
+				54.4
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 43.3,
+			"uncachedInputTokens": 96.2,
+			"inputTokens": 1864,
+			"usdPer1kFast": 0.213,
+			"usdPer1kBatch": 0.0533,
+			"latencySamples": 20,
+			"p50Ms": 857,
+			"p90Ms": 1207,
+			"flips": 28
+		},
+		{
+			"label": "notation@r1",
+			"calls": 406,
+			"batchReps": 2,
+			"accuracy": 51.8,
+			"accuracyPerRep": [
+				51.3,
+				52.3
+			],
+			"firstTryUnreadable": 9.6,
+			"lenientReads": 4.7,
+			"finalUnreadable": 2.2,
+			"outputTokens": 11,
+			"uncachedInputTokens": 106.1,
+			"inputTokens": 2229.2,
+			"usdPer1kFast": 0.1569,
+			"usdPer1kBatch": 0.0392,
+			"latencySamples": 20,
+			"p50Ms": 832,
+			"p90Ms": 1206,
+			"flips": 16,
+			"vsJson": "81/115"
+		},
+		{
+			"label": "json-examples@r1",
+			"calls": 213,
+			"batchReps": 1,
+			"accuracy": 51.8,
+			"accuracyPerRep": [
+				51.8
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 48.1,
+			"uncachedInputTokens": 96.3,
+			"inputTokens": 2391.7,
+			"usdPer1kFast": 0.2457,
+			"usdPer1kBatch": 0.0614,
+			"latencySamples": 20,
+			"p50Ms": 987,
+			"p90Ms": 1301,
+			"vsJson": "50/67"
+		},
+		{
+			"label": "json-strict@r1",
+			"calls": 213,
+			"batchReps": 1,
+			"accuracy": 54.4,
+			"accuracyPerRep": [
+				54.4
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 44.6,
+			"uncachedInputTokens": 96.3,
+			"inputTokens": 1881.4,
+			"usdPer1kFast": 0.2169,
+			"usdPer1kBatch": 0.0542,
+			"latencySamples": 20,
+			"p50Ms": 1091,
+			"p90Ms": 1637,
+			"vsJson": "27/29"
+		},
+		{
+			"label": "headword@r1",
+			"calls": 213,
+			"batchReps": 1,
+			"accuracy": 55.4,
+			"accuracyPerRep": [
+				55.4
+			],
+			"firstTryUnreadable": 12.7,
+			"lenientReads": 0.5,
+			"finalUnreadable": 6.6,
+			"outputTokens": 12.7,
+			"uncachedInputTokens": 109.5,
+			"inputTokens": 2331.5,
+			"usdPer1kFast": 0.1677,
+			"usdPer1kBatch": 0.0419,
+			"latencySamples": 20,
+			"p50Ms": 826,
+			"p90Ms": 1134,
+			"vsJson": "59/55"
+		},
+		{
+			"label": "lark@r1",
+			"calls": 213,
+			"batchReps": 1,
+			"accuracy": 42.5,
+			"accuracyPerRep": [
+				42.5
+			],
+			"firstTryUnreadable": 5.2,
+			"lenientReads": 1.4,
+			"finalUnreadable": 0.9,
+			"outputTokens": 42.3,
+			"uncachedInputTokens": 231.9,
+			"inputTokens": 2556.1,
+			"usdPer1kFast": 0.2904,
+			"usdPer1kBatch": 0.0726,
+			"latencySamples": 20,
+			"p50Ms": 776,
+			"p90Ms": 1107,
+			"vsJson": "28/99"
+		},
+		{
+			"label": "pattern@r1",
+			"calls": 213,
+			"batchReps": 1,
+			"accuracy": 52.8,
+			"accuracyPerRep": [
+				52.8
+			],
+			"firstTryUnreadable": 0.5,
+			"lenientReads": 1.4,
+			"finalUnreadable": 0,
+			"outputTokens": 17.8,
+			"uncachedInputTokens": 96.7,
+			"inputTokens": 2063.9,
+			"usdPer1kFast": 0.1604,
+			"usdPer1kBatch": 0.0401,
+			"latencySamples": 20,
+			"p50Ms": 920,
+			"p90Ms": 1203,
+			"vsJson": "48/59"
+		}
+	]
+}

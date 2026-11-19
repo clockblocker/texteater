@@ -47,6 +47,7 @@ const { positionals, values } = parseArgs({
 		budget: { type: "string", default: "0.2" },
 		limit: { type: "string" },
 		misses: { type: "string" },
+		baseline: { type: "string", default: "json@r1" },
 		"only-json-right": { type: "boolean", default: false },
 	},
 });
@@ -250,7 +251,7 @@ else if (command === "estimate") {
 	const scored = scoreCalls(records, byId, (record) =>
 		variantAt(record.variant, record.revision),
 	);
-	const rows = summarize(scored);
+	const rows = summarize(scored, values.baseline);
 	const name = paths
 		.map((path) => basename(path, ".jsonl"))
 		.join("+")

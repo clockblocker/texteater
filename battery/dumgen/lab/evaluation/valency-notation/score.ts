@@ -118,7 +118,7 @@ function paired(reps: readonly Rep[], baselines: readonly Rep[]) {
 }
 
 /** One row per variant and revision. */
-export function summarize(scored: readonly Scored[]) {
+export function summarize(scored: readonly Scored[], baseline = "json@r1") {
 	const labels = [...new Set(scored.map(({ label }) => label))];
 	const repKey = (call: Scored) => `${call.run}|${call.repetition}`;
 	const byRep = (label: string) => {
@@ -133,7 +133,7 @@ export function summarize(scored: readonly Scored[]) {
 		return [...reps.values()];
 	};
 	const jsonReps = labels
-		.filter((label) => label.startsWith("json@"))
+		.filter((label) => label === baseline)
 		.flatMap(byRep);
 	return labels.map((label) => {
 		const mine = scored.filter((call) => call.label === label);
@@ -186,9 +186,10 @@ export function summarize(scored: readonly Scored[]) {
 								),
 					).length
 				: undefined;
-		const { wins, losses } = label.startsWith("json@")
-			? { wins: 0, losses: 0 }
-			: paired(reps, jsonReps);
+		const { wins, losses } =
+			label === baseline
+				? { wins: 0, losses: 0 }
+				: paired(reps, jsonReps);
 		return {
 			label,
 			calls: mine.length,
@@ -222,7 +223,7 @@ export function summarize(scored: readonly Scored[]) {
 			p50Ms: round(percentile(latencies, 50), 0),
 			p90Ms: round(percentile(latencies, 90), 0),
 			...(flips === undefined ? {} : { flips }),
-			...(label.startsWith("json@") || batched.length === 0
+			...(label === baseline || batched.length === 0
 				? {}
 				: { vsJson: `${wins}/${losses}` }),
 		};
@@ -231,7 +232,7 @@ export function summarize(scored: readonly Scored[]) {
 
 export function table(rows: ReturnType<typeof summarize>): string {
 	return [
-		"variant | reps | acc % (per rep) | 1st-try unreadable % | lenient reads % | final unreadable % | out tok | uncached in | in | $/1k fast | $/1k batch | p50 | p90 | flips | vs json W/L",
+		"variant | reps | acc % (per rep) | 1st-try unreadable % | lenient reads % | final unreadable % | out tok | uncached in | in | $/1k fast | $/1k batch | p50 | p90 | flips | vs baseline W/L",
 		...rows.map((row) =>
 			[
 				row.label,

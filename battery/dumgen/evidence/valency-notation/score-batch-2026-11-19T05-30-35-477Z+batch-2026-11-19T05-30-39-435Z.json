@@ -1,0 +1,77 @@
+{
+	"files": [
+		"batch-2026-11-19T05-30-35-477Z.jsonl",
+		"batch-2026-11-19T05-30-39-435Z.jsonl"
+	],
+	"spentUsd": 0.016392079999999986,
+	"rows": [
+		{
+			"label": "json@r2",
+			"calls": 108,
+			"batchReps": 2,
+			"accuracy": 52.8,
+			"accuracyPerRep": [
+				53.7,
+				51.9
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 39.2,
+			"uncachedInputTokens": 80,
+			"inputTokens": 1815.8,
+			"usdPer1kFast": 0.1955,
+			"usdPer1kBatch": 0.0489,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 5,
+			"vsJson": "0/14"
+		},
+		{
+			"label": "pattern@r2",
+			"calls": 108,
+			"batchReps": 2,
+			"accuracy": 58.3,
+			"accuracyPerRep": [
+				59.3,
+				57.4
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 15.5,
+			"uncachedInputTokens": 80,
+			"inputTokens": 2117,
+			"usdPer1kFast": 0.1506,
+			"usdPer1kBatch": 0.0377,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 1,
+			"vsJson": "6/8"
+		},
+		{
+			"label": "json-examples@r3",
+			"calls": 108,
+			"batchReps": 2,
+			"accuracy": 59.3,
+			"accuracyPerRep": [
+				59.3,
+				59.3
+			],
+			"firstTryUnreadable": 0,
+			"lenientReads": 0,
+			"finalUnreadable": 0,
+			"outputTokens": 39.7,
+			"uncachedInputTokens": 80,
+			"inputTokens": 2613.8,
+			"usdPer1kFast": 0.2286,
+			"usdPer1kBatch": 0.0572,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null,
+			"flips": 0
+		}
+	]
+}

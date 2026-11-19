@@ -46,7 +46,7 @@ export const notationParagraphs = {
 		"Use only the complement kinds `complementKinds` names. Answer with the dictionary entry alone, nothing before or after it: the frame, then the Lemma's Canonical Form exactly as `reading.lemma` writes it.",
 };
 
-export type NotationParagraphs = Readonly<
+type NotationParagraphs = Readonly<
 	Record<keyof typeof notationParagraphs, string>
 > & {
 	/** The Lemma written first, then the frame (r2's `lead` variants). */
