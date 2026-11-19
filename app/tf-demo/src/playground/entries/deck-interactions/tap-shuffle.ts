@@ -80,11 +80,14 @@ export function tapShuffle({
 	id,
 	slots,
 	out,
+	legMs = LEG_MS,
 }: {
 	readonly order: readonly string[];
 	readonly id: string;
 	readonly slots: readonly Slot[];
 	readonly out: number;
+	/** Each leg's length: deck-of-cards' 200 ms unless the inspector says otherwise. */
+	readonly legMs?: number;
 }): {
 	readonly order: readonly string[];
 	readonly moves: readonly CardMove[];
@@ -102,12 +105,12 @@ export function tapShuffle({
 			index: front,
 			startMs: STAGGER_MS * front,
 			reducedStartMs: STAGGER_MS * front,
-			ms: 2 * LEG_MS,
-			zAtMs: 2 * LEG_MS,
+			ms: 2 * legMs,
+			zAtMs: 2 * legMs,
 			lifted: true,
 			legs: legsOf([
-				{ at: 0, ms: LEG_MS, to: pulled },
-				{ at: LEG_MS, ms: LEG_MS, to: poseOf(top) },
+				{ at: 0, ms: legMs, to: pulled },
+				{ at: legMs, ms: legMs, to: poseOf(top) },
 			]),
 		},
 	];
@@ -118,12 +121,12 @@ export function tapShuffle({
 		moves.push({
 			id: other,
 			index,
-			startMs: LEG_MS + STAGGER_MS * index,
+			startMs: legMs + STAGGER_MS * index,
 			reducedStartMs: STAGGER_MS * index,
-			ms: LEG_MS,
+			ms: legMs,
 			zAtMs: 0,
 			lifted: false,
-			legs: legsOf([{ at: 0, ms: LEG_MS, to: poseOf(slot) }]),
+			legs: legsOf([{ at: 0, ms: legMs, to: poseOf(slot) }]),
 		});
 	}
 	return { order: next, moves };

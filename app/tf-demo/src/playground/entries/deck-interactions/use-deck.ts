@@ -95,8 +95,15 @@ export type DeckStatus = "dealt" | "leaving" | "gone";
 
 export type Deck = ReturnType<typeof useDeck>;
 
-/** How a tap brings a Card to the front: "off" restacks it at once and lets the reflow take it. */
-export type TapShuffle = { readonly pullOut: PullOut; readonly side: Side };
+/**
+ * How a tap brings a Card to the front: "off" restacks it at once and lets
+ * the reflow take it; `ms` 0 puts every Card in its new place at once.
+ */
+export type TapShuffle = {
+	readonly pullOut: PullOut;
+	readonly side: Side;
+	readonly ms?: number;
+};
 
 /**
  * The Deck every variant drives: its order, whether it is dealt, gone or
@@ -311,13 +318,40 @@ export function useDeck({
 		(id: string, tap?: TapShuffle) => {
 			const current = orderRef.current;
 			if (current.at(-1) === id || !current.includes(id)) return;
+			if (tap?.ms === 0) {
+				const next = [...current.filter((other) => other !== id), id];
+				orderRef.current = next;
+				player.takeAll();
+				next.forEach((other, index) => {
+					const slot = slots[index];
+					if (
+						!slot ||
+						busy.current.has(other) ||
+						other === expandedRef.current
+					)
+						return;
+					const card = valuesOf(other);
+					for (const key of GLIDING)
+						card[key].jump(key === "lift" ? 0 : slot[key]);
+					card.z.set(BASE_Z + index);
+				});
+				setOrder(next);
+				return;
+			}
 			const at = slots[current.indexOf(id)];
 			const out =
 				tap && at ? pullOutOf(tap.pullOut, tap.side, at.w) : null;
 			const plan =
 				out === null
 					? null
-					: tapShuffle({ order: current, id, slots, out });
+					: tapShuffle({
+							order: current,
+							id,
+							slots,
+							out,
+							legMs:
+								tap?.ms === undefined ? undefined : tap.ms / 2,
+						});
 			const next = plan?.order ?? [
 				...current.filter((other) => other !== id),
 				id,
@@ -331,7 +365,7 @@ export function useDeck({
 			} else player.takeAll();
 			setOrder(next);
 		},
-		[slots, player],
+		[slots, player, valuesOf],
 	);
 
 	/**

@@ -6,6 +6,7 @@ import {
 	inspector,
 	landed,
 	reduceMotion,
+	setKnob,
 } from "./deck-interactions";
 import {
 	besideOf,
@@ -163,6 +164,7 @@ export function closeSpecs() {
 		page,
 	}) => {
 		await open(page, "D");
+		await setKnob(page, "Tap shuffle duration", 400);
 		const rest = await shown(page);
 		const ids = rest.map((own) => own.id);
 		const id = ids[2] ?? "";

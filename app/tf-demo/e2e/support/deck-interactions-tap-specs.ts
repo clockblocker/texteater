@@ -8,6 +8,7 @@ import {
 	pull,
 	redeal,
 	reduceMotion,
+	setKnob,
 } from "./deck-interactions";
 import {
 	choose,
@@ -49,6 +50,8 @@ async function open(page: Page, variant: Variant, rtl = false) {
 		await inspector(page)
 			.getByRole("button", { name: "RTL", exact: true })
 			.click();
+	/* these judge the shuffle's motion: deck-of-cards' 400 ms, not the default 0 */
+	await setKnob(page, "Tap shuffle duration", 400);
 	await page.mouse.move(5, 5);
 	await landed(page);
 }
@@ -163,6 +166,33 @@ export function tapSpecs() {
 			expect(Math.min(...tapped.map((at) => at.o))).toBeLessThan(0.2);
 			const last = frames.at(-1);
 			expect(last?.cards.every((own) => own.o === 1)).toBe(true);
+			await expectRest(page, rest, order);
+		});
+
+		test(`${variant}: at a 0 ms tap shuffle a tap puts the Cards in their new places at once, none travelling or fading`, async ({
+			page,
+		}) => {
+			await open(page, variant);
+			await setKnob(page, "Tap shuffle duration", 0);
+			const rest = await shown(page);
+			const ids = rest.map((own) => own.id);
+			const order = fronted(ids, ids[0] ?? "");
+			const done = await record(page, 400);
+			await tapAt(page, await tailOf(card(page, 0)));
+			await page.mouse.move(5, 5);
+			const frames = await done();
+			for (const own of ids) {
+				const from = rest[ids.indexOf(own)];
+				const to = rest[order.indexOf(own)];
+				for (const at of trackOf(frames, own)) {
+					const off = (slot: Shown | undefined) =>
+						slot ? Math.hypot(at.u - slot.u, at.v - slot.v) : 1;
+					expect(Math.min(off(from), off(to))).toBeLessThanOrEqual(
+						0.01,
+					);
+					expect(at.o).toBe(1);
+				}
+			}
 			await expectRest(page, rest, order);
 		});
 
