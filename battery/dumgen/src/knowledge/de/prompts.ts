@@ -185,6 +185,14 @@ export const valency = {
 		"Use only the complement kinds `complementKinds` names. Answer {valency: [...]} with the Slots in order, each {status, complements}, or {valency: []} when the Reading governs nothing.",
 		rules.valency,
 	),
+	// After `valency.output`, as the valency notation bench measured it
+	// (`valency-examples.ts`): Luna wrote spurious predicatives (mögen,
+	// lassen, finden) and Either where one referent fills the Slot.
+	restraint: paragraph(
+		"valency.restraint",
+		"Add a Predicative only when the dictionary's pattern for this meaning names a predicative. Either is no default referent of an object: Something when only a thing fills the Slot in this meaning, Someone when only a person does.",
+		rules.valency,
+	),
 } as const;
 
 // Semantic Relations: Luna lists candidates, jev judges each one.

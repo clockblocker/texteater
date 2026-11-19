@@ -46,6 +46,7 @@ import {
 	write,
 } from "./context.js";
 import { shared, valency } from "./prompts.js";
+import { valencyExamples } from "./valency-examples.js";
 
 /**
  * The German prepositions a governor can select (dumcorpus's ADP Case
@@ -69,6 +70,8 @@ export const valencyPrompt = [
 	valency.referent,
 	valency.shapes,
 	valency.output,
+	valency.restraint,
+	valencyExamples,
 ].join("\n");
 
 type ComplementKind = Dumrel.GermanValencyComplement["kind"];

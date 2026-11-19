@@ -33,6 +33,10 @@ import {
 	translationPromptTexts,
 } from "../../src/knowledge/de/translation-prompts.js";
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
+import {
+	valencyExampleLemmas,
+	valencyExamplePromptTexts,
+} from "../../src/knowledge/de/valency-examples.js";
 
 test("every Knowledge prompt paragraph cites the Rules it states at their current hashes (ADR 0037, #695)", () => {
 	const prompts = [
@@ -40,6 +44,7 @@ test("every Knowledge prompt paragraph cites the Rules it states at their curren
 		...translationPromptTexts(),
 		...structurePromptTexts(),
 		...licencePromptTexts(),
+		...valencyExamplePromptTexts(),
 	];
 	expect(prompts.length).toBeGreaterThan(70);
 	expect(checkPromptCitations(prompts, rules)).toEqual([]);
@@ -141,6 +146,7 @@ test("no example in a Knowledge prompt uses a Lemma of the Knowledge gold or the
 		...translationExamples(),
 		...structureExamples(),
 		...licenceExamples(),
+		...valencyExampleLemmas,
 	];
 	expect(examples.length).toBeGreaterThan(15);
 	const clashes = examples.flatMap((example) =>
