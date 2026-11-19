@@ -1,0 +1,25 @@
+{
+	"files": [
+		"latency-2026-11-19T06-10-39-511Z.jsonl"
+	],
+	"set": "dev",
+	"spentUsd": 0.00015988000000000002,
+	"rows": [
+		{
+			"revision": "production",
+			"calls": 1,
+			"batchReps": 0,
+			"accuracy": 0,
+			"accuracyPerRep": [],
+			"unreadable": 0,
+			"outputTokens": 15,
+			"cachedInputTokens": 2037,
+			"inputTokens": 2143,
+			"usdPer1kFast": 0.1599,
+			"usdPer1kBatch": 0.04,
+			"latencySamples": 1,
+			"p50Ms": 2761,
+			"p90Ms": 2761
+		}
+	]
+}

@@ -107,7 +107,8 @@ export const definition = {
 	),
 } as const;
 
-// Valency: Luna proposes the frame (ADR 0034, #675, #677).
+// Valency: Luna proposes the frame (ADR 0034, #675, #677), written in the
+// dictionary notation `valency-prompts.ts` states.
 
 export const valency = {
 	task: paragraph(
@@ -173,24 +174,6 @@ export const valency = {
 	referent: paragraph(
 		"valency.referent",
 		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («kümmern» with «um»: Either), never just what this sentence happens to show. A subject is Either whenever an institution, a machine, an event or a thing can fill it as well as a person; it is Someone only when the meaning needs a person who thinks, speaks, feels or acts on purpose, and Something only when no person can fill it.",
-		rules.valency,
-	),
-	shapes: paragraph(
-		"valency.shapes",
-		"A Predicative names whether it describes the subject or the object and its marker: None, Als or Für («jemanden für klug halten»: Object, Für). A Clause names its form, ZuInfinitive, BareInfinitive, Dass, Ob or W, and its correlate: Required when the clause needs one, Optional when it may take one.",
-		rules.valency,
-	),
-	output: paragraph(
-		"valency.output",
-		"Use only the complement kinds `complementKinds` names. Answer {valency: [...]} with the Slots in order, each {status, complements}, or {valency: []} when the Reading governs nothing.",
-		rules.valency,
-	),
-	// After `valency.output`, as the valency notation bench measured it
-	// (`valency-examples.ts`): Luna wrote spurious predicatives (mögen,
-	// lassen, finden) and Either where one referent fills the Slot.
-	restraint: paragraph(
-		"valency.restraint",
-		"Add a Predicative only when the dictionary's pattern for this meaning names a predicative. Either is no default referent of an object: Something when only a thing fills the Slot in this meaning, Someone when only a person does.",
 		rules.valency,
 	),
 } as const;

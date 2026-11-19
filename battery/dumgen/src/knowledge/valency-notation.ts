@@ -1,15 +1,17 @@
 /**
- * The language-free skeleton of the dictionary notation a Valency Frame is
- * written in: Slots separated by spaces in frame order, an Optional Slot in
- * `( … )`, the alternatives of one Slot joined by `|`, each complement a
- * head (`jmdn./etw.`, `dass`, `irgendwo`) after at most one prefix word (a
- * preposition, a predicative's marker, a correlate), the prefix itself
- * Optional in `( … )` (`(es) dass`). A frame may open with an opener word
- * (German expletive `es`), and an empty frame is one word of its own.
+ * The language-free skeleton of the dictionary notation Luna writes a
+ * Valency Frame in: Slots separated by spaces in frame order, an Optional
+ * Slot in `( … )`, the alternatives of one Slot joined by `|`, each
+ * complement a head (`jmdn./etw.`, `dass`, `irgendwo`) after at most one
+ * prefix word (a preposition, a predicative's marker, a correlate), the
+ * prefix itself Optional in `( … )` (`(es) dass`). A frame may open with an
+ * opener word (German expletive `es`), and an empty frame is one word of
+ * its own.
  *
- * What the words mean is a language's word table (`german.ts`; English's
- * sb/sth and Hebrew's מישהו/משהו later): which words are prefixes, heads and
- * openers. The skeleton only finds the structure, and prints it back.
+ * What the words mean is a language's word table (`de/valency-notation.ts`;
+ * English's sb/sth and Hebrew's מישהו/משהו later): which words are
+ * prefixes, heads and openers. The skeleton only finds the structure, and
+ * prints it back.
  */
 
 /** One complement as written: its head and the prefix before it, if any. */
@@ -42,14 +44,7 @@ export type FrameWords = {
 	readonly empty: string;
 };
 
-/**
- * The words of a headword written in place, which a frame may interleave
- * with its complements as a dictionary does (`jmdm. auf den Zahn fühlen`);
- * they are skipped, in any letter case.
- */
-export type ParseOptions = { readonly headword?: string };
-
-export type ParseResult =
+type ParseResult =
 	| { readonly ok: true; readonly frame: RawFrame }
 	| { readonly ok: false; readonly error: string };
 
@@ -59,12 +54,9 @@ export type ParseResult =
  */
 const tokenPattern = /\(|\)|\||[^\s()|]+(?:\([^\s()|]*\))?/gu;
 
-const fold = (word: string) => word.toLocaleLowerCase("de");
-
-/** The tokens of `text` less the headword's words, or the stray text left over. */
+/** The tokens of `text`, or the stray text between them. */
 function tokensOf(
 	text: string,
-	headword: string | undefined,
 ): { readonly tokens: string[] } | { readonly error: string } {
 	const tokens: string[] = [];
 	let at = 0;
@@ -77,38 +69,12 @@ function tokensOf(
 	}
 	if (text.slice(at).trim() !== "")
 		return { error: `Unreadable text «${text.slice(at).trim()}»` };
-	if (headword === undefined) return { tokens };
-	const words = headword.split(/\s+/u).filter(Boolean).map(fold);
-	// The headword whole where it last stands (`jmd. außer sich(dat) außer sein`).
-	for (let start = tokens.length - words.length; start >= 0; start -= 1)
-		if (words.every((word, at) => fold(tokens[start + at] ?? "") === word))
-			return {
-				tokens: [
-					...tokens.slice(0, start),
-					...tokens.slice(start + words.length),
-				],
-			};
-	// Else its words in their order, then any left anywhere.
-	const kept: string[] = [];
-	let next = 0;
-	for (const token of tokens) {
-		if (next < words.length && fold(token) === words[next]) {
-			next += 1;
-			continue;
-		}
-		kept.push(token);
-	}
-	const left = new Set(words.slice(next));
-	return { tokens: kept.filter((token) => !left.has(fold(token))) };
+	return { tokens };
 }
 
 /** Reads a frame's structure: its opener, its Slots, their alternatives. */
-export function parseFrame(
-	text: string,
-	words: FrameWords,
-	options: ParseOptions = {},
-): ParseResult {
-	const lexed = tokensOf(text.trim(), options.headword);
+export function parseFrame(text: string, words: FrameWords): ParseResult {
+	const lexed = tokensOf(text.trim());
 	if ("error" in lexed) return { ok: false, error: lexed.error };
 	const { tokens } = lexed;
 	if (
@@ -218,11 +184,10 @@ const printedComplement = ({ head, prefix, optionalPrefix }: RawComplement) =>
 		? head
 		: `${optionalPrefix ? `(${prefix})` : prefix} ${head}`;
 
-/** A frame's structure as text; a headword, when given, goes last. */
+/** A frame's structure as text. */
 export function printFrame(
 	frame: RawFrame,
 	words: Pick<FrameWords, "empty">,
-	options: ParseOptions = {},
 ): string {
 	const slots = frame.slots.map(({ optional, alternatives }) => {
 		const joined = alternatives.map(printedComplement).join("|");
@@ -231,7 +196,6 @@ export function printFrame(
 	const parts = [
 		...(frame.opener === undefined ? [] : [frame.opener]),
 		...slots,
-		...(options.headword === undefined ? [] : [options.headword]),
 	];
 	return parts.length === 0 ? words.empty : parts.join(" ");
 }

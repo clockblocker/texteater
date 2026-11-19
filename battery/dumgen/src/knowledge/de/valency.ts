@@ -2,7 +2,10 @@
  * The Valency Frame of a Reading (Sys ADR 0034): Luna proposes the
  * Satzbauplan of the one Lesart the Emoji Description names, in the Slot
  * shape of #674, holding only the complement kinds the route allows
- * (`allowedComplementKinds`). Dumrel checks it Slot by Slot: a Slot it
+ * (`allowedComplementKinds`). Luna writes it in German dictionary
+ * notation (`jmd. (etw.|(es) dass)`, `valency-notation.ts`), one string a
+ * strict schema's pattern holds, read back into those Slots. Dumrel checks
+ * them Slot by Slot: a Slot it
  * refuses, such as a Place on a German noun, is dropped and named in a
  * `DroppedValencySlots` event, and its siblings stay (#675).
  *
@@ -33,6 +36,7 @@ import type * as Dumling from "dumling/types";
 import { allowedComplementKinds, applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
+import type { InvalidModelOutput } from "../../errors.js";
 import type {
 	GermanKnowledgeChange,
 	KnowledgeFailure,
@@ -46,7 +50,8 @@ import {
 	write,
 } from "./context.js";
 import { shared, valency } from "./prompts.js";
-import { valencyExamples } from "./valency-examples.js";
+import { germanFramePattern, parseGermanFrame } from "./valency-notation.js";
+import { examplesParagraph, notationParagraphs } from "./valency-prompts.js";
 
 /**
  * The German prepositions a governor can select (dumcorpus's ADP Case
@@ -68,13 +73,9 @@ export const valencyPrompt = [
 	valency.route,
 	valency.fixed,
 	valency.referent,
-	valency.shapes,
-	valency.output,
-	valency.restraint,
-	valencyExamples,
+	...notationParagraphs,
+	examplesParagraph,
 ].join("\n");
-
-type ComplementKind = Dumrel.GermanValencyComplement["kind"];
 
 /** One entry of an Attestation's `valencyEvidence`, on any route that records it. */
 type ValencyEvidence = Extract<
@@ -88,128 +89,33 @@ type GermanSlot = {
 	readonly complements: readonly Dumrel.GermanValencyComplement[];
 };
 
-const referent = { type: "string", enum: ["Someone", "Something", "Either"] };
-const complementSchemas: Readonly<
-	Record<ComplementKind, Readonly<Record<string, unknown>>>
-> = {
-	Reflexive: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Reflexive"] },
-			governedCase: { type: "string", enum: ["Acc", "Dat"] },
-			// Only inside a fixed phrase: außer sich sein (ADR 0052).
-			preposition: { type: "string" },
-		},
-		required: ["kind", "governedCase"],
-		additionalProperties: false,
-	},
-	Case: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Case"] },
-			governedCase: {
-				type: "string",
-				enum: ["Nom", "Acc", "Dat", "Gen"],
-			},
-			referent,
-		},
-		required: ["kind", "governedCase", "referent"],
-		additionalProperties: false,
-	},
-	Preposition: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Preposition"] },
-			preposition: {
-				type: "string",
-				enum: germanGovernablePrepositions,
-			},
-			governedCase: { type: "string", enum: ["Acc", "Dat", "Gen"] },
-			referent,
-		},
-		required: ["kind", "preposition", "governedCase", "referent"],
-		additionalProperties: false,
-	},
-	Adverbial: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Adverbial"] },
-			standIn: {
-				type: "string",
-				enum: [
-					"Irgendwo",
-					"Irgendwohin",
-					"Irgendwie",
-					"IrgendwieLange",
-					"IrgendwieViel",
-				],
-			},
-		},
-		required: ["kind", "standIn"],
-		additionalProperties: false,
-	},
-	Predicative: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Predicative"] },
-			of: { type: "string", enum: ["Subject", "Object"] },
-			marker: { type: "string", enum: ["None", "Als", "Für"] },
-		},
-		required: ["kind", "of", "marker"],
-		additionalProperties: false,
-	},
-	Clause: {
-		type: "object",
-		properties: {
-			kind: { type: "string", enum: ["Clause"] },
-			form: {
-				type: "string",
-				enum: ["ZuInfinitive", "BareInfinitive", "Dass", "Ob", "W"],
-			},
-			correlate: { type: "string", enum: ["Required", "Optional"] },
-		},
-		required: ["kind", "form"],
-		additionalProperties: false,
-	},
-};
+/**
+ * The answer Luna writes under, strict: the frame as one string the
+ * notation's pattern holds, so every answer reads back.
+ */
+const frameAnswer = { type: "string", pattern: germanFramePattern } as const;
 
-/** The frame Luna answers under: only the route's complement kinds (#675). */
-function frameSchema(kinds: readonly string[]) {
-	// Dumrel's kinds span every language's; a German route allows German ones.
-	const schemaOf: Readonly<
-		Partial<Record<string, Readonly<Record<string, unknown>>>>
-	> = complementSchemas;
-	return {
-		type: "object",
-		properties: {
-			valency: {
-				type: "array",
-				items: {
-					type: "object",
-					properties: {
-						status: {
-							type: "string",
-							enum: ["Required", "Optional"],
-						},
-						complements: {
-							type: "array",
-							minItems: 1,
-							items: {
-								anyOf: kinds.flatMap((kind) => {
-									const schema = schemaOf[kind];
-									return schema ? [schema] : [];
-								}),
-							},
-						},
-					},
-					required: ["status", "complements"],
-					additionalProperties: false,
-				},
-			},
-		},
-		required: ["valency"],
-		additionalProperties: false,
-	} as const;
+/**
+ * The Slots Luna's notation reads as, each preposition its Canonical Form,
+ * or why it reads as none: under the pattern only a frame the German table
+ * refuses (a correlate before a noun phrase, a case its preposition cannot
+ * take) fails, as an answer outside the schema did.
+ */
+function frameOf(
+	context: AspectContext,
+	output: unknown,
+): readonly unknown[] | InvalidModelOutput {
+	if (typeof output !== "string")
+		return unusable("valency", "Luna answered no frame");
+	const read = parseGermanFrame(output, {
+		verb: context.lemma.kind === "VERB",
+	});
+	return read.ok
+		? read.frame
+		: unusable(
+				"valency",
+				`Luna's frame «${output.slice(0, 120)}» does not read: ${read.error}`,
+			);
 }
 
 /** A preposition's ADP Lemma, as Grammatical Resolution writes it in `valencyEvidence`. */
@@ -226,31 +132,16 @@ const prepositionLemma = (
 
 /**
  * A proposed complement in Dumrel's shape: a preposition becomes its ADP
- * Lemma. A Reflexive's blank preposition, as Luna writes for one outside
- * a fixed phrase, is none.
+ * Lemma.
  */
 function complementOf(value: unknown): unknown {
 	if (
 		!isRecord(value) ||
 		(value.kind !== "Preposition" && value.kind !== "Reflexive") ||
-		value.preposition === undefined
+		typeof value.preposition !== "string"
 	)
 		return value;
-	if (
-		value.kind === "Reflexive" &&
-		typeof value.preposition === "string" &&
-		value.preposition.trim() === ""
-	) {
-		const { preposition: _blank, ...reflexive } = value;
-		return reflexive;
-	}
-	return {
-		...value,
-		preposition:
-			typeof value.preposition === "string"
-				? prepositionLemma(value.preposition.trim().toLowerCase())
-				: value.preposition,
-	};
+	return { ...value, preposition: prepositionLemma(value.preposition) };
 }
 
 /**
@@ -545,19 +436,14 @@ export const produceValency = (
 	AspectError
 > =>
 	Effect.gen(function* () {
-		const kinds = allowedComplementKinds(context.lemma).filter(
-			(kind) => kind in complementSchemas,
-		);
 		const proposed = yield* write(
 			context,
 			"valency",
 			valencyPrompt,
-			{ complementKinds: [...kinds] },
-			frameSchema(kinds),
-			(output) =>
-				isRecord(output) && Array.isArray(output.valency)
-					? output.valency
-					: unusable("valency", "Luna answered no valency list"),
+			{ complementKinds: [...allowedComplementKinds(context.lemma)] },
+			frameAnswer,
+			(output) => frameOf(context, output),
+			{ strict: true },
 		);
 		const { kept, dropped } = validFrame(context.reading, proposed);
 		if (dropped.length > 0)

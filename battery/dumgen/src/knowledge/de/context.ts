@@ -107,9 +107,10 @@ export const aspectContext = (
 
 /**
  * One Luna request of an aspect: its system prompt, the Reading and the
- * marked Sentence with whatever the aspect adds, JSON back under `schema`
- * (strict mode off, as every Dumgen writing call: the check enforces it).
- * The input names its `aspect`, so a cached answer is keyed by it.
+ * marked Sentence with whatever the aspect adds, JSON back under `schema`.
+ * Strict mode is off unless `strict` asks for it (the valency frame's
+ * pattern): the check enforces the schema. The input names its `aspect`,
+ * so a cached answer is keyed by it.
  */
 export function write<Output>(
 	context: AspectContext,
@@ -118,7 +119,10 @@ export function write<Output>(
 	extra: Readonly<Record<string, unknown>>,
 	schema: Readonly<Record<string, unknown>>,
 	check: (output: unknown) => Output | InvalidModelOutput,
-	options: { readonly withSentence?: boolean } = {},
+	options: {
+		readonly withSentence?: boolean;
+		readonly strict?: boolean;
+	} = {},
 ): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
 	return context.write(
 		stage,
@@ -134,6 +138,7 @@ export function write<Output>(
 			},
 			outputFormat: "json",
 			outputSchema: schema,
+			...(options.strict ? { strict: true } : {}),
 		},
 		check,
 	);

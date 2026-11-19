@@ -1,33 +1,30 @@
 /**
- * The valency notation bench (`bun run valency-notation <command>` in
- * battery/dumgen; the OpenAI key from the repository's .env.local):
+ * The valency bench (`bun run valency-notation <command>` in
+ * battery/dumgen; the OpenAI key from the repository's .env.local): the
+ * production valency call over the Knowledge gold, under production's
+ * prompt or a revision of it (`revisions.ts`).
  *
- *   tokens                         o200k counts of every gold frame, JSON vs notation
- *   estimate  --variants a,b --reps N [--set dev] [--latency N]
- *   batch     --variants a,b --reps N [--set dev] [--revision r1] [--budget 0.2]
- *   latency   --variants a,b --samples 20 [--revision r1] [--budget 0.1]
- *   score     <run files…> [--set dev] [--misses label]
+ *   tokens                         o200k counts: each revision's prompt, gold frames in the notation
+ *   estimate  --revisions a,b --reps N [--set dev] [--latency N]
+ *   batch     --revisions a,b --reps N [--set dev] [--budget 0.1]
+ *   latency   --revisions a,b --samples 20 [--budget 0.1]
+ *   score     <run files…> [--set dev] [--baseline production] [--misses revision]
  *
- * Results go to evidence/valency-notation/.
+ * `--set` is dev, heldout or all. Results go to evidence/valency-notation/.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { countTokens } from "gpt-tokenizer/encoding/o200k_base";
+import { printGermanFrame } from "../../../src/knowledge/de/valency-notation.js";
+import { lunaResponsesBody } from "../../../src/openai-luna.js";
 import { lunaUsd } from "../resolve-grammar/pricing.js";
-import { printGermanFrame } from "./german.js";
 import { type ValencyCase, valencyCases } from "./gold.js";
 import { requestOf } from "./harness.js";
 import { type BenchCase, type Job, runBatch, runLatency } from "./live.js";
-import { revisions } from "./revisions.js";
+import { revisionPrompt, revisions } from "./revisions.js";
 import { readRuns, scoreCalls, summarize, table } from "./score.js";
-import {
-	notationLark,
-	type VariantName,
-	variant,
-	variantNames,
-} from "./variants.js";
 
 const evidence = fileURLToPath(
 	new URL("../../../evidence/valency-notation/", import.meta.url),
@@ -38,17 +35,15 @@ const { positionals, values } = parseArgs({
 	args: process.argv.slice(2),
 	allowPositionals: true,
 	options: {
-		variants: { type: "string", default: "json" },
+		revisions: { type: "string", default: "production" },
 		reps: { type: "string", default: "1" },
 		samples: { type: "string", default: "20" },
 		latency: { type: "string", default: "0" },
 		set: { type: "string", default: "dev" },
-		revision: { type: "string", default: "r1" },
-		budget: { type: "string", default: "0.2" },
+		budget: { type: "string", default: "0.1" },
 		limit: { type: "string" },
 		misses: { type: "string" },
-		baseline: { type: "string", default: "json@r1" },
-		"only-json-right": { type: "boolean", default: false },
+		baseline: { type: "string", default: "production" },
 	},
 });
 const [command, ...files] = positionals;
@@ -66,20 +61,10 @@ async function benchCases(set: string): Promise<Entry[]> {
 	}));
 }
 
-const names = (values.variants ?? "")
+const asked = (values.revisions ?? "")
 	.split(",")
 	.filter(Boolean)
-	.map((name) => {
-		if (!(variantNames as readonly string[]).includes(name))
-			throw Error(`${name} is no variant (${variantNames.join(", ")})`);
-		return name as VariantName;
-	});
-
-const variantAt = (name: VariantName, revision: string) => {
-	const paragraphs = revisions[revision];
-	if (!paragraphs) throw Error(`${revision} is no revision`);
-	return variant(name, paragraphs);
-};
+	.map((revision) => ({ revision, systemPrompt: revisionPrompt(revision) }));
 
 const stats = (values: readonly number[]) => {
 	const sorted = [...values].sort((a, b) => a - b);
@@ -88,54 +73,30 @@ const stats = (values: readonly number[]) => {
 	return { mean: Math.round(mean * 10) / 10, p90, max: sorted.at(-1) ?? 0 };
 };
 
-/** What each variant's gold answer would cost in o200k tokens, its prompt prefix too. */
+/** Each revision's prompt and every gold frame in the notation, in o200k tokens. */
 async function tokens() {
 	const cases = await benchCases("all");
 	const authored = cases.filter(({ coverage }) => coverage === "Authored");
-	const written = {
-		"json (as Luna answers, {value:…})": ({ frame }: Entry) =>
-			JSON.stringify({ value: { valency: frame } }),
-		notation: ({ frame, context }: Entry) =>
-			printGermanFrame(frame, context),
-		"notation + headword": ({ frame, context, goldCase }: Entry) =>
-			printGermanFrame(frame, context, {
-				headword: goldCase.reading.lemma.canonicalForm,
-			}),
-		'notation in {"frame":…} (pattern)': ({ frame, context }: Entry) =>
-			JSON.stringify({ frame: printGermanFrame(frame, context) }),
-		"notation, verb subject elided (lossy)": ({ frame, context }: Entry) =>
-			printGermanFrame(context.verb ? frame.slice(1) : frame, {
-				verb: false,
-			}),
-	};
-	const rows = Object.entries(written).map(([name, write]) => ({
-		name,
-		authored: stats(authored.map((entry) => countTokens(write(entry)))),
-		all: stats(cases.map((entry) => countTokens(write(entry)))),
-	}));
-	const prompts = Object.fromEntries(
-		variantNames.map((name) => [
-			name,
-			countTokens(variantAt(name, values.revision ?? "r1").systemPrompt) +
-				(name === "lark" ? countTokens(notationLark) : 0),
-		]),
-	);
-	const samples = cases
-		.filter(({ coverage }) => coverage === "Authored")
-		.slice(0, 12)
-		.map(({ goldCase, frame, context }) => ({
-			lemma: goldCase.reading.lemma.canonicalForm,
-			notation: printGermanFrame(frame, context),
-		}));
+	const written = ({ frame, context }: Entry) =>
+		JSON.stringify({ value: printGermanFrame(frame, context) });
 	const report = {
 		cases: cases.length,
 		authored: authored.length,
-		rows,
-		promptTokens: prompts,
-		samples,
+		answerTokens: {
+			authored: stats(
+				authored.map((entry) => countTokens(written(entry))),
+			),
+			all: stats(cases.map((entry) => countTokens(written(entry)))),
+		},
+		promptTokens: Object.fromEntries(
+			Object.entries(revisions).map(([name, prompt]) => [
+				name,
+				countTokens(prompt),
+			]),
+		),
 	};
 	writeFileSync(
-		join(evidence, "tokens.json"),
+		join(evidence, "prompt-tokens.json"),
 		`${JSON.stringify(report, null, "\t")}\n`,
 	);
 	console.log(JSON.stringify(report, null, 2));
@@ -143,44 +104,44 @@ async function tokens() {
 
 /** A round's worst-case price: no cache hit, every gold answer padded by a third. */
 function estimate(entries: readonly Entry[], reps: number, latency: number) {
-	const perVariant = names.map((name) => {
-		const v = variantAt(name, values.revision ?? "r1");
-		const tokensOf = (entry: Entry) => {
-			const body = v.body(entry.bench.request);
-			const input =
-				countTokens(JSON.stringify(body.input)) +
-				countTokens(JSON.stringify(body.text ?? "")) +
-				countTokens(JSON.stringify(body.tools ?? ""));
-			const output = Math.round(
-				1.3 *
-					(countTokens(
-						name.startsWith("json")
-							? JSON.stringify({
-									value: { valency: entry.frame },
-								})
-							: printGermanFrame(entry.frame, entry.context),
-					) +
-						10),
+	const perRevision = asked.map(({ revision, systemPrompt }) => {
+		const sum = entries
+			.map((entry) => {
+				const body = lunaResponsesBody({
+					...entry.bench.request,
+					systemPrompt,
+				});
+				return {
+					inputTokens:
+						countTokens(JSON.stringify(body.input)) +
+						countTokens(JSON.stringify(body.text)),
+					outputTokens: Math.round(
+						1.3 *
+							(countTokens(
+								printGermanFrame(entry.frame, entry.context),
+							) +
+								10),
+					),
+				};
+			})
+			.reduce(
+				(total, next) => ({
+					inputTokens: total.inputTokens + next.inputTokens,
+					outputTokens: total.outputTokens + next.outputTokens,
+				}),
+				{ inputTokens: 0, outputTokens: 0 },
 			);
-			return { inputTokens: input, outputTokens: output };
+		return {
+			revision,
+			batchUsd: lunaUsd(sum, "batch") * reps,
+			latencyUsd: (lunaUsd(sum, "fast") / entries.length) * (latency + 1),
 		};
-		const sum = entries.map(tokensOf).reduce(
-			(total, next) => ({
-				inputTokens: total.inputTokens + next.inputTokens,
-				outputTokens: total.outputTokens + next.outputTokens,
-			}),
-			{ inputTokens: 0, outputTokens: 0 },
-		);
-		const batchUsd = lunaUsd(sum, "batch") * reps;
-		const latencyUsd =
-			(lunaUsd(sum, "fast") / entries.length) * (latency + 1);
-		return { variant: name, batchUsd, latencyUsd };
 	});
-	const total = perVariant.reduce(
+	const total = perRevision.reduce(
 		(sum, { batchUsd, latencyUsd }) => sum + batchUsd + latencyUsd,
 		0,
 	);
-	return { cases: entries.length, perVariant, worstCaseUsd: total };
+	return { cases: entries.length, perRevision, worstCaseUsd: total };
 }
 
 const apiKey = () => {
@@ -208,19 +169,16 @@ else if (command === "estimate") {
 		throw Error(
 			`Projected $${priced.worstCaseUsd.toFixed(4)} is past the budget`,
 		);
-	const revision = values.revision ?? "r1";
-	const jobs: Job[] = names.flatMap((name) =>
+	const jobs: Job[] = asked.flatMap((revision) =>
 		entries.flatMap((entry) =>
 			Array.from({ length: reps }, (_, repetition) => ({
-				variant: variantAt(name, revision),
-				revision,
+				...revision,
 				benchCase: entry.bench,
 				repetition,
 			})),
 		),
 	);
-	const file = await runBatch(jobs, { apiKey: apiKey(), evidence });
-	console.log(file);
+	console.log(await runBatch(jobs, { apiKey: apiKey(), evidence }));
 } else if (command === "latency") {
 	const entries = await benchCases(values.set ?? "dev");
 	const samples = Number(values.samples);
@@ -234,13 +192,13 @@ else if (command === "estimate") {
 		throw Error(
 			`Projected $${priced.worstCaseUsd.toFixed(4)} is past the budget`,
 		);
-	const revision = values.revision ?? "r1";
-	const file = await runLatency(
-		names.map((name) => ({ variant: variantAt(name, revision), revision })),
-		sample.map(({ bench }) => bench),
-		{ apiKey: apiKey(), evidence },
+	console.log(
+		await runLatency(
+			asked,
+			sample.map(({ bench }) => bench),
+			{ apiKey: apiKey(), evidence },
+		),
 	);
-	console.log(file);
 } else if (command === "score") {
 	const entries = await benchCases(values.set ?? "dev");
 	const byId = new Map(entries.map((entry) => [entry.goldCase.id, entry]));
@@ -248,9 +206,7 @@ else if (command === "estimate") {
 		file.includes("/") ? file : join(evidence, "runs", file),
 	);
 	const records = readRuns(paths).filter((record) => byId.has(record.caseId));
-	const scored = scoreCalls(records, byId, (record) =>
-		variantAt(record.variant, record.revision),
-	);
+	const scored = scoreCalls(records, byId);
 	const rows = summarize(scored, values.baseline);
 	const name = paths
 		.map((path) => basename(path, ".jsonl"))
@@ -258,36 +214,24 @@ else if (command === "estimate") {
 		.slice(0, 150);
 	const spent = records.reduce((sum, record) => sum + record.usd, 0);
 	writeFileSync(
-		join(evidence, `score-${name}.json`),
-		`${JSON.stringify({ files: paths.map((path) => basename(path)), spentUsd: spent, rows }, null, "\t")}\n`,
+		join(evidence, `score-${values.set}-${name}.json`),
+		`${JSON.stringify({ files: paths.map((path) => basename(path)), set: values.set, spentUsd: spent, rows }, null, "\t")}\n`,
 	);
 	console.log(table(rows));
 	console.log(`spent in these runs: $${spent.toFixed(5)}`);
-	if (values.misses) {
-		const misses = scored.filter(
-			({ label, correct }) => label === values.misses && !correct,
-		);
-		// The cases JSON got right in some repetition.
-		const jsonRight = new Set(
-			scored
-				.filter(({ label, correct }) => label === "json@r1" && correct)
-				.map(({ caseId }) => caseId),
-		);
-		for (const miss of misses) {
-			const entry = byId.get(miss.caseId);
+	if (values.misses)
+		for (const { record, correct, failed } of scored) {
+			if (record.revision !== values.misses || correct) continue;
+			const entry = byId.get(record.caseId);
 			if (!entry) continue;
-			if (values["only-json-right"] && !jsonRight.has(miss.caseId))
-				continue;
+			const { reading } = entry.goldCase;
 			console.log(
 				[
-					`${entry.goldCase.reading.lemma.canonicalForm} ${"emojiDescription" in entry.goldCase.reading ? entry.goldCase.reading.emojiDescription : ""}`,
+					`${reading.lemma.canonicalForm} ${"emojiDescription" in reading ? reading.emojiDescription : ""}`,
 					`gold: ${printGermanFrame(entry.frame, entry.context)}`,
-					`said: ${(miss.text ?? "").replace(/\s+/gu, " ").slice(0, 300)}`,
-					...(miss.failed
-						? [`failed: ${miss.failed.slice(0, 200)}`]
-						: []),
+					`said: ${JSON.stringify(record.output ?? record.failure ?? null).slice(0, 300)}`,
+					...(failed ? [`failed: ${failed.slice(0, 200)}`] : []),
 				].join("\n  "),
 			);
 		}
-	}
 } else throw Error(`Unknown command ${command ?? ""}`);

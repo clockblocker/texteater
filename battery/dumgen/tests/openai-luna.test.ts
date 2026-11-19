@@ -201,6 +201,34 @@ test("an exchange's output cap goes as max_output_tokens, and none goes without 
 	expect(uncapped).not.toHaveProperty("max_output_tokens");
 });
 
+test("strict mode is the request's: off unless it asks, and a strict string answer reads as its value", () => {
+	const format = (asked: LunaRequest) => {
+		const { text } = lunaResponsesBody(asked) as {
+			text: { format: { strict: boolean } };
+		};
+		return text.format;
+	};
+	expect(format(request).strict).toBe(false);
+	const strict: LunaRequest = {
+		...request,
+		outputSchema: { type: "string", pattern: "^(?:-|jmd\\.)$" },
+		strict: true,
+	};
+	expect(format(strict)).toMatchObject({
+		strict: true,
+		schema: {
+			properties: {
+				value: { type: "string", pattern: "^(?:-|jmd\\.)$" },
+			},
+			required: ["value"],
+			additionalProperties: false,
+		},
+	});
+	expect(lunaResponseOf(completed('{"value":"jmd."}'), strict).output).toBe(
+		"jmd.",
+	);
+});
+
 test("an incomplete response throws with its reason", async () => {
 	const { fetch } = fakeFetch([
 		{

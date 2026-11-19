@@ -1,4 +1,8 @@
 import { expect, test } from "bun:test";
+import {
+	type ProposedSlot,
+	printGermanFrame,
+} from "../../src/knowledge/de/valency-notation.js";
 import type { GermanKnowledgeChange } from "../../src/knowledge/types.js";
 import {
 	knowledgeInput,
@@ -42,10 +46,10 @@ const frameOf = (changes: readonly GermanKnowledgeChange[]): unknown => {
 	return change && "value" in change ? change.value : undefined;
 };
 
-/** A valency-only run on `emoji`, Luna proposing `valency`. */
+/** A valency-only run on `emoji`, Luna proposing `valency`, written in the notation. */
 async function frame(
 	emoji: string,
-	valency: readonly unknown[],
+	valency: readonly ProposedSlot[],
 	valencyEvidence: readonly unknown[] = [],
 	origin: "New" | "TopUp" = "New",
 	occurrence: {
@@ -58,7 +62,9 @@ async function frame(
 		target: ["schämt", "sich"],
 	},
 ) {
-	const luna = knowledgeLuna({ valency: { valency } });
+	const luna = knowledgeLuna({
+		valency: printGermanFrame(valency, { verb: true }),
+	});
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(
@@ -84,7 +90,10 @@ test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Requ
 			target: ["schäme", "mich"],
 		},
 	);
-	expect(JSON.stringify(luna.sent[0]?.outputSchema)).toContain("Reflexive");
+	expect(luna.sent[0]?.input).toHaveProperty(
+		"complementKinds",
+		expect.arrayContaining(["Reflexive"]),
+	);
 	expect(frameOf(result.changes)).toEqual([subject, reflexive("Acc")]);
 	expect(luna.sent[0]?.systemPrompt).toContain("Test it in the first person");
 });
@@ -104,21 +113,6 @@ test("a sich names no case, so Luna's case for the meaning stands, and with neit
 		},
 	);
 	expect(frameOf(result.changes)).toEqual([subject, reflexive("Dat")]);
-	// A blank preposition, as Luna writes outside a fixed phrase, is none.
-	const blank = await frame(
-		"🪞😳",
-		[
-			subject,
-			{
-				status: "Required",
-				complements: [
-					{ kind: "Reflexive", governedCase: "Dat", preposition: "" },
-				],
-			},
-		],
-		[hidden],
-	);
-	expect(frameOf(blank.result.changes)).toEqual([subject, reflexive("Dat")]);
 	// Luna proposing none, nothing names the case.
 	const none = await frame("🪞😳", [subject], [hidden]);
 	expect(frameOf(none.result.changes)).toBeUndefined();

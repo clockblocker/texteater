@@ -1,38 +1,51 @@
 import { expect, test } from "bun:test";
 import { canonicalJson } from "common-utils";
+import { valencyCases } from "../../lab/evaluation/valency-notation/gold.js";
 import {
+	germanFramePattern,
 	parseGermanFrame,
 	printGermanFrame,
-} from "../../../lab/evaluation/valency-notation/german.js";
-import { valencyCases } from "../../../lab/evaluation/valency-notation/gold.js";
+} from "../../src/knowledge/de/valency-notation.js";
+import { valencyExamples } from "../../src/knowledge/de/valency-prompts.js";
 
 const verb = { verb: true };
 const adjective = { verb: false };
+const pattern = new RegExp(germanFramePattern, "u");
 
-test("every gold frame prints and reads back the same, with and without its headword", async () => {
+test("every gold frame prints in the notation the pattern holds, and reads back the same", async () => {
 	const cases = await valencyCases();
 	expect(cases.length).toBeGreaterThan(200);
 	const misses: string[] = [];
 	for (const { goldCase, frame, context } of cases) {
 		const headword = goldCase.reading.lemma.canonicalForm;
-		for (const options of [{}, { headword }]) {
-			const text = printGermanFrame(frame, context, options);
-			const read = parseGermanFrame(text, context, options);
-			if (!read.ok || canonicalJson(read.frame) !== canonicalJson(frame))
-				misses.push(
-					`${headword}: ${text} → ${read.ok ? canonicalJson(read.frame) : read.error}`,
-				);
-		}
+		const text = printGermanFrame(frame, context);
+		const read = parseGermanFrame(text, context);
+		if (!pattern.test(text))
+			misses.push(`${headword}: ${text} is outside the pattern`);
+		if (!read.ok || canonicalJson(read.frame) !== canonicalJson(frame))
+			misses.push(
+				`${headword}: ${text} → ${read.ok ? canonicalJson(read.frame) : read.error}`,
+			);
 	}
 	expect(misses).toEqual([]);
 });
 
-test("the brief's frames read as the model holds them", () => {
+test("every prompt example is in the pattern and reads back as written", () => {
+	for (const { lemma, verb, frame } of valencyExamples) {
+		expect({ lemma, inPattern: pattern.test(frame) }).toEqual({
+			lemma,
+			inPattern: true,
+		});
+		const read = parseGermanFrame(frame, { verb });
+		expect(read.ok && printGermanFrame(read.frame, { verb })).toBe(frame);
+	}
+});
+
+test("the examples' frames read as the model holds them", () => {
 	expect(
 		parseGermanFrame("jmd. (etw.|(es) dass|(es) ob|(es) w)", verb),
 	).toEqual({
 		ok: true,
-		lenient: [],
 		frame: [
 			{
 				status: "Required",
@@ -56,9 +69,8 @@ test("the brief's frames read as the model holds them", () => {
 		],
 	});
 	const freuen = parseGermanFrame(
-		"jmd. sich(akk) (auf jmdn./etw.|über etw.(akk)) freuen",
+		"jmd. sich(akk) (auf jmdn./etw.|über etw.(akk))",
 		verb,
-		{ headword: "freuen" },
 	);
 	expect(freuen.ok && freuen.frame[2]?.complements).toEqual([
 		{
@@ -95,14 +107,7 @@ test("the brief's frames read as the model holds them", () => {
 	expect(ausser.ok && ausser.frame[1]?.complements).toEqual([
 		{ kind: "Reflexive", governedCase: "Dat", preposition: "außer" },
 	]);
-	expect(parseGermanFrame("-", adjective)).toEqual({
-		ok: true,
-		frame: [],
-		lenient: [],
-	});
-	expect(
-		parseGermanFrame("- Scham", adjective, { headword: "Scham" }),
-	).toEqual({ ok: true, frame: [], lenient: [] });
+	expect(parseGermanFrame("-", adjective)).toEqual({ ok: true, frame: [] });
 });
 
 test("a one-case preposition's case holds, and a two-way one's defaults to Acc", () => {
@@ -110,13 +115,23 @@ test("a one-case preposition's case holds, and a two-way one's defaults to Acc",
 	expect(mit.ok && mit.frame[0]?.complements[0]).toMatchObject({
 		governedCase: "Dat",
 	});
-	expect(mit.ok && mit.lenient).toEqual(["PrepositionCaseRepaired"]);
 	const vor = parseGermanFrame("(vor etw.)", adjective);
-	expect(vor.ok && vor.lenient).toEqual(["TwoWayPrepositionCase"]);
+	expect(vor.ok && vor.frame[0]?.complements[0]).toMatchObject({
+		governedCase: "Acc",
+	});
 });
 
-test("a stray word or an unclosed Slot is a parse failure", () => {
-	expect(parseGermanFrame("jmd. etwas", verb).ok).toBe(false);
-	expect(parseGermanFrame("jmd. (etw.", verb).ok).toBe(false);
-	expect(parseGermanFrame('{"valency": []}', verb).ok).toBe(false);
+test("a stray word, an unclosed Slot or a correlate before a noun phrase is a parse failure, and the pattern holds none of them", () => {
+	for (const text of [
+		"jmd. etwas",
+		"jmd. (etw.",
+		'{"valency": []}',
+		"jmd. den Braten",
+	]) {
+		expect(parseGermanFrame(text, verb).ok).toBe(false);
+		expect(pattern.test(text)).toBe(false);
+	}
+	// In the pattern, and still no frame: a two-way preposition takes no Nom.
+	expect(pattern.test("jmd. an jmd.")).toBe(true);
+	expect(parseGermanFrame("jmd. an jmd.", verb).ok).toBe(false);
 });

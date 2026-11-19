@@ -8,3 +8,5 @@
 {"at":"2026-11-19T05:32:23.878Z","run":"batch-2026-11-19T05-30-35-477Z","mode":"batch","batch":"batch_6afe897cc2a48190a968ff0142b46fa6","variants":["json@r2","pattern@r2"],"requests":216,"retries":0,"usd":0.009345859999999998}
 {"at":"2026-11-19T05:32:28.192Z","run":"batch-2026-11-19T05-30-39-435Z","mode":"batch","batch":"batch_6afe8980f6bc819090404609144529f4","variants":["json-examples@r3"],"requests":108,"retries":0,"usd":0.007046220000000002}
 {"at":"2026-11-19T05:34:17.679Z","run":"latency-2026-11-19T05-31-45-448Z","mode":"latency","variants":["json@r2","json-strict@r2","pattern@r2","lead-pattern@r2","notation@r2"],"samples":30,"usd":0.03047312000000001}
+{"at":"2026-11-19T06:10:44.870Z","run":"latency-2026-11-19T06-10-39-511Z","mode":"latency","revisions":["production"],"samples":1,"usd":0.00125678}
+{"at":"2026-11-19T06:13:41.007Z","run":"batch-2026-11-19T06-10-35-312Z","mode":"batch","batch":"batch_6afe92dd761c81909d0d81b09c367bf1","revisions":["production"],"requests":247,"usd":0.010185300000000005}

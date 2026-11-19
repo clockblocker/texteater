@@ -16,10 +16,20 @@ import * as Context from "effect/Context";
  * executors take it.
  */
 export type LunaRequest = (
-	| { readonly outputFormat: "text"; readonly outputSchema?: never }
+	| {
+			readonly outputFormat: "text";
+			readonly outputSchema?: never;
+			readonly strict?: never;
+	  }
 	| {
 			readonly outputFormat?: "json";
 			readonly outputSchema: Readonly<Record<string, unknown>>;
+			/**
+			 * OpenAI's strict structured outputs, which hold the answer to
+			 * the schema as it is written (a string's `pattern` too); off
+			 * when absent, and the operation's check enforces the schema.
+			 */
+			readonly strict?: boolean;
 	  }
 ) & {
 	readonly systemPrompt: string;

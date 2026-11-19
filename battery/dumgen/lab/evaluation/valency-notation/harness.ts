@@ -2,9 +2,10 @@
  * The one seam the bench drives, as the TOON bench (`../toon-valency`, in
  * its own worktree) found it: each valency-covered Reading run through the
  * production `produceValency` with the Luna `Write` the bench supplies. The
- * request production builds is what a variant rewrites; what the variant's
- * answer becomes after Dumgen's and Dumrel's checks is what gold is
- * compared with, as `knowledge.produce`'s scoring compares it.
+ * request production builds is what the bench sends, a revision's system
+ * prompt in place of production's; what its answer becomes after Dumgen's
+ * and Dumrel's checks is what gold is compared with, as
+ * `knowledge.produce`'s scoring compares it.
  */
 import * as Effect from "effect/Effect";
 import type { CallLog } from "../../../src/call.js";

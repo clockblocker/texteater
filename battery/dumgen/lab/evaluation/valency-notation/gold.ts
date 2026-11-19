@@ -4,17 +4,17 @@
  * frame in Luna's proposal shape (a preposition is its Canonical Form).
  */
 import type * as Dumrel from "dumrel/types";
+import type {
+	FrameContext,
+	ProposedComplement,
+	ProposedSlot,
+} from "../../../src/knowledge/de/valency-notation.js";
 import {
 	type KnowledgeCase,
 	type KnowledgeSetName,
 	loadKnowledgeSet,
 	trackedKnowledgeSetsRoot,
 } from "../knowledge/cases.js";
-import type {
-	FrameContext,
-	ProposedComplement,
-	ProposedSlot,
-} from "./german.js";
 
 export type ValencyCase = {
 	readonly set: KnowledgeSetName;

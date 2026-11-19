@@ -366,11 +366,12 @@ export function logEvent(
 /**
  * Stubs the deployment's Luna transport, as a deployment with an OpenAI key
  * and no TypeSafe key, until `restore`. A Valency Frame request gets
- * `frame`; every other request gets text.
+ * `frame`, written in the notation Luna answers it in; every other request
+ * gets text.
  */
 export function stubProvider(
 	respond: (modelInput: ModelInput) => Promise<string>,
-	frame: readonly unknown[] = [],
+	frame = "-",
 	plural: unknown = { plurality: "NoPlural", plurals: [] },
 ) {
 	const requests: ModelInput[] = [];
@@ -380,7 +381,7 @@ export function stubProvider(
 		return {
 			output:
 				modelInput.aspect === "valency"
-					? { valency: frame }
+					? frame
 					: modelInput.aspect === "pluralPattern"
 						? plural
 						: { text: await respond(modelInput) },

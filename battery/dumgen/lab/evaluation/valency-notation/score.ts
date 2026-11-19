@@ -1,17 +1,16 @@
 /**
- * Scores the bench's run files with no model: each call's final answer
- * (its retry's, when it had one) through `produceValency` against gold, and
- * per variant and revision the accuracy, the first-try and final read
- * failures, tokens, dollars per thousand calls on a warm cache, latency,
- * the cases that flip between repetitions, and the paired wins and losses
- * against `json` on the same cases.
+ * Scores the bench's run files with no model: each answer through
+ * production's `produceValency` (its check reading the notation, then
+ * Dumgen's and Dumrel's checks) against gold, and per revision the
+ * accuracy, the answers that did not read, tokens, dollars per thousand
+ * calls on a warm cache, latency, the cases that flip between repetitions,
+ * and the paired wins and losses against a baseline revision.
  */
 import { readFileSync } from "node:fs";
 import { lunaUsd } from "../resolve-grammar/pricing.js";
 import type { ValencyCase } from "./gold.js";
 import { verdictOf } from "./harness.js";
-import type { BenchCase, RunRecord } from "./live.js";
-import type { Variant } from "./variants.js";
+import type { RunRecord } from "./live.js";
 
 const percentile = (values: readonly number[], p: number) => {
 	const sorted = [...values].sort((a, b) => a - b);
@@ -26,18 +25,10 @@ const round = (value: number, digits = 1) =>
 	Math.round(value * 10 ** digits) / 10 ** digits;
 
 export type Scored = {
-	readonly label: string;
-	readonly caseId: string;
-	readonly run: string;
-	readonly repetition: number;
-	readonly mode: RunRecord["mode"];
-	readonly attempts: readonly RunRecord[];
+	readonly record: RunRecord;
 	readonly correct: boolean;
-	readonly firstUnreadable: boolean;
+	/** The answer failed before Dumrel saw a frame: no output, or a notation that does not read. */
 	readonly unreadable: boolean;
-	/** The first answer read only with a lenient repair. */
-	readonly lenient: boolean;
-	readonly text?: string;
 	readonly failed?: string;
 };
 
@@ -49,53 +40,25 @@ export const readRuns = (files: readonly string[]): RunRecord[] =>
 			.map((line) => JSON.parse(line) as RunRecord),
 	);
 
-/** Every call of the runs, scored. */
+/** Every answer of the runs, scored. */
 export function scoreCalls(
 	records: readonly RunRecord[],
-	cases: ReadonlyMap<string, ValencyCase & { readonly bench: BenchCase }>,
-	variantOf: (record: RunRecord) => Variant,
+	cases: ReadonlyMap<string, ValencyCase>,
 ): Scored[] {
-	const calls = new Map<string, RunRecord[]>();
-	for (const record of records) {
-		const key = `${record.run}|${record.variant}@${record.revision}|${record.caseId}|${record.repetition}`;
-		calls.set(key, [...(calls.get(key) ?? []), record]);
-	}
-	return [...calls.values()].map((asked) => {
-		asked.sort((a, b) => a.attempt - b.attempt);
-		const [first] = asked;
-		if (!first) throw Error("A call without attempts");
-		const entry = cases.get(first.caseId);
-		if (!entry) throw Error(`${first.caseId} is no bench case`);
-		const variant = variantOf(first);
-		const decode = (record: RunRecord) =>
-			record.text === undefined
-				? undefined
-				: variant.decode(record.text, entry.bench.request);
-		// Read with today's reader: an answer it reads needed no retry.
-		const firstDecoded = decode(first);
-		const attempts = firstDecoded?.ok ? [first] : asked;
-		const final = attempts[attempts.length - 1] as RunRecord;
-		const decoded = decode(final);
+	return records.map((record) => {
+		const entry = cases.get(record.caseId);
+		if (!entry) throw Error(`${record.caseId} is no bench case`);
+		let unreadable = record.output === undefined;
 		const verdict = verdictOf(entry.goldCase, () =>
-			decoded === undefined
-				? { ok: false, message: final.failure ?? "no answer" }
-				: decoded.ok
-					? { ok: true, output: decoded.output }
-					: { ok: false, message: decoded.problem },
+			record.output === undefined
+				? { ok: false, message: record.failure ?? "no answer" }
+				: { ok: true, output: record.output },
 		);
+		if (verdict.failed?.startsWith("Luna")) unreadable = true;
 		return {
-			label: `${final.variant}@${final.revision}`,
-			caseId: final.caseId,
-			run: final.run,
-			repetition: final.repetition,
-			mode: final.mode,
-			attempts,
+			record,
 			correct: verdict.correct,
-			firstUnreadable: firstDecoded === undefined || !firstDecoded.ok,
-			unreadable: decoded === undefined || !decoded.ok,
-			lenient:
-				firstDecoded?.ok === true && firstDecoded.lenient !== undefined,
-			...(final.text === undefined ? {} : { text: final.text }),
+			unreadable,
 			...(verdict.failed === undefined ? {} : { failed: verdict.failed }),
 		};
 	});
@@ -103,7 +66,7 @@ export function scoreCalls(
 
 type Rep = ReadonlyMap<string, boolean>;
 
-/** Each rep against each JSON rep: the cases only one of the two got right. */
+/** Each rep against each baseline rep: the cases only one of the two got right. */
 function paired(reps: readonly Rep[], baselines: readonly Rep[]) {
 	let wins = 0;
 	let losses = 0;
@@ -117,56 +80,42 @@ function paired(reps: readonly Rep[], baselines: readonly Rep[]) {
 	return { wins, losses };
 }
 
-/** One row per variant and revision. */
-export function summarize(scored: readonly Scored[], baseline = "json@r1") {
-	const labels = [...new Set(scored.map(({ label }) => label))];
-	const repKey = (call: Scored) => `${call.run}|${call.repetition}`;
-	const byRep = (label: string) => {
+/** One row per revision. */
+export function summarize(scored: readonly Scored[], baseline = "production") {
+	const revisions = [...new Set(scored.map(({ record }) => record.revision))];
+	const byRep = (revision: string) => {
 		const reps = new Map<string, Map<string, boolean>>();
-		for (const call of scored)
-			if (call.label === label && call.mode === "batch") {
-				const rep =
-					reps.get(repKey(call)) ?? new Map<string, boolean>();
-				rep.set(call.caseId, call.correct);
-				reps.set(repKey(call), rep);
+		for (const { record, correct } of scored)
+			if (record.revision === revision && record.mode === "batch") {
+				const key = `${record.run}|${record.repetition}`;
+				const rep = reps.get(key) ?? new Map<string, boolean>();
+				rep.set(record.caseId, correct);
+				reps.set(key, rep);
 			}
 		return [...reps.values()];
 	};
-	const jsonReps = labels
-		.filter((label) => label === baseline)
-		.flatMap(byRep);
-	return labels.map((label) => {
-		const mine = scored.filter((call) => call.label === label);
-		const batched = mine.filter(({ mode }) => mode === "batch");
-		const reps = byRep(label);
+	const baselineReps = byRep(baseline);
+	return revisions.map((revision) => {
+		const mine = scored.filter(
+			({ record }) => record.revision === revision,
+		);
+		const reps = byRep(revision);
 		const accuracies = reps.map(
 			(rep) =>
 				(100 * [...rep.values()].filter(Boolean).length) /
 				Math.max(1, rep.size),
 		);
-		const latencies = mine
-			.filter(({ mode }) => mode === "latency")
-			.map(({ attempts }) =>
-				attempts.reduce(
-					(sum, { latencyMs }) => sum + (latencyMs ?? 0),
-					0,
-				),
-			);
+		const latencies = mine.flatMap(({ record }) =>
+			record.latencyMs === undefined ? [] : [record.latencyMs],
+		);
 		const perCall = (pick: (record: RunRecord) => number) =>
-			mean(
-				mine.map(({ attempts }) =>
-					attempts.reduce((sum, r) => sum + pick(r), 0),
-				),
-			);
+			mean(mine.map(({ record }) => pick(record)));
 		const tokens = {
 			inputTokens: perCall((r) => r.tokens.inputTokens),
 			cachedInputTokens: perCall((r) => r.tokens.cachedInputTokens),
 			cacheWriteTokens: perCall((r) => r.tokens.cacheWriteTokens),
 			outputTokens: perCall((r) => r.tokens.outputTokens),
 		};
-		const firstOutput = mean(
-			mine.map(({ attempts }) => attempts[0]?.tokens.outputTokens ?? 0),
-		);
 		// A warm cache's price: the whole prefix read from the cache.
 		const warm = {
 			...tokens,
@@ -187,35 +136,21 @@ export function summarize(scored: readonly Scored[], baseline = "json@r1") {
 					).length
 				: undefined;
 		const { wins, losses } =
-			label === baseline
+			revision === baseline
 				? { wins: 0, losses: 0 }
-				: paired(reps, jsonReps);
+				: paired(reps, baselineReps);
 		return {
-			label,
+			revision,
 			calls: mine.length,
 			batchReps: reps.length,
 			accuracy: round(mean(accuracies)),
 			accuracyPerRep: accuracies.map((value) => round(value)),
-			firstTryUnreadable: round(
-				(100 *
-					mine.filter(({ firstUnreadable }) => firstUnreadable)
-						.length) /
-					Math.max(1, mine.length),
-			),
-			lenientReads: round(
-				(100 * mine.filter(({ lenient }) => lenient).length) /
-					Math.max(1, mine.length),
-			),
-			finalUnreadable: round(
+			unreadable: round(
 				(100 * mine.filter(({ unreadable }) => unreadable).length) /
 					Math.max(1, mine.length),
 			),
-			outputTokens: round(firstOutput),
-			uncachedInputTokens: round(
-				tokens.inputTokens -
-					tokens.cachedInputTokens -
-					tokens.cacheWriteTokens,
-			),
+			outputTokens: round(tokens.outputTokens),
+			cachedInputTokens: round(tokens.cachedInputTokens),
 			inputTokens: round(tokens.inputTokens),
 			usdPer1kFast: round(1000 * lunaUsd(warm, "fast"), 4),
 			usdPer1kBatch: round(1000 * lunaUsd(warm, "batch"), 4),
@@ -223,33 +158,32 @@ export function summarize(scored: readonly Scored[], baseline = "json@r1") {
 			p50Ms: round(percentile(latencies, 50), 0),
 			p90Ms: round(percentile(latencies, 90), 0),
 			...(flips === undefined ? {} : { flips }),
-			...(label === baseline || batched.length === 0
+			...(revision === baseline || reps.length === 0
 				? {}
-				: { vsJson: `${wins}/${losses}` }),
+				: { vsBaseline: `${wins}/${losses}` }),
 		};
 	});
 }
 
 export function table(rows: ReturnType<typeof summarize>): string {
 	return [
-		"variant | reps | acc % (per rep) | 1st-try unreadable % | lenient reads % | final unreadable % | out tok | uncached in | in | $/1k fast | $/1k batch | p50 | p90 | flips | vs baseline W/L",
+		"revision | calls | reps | acc % (per rep) | unreadable % | out tok | cached in | in | $/1k fast | $/1k batch | p50 | p90 | flips | vs baseline W/L",
 		...rows.map((row) =>
 			[
-				row.label,
+				row.revision,
+				row.calls,
 				row.batchReps,
 				`${row.accuracy} (${row.accuracyPerRep.join("/")})`,
-				row.firstTryUnreadable,
-				row.lenientReads,
-				row.finalUnreadable,
+				row.unreadable,
 				row.outputTokens,
-				row.uncachedInputTokens,
+				row.cachedInputTokens,
 				row.inputTokens,
 				row.usdPer1kFast,
 				row.usdPer1kBatch,
 				row.p50Ms,
 				row.p90Ms,
 				row.flips ?? "",
-				row.vsJson ?? "",
+				row.vsBaseline ?? "",
 			].join(" | "),
 		),
 	].join("\n");

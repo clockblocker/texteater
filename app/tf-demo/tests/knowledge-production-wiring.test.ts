@@ -124,7 +124,7 @@ async function runProductionAction(
 		transcription: "baŋk",
 		definition: "Ein Geldinstitut.",
 		translations: [[{ kind: "Text", text: "bank" }]],
-		valency: { valency: [] },
+		valency: "-",
 	};
 	// `Bank` has a plural, and it was formed from no other word, so it has
 	// no Source.

@@ -35,8 +35,8 @@ import {
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
 import {
 	valencyExampleLemmas,
-	valencyExamplePromptTexts,
-} from "../../src/knowledge/de/valency-examples.js";
+	valencyPromptTexts,
+} from "../../src/knowledge/de/valency-prompts.js";
 
 test("every Knowledge prompt paragraph cites the Rules it states at their current hashes (ADR 0037, #695)", () => {
 	const prompts = [
@@ -44,7 +44,7 @@ test("every Knowledge prompt paragraph cites the Rules it states at their curren
 		...translationPromptTexts(),
 		...structurePromptTexts(),
 		...licencePromptTexts(),
-		...valencyExamplePromptTexts(),
+		...valencyPromptTexts(),
 	];
 	expect(prompts.length).toBeGreaterThan(70);
 	expect(checkPromptCitations(prompts, rules)).toEqual([]);

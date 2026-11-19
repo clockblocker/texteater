@@ -207,6 +207,7 @@ export const lunaRequestSchema = z.union([
 		...lunaFields,
 		outputFormat: z.literal("json").optional(),
 		outputSchema: z.record(z.string(), z.unknown()),
+		strict: z.boolean().optional(),
 	}),
 ]) satisfies z.ZodType<LunaRequest>;
 

@@ -1,8 +1,9 @@
 /**
- * The German word table of the valency notation (`skeleton.ts`), in
- * Duden's style: a Valency Frame as Luna proposes it, each preposition its
- * Canonical Form, written as `jmd. (etw.|(es) dass|(es) ob|(es) w)`, and
- * read back.
+ * The German word table of the valency notation (`../valency-notation.ts`),
+ * in Duden's style: a Valency Frame as Luna proposes it, each preposition
+ * its Canonical Form, written as `jmd. (etw.|(es) dass|(es) ob|(es) w)`,
+ * and read back. `germanFramePattern` is the same language as one regular
+ * expression, which Luna's answer is held to (a strict schema's `pattern`).
  *
  * - A Case or Preposition complement is the dictionary's pronoun, its case
  *   in its form: jmd. jmdn. jmdm. jmds. (Someone, Nom/Acc/Dat/Gen), etw.
@@ -26,15 +27,15 @@
 import {
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
+	germanGovernablePrepositions,
 } from "dumcorpus/inventories";
 import {
 	type FrameWords,
-	type ParseOptions,
 	parseFrame,
 	printFrame,
 	type RawComplement,
 	type RawFrame,
-} from "./skeleton.js";
+} from "../valency-notation.js";
 
 type Referent = "Someone" | "Something" | "Either";
 type CaseName = "Nom" | "Acc" | "Dat" | "Gen";
@@ -90,15 +91,8 @@ export type ProposedSlot = {
 /** What decides a frame's defaults: whether its Lemma is a verb, which has a subject. */
 export type FrameContext = { readonly verb: boolean };
 
-/** What the reading left to a default, which a prompt may want to name. */
-type Leniency = "TwoWayPrepositionCase" | "PrepositionCaseRepaired";
-
-export type GermanParse =
-	| {
-			readonly ok: true;
-			readonly frame: ProposedSlot[];
-			readonly lenient: readonly Leniency[];
-	  }
+type GermanParse =
+	| { readonly ok: true; readonly frame: ProposedSlot[] }
 	| { readonly ok: false; readonly error: string };
 
 const someoneForm: Readonly<Record<CaseName, string>> = {
@@ -276,14 +270,14 @@ function reflexiveOf(
 }
 
 /**
- * A preposition's complement: a one-case preposition's case holds, a
- * two-way one's is the pronoun's, Acc when a bare etw. names none.
+ * A preposition's complement: a one-case preposition's case holds, whatever
+ * case its pronoun's form names; a two-way one's is the pronoun's, Acc when
+ * a bare etw. names none.
  */
 function prepositionOf(
 	{ head, prefix }: RawComplement & { readonly prefix: string },
 	referent: Referent,
 	written: CaseName | undefined,
-	lenient: Leniency[],
 ): Read {
 	if (prefix === "es" || prefix === "als")
 		return `«${prefix} ${head}» is no complement`;
@@ -292,17 +286,13 @@ function prepositionOf(
 		(name): name is Exclude<CaseName, "Nom"> => name !== "Nom",
 	);
 	const [only] = cases;
-	if (cases.length === 1 && only !== undefined) {
-		if (written !== undefined && written !== only)
-			lenient.push("PrepositionCaseRepaired");
+	if (cases.length === 1 && only !== undefined)
 		return {
 			kind: "Preposition",
 			preposition,
 			governedCase: only,
 			referent,
 		};
-	}
-	if (written === undefined) lenient.push("TwoWayPrepositionCase");
 	const governedCase = written ?? "Acc";
 	if (governedCase === "Nom")
 		return `«${prefix} ${head}» names no case ${prefix} governs`;
@@ -310,11 +300,7 @@ function prepositionOf(
 }
 
 /** A Case or Preposition complement: its pronoun, after its preposition if any. */
-function referenceOf(
-	raw: RawComplement,
-	position: Position,
-	lenient: Leniency[],
-): Read {
+function referenceOf(raw: RawComplement, position: Position): Read {
 	const read = readReferent(raw.head);
 	if (typeof read === "string") return read;
 	const { referent, named, marked } = read;
@@ -327,20 +313,11 @@ function referenceOf(
 			governedCase: named ?? marked ?? (position.subject ? "Nom" : "Acc"),
 			referent,
 		};
-	return prepositionOf(
-		{ ...raw, prefix },
-		referent,
-		named ?? marked,
-		lenient,
-	);
+	return prepositionOf({ ...raw, prefix }, referent, named ?? marked);
 }
 
 /** One complement as written, or why it is none. */
-function complementOf(
-	raw: RawComplement,
-	position: Position,
-	lenient: Leniency[],
-): Read {
+function complementOf(raw: RawComplement, position: Position): Read {
 	const { head, prefix, optionalPrefix } = raw;
 	const clause = clauseOfWord.get(head);
 	if (clause !== undefined) return clauseOf(raw, clause);
@@ -361,7 +338,7 @@ function complementOf(
 	const reflexive = head.match(/^sich\((akk|dat)\)$/u);
 	if (reflexive)
 		return reflexiveOf(raw, reflexive[1] === "akk" ? "Acc" : "Dat");
-	return referenceOf(raw, position, lenient);
+	return referenceOf(raw, position);
 }
 
 const isAccusativeCase = (complement: ProposedComplement) =>
@@ -371,12 +348,10 @@ const isAccusativeCase = (complement: ProposedComplement) =>
 export function parseGermanFrame(
 	text: string,
 	context: FrameContext,
-	options: ParseOptions = {},
 ): GermanParse {
-	const parsed = parseFrame(text, germanWords, options);
+	const parsed = parseFrame(text, germanWords);
 	if (!parsed.ok) return parsed;
 	const { opener, slots } = parsed.frame;
-	const lenient: Leniency[] = [];
 	// The Acc object a predicative's default reads, its own Slot aside; a
 	// bare etw. there is Acc unless it is the subject, so read it as such.
 	const subjectSlot = context.verb && opener === undefined ? 0 : -1;
@@ -384,11 +359,10 @@ export function parseGermanFrame(
 	for (const [index, slot] of slots.entries()) {
 		const complements: ProposedComplement[] = [];
 		for (const raw of slot.alternatives) {
-			const read = complementOf(
-				raw,
-				{ subject: index === subjectSlot, accusativeObject: false },
-				[],
-			);
+			const read = complementOf(raw, {
+				subject: index === subjectSlot,
+				accusativeObject: false,
+			});
 			if (typeof read === "string") return { ok: false, error: read };
 			complements.push(read);
 		}
@@ -402,11 +376,10 @@ export function parseGermanFrame(
 		);
 		const complements: ProposedComplement[] = [];
 		for (const raw of slot.alternatives) {
-			const read = complementOf(
-				raw,
-				{ subject: index === subjectSlot, accusativeObject },
-				lenient,
-			);
+			const read = complementOf(raw, {
+				subject: index === subjectSlot,
+				accusativeObject,
+			});
 			if (typeof read === "string") return { ok: false, error: read };
 			complements.push(read);
 		}
@@ -415,7 +388,7 @@ export function parseGermanFrame(
 			complements,
 		});
 	}
-	return { ok: true, frame, lenient };
+	return { ok: true, frame };
 }
 
 /** The referent word of a Someone, Something or Either in `governedCase`. */
@@ -534,11 +507,56 @@ function rawFrameOf(
 	};
 }
 
-/** Writes a German frame in the notation; with a headword, the headword goes last. */
+/** Writes a German frame in the notation. */
 export function printGermanFrame(
 	frame: readonly ProposedSlot[],
 	context: FrameContext,
-	options: ParseOptions = {},
 ): string {
-	return printFrame(rawFrameOf(frame, context), germanWords, options);
+	return printFrame(rawFrameOf(frame, context), germanWords);
 }
+
+/**
+ * The prepositions a fixed phrase's Reflexive may follow (`außer sich`):
+ * the governable ones and the few only a fixed phrase takes. A grammar
+ * letting any word stand there had Luna fill it with runaway letters
+ * (`ankommenaluunniit… sich(dat)`, the bench's r1).
+ */
+const fixedPhrasePrepositions = [
+	...germanGovernablePrepositions,
+	"außer",
+	"hinter",
+	"neben",
+	"ohne",
+];
+
+/**
+ * The notation as one regular expression, for a strict JSON schema's
+ * `pattern`: the frames `parseGermanFrame` reads, a Preposition
+ * complement's preposition one a governor selects. It is the valency
+ * notation bench's (`lab/evaluation/valency-notation/`), whose r2 prompt
+ * under it matched gold on 64.0% of 193 dev Readings and never answered
+ * unreadable.
+ */
+export const germanFramePattern = (() => {
+	const ref =
+		"(?:(?:jmd|jmdn|jmdm|jmds)\\.(?:/etw\\.)?|etw\\.(?:\\((?:nom|akk|dat|gen)\\))?)";
+	const prep = `(?:${germanGovernablePrepositions.join("|")})`;
+	const refl = "sich\\((?:akk|dat)\\)";
+	const clause = "(?:dass|ob|w|zu\\+Inf|Inf)";
+	const comp = [
+		ref,
+		`${prep} ${ref}`,
+		refl,
+		`(?:${fixedPhrasePrepositions.join("|")}) ${refl}`,
+		clause,
+		`es ${clause}`,
+		`\\(es\\) ${clause}`,
+		"irgendwo",
+		"irgendwohin",
+		"irgendwie(?: lange| viel)?",
+		"(?:(?:als|für) )?ADJ(?:\\((?:subj|obj)\\))?",
+	].join("|");
+	const alts = `(?:${comp})(?:\\|(?:${comp}))*`;
+	const slot = `(?:\\(${alts}\\)|${alts})`;
+	return `^(?:-|(?:es )?${slot}(?: ${slot})*)$`;
+})();

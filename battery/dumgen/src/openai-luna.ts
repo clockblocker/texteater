@@ -131,9 +131,10 @@ function requiredOf(request: LunaRequest): readonly string[] {
 
 /**
  * The Responses API body of one Luna request: the system prompt, the input
- * as one user message, and JSON output wrapped in `value`. With
- * `promptCaching`, the system prompt is a developer message ending in an
- * explicit cache breakpoint.
+ * as one user message, and JSON output wrapped in `value`, in strict mode
+ * only when the request asks for it (`strict`). With `promptCaching`, the
+ * system prompt is a developer message ending in an explicit cache
+ * breakpoint.
  */
 export function lunaResponsesBody(
 	request: LunaRequest,
@@ -181,7 +182,7 @@ export function lunaResponsesBody(
 				? {
 						type: "json_schema",
 						name: "output",
-						strict: false,
+						strict: request.strict === true,
 						schema: {
 							type: "object",
 							properties: { value: schema },

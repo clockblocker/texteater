@@ -409,7 +409,7 @@ test("the harness prices a round from the oracle without a call, runs live once 
 			? request.input.aspect
 			: undefined;
 		const answers: Record<string, unknown> = {
-			valency: { valency: [] },
+			valency: "-",
 			verbForms: {
 				preterite: ["wartete"],
 				presentSingular: {
