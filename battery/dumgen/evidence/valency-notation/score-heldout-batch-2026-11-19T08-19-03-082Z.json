@@ -1,0 +1,27 @@
+{
+	"files": [
+		"batch-2026-11-19T08-19-03-082Z.jsonl"
+	],
+	"set": "heldout",
+	"spentUsd": 0.0019749799999999994,
+	"rows": [
+		{
+			"revision": "production",
+			"calls": 54,
+			"batchReps": 1,
+			"accuracy": 66.7,
+			"accuracyPerRep": [
+				66.7
+			],
+			"unreadable": 0,
+			"outputTokens": 13.9,
+			"cachedInputTokens": 2022,
+			"inputTokens": 2102,
+			"usdPer1kFast": 0.1463,
+			"usdPer1kBatch": 0.0366,
+			"latencySamples": 0,
+			"p50Ms": null,
+			"p90Ms": null
+		}
+	]
+}
