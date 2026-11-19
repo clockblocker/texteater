@@ -439,8 +439,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -983,8 +982,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Acc",
-							"referent": "Either"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}
@@ -1154,8 +1152,7 @@
 										"canonicalForm": "mit",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Either"
+									"governedCase": "Dat"
 								}
 							]
 						}

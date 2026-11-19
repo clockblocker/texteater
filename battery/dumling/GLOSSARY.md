@@ -224,7 +224,9 @@ prepositions
 
 **Slot**:
 One position in a Valency Frame, Required or Optional, holding one complement
-or alternatives that can replace each other. See [ADR 0034].
+or alternatives that can replace each other. A complement names its case or
+function, never whether a person or a thing fills it. See [ADR 0034] and
+[ADR 0057].
 _Avoid_: argument, valent, complement slot, Ergänzung
 
 ### Inflection tables
@@ -262,3 +264,4 @@ _Avoid_: Paradigm Cell, slot
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [ADR 0056]: ../../docs/adr/0056-store-a-german-surface-in-base-order-and-project-its-slots.md
+[ADR 0057]: ../../docs/adr/0057-name-a-valency-complement-by-its-case-never-its-referent.md

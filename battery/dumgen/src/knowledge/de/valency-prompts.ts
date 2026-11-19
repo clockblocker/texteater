@@ -1,57 +1,62 @@
 /**
  * The valency prompt's answer shape: the paragraphs that say how Luna
- * writes the frame in the German dictionary notation
- * (`valency-notation.ts`), after the linguistic paragraphs in
- * `prompts.ts`, and its worked examples, each a Reading and its frame as
- * Luna answers it. Two of them are Locutions whose fixed noun is no object
- * («den Braten riechen», «einen Bären aufbinden»), the commonest miss
- * without them.
+ * writes the frame in case letters (`valency-notation.ts`), after the
+ * linguistic paragraphs in `prompts.ts`, two rules whose examples are
+ * frames in the notation, and the worked examples, each a Reading and its
+ * frame as Luna answers it. Two of them are Locutions whose fixed noun is
+ * no object («den Braten riechen», «einen Bären aufbinden»), the commonest
+ * miss without them.
  *
- * They are the valency notation bench's r2 paragraphs and examples
- * (`lab/evaluation/valency-notation/`), which under the strict schema's
- * pattern matched gold on 64.0% of 193 dev Readings and 58.3% of 54
- * held-out ones (2026-11-19, 2 reps), against 54.7% and 52.8% for the JSON
- * answer they replace. r2's predicative paragraph holds the JSON prompt's
- * predicative restraint; r3's Either restraint scored no better under the
- * pattern (62.2%), so it is not here.
+ * They are the valency notation bench's `letters@r4` paragraphs and
+ * examples (`lab/evaluation/valency-notation/`, its git history): with the
+ * referent gone, a noun phrase named by its case letter alone, as the
+ * learner's valency line shows it, matched gold on 74.7% of 193 dev
+ * Readings over 8 reps and 63.6% of 54 held-out ones over 3 (2026-11-19),
+ * against 71.8% and 64.2% for the Duden-style notation it replaces with
+ * referents ignored, in 13 output tokens instead of 16.
  *
  * No example is a Lemma of the Knowledge gold or the spot-check samples
- * (#693); `valencyExampleLemmas` names them for the disjointness test,
- * since the line quotes none «…».
+ * (#693); `valencyExampleLemmas` names the examples line's Lemmas for the
+ * disjointness test, since the line quotes none «…».
  */
 import type { CitingPrompt } from "dumcorpus/types";
 import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 
 const valencyRule: Cite = [
 	"de/valency-frame-follows-e-valbu",
-	"f0b9c8226ff45fb8",
+	"b0e43da9d292b84d",
 ];
+const collocationRule: Cite = [
+	"de/funktionsverbgefuege-are-collocations",
+	"57f04b272a0e9aeb",
+];
+const idiomRule: Cite = ["de/idiom", "d25679f2a06809b9"];
 
 const registry = paragraphRegistry("de/knowledge");
-const paragraph = (name: string, text: string) =>
-	registry.paragraph(`valency.notation.${name}`, text, valencyRule);
+const paragraph = (name: string, text: string, ...cites: Cite[]) =>
+	registry.paragraph(`valency.notation.${name}`, text, valencyRule, ...cites);
 
-/** What each part of the frame is written as, in the order the prompt says it. */
+/** What each part of the frame is written as, and the rules stated in it, in the order the prompt says them. */
 export const notationParagraphs = [
 	paragraph(
 		"shape",
-		"Write the frame in German dictionary notation, as Duden and E-VALBU write a pattern: the Slots in frame order separated by single spaces, an Optional Slot in parentheses, a Required one bare, and the alternatives of one Slot joined by | with no spaces around it.",
+		"Write the frame in German dictionary notation, as E-VALBU and Duden write a pattern: the Slots in frame order separated by single spaces, an Optional Slot in parentheses, a Required one bare, and the alternatives of one Slot joined by | with no spaces around it.",
 	),
 	paragraph(
 		"case",
-		"A Case complement is the dictionary pronoun, whose form names case and referent: jmd. (Nom), jmdn. (Acc), jmdm. (Dat), jmds. (Gen) for Someone; etw. for Something; jmd./etw., jmdn./etw., jmdm./etw., jmds./etw. for Either. A bare etw. is Nom in a verb's subject Slot and Acc everywhere else; write etw.(dat) or etw.(gen) for those cases. The form is the case: never add a case name after a pronoun.",
+		"A Case complement is the letter of its case, whoever or whatever fills it: N (Nom), A (Acc), D (Dat), G (Gen).",
 	),
 	paragraph(
 		"preposition",
-		"A Preposition complement is the preposition and its pronoun, the pronoun's form naming the case: auf jmdn., mit jmdm./etw., nach etw. After a two-way preposition (an, auf, in, über, unter, vor, zwischen) a bare etw. names its case: auf etw.(akk), an etw.(dat).",
+		"A Preposition complement is the preposition and the letter of the case it governs there: auf A, mit D, wegen G; after a two-way preposition (an, auf, hinter, in, neben, über, unter, vor, zwischen) it names which case: an A, an D. A governed über or auf takes Acc (über A) and a governed vor or zwischen Dat (vor D); a governed an or in takes the case the dictionary gives this meaning («denken an»: an A; «leiden an»: an D).",
 	),
 	paragraph(
 		"reflexive",
-		"A Reflexive complement is sich(akk) or sich(dat); inside a fixed phrase it follows the phrase's preposition: außer sich(dat).",
+		"A Reflexive complement is sich(A) or sich(D); inside a fixed phrase it follows the phrase's preposition: außer sich(D). Without 🪞 at the start of the Emoji Description, never write a Required sich(A) or sich(D): a sich this sentence shows is then the ordinary object, A or D («sie kämmt sich»: N A).",
 	),
 	paragraph(
 		"clause",
-		"A Clause is dass, ob, w (an indirect w-question), zu+Inf or Inf (a bare infinitive). es before it marks a Required correlate and (es) an Optional one, whatever word the correlate is (es, or the da- word of the Slot's preposition): (auf jmdn./etw.|(es) dass).",
+		"A Clause is dass, ob, w (an indirect w-question), zu+Inf or Inf (a bare infinitive). es before it marks a Required correlate and (es) an Optional one, whatever word the correlate is (es, or the da- word of the Slot's preposition): (auf A|(es) dass).",
 	),
 	paragraph(
 		"adverbial",
@@ -63,11 +68,21 @@ export const notationParagraphs = [
 	),
 	paragraph(
 		"subject",
-		"A verb's frame starts with its subject Slot; a verb whose subject is only an expletive es starts with es instead (es jmdm. irgendwie). Write - when the Reading governs nothing.",
+		"A verb's frame starts with its subject Slot, N; a verb whose subject is only an expletive es starts with es instead (es D irgendwie). Write - when the Reading governs nothing.",
+	),
+	paragraph(
+		"optionalPreposition",
+		"Most prepositional Slots are Optional: one is Required only when the word without it is ungrammatical or means something else («bestehen aus», «sich kümmern um»). A Locution's prepositional Slot is almost always Optional («Kritik üben»: N (an D)).",
+	),
+	paragraph(
+		"collocation",
+		"A Collocation of a verb and a noun («Kritik üben», «Hilfe leisten») takes every complement its noun takes, each as an Optional Slot: the noun's preposition («die Kritik an etwas»: (an D)) and the person it is for («jemandem Hilfe leisten»: (D)). An Idiom's frame holds each jemand, jemandem or etwas its dictionary entry names beyond its own words, Optional when the idiom is complete without it («mit jemandem ins Gespräch kommen»: N (mit D)), and nothing the entry does not name.",
+		collocationRule,
+		idiomRule,
 	),
 	paragraph(
 		"output",
-		"Use only the complement kinds `complementKinds` names. Answer with the frame alone: only the notation's pronouns, prepositions, markers and stand-ins, never the Lemma, its fixed words, its separable prefix, a kind's name or any other word.",
+		"Use only the complement kinds `complementKinds` names. Answer with the frame alone: only the notation's letters, prepositions, markers and stand-ins, never the Lemma, its fixed words, its separable prefix, a kind's name or any other word.",
 	),
 ];
 
@@ -77,50 +92,34 @@ export const valencyExamples = [
 		lemma: "ahnen",
 		emoji: "🤔",
 		verb: true,
-		frame: "jmd. (etw.|(es) dass|(es) ob|(es) w)",
+		frame: "N (A|(es) dass|(es) ob|(es) w)",
 	},
 	{
 		lemma: "freuen",
 		emoji: "🪞😊",
 		verb: true,
-		frame: "jmd. sich(akk) (auf jmdn./etw.|über jmdn./etw.|(es) dass|(es) zu+Inf)",
+		frame: "N sich(A) (auf A|über A|(es) dass|(es) zu+Inf)",
 	},
-	{
-		lemma: "halten",
-		emoji: "🤔⚖",
-		verb: true,
-		frame: "jmd. jmdn./etw. für ADJ",
-	},
-	{ lemma: "fehlen", emoji: "🕳", verb: true, frame: "es jmdm. an etw.(dat)" },
-	{ lemma: "dauern", emoji: "⏳", verb: true, frame: "etw. irgendwie lange" },
-	{
-		lemma: "neidisch",
-		emoji: "😒",
-		verb: false,
-		frame: "(auf jmdn./etw.)",
-	},
+	{ lemma: "halten", emoji: "🤔⚖", verb: true, frame: "N A für ADJ" },
+	{ lemma: "fehlen", emoji: "🕳", verb: true, frame: "es D an D" },
+	{ lemma: "dauern", emoji: "⏳", verb: true, frame: "N irgendwie lange" },
+	{ lemma: "neidisch", emoji: "😒", verb: false, frame: "(auf A)" },
 	{ lemma: "Fenster", emoji: "🪟", verb: false, frame: "-" },
-	{ lemma: "den Braten riechen", emoji: "👃🕵", verb: true, frame: "jmd." },
+	{ lemma: "den Braten riechen", emoji: "👃🕵", verb: true, frame: "N" },
 	{
 		lemma: "einen Bären aufbinden",
 		emoji: "🐻🤥",
 		verb: true,
-		frame: "jmd. jmdm.",
+		frame: "N D",
 	},
 ] as const;
 
-/**
- * The examples as one line, each Reading then its frame; no period after
- * a final `jmdm.`, which ends in one.
- */
+/** The examples as one line, each Reading then its frame. */
 export const examplesParagraph = registry.paragraph(
 	"valency.examples",
-	(() => {
-		const line = `Examples: ${valencyExamples
-			.map(({ lemma, emoji, frame }) => `${lemma} ${emoji}: ${frame}`)
-			.join("; ")}`;
-		return line.endsWith(".") ? line : `${line}.`;
-	})(),
+	`Examples: ${valencyExamples
+		.map(({ lemma, emoji, frame }) => `${lemma} ${emoji}: ${frame}`)
+		.join("; ")}.`,
 	valencyRule,
 );
 
@@ -128,6 +127,10 @@ export const examplesParagraph = registry.paragraph(
 export const valencyExampleLemmas: readonly string[] = valencyExamples.map(
 	({ lemma }) => lemma,
 );
+
+/** The «…» examples the notation paragraphs quote, for the disjointness test (#693). */
+export const valencyNotationExamples = (): readonly string[] =>
+	registry.examples();
 
 /** The registered paragraphs, as dumcorpus's citation check reads them. */
 export function valencyPromptTexts(): readonly CitingPrompt[] {

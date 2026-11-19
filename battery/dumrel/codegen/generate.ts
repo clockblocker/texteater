@@ -53,7 +53,6 @@ import {
 	translationSchema,
 	unitShadowSchema,
 	valencyComplementSchema,
-	valencyReferentSchema,
 	valencySlotSchema,
 	valencySlotStatusSchema,
 } from "../src/schemas.js";
@@ -86,7 +85,6 @@ const outputTypeExports = {
 	SemanticRelationProjection: "semanticRelationProjection",
 	GovernedCase: "governedCase",
 	ValencySlotStatus: "valencySlotStatus",
-	ValencyReferent: "valencyReferent",
 	GermanValencyComplement: "germanValencyComplement",
 	HebrewValencyComplement: "hebrewValencyComplement",
 	EnglishValencyComplement: "englishValencyComplement",
@@ -107,7 +105,6 @@ const outputTypeExports = {
 	FormulaRole: "formulaRole",
 };
 const unexportedOutputTypes = [
-	"ValencyReferent",
 	"GovernmentRelation",
 	"ParticipleMeaning",
 	"SayingType",
@@ -139,7 +136,6 @@ const compiled = compileZodValidationArtifacts({
 		semanticRelationProjection: semanticRelationProjectionSchema,
 		governedCase: governedCaseSchema,
 		valencySlotStatus: valencySlotStatusSchema,
-		valencyReferent: valencyReferentSchema,
 		germanValencyComplement: germanValencyComplementSchema,
 		hebrewValencyComplement: hebrewValencyComplementSchema,
 		englishValencyComplement: englishValencyComplementSchema,

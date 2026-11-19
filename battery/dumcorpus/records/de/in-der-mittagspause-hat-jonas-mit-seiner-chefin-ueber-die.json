@@ -174,8 +174,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -297,8 +296,7 @@
 								"canonicalForm": "mit",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Someone"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					},
@@ -314,8 +312,7 @@
 								"canonicalForm": "über",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

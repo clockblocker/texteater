@@ -45,7 +45,7 @@ per Reading:
 
 `erinnern` 🪞🧠 takes Acc (*ich erinnere mich*). `vorstellen` 'imagine' takes
 Dat (*ich stelle mir etwas vor*). The field is `governedCase` for the reason
-ADR 0034 gives. The Reflexive has no referent, since it is the subject. The
+ADR 0034 gives. The
 English Reflexive has no case (`pride oneself on`), and it takes the optional
 preposition too (`be beside oneself`, below). Hebrew adds none, since HITPAEL
 is a binyan, not a pronoun. A Reflexive is the only complement in its Slot,

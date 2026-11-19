@@ -34,7 +34,6 @@ import {
 	sayingTypeValues,
 	translationLanguageValues,
 	translationPieceKindValues,
-	valencyReferentValues,
 	valencySlotStatusValues,
 } from "./vocabulary.js";
 
@@ -61,7 +60,6 @@ export { unitShadowSchema };
 
 export const governedCaseSchema = z.enum(governedCaseValues);
 export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
-export const valencyReferentSchema = z.enum(valencyReferentValues);
 
 /**
  * German complements, after E-VALBU (ADR 0034): a bare case (`jemandem`, Dat);
@@ -73,19 +71,17 @@ export const valencyReferentSchema = z.enum(valencyReferentValues);
  * Required `darauf`); or a lexical Reflexive with its case, and with the ADP
  * Lemma it follows when it is the object of a fixed phrase's preposition
  * (`außer sich sein`: `außer` + Dat), the case that preposition governs
- * (ADR 0052). Only Case and Preposition name a referent.
+ * (ADR 0052).
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Case"),
 		governedCase: z.enum(germanComplementCaseValues),
-		referent: valencyReferentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: adpositionLemmaSchemas.de,
 		governedCase: governedCaseSchema,
-		referent: valencyReferentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Adverbial"),
@@ -113,18 +109,11 @@ export const germanValencyComplementSchema = z.union([
  * selects (`סמך על`).
  */
 export const hebrewValencyComplementSchema = z.union([
-	z.strictObject({
-		kind: z.literal("Subject"),
-		referent: valencyReferentSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("DirectObject"),
-		referent: valencyReferentSchema,
-	}),
+	z.strictObject({ kind: z.literal("Subject") }),
+	z.strictObject({ kind: z.literal("DirectObject") }),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: adpositionLemmaSchemas.he,
-		referent: valencyReferentSchema,
 	}),
 ]);
 /**
@@ -135,22 +124,12 @@ export const hebrewValencyComplementSchema = z.union([
  * the ADP Lemma it follows inside a fixed phrase (`be beside oneself`).
  */
 export const englishValencyComplementSchema = z.union([
-	z.strictObject({
-		kind: z.literal("Subject"),
-		referent: valencyReferentSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("DirectObject"),
-		referent: valencyReferentSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("IndirectObject"),
-		referent: valencyReferentSchema,
-	}),
+	z.strictObject({ kind: z.literal("Subject") }),
+	z.strictObject({ kind: z.literal("DirectObject") }),
+	z.strictObject({ kind: z.literal("IndirectObject") }),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: adpositionLemmaSchemas.en,
-		referent: valencyReferentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Reflexive"),

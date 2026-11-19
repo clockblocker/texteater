@@ -90,8 +90,7 @@
 							"governors": [4],
 							"offset": 12,
 							"preposition": "auf",
-							"case": "Dat",
-							"referent": "Something"
+							"case": "Dat"
 						}
 					]
 				},

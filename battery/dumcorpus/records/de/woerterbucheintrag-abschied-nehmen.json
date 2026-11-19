@@ -45,8 +45,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -63,8 +62,7 @@
 										"canonicalForm": "von",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Either"
+									"governedCase": "Dat"
 								}
 							]
 						}

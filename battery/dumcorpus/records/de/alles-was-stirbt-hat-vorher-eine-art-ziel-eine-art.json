@@ -1088,8 +1088,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Something"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -1106,8 +1105,7 @@
 										"canonicalForm": "auf",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -1198,8 +1196,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

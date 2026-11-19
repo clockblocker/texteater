@@ -100,15 +100,13 @@
 							"governors": [4],
 							"offset": 17,
 							"preposition": "bei",
-							"case": "Dat",
-							"referent": "Someone"
+							"case": "Dat"
 						},
 						{
 							"governors": [4],
 							"offset": 25,
 							"preposition": "für",
-							"case": "Acc",
-							"referent": "Something"
+							"case": "Acc"
 						}
 					]
 				},

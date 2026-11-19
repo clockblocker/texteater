@@ -311,8 +311,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						}
@@ -676,8 +675,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -930,8 +928,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						}

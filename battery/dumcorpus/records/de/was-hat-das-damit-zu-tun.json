@@ -156,8 +156,7 @@
 								"canonicalForm": "mit",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Something"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

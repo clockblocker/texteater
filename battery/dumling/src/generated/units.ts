@@ -333,10 +333,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -349,10 +345,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -529,10 +521,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -545,10 +533,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -1189,10 +1173,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -1205,10 +1185,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -2008,10 +1984,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -2024,10 +1996,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -5681,10 +5649,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -5697,10 +5661,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -5889,10 +5849,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -5905,10 +5861,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -6085,10 +6037,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -6101,10 +6049,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -6895,10 +6839,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -6911,10 +6851,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -7833,10 +7769,6 @@ export interface UnitMap {
 							| {
 									kind: "Case";
 									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Preposition";
@@ -7849,10 +7781,6 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 									};
 									governedCase: "Acc" | "Dat" | "Gen";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  }
 							| {
 									kind: "Reflexive";
@@ -9560,27 +9488,9 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
+							| { kind: "IndirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -9596,10 +9506,6 @@ export interface UnitMap {
 												| null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -11038,27 +10944,9 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
+							| { kind: "IndirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -11074,10 +10962,6 @@ export interface UnitMap {
 												| null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -12654,27 +12538,9 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
+							| { kind: "IndirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -12690,10 +12556,6 @@ export interface UnitMap {
 												| null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -13303,27 +13165,9 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
+							| { kind: "IndirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -13339,10 +13183,6 @@ export interface UnitMap {
 												| null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -13630,27 +13470,9 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
+							| { kind: "IndirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -13666,10 +13488,6 @@ export interface UnitMap {
 												| null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -15209,20 +15027,8 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -15236,10 +15042,6 @@ export interface UnitMap {
 											case: ("Acc" | "Gen") | null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -16387,20 +16189,8 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -16414,10 +16204,6 @@ export interface UnitMap {
 											case: ("Acc" | "Gen") | null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;
@@ -17790,20 +17576,8 @@ export interface UnitMap {
 				| Array<{
 						member: number | null;
 						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
+							| { kind: "Subject" }
+							| { kind: "DirectObject" }
 							| {
 									kind: "Preposition";
 									preposition: {
@@ -17817,10 +17591,6 @@ export interface UnitMap {
 											case: ("Acc" | "Gen") | null;
 										};
 									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
 							  };
 				  }>
 				| undefined;

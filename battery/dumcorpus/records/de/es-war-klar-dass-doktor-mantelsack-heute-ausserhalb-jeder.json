@@ -754,8 +754,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Gen",
-							"referent": "Either"
+							"governedCase": "Gen"
 						},
 						"realizedCase": "Gen"
 					}
@@ -900,8 +899,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -910,8 +908,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Someone"
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -920,8 +917,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								},
 								{
 									"kind": "Clause",
@@ -1106,8 +1102,7 @@
 								"kind": "ADP",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

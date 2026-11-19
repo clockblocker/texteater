@@ -70,7 +70,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "f0b9c8226ff45fb8"
+				"hash": "b0e43da9d292b84d"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -125,8 +125,7 @@
 										"canonicalForm": "auf",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								},
 								{
 									"kind": "Clause",
@@ -215,8 +214,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Someone"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}
@@ -235,8 +233,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								},
 								{
 									"kind": "Clause",

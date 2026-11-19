@@ -92,8 +92,7 @@
 								"canonicalForm": "über",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

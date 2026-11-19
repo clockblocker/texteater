@@ -1,19 +1,17 @@
 /**
  * The German word table of the valency notation (`../valency-notation.ts`),
- * in Duden's style: a Valency Frame as Luna proposes it, each preposition
- * its Canonical Form, written as `jmd. (etw.|(es) dass|(es) ob|(es) w)`,
- * and read back. `germanFramePattern` is the same language as one regular
+ * in case letters: a Valency Frame as Luna proposes it, each preposition its
+ * Canonical Form, written as `N (A|(es) dass|(es) ob|(es) w)`, and read
+ * back. `germanFramePattern` is the same language as one regular
  * expression, which Luna's answer is held to (a strict schema's `pattern`).
  *
- * - A Case or Preposition complement is the dictionary's pronoun, its case
- *   in its form: jmd. jmdn. jmdm. jmds. (Someone, Nom/Acc/Dat/Gen), etw.
- *   (Something), `jmdn./etw.` (Either). A bare etw. is Nom as a verb's
- *   subject (its first Slot) and Acc elsewhere; another case is marked
- *   `etw.(dat)`, `etw.(gen)`. After a preposition of one case, the
- *   preposition's case holds; after a two-way one etw. names it,
- *   `auf etw.(akk)`, `an etw.(dat)`.
- * - A Reflexive is `sich(akk)` or `sich(dat)`, in a fixed phrase after its
- *   preposition (`außer sich(dat)`).
+ * - A Case complement is the letter of its case: N (Nom), A (Acc), D (Dat),
+ *   G (Gen).
+ * - A Preposition complement is the preposition, a space and the letter of
+ *   the case it governs: `auf A`, `mit D`, `wegen G`, `an A`, `an D`. A
+ *   one-case preposition's case holds, whatever letter follows it.
+ * - A Reflexive is `sich(A)` or `sich(D)`, in a fixed phrase after its
+ *   preposition (`außer sich(D)`).
  * - A Clause is `dass`, `ob`, `w`, `zu+Inf` or `Inf`, after `es` when it
  *   needs a correlate and `(es)` when it may take one.
  * - An Adverbial is its stand-in: irgendwo, irgendwohin, irgendwie,
@@ -22,7 +20,7 @@
  *   when the frame has an Acc Case complement and the subject otherwise;
  *   `ADJ(subj)` and `ADJ(obj)` say so against that.
  * - A verb frame with no subject Slot (an expletive es subject) opens with
- *   `es` (`es jmdm. irgendwie`); an empty frame is `-`.
+ *   `es` (`es D irgendwie`); an empty frame is `-`.
  */
 import {
 	germanAdpositionAllowedCases,
@@ -37,21 +35,15 @@ import {
 	type RawFrame,
 } from "../valency-notation.js";
 
-type Referent = "Someone" | "Something" | "Either";
 type CaseName = "Nom" | "Acc" | "Dat" | "Gen";
 
 /** A complement as Luna proposes it: a preposition is its Canonical Form. */
 export type ProposedComplement =
-	| {
-			readonly kind: "Case";
-			readonly governedCase: CaseName;
-			readonly referent: Referent;
-	  }
+	| { readonly kind: "Case"; readonly governedCase: CaseName }
 	| {
 			readonly kind: "Preposition";
 			readonly preposition: string;
 			readonly governedCase: Exclude<CaseName, "Nom">;
-			readonly referent: Referent;
 	  }
 	| {
 			readonly kind: "Adverbial";
@@ -95,24 +87,19 @@ type GermanParse =
 	| { readonly ok: true; readonly frame: ProposedSlot[] }
 	| { readonly ok: false; readonly error: string };
 
-const someoneForm: Readonly<Record<CaseName, string>> = {
-	Nom: "jmd.",
-	Acc: "jmdn.",
-	Dat: "jmdm.",
-	Gen: "jmds.",
+const caseLetter: Readonly<Record<CaseName, string>> = {
+	Nom: "N",
+	Acc: "A",
+	Dat: "D",
+	Gen: "G",
 };
-const caseOfSomeone = new Map(
-	Object.entries(someoneForm).map(([name, form]) => [form, name as CaseName]),
+const caseOfLetter = new Map(
+	Object.entries(caseLetter).map(([name, letter]) => [
+		letter,
+		name as CaseName,
+	]),
 );
-const caseMark: Readonly<Record<CaseName, string>> = {
-	Nom: "nom",
-	Acc: "akk",
-	Dat: "dat",
-	Gen: "gen",
-};
-const caseOfMark = new Map(
-	Object.entries(caseMark).map(([name, mark]) => [mark, name as CaseName]),
-);
+const reflexiveCaseOfLetter = { A: "Acc", D: "Dat" } as const;
 
 const clauseWord = {
 	Dass: "dass",
@@ -156,16 +143,13 @@ function prepositionCases(word: string): readonly CaseName[] {
 	return before ? before.allowed : germanAdpositionAllowedCases(entry);
 }
 
-const referentPart =
-	/^(jmd\.|jmdn\.|jmdm\.|jmds\.|etw\.(?:\((nom|akk|dat|gen)\))?)$/u;
-const isReferentWord = (word: string) =>
-	word.split("/").every((part) => referentPart.test(part));
+const reflexivePattern = /^sich\((A|D)\)$/u;
+const predicativePattern = /^ADJ(?:\((subj|obj)\))?$/u;
 const isHead = (word: string) =>
-	isReferentWord(word) ||
-	word === "sich(akk)" ||
-	word === "sich(dat)" ||
+	caseOfLetter.has(word) ||
+	reflexivePattern.test(word) ||
 	clauseOfWord.has(word) ||
-	/^ADJ(\((subj|obj)\))?$/u.test(word);
+	predicativePattern.test(word);
 
 const germanWords: FrameWords = {
 	isPrefix: (word) =>
@@ -188,35 +172,6 @@ const germanWords: FrameWords = {
 				? head.startsWith("ADJ")
 				: !clauseOfWord.has(head) && !adverbialOfWords.has(head),
 	empty: "-",
-};
-
-/** A referent word's referent, the case its jmd. form names and the one its etw. marks. */
-function readReferent(
-	word: string,
-): { referent: Referent; named?: CaseName; marked?: CaseName } | string {
-	const parts = word.split("/");
-	const someone = parts.find((part) => part.startsWith("jmd"));
-	const something = parts.find((part) => part.startsWith("etw."));
-	if (parts.length > 2 || (parts.length === 2 && !(someone && something)))
-		return `«${word}» is no referent`;
-	const named =
-		someone === undefined ? undefined : caseOfSomeone.get(someone);
-	const mark = something?.match(/\((\w+)\)/u)?.[1];
-	const marked = mark === undefined ? undefined : caseOfMark.get(mark);
-	const referent: Referent =
-		someone && something ? "Either" : someone ? "Someone" : "Something";
-	return {
-		referent,
-		...(named === undefined ? {} : { named }),
-		...(marked === undefined ? {} : { marked }),
-	};
-}
-
-/** Where a complement stands, which its defaults read. */
-type Position = {
-	readonly subject: boolean;
-	/** Whether another Slot of the frame holds an Acc Case complement. */
-	readonly accusativeObject: boolean;
 };
 
 /** A complement read, or why it is none. */
@@ -243,11 +198,11 @@ const markerOfPrefix: Readonly<Record<string, "Als" | "Für">> = {
 function predicativeOf(
 	{ head, prefix }: RawComplement,
 	mark: "subj" | "obj" | undefined,
-	position: Position,
+	accusativeObject: boolean,
 ): Read {
 	const marker = prefix === undefined ? "None" : markerOfPrefix[prefix];
 	if (marker === undefined) return `«${prefix} ${head}» is no predicative`;
-	const plain = position.accusativeObject ? "Object" : "Subject";
+	const plain = accusativeObject ? "Object" : "Subject";
 	return {
 		kind: "Predicative",
 		of: mark === undefined ? plain : predicativeOfMark[mark],
@@ -269,16 +224,12 @@ function reflexiveOf(
 	};
 }
 
-/**
- * A preposition's complement: a one-case preposition's case holds, whatever
- * case its pronoun's form names; a two-way one's is the pronoun's, Acc when
- * a bare etw. names none.
- */
-function prepositionOf(
-	{ head, prefix }: RawComplement & { readonly prefix: string },
-	referent: Referent,
-	written: CaseName | undefined,
+/** A Case complement, or a Preposition one when a preposition stands before its letter. */
+function caseComplementOf(
+	{ head, prefix }: RawComplement,
+	written: CaseName,
 ): Read {
+	if (prefix === undefined) return { kind: "Case", governedCase: written };
 	if (prefix === "es" || prefix === "als")
 		return `«${prefix} ${head}» is no complement`;
 	const preposition = prefix.toLocaleLowerCase("de");
@@ -287,37 +238,14 @@ function prepositionOf(
 	);
 	const [only] = cases;
 	if (cases.length === 1 && only !== undefined)
-		return {
-			kind: "Preposition",
-			preposition,
-			governedCase: only,
-			referent,
-		};
-	const governedCase = written ?? "Acc";
-	if (governedCase === "Nom")
+		return { kind: "Preposition", preposition, governedCase: only };
+	if (written === "Nom")
 		return `«${prefix} ${head}» names no case ${prefix} governs`;
-	return { kind: "Preposition", preposition, governedCase, referent };
-}
-
-/** A Case or Preposition complement: its pronoun, after its preposition if any. */
-function referenceOf(raw: RawComplement, position: Position): Read {
-	const read = readReferent(raw.head);
-	if (typeof read === "string") return read;
-	const { referent, named, marked } = read;
-	if (named !== undefined && marked !== undefined && named !== marked)
-		return `«${raw.head}» names two cases`;
-	const { prefix } = raw;
-	if (prefix === undefined)
-		return {
-			kind: "Case",
-			governedCase: named ?? marked ?? (position.subject ? "Nom" : "Acc"),
-			referent,
-		};
-	return prepositionOf({ ...raw, prefix }, referent, named ?? marked);
+	return { kind: "Preposition", preposition, governedCase: written };
 }
 
 /** One complement as written, or why it is none. */
-function complementOf(raw: RawComplement, position: Position): Read {
+function complementOf(raw: RawComplement, accusativeObject: boolean): Read {
 	const { head, prefix, optionalPrefix } = raw;
 	const clause = clauseOfWord.get(head);
 	if (clause !== undefined) return clauseOf(raw, clause);
@@ -328,58 +256,42 @@ function complementOf(raw: RawComplement, position: Position): Read {
 		return prefix === undefined
 			? { kind: "Adverbial", standIn }
 			: `«${prefix} ${head}» is no adverbial`;
-	const predicative = head.match(/^ADJ(?:\((subj|obj)\))?$/u);
+	const predicative = head.match(predicativePattern);
 	if (predicative)
 		return predicativeOf(
 			raw,
 			predicative[1] as "subj" | "obj" | undefined,
-			position,
+			accusativeObject,
 		);
-	const reflexive = head.match(/^sich\((akk|dat)\)$/u);
-	if (reflexive)
-		return reflexiveOf(raw, reflexive[1] === "akk" ? "Acc" : "Dat");
-	return referenceOf(raw, position);
+	const reflexive = head.match(reflexivePattern)?.[1];
+	if (reflexive === "A" || reflexive === "D")
+		return reflexiveOf(raw, reflexiveCaseOfLetter[reflexive]);
+	const written = caseOfLetter.get(head);
+	return written === undefined
+		? `«${head}» is no complement`
+		: caseComplementOf(raw, written);
 }
 
-const isAccusativeCase = (complement: ProposedComplement) =>
-	complement.kind === "Case" && complement.governedCase === "Acc";
-
-/** Reads a German frame in the notation, `context` deciding its defaults. */
-export function parseGermanFrame(
-	text: string,
-	context: FrameContext,
-): GermanParse {
+/** Reads a German frame in the notation. */
+export function parseGermanFrame(text: string): GermanParse {
 	const parsed = parseFrame(text, germanWords);
 	if (!parsed.ok) return parsed;
-	const { opener, slots } = parsed.frame;
-	// The Acc object a predicative's default reads, its own Slot aside; a
-	// bare etw. there is Acc unless it is the subject, so read it as such.
-	const subjectSlot = context.verb && opener === undefined ? 0 : -1;
-	const first: ProposedComplement[][] = [];
-	for (const [index, slot] of slots.entries()) {
-		const complements: ProposedComplement[] = [];
-		for (const raw of slot.alternatives) {
-			const read = complementOf(raw, {
-				subject: index === subjectSlot,
-				accusativeObject: false,
-			});
-			if (typeof read === "string") return { ok: false, error: read };
-			complements.push(read);
-		}
-		first.push(complements);
-	}
+	const { slots } = parsed.frame;
+	// The Acc object a predicative's default reads, its own Slot aside.
+	const accusative = slots.map(({ alternatives }) =>
+		alternatives.some(
+			({ head, prefix }) =>
+				prefix === undefined && head === caseLetter.Acc,
+		),
+	);
 	const frame: ProposedSlot[] = [];
 	for (const [index, slot] of slots.entries()) {
-		const accusativeObject = first.some(
-			(complements, other) =>
-				other !== index && complements.some(isAccusativeCase),
+		const accusativeObject = accusative.some(
+			(has, other) => has && other !== index,
 		);
 		const complements: ProposedComplement[] = [];
 		for (const raw of slot.alternatives) {
-			const read = complementOf(raw, {
-				subject: index === subjectSlot,
-				accusativeObject,
-			});
+			const read = complementOf(raw, accusativeObject);
 			if (typeof read === "string") return { ok: false, error: read };
 			complements.push(read);
 		}
@@ -391,55 +303,24 @@ export function parseGermanFrame(
 	return { ok: true, frame };
 }
 
-/** The referent word of a Someone, Something or Either in `governedCase`. */
-function referentWord(
-	referent: Referent,
-	governedCase: CaseName,
-	etw: string,
-): string {
-	const someone = someoneForm[governedCase];
-	if (referent === "Someone") return someone;
-	if (referent === "Something") return etw;
-	return `${someone}/etw.`;
-}
-
-const markedEtw = (governedCase: CaseName) => `etw.(${caseMark[governedCase]})`;
+const isAccusativeCase = (complement: ProposedComplement) =>
+	complement.kind === "Case" && complement.governedCase === "Acc";
 
 function rawComplementOf(
 	complement: ProposedComplement,
-	position: Position,
+	accusativeObject: boolean,
 ): RawComplement {
 	switch (complement.kind) {
-		case "Case": {
-			const plain = position.subject ? "Nom" : "Acc";
-			const etw =
-				complement.governedCase === plain
-					? "etw."
-					: markedEtw(complement.governedCase);
-			return {
-				head: referentWord(
-					complement.referent,
-					complement.governedCase,
-					etw,
-				),
-			};
-		}
-		case "Preposition": {
-			const single =
-				prepositionCases(complement.preposition).length === 1;
-			const etw = single ? "etw." : markedEtw(complement.governedCase);
+		case "Case":
+			return { head: caseLetter[complement.governedCase] };
+		case "Preposition":
 			return {
 				prefix: complement.preposition,
-				head: referentWord(
-					complement.referent,
-					complement.governedCase,
-					etw,
-				),
+				head: caseLetter[complement.governedCase],
 			};
-		}
 		case "Reflexive":
 			return {
-				head: `sich(${caseMark[complement.governedCase]})`,
+				head: `sich(${caseLetter[complement.governedCase]})`,
 				...(complement.preposition === undefined
 					? {}
 					: { prefix: complement.preposition }),
@@ -459,7 +340,7 @@ function rawComplementOf(
 		case "Adverbial":
 			return { head: adverbialWords[complement.standIn] };
 		case "Predicative": {
-			const plain = position.accusativeObject ? "Object" : "Subject";
+			const plain = accusativeObject ? "Object" : "Subject";
 			const head =
 				complement.of === plain
 					? "ADJ"
@@ -486,7 +367,6 @@ function rawFrameOf(
 			(complement) =>
 				complement.kind === "Case" && complement.governedCase === "Nom",
 		);
-	const subjectSlot = context.verb && !subjectless ? 0 : -1;
 	return {
 		...(subjectless ? { opener: "es" } : {}),
 		slots: frame.map((slot, index) => {
@@ -497,10 +377,7 @@ function rawFrameOf(
 			return {
 				optional: slot.status === "Optional",
 				alternatives: slot.complements.map((complement) =>
-					rawComplementOf(complement, {
-						subject: index === subjectSlot,
-						accusativeObject,
-					}),
+					rawComplementOf(complement, accusativeObject),
 				),
 			};
 		}),
@@ -519,7 +396,7 @@ export function printGermanFrame(
  * The prepositions a fixed phrase's Reflexive may follow (`außer sich`):
  * the governable ones and the few only a fixed phrase takes. A grammar
  * letting any word stand there had Luna fill it with runaway letters
- * (`ankommenaluunniit… sich(dat)`, the bench's r1).
+ * (`ankommenaluunniit… sich(dat)`, the bench's first round).
  */
 const fixedPhrasePrepositions = [
 	...germanGovernablePrepositions,
@@ -533,28 +410,26 @@ const fixedPhrasePrepositions = [
  * The notation as one regular expression, for a strict JSON schema's
  * `pattern`: the frames `parseGermanFrame` reads, a Preposition
  * complement's preposition one a governor selects. It is the valency
- * notation bench's (`lab/evaluation/valency-notation/`), whose r2 prompt
- * under it matched gold on 64.0% of 193 dev Readings and never answered
- * unreadable.
+ * notation bench's `letters@r4` pattern (`lab/evaluation/valency-notation/`,
+ * its git history), under which Luna matched gold on 74.7% of 193 dev
+ * Readings, referents ignored, and never answered unreadable.
  */
 export const germanFramePattern = (() => {
-	const ref =
-		"(?:(?:jmd|jmdn|jmdm|jmds)\\.(?:/etw\\.)?|etw\\.(?:\\((?:nom|akk|dat|gen)\\))?)";
-	const prep = `(?:${germanGovernablePrepositions.join("|")})`;
-	const refl = "sich\\((?:akk|dat)\\)";
+	const any = (options: readonly string[]) => `(?:${options.join("|")})`;
+	const refl = "(?:sich\\(A\\)|sich\\(D\\))";
 	const clause = "(?:dass|ob|w|zu\\+Inf|Inf)";
 	const comp = [
-		ref,
-		`${prep} ${ref}`,
+		"(?:N|A|D|G)",
+		`${any(germanGovernablePrepositions)} (?:A|D|G)`,
 		refl,
-		`(?:${fixedPhrasePrepositions.join("|")}) ${refl}`,
+		`${any(fixedPhrasePrepositions)} ${refl}`,
 		clause,
 		`es ${clause}`,
 		`\\(es\\) ${clause}`,
 		"irgendwo",
 		"irgendwohin",
 		"irgendwie(?: lange| viel)?",
-		"(?:(?:als|für) )?ADJ(?:\\((?:subj|obj)\\))?",
+		"(?:(?:als|für) )?ADJ",
 	].join("|");
 	const alts = `(?:${comp})(?:\\|(?:${comp}))*`;
 	const slot = `(?:\\(${alts}\\)|${alts})`;

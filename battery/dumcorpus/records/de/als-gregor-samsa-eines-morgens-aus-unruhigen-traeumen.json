@@ -457,8 +457,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -642,8 +641,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -652,8 +650,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -881,8 +878,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -1109,8 +1105,7 @@
 										"canonicalForm": "zu",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Either"
+									"governedCase": "Dat"
 								},
 								{
 									"kind": "Preposition",
@@ -1122,8 +1117,7 @@
 										"canonicalForm": "in",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -1200,8 +1194,7 @@
 								"canonicalForm": "zu",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

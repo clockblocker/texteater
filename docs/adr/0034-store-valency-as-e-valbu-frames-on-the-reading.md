@@ -21,12 +21,13 @@ optional complements are parenthesised. A frame is an ordered list of Slots.
 Each Slot is `{ status, complements }`: one status, `"Required" | "Optional"`,
 and a non-empty ordered list of complements, usually one. Several complements
 in one Slot are alternatives, E-VALBU's `/`: `reden` has a Required Nom, an
-Optional `mit` + Dat and an Optional `über` + Acc | `von` + Dat. A Case or
-Preposition complement appears at most once in a frame, since its referent
-tells it apart (`jemanden etwas lehren` has an Acc Someone and an Acc
-Something). An Adverbial, Predicative or Clause appears at most once in a
-Slot but may recur in another: `Dass er kommt, bedeutet, dass sie geht` has
-a Clause Dass in the Nom Slot and in the Acc Slot of `bedeuten`. A Slot that
+Optional `mit` + Dat and an Optional `über` + Acc | `von` + Dat. A Preposition complement appears at
+most once in a frame. A Case, Adverbial, Predicative or Clause appears at
+most once in a Slot but may recur in another: `jemanden etwas lehren` has an
+Acc in two Slots
+([ADR 0057](./0057-name-a-valency-complement-by-its-case-never-its-referent.md)),
+and `Dass er kommt, bedeutet, dass sie geht` a Clause Dass in the Nom Slot
+and in the Acc Slot of `bedeuten`. A Slot that
 is either one complement or a list of alternatives was rejected as two shapes
 for one thing.
 
@@ -69,14 +70,16 @@ The frame skeleton is universal. Each language defines its complement
 vocabulary. German follows E-VALBU:
 
 ```ts
-{ kind: "Case", governedCase: "Nom" | "Acc" | "Dat" | "Gen", referent }
-{ kind: "Preposition", preposition: /* ADP Lexeme Lemma */, governedCase: "Acc" | "Dat" | "Gen", referent }
+{ kind: "Case", governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
+{ kind: "Preposition", preposition: /* ADP Lexeme Lemma */, governedCase: "Acc" | "Dat" | "Gen" }
 { kind: "Adverbial", standIn: "Irgendwo" | "Irgendwohin" | "Irgendwie" | "IrgendwieLange" | "IrgendwieViel" }
 { kind: "Predicative", of: "Subject" | "Object", marker: "None" | "Als" | "Für" }
 { kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", correlate?: "Required" | "Optional" }
 { kind: "Reflexive", governedCase: "Acc" | "Dat", preposition?: /* ADP Lexeme Lemma */ }
-// referent: "Someone" | "Something" | "Either"
 ```
+
+No complement names its referent, whether a person or a thing fills it
+([ADR 0057](./0057-name-a-valency-complement-by-its-case-never-its-referent.md)).
 
 - **Case** and **Preposition** mark a complement by the case the word
   governs. The field is `governedCase`, not `case`, because Knowledge never
@@ -89,12 +92,12 @@ vocabulary. German follows E-VALBU:
   substitutes for it: `wohnen` *irgendwo*; `legen`, `stellen`, `setzen` and
   `hängen` *irgendwohin*; `sich benehmen` *irgendwie*; `dauern` *irgendwie
   lange*; `kosten` *irgendwie viel*. Other stand-ins wait until a word
-  requires one. It has no referent, and the preposition inside it is free
+  requires one. The preposition inside it is free
   (see "An occurrence"). Its field is not named `meaning`, since meaning
   belongs to the Reading and its Emoji Description.
 - **Predicative** is E-VALBU's Kprd: `aussehen` takes one of its subject with
   no marker, and `jN für dumm halten` one of its object marked `für`. It has
-  no case and no referent. Its marker `als` or `für` is a free word, and it
+  no case. Its marker `als` or `für` is a free word, and it
   never makes a Preposition Slot. A copula (`sein`, `werden`, `bleiben`,
   `scheinen`, `wirken`, `sich zeigen`) has a Required Nom and a Required
   Predicative of its subject, marked `als` for `sich zeigen` and unmarked for
@@ -122,7 +125,7 @@ vocabulary. German follows E-VALBU:
   'imagine' Dat. Inside a fixed phrase it names the preposition it is the
   object of, with the case that preposition governs: `außer sein` (*außer
   sich sein*) `außer` + Dat. It is the only complement of its Slot, at most
-  one per frame, and has no referent
+  one per frame
   ([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
 Hebrew marks function and preposition, with no case: Subject, DirectObject

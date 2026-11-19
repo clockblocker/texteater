@@ -51,8 +51,7 @@
 							"governors": [4],
 							"offset": 26,
 							"preposition": "auf",
-							"case": "Acc",
-							"referent": "Something"
+							"case": "Acc"
 						}
 					]
 				},

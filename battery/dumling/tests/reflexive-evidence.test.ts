@@ -67,6 +67,7 @@ test("a verbal Attestation names its lexical reflexive member and its case (ADR 
 		[
 			{
 				...reflexive,
+				// A valency complement names no referent (ADR 0057).
 				complement: { ...reflexive?.complement, referent: "Someone" },
 			},
 		],

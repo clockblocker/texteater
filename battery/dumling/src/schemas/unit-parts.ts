@@ -122,9 +122,6 @@ export const surfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.refine(hasMarkedFeature, { error: nonEmptyFeatureBagError })
 	.nullable();
-/** Whether a valency complement names a person, a thing, or either (ADR 0034). */
-export const referentSchema = z.enum(["Someone", "Something", "Either"]);
-
 /**
  * A route's Lemma without the Syncretism fields a route may add (system ADR
  * 0046). A route policy builds the ADP Lemma its Preposition complements name

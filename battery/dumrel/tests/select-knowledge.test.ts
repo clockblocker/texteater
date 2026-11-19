@@ -80,3 +80,32 @@ test("a Foreign unit requests only its translations, and X has no policy", () =>
 		} as unknown as KnowledgeSelectionInput).success,
 	).toBe(false);
 });
+
+test("German governors request valency; other Kinds do not", () => {
+	for (const [family, kind, expected] of [
+		["Lexeme", "VERB", true],
+		["Lexeme", "ADJ", true],
+		["Lexeme", "NOUN", true],
+		["Locution", "VERB", true],
+		["Locution", "ADJ", true],
+		["Locution", "NOUN", true],
+		["Locution", "ADV", false],
+		["Saying", "Saying", false],
+		["Lexeme", "ADP", false],
+		["Lexeme", "ADV", false],
+		["Lexeme", "DET", false],
+		["Morpheme", "Root", false],
+	] as const) {
+		const selected = selectKnowledge({
+			route: { language: "de", family, kind } as never,
+		});
+		expect(selected.success).toBe(true);
+		if (selected.success)
+			expect(Object.hasOwn(selected.value, "valency")).toBe(expected);
+	}
+	const disabled = selectKnowledge({
+		route: { language: "de", family: "Lexeme", kind: "VERB" },
+		settings: { valency: false },
+	});
+	expect(disabled.success && disabled.value).not.toHaveProperty("valency");
+});

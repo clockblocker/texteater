@@ -8,11 +8,7 @@ import {
 	isHebrewArticleAttestation,
 } from "../../../validation/semantics.js";
 import { routePolicy } from "../../route-policy.js";
-import {
-	indexSchema,
-	plainLemmaSchema,
-	referentSchema,
-} from "../../unit-parts.js";
+import { indexSchema, plainLemmaSchema } from "../../unit-parts.js";
 import { HeAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
 
 /**
@@ -21,18 +17,14 @@ import { HeAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
  * ADP Lemma (`סמך על`).
  */
 const hebrewComplementSchema = z.union([
-	z.strictObject({ kind: z.literal("Subject"), referent: referentSchema }),
-	z.strictObject({
-		kind: z.literal("DirectObject"),
-		referent: referentSchema,
-	}),
+	z.strictObject({ kind: z.literal("Subject") }),
+	z.strictObject({ kind: z.literal("DirectObject") }),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: plainLemmaSchema(
 			{ language: "he", family: "Lexeme", kind: "ADP" },
 			HeAdpositionFeatureBagsSchema.shape.core,
 		),
-		referent: referentSchema,
 	}),
 ]);
 

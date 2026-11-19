@@ -121,7 +121,6 @@ describe("public storage-facing schemas", () => {
 				coreFeatures: {},
 			},
 			governedCase,
-			referent: "Either",
 		});
 		const entry = (...complements: unknown[]) => ({
 			reading: germanGehenReading,
@@ -157,7 +156,7 @@ describe("public storage-facing schemas", () => {
 		}
 	});
 
-	test("German Reading Knowledge holds the complements without a referent", () => {
+	test("German Reading Knowledge holds its complements, none with a referent", () => {
 		const schema = getDumdictSchemasFor("de").readingEntrySchema;
 		const entry = (...complements: unknown[]) => ({
 			reading: germanGehenReading,
@@ -172,7 +171,6 @@ describe("public storage-facing schemas", () => {
 							{
 								kind: "Case",
 								governedCase: "Nom",
-								referent: "Someone",
 							},
 						],
 					},
@@ -184,15 +182,15 @@ describe("public storage-facing schemas", () => {
 			[{ kind: "Adverbial", standIn: "Irgendwohin" }],
 			[{ kind: "Predicative", of: "Subject", marker: "Als" }],
 			[
-				{ kind: "Case", governedCase: "Acc", referent: "Something" },
+				{ kind: "Case", governedCase: "Acc" },
 				{ kind: "Clause", form: "Dass", correlate: "Optional" },
 			],
 		])
 			expect(schema.safeParse(entry(...complements)).success).toBe(true);
 		for (const complements of [
 			[],
-			[{ kind: "Case", case: "Acc", referent: "Something" }],
-			[{ kind: "Adverbial", standIn: "Irgendwo", referent: "Something" }],
+			[{ kind: "Case", case: "Acc" }],
+			[{ kind: "Case", governedCase: "Acc", referent: "Something" }],
 		])
 			expect(schema.safeParse(entry(...complements)).success).toBe(false);
 	});
@@ -216,16 +214,12 @@ describe("public storage-facing schemas", () => {
 				valency: [{ status: "Required", complements: [complement] }],
 			},
 		});
-		expect(
-			schema.safeParse(entry({ kind: "Subject", referent: "Someone" }))
-				.success,
-		).toBe(true);
+		expect(schema.safeParse(entry({ kind: "Subject" })).success).toBe(true);
 		expect(
 			schema.safeParse(
 				entry({
 					kind: "Preposition",
 					preposition: al,
-					referent: "Either",
 				}),
 			).success,
 		).toBe(true);
@@ -235,7 +229,6 @@ describe("public storage-facing schemas", () => {
 					kind: "Preposition",
 					preposition: al,
 					governedCase: "Acc",
-					referent: "Either",
 				}),
 			).success,
 		).toBe(false);
@@ -261,8 +254,8 @@ describe("public storage-facing schemas", () => {
 			},
 		});
 		for (const complement of [
-			{ kind: "IndirectObject", referent: "Someone" },
-			{ kind: "Preposition", preposition: on, referent: "Something" },
+			{ kind: "IndirectObject" },
+			{ kind: "Preposition", preposition: on },
 		])
 			expect(schema.safeParse(entry(complement)).success).toBe(true);
 		for (const complement of [
@@ -270,7 +263,6 @@ describe("public storage-facing schemas", () => {
 				kind: "Preposition",
 				preposition: on,
 				governedCase: "Acc",
-				referent: "Either",
 			},
 			{
 				kind: "Preposition",
@@ -279,7 +271,6 @@ describe("public storage-facing schemas", () => {
 					language: "he",
 					coreFeatures: { abbr: null, case: null },
 				},
-				referent: "Either",
 			},
 		])
 			expect(schema.safeParse(entry(complement)).success).toBe(false);

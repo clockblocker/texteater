@@ -6,7 +6,7 @@ export const knowledge: Rule[] = [
 	{
 		id: "de/valency-frame-follows-e-valbu",
 		statement:
-			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts: warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns it: stolz (auf + Acc). A Collocation's frame takes its noun's government: eine Entscheidung treffen (über + Acc). A referent is the dictionary's jemand or etwas for the sense, not the sentence's (sich erinnern an: Either). Each clause form listed is an alternative in its Slot. When either of two complements completes the frame, both are Optional: bitten (Acc) (um + Acc).",
+			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts: warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns it: stolz (auf + Acc). A Collocation's frame takes its noun's government: eine Entscheidung treffen (über + Acc). Each clause form listed is an alternative in its Slot. When either of two complements completes the frame, both are Optional: bitten (Acc) (um + Acc).",
 		adrs: ["ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),

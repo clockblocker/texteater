@@ -51,8 +51,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -61,8 +60,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								},
 								{
 									"kind": "Preposition",
@@ -74,8 +72,7 @@
 										"canonicalForm": "an",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Someone"
+									"governedCase": "Acc"
 								}
 							]
 						}

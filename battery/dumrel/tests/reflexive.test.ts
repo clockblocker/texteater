@@ -7,19 +7,14 @@ const required = <const C extends unknown[]>(...complements: C) =>
 	({ status: "Required", complements }) as const;
 const optional = <const C extends unknown[]>(...complements: C) =>
 	({ status: "Optional", complements }) as const;
-const nom = { kind: "Case", governedCase: "Nom", referent: "Someone" } as const;
-const acc = {
-	kind: "Case",
-	governedCase: "Acc",
-	referent: "Something",
-} as const;
+const nom = { kind: "Case", governedCase: "Nom" } as const;
+const acc = { kind: "Case", governedCase: "Acc" } as const;
 const reflexiveAcc = { kind: "Reflexive", governedCase: "Acc" } as const;
 const reflexiveDat = { kind: "Reflexive", governedCase: "Dat" } as const;
 const anAcc = {
 	kind: "Preposition",
 	preposition: { ...aufLemma, canonicalForm: "an" },
 	governedCase: "Acc",
-	referent: "Either",
 } as const;
 
 /** `erinnern` 🪞🧠 'remember': `sich erinnern an`, the Lemma's word bare. */

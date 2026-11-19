@@ -56,8 +56,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								}
 							]
 						},

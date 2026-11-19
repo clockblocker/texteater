@@ -3,11 +3,11 @@
  * Satzbauplan of the one Lesart the Emoji Description names, in the Slot
  * shape of #674, holding only the complement kinds the route allows
  * (`allowedComplementKinds`). Luna writes it in German dictionary
- * notation (`jmd. (etw.|(es) dass)`, `valency-notation.ts`), one string a
- * strict schema's pattern holds, read back into those Slots. Dumrel checks
- * them Slot by Slot: a Slot it
- * refuses, such as a Place on a German noun, is dropped and named in a
- * `DroppedValencySlots` event, and its siblings stay (#675).
+ * notation in case letters (`N (A|(es) dass)`, `valency-notation.ts`),
+ * one string a strict schema's pattern holds, read back into those Slots.
+ * Dumrel checks them Slot by Slot: a Slot it refuses, such as a Place on a
+ * German noun, is dropped and named in a `DroppedValencySlots` event, and
+ * its siblings stay (#675).
  *
  * The occurrence's `valencyEvidence` joins the frame only when the
  * occurrence created the Reading (`origin` New, #677): each governed
@@ -74,7 +74,6 @@ export const valencyPrompt = [
 	valency.preposition,
 	valency.route,
 	valency.fixed,
-	valency.referent,
 	...notationParagraphs,
 	examplesParagraph,
 ].join("\n");
@@ -103,15 +102,10 @@ const frameAnswer = { type: "string", pattern: germanFramePattern } as const;
  * refuses (a correlate before a noun phrase, a case its preposition cannot
  * take) fails, as an answer outside the schema did.
  */
-function frameOf(
-	context: AspectContext,
-	output: unknown,
-): readonly unknown[] | InvalidModelOutput {
+function frameOf(output: unknown): readonly unknown[] | InvalidModelOutput {
 	if (typeof output !== "string")
 		return unusable("valency", "Luna answered no frame");
-	const read = parseGermanFrame(output, {
-		verb: context.lemma.kind === "VERB",
-	});
+	const read = parseGermanFrame(output);
 	return read.ok
 		? read.frame
 		: unusable(
@@ -264,8 +258,8 @@ const coveredPrepositions = (frame: readonly GermanSlot[]) =>
 /**
  * The Optional Slots the creating occurrence's government adds to a
  * proposed frame, and the evidence Knowledge cannot hold. Only a governed
- * preposition no complement covers comes in, with an Either referent: a
- * sentence shows neither whether the word needs it nor what fills it.
+ * preposition no complement covers comes in, Optional: a sentence does not
+ * show whether the word needs it.
  */
 function attestedSlots(
 	lemma: Dumling.Lemma<"de">,
@@ -314,7 +308,6 @@ function attestedSlots(
 					kind: "Preposition",
 					preposition: prepositionLemma(form),
 					governedCase,
-					referent: "Either",
 				},
 			],
 		});
@@ -355,9 +348,9 @@ function attestedReflexive(
 /**
  * The ordinary object a Required sich becomes on a Reading without 🪞: no
  * lexical reflexive, so the sich is an object another noun phrase could
- * replace, an Either Case complement in its case (`sich wenden` ↪:
- * jmdn./etw.). None for a fixed phrase's reflexive, or where the frame
- * already has an object in that case.
+ * replace, a Case complement in its case (`sich wenden` ↪: A). None for a
+ * fixed phrase's reflexive, or where the frame already has an object in
+ * that case.
  */
 function ordinaryObject(
 	proposed: GermanSlot,
@@ -377,9 +370,7 @@ function ordinaryObject(
 		? undefined
 		: {
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase, referent: "Either" },
-				],
+				complements: [{ kind: "Case", governedCase }],
 			};
 }
 
@@ -483,7 +474,7 @@ export const produceValency = (
 			valencyPrompt,
 			{ complementKinds: [...allowedComplementKinds(context.lemma)] },
 			frameAnswer,
-			(output) => frameOf(context, output),
+			frameOf,
 			{ strict: true },
 		);
 		const { kept, dropped } = validFrame(context.reading, proposed);

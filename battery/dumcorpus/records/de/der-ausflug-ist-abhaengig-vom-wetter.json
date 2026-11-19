@@ -94,8 +94,7 @@
 							"governors": [16],
 							"offset": 25,
 							"preposition": "von",
-							"case": "Dat",
-							"referent": "Something"
+							"case": "Dat"
 						}
 					]
 				},

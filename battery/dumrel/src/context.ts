@@ -310,17 +310,25 @@ function reflexiveIssue(
 	return undefined;
 }
 
+/** The complements a frame names at most once, across all its Slots (ADR 0057). */
+const onceInFrame: ReadonlySet<ValencyComplement["kind"]> = new Set([
+	"Preposition",
+	"Subject",
+	"DirectObject",
+	"IndirectObject",
+]);
+
 /**
- * A frame whose complements the source's route allows. A complement with a
- * referent (a Case or Preposition, or a Hebrew or English Subject or object)
- * appears once in the frame, its referent telling it apart from its
- * namesakes. An Adverbial, Predicative or Clause appears once per Slot but may
- * recur in another: `Dass er kommt, bedeutet, dass …` has a Clause Dass in its
- * Nom Slot and in its Acc Slot. Which complements belong in one Slot is the
- * proposal's call; only the correlate is checked: a Clause with a correlate
- * takes its `da(r)-` from the Slot's preposition, so a Slot that holds one has
- * at most one Preposition (ADR 0034). A Reflexive is the only complement of
- * its Slot, and a frame has at most one (ADR 0052).
+ * A frame whose complements the source's route allows. A Preposition
+ * complement, and a Hebrew or English Subject or object, appears once in the
+ * frame. A German Case complement, like an Adverbial, Predicative or Clause,
+ * appears once per Slot but may recur in another: `jemanden etwas fragen` has
+ * an Acc in two Slots, and `Dass er kommt, bedeutet, dass …` a Clause Dass in
+ * its Nom Slot and in its Acc Slot. Which complements belong in one Slot is
+ * the proposal's call; only the correlate is checked: a Clause with a
+ * correlate takes its `da(r)-` from the Slot's preposition, so a Slot that
+ * holds one has at most one Preposition (ADRs 0034, 0057). A Reflexive is the only
+ * complement of its Slot, and a frame has at most one (ADR 0052).
  */
 function parseValencyFrame<R extends Dumling.Reading>(
 	source: R,
@@ -350,11 +358,11 @@ function parseValencyFrame<R extends Dumling.Reading>(
 					"A Slot lists each complement once",
 				);
 			inSlot.add(identity);
-			if ("referent" in complement) {
+			if (onceInFrame.has(complement.kind)) {
 				if (inFrame.has(identity))
 					return issue(
 						complementPath,
-						"A Valency Frame lists each Case or Preposition complement once, across all its Slots",
+						"A Valency Frame lists each Preposition, Subject or object complement once, across all its Slots",
 					);
 				inFrame.add(identity);
 			}

@@ -459,8 +459,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -477,8 +476,7 @@
 										"canonicalForm": "mit",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								}
 							]
 						},
@@ -495,8 +493,7 @@
 										"canonicalForm": "über",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -545,8 +542,7 @@
 								"kind": "ADP",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Someone"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -731,8 +727,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						}
@@ -1115,8 +1110,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -1125,8 +1119,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}

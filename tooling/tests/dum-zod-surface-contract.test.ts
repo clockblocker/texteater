@@ -48,7 +48,6 @@ const DUM_PUBLIC_ZOD_SURFACES = {
 		"unitShadowSchema",
 		"valencyComplementSchema",
 		"valencyFrameSchema",
-		"valencyReferentSchema",
 		"valencySlotSchema",
 		"valencySlotStatusSchema",
 	],

@@ -44,10 +44,6 @@ export type RunRecord = {
 export type Job = {
 	readonly revision: string;
 	readonly systemPrompt: string;
-	/** What the revision makes of production's input, if it changes it. */
-	readonly input?: (input: unknown) => unknown;
-	/** The answer schema the revision asks under, if not production's. */
-	readonly schema?: Readonly<Record<string, unknown>>;
 	readonly benchCase: BenchCase;
 	readonly repetition: number;
 };
@@ -72,17 +68,10 @@ function ledger(evidence: string, entry: Readonly<Record<string, unknown>>) {
 	);
 }
 
-const requestOf = (job: Job): LunaRequest => {
-	const { request } = job.benchCase;
-	const asked = {
-		...request,
-		systemPrompt: job.systemPrompt,
-		...(job.input ? { input: job.input(request.input) } : {}),
-	};
-	return job.schema && asked.outputFormat !== "text"
-		? { ...asked, outputSchema: job.schema }
-		: asked;
-};
+const requestOf = (job: Job): LunaRequest => ({
+	...job.benchCase.request,
+	systemPrompt: job.systemPrompt,
+});
 
 /** A response's output, or the problem the transport named for keeping none. */
 function outcomeOf(

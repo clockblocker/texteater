@@ -2,14 +2,14 @@
  * The language-free skeleton of the dictionary notation Luna writes a
  * Valency Frame in: Slots separated by spaces in frame order, an Optional
  * Slot in `( … )`, the alternatives of one Slot joined by `|`, each
- * complement a head (`jmdn./etw.`, `dass`, `irgendwo`) after at most one
+ * complement a head (`A`, `dass`, `irgendwo`) after at most one
  * prefix word (a preposition, a predicative's marker, a correlate), the
  * prefix itself Optional in `( … )` (`(es) dass`). A frame may open with an
  * opener word (German expletive `es`), and an empty frame is one word of
  * its own.
  *
  * What the words mean is a language's word table (`de/valency-notation.ts`;
- * English's sb/sth and Hebrew's מישהו/משהו later): which words are
+ * English's and Hebrew's later): which words are
  * prefixes, heads and openers. The skeleton only finds the structure, and
  * prints it back.
  */
@@ -38,7 +38,7 @@ export type FrameWords = {
 	/** How many words, from `index` on, make one head; 0 when none starts there. */
 	readonly headLength: (words: readonly string[], index: number) => number;
 	readonly isOpener: (word: string) => boolean;
-	/** Whether a prefix stands before this head (German es before a clause, not before jmdm.). */
+	/** Whether a prefix stands before this head (German es before a clause, not before D). */
 	readonly combines: (prefix: string, head: string) => boolean;
 	/** What an empty frame is written as. */
 	readonly empty: string;
@@ -49,8 +49,8 @@ type ParseResult =
 	| { readonly ok: false; readonly error: string };
 
 /**
- * A word, with any case or role marker written onto it (`etw.(dat)`,
- * `sich(akk)`), or one of `(`, `)`, `|`.
+ * A word, with any case or role marker written onto it (`sich(A)`,
+ * `ADJ(subj)`), or one of `(`, `)`, `|`.
  */
 const tokenPattern = /\(|\)|\||[^\s()|]+(?:\([^\s()|]*\))?/gu;
 

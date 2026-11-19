@@ -143,7 +143,6 @@ function adpositionEvidence(
 			complement: {
 				kind: "Case",
 				governedCase: realized,
-				referent: "Either",
 			},
 			realizedCase: realized,
 		},

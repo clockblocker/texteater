@@ -334,7 +334,7 @@ test("onContribution's error is the run's only error, and it interrupts the aspe
 test("the creating occurrence contributes the governed preposition the proposal omitted (#677, #616)", async () => {
 	const jev = knowledgeJev();
 	const luna = knowledgeLuna({
-		valency: "jmd. (für jmdn./etw.)",
+		valency: "N (für A)",
 	});
 	const input = knowledgeInput(
 		verb("bedanken"),
@@ -355,9 +355,7 @@ test("the creating occurrence contributes the governed preposition the proposal 
 	expect(change?.value).toEqual([
 		{
 			status: "Required",
-			complements: [
-				{ kind: "Case", governedCase: "Nom", referent: "Someone" },
-			],
+			complements: [{ kind: "Case", governedCase: "Nom" }],
 		},
 		{
 			status: "Optional",
@@ -366,7 +364,6 @@ test("the creating occurrence contributes the governed preposition the proposal 
 					kind: "Preposition",
 					preposition: adp("für"),
 					governedCase: "Acc",
-					referent: "Either",
 				},
 			],
 		},
@@ -377,7 +374,6 @@ test("the creating occurrence contributes the governed preposition the proposal 
 					kind: "Preposition",
 					preposition: adp("bei"),
 					governedCase: "Dat",
-					referent: "Either",
 				},
 			],
 		},
@@ -418,7 +414,7 @@ test("on TopUp a later sentence's government yields no valency change and no mod
 });
 
 test("an attested preposition no governor selects stays an attributable failure (#677)", async () => {
-	const luna = knowledgeLuna({ valency: "jmd." });
+	const luna = knowledgeLuna({ valency: "N" });
 	const { result } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(
@@ -444,7 +440,7 @@ test("an attested preposition no governor selects stays an attributable failure 
 
 test("a Slot holds alternatives, and the covered set counts every one of them (#675)", async () => {
 	const luna = knowledgeLuna({
-		valency: "jmd. (über jmdn./etw.|von jmdm./etw.)",
+		valency: "N (über A|von D)",
 	});
 	const { result } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
@@ -479,7 +475,7 @@ test("a Slot holds alternatives, and the covered set counts every one of them (#
 });
 
 test("free-marker complements land, and a Place on a German noun is dropped with a DroppedValencySlots event (#675)", async () => {
-	const verbLuna = knowledgeLuna({ valency: "jmd. irgendwo" });
+	const verbLuna = knowledgeLuna({ valency: "N irgendwo" });
 	const hausen = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: verbLuna.ask },
 		knowledgeInput(
@@ -496,7 +492,7 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 	expect(hausen.trace?.events).toBeUndefined();
 
 	const nounLuna = knowledgeLuna({
-		valency: "irgendwo (nach jmdm./etw.)",
+		valency: "irgendwo (nach D)",
 	});
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: nounLuna.ask },
@@ -522,7 +518,6 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 					kind: "Preposition",
 					preposition: adp("nach"),
 					governedCase: "Dat",
-					referent: "Either",
 				},
 			],
 		},
@@ -538,7 +533,7 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 });
 
 test("a preposition in a case it never governs is dropped too", async () => {
-	const luna = knowledgeLuna({ valency: "jmd. (an etw.(gen))" });
+	const luna = knowledgeLuna({ valency: "N (an G)" });
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(

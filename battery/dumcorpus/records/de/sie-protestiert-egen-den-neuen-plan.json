@@ -65,8 +65,7 @@
 								"canonicalForm": "gegen",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

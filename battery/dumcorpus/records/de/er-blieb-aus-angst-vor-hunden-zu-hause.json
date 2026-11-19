@@ -57,8 +57,7 @@
 								{
 									"kind": "Preposition",
 									"preposition": "vor",
-									"governedCase": "Dat",
-									"referent": "Either"
+									"governedCase": "Dat"
 								}
 							]
 						}

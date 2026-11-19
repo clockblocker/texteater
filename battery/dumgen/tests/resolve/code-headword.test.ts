@@ -172,7 +172,6 @@ test("a one-word preposition written as two words is code's headword, its Surfac
 				complement: {
 					kind: "Case",
 					governedCase: "Gen",
-					referent: "Either",
 				},
 				realizedCase: "Gen",
 			},

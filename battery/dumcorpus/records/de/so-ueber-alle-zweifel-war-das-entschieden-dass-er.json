@@ -513,8 +513,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Acc",
-							"referent": "Either"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}
@@ -1089,8 +1088,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Acc",
-							"referent": "Either"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}
@@ -1325,8 +1323,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						}
@@ -1514,8 +1511,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -1705,8 +1701,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

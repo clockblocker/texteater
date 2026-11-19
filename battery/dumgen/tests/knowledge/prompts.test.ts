@@ -35,6 +35,7 @@ import {
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
 import {
 	valencyExampleLemmas,
+	valencyNotationExamples,
 	valencyPromptTexts,
 } from "../../src/knowledge/de/valency-prompts.js";
 
@@ -147,6 +148,7 @@ test("no example in a Knowledge prompt uses a Lemma of the Knowledge gold or the
 		...structureExamples(),
 		...licenceExamples(),
 		...valencyExampleLemmas,
+		...valencyNotationExamples(),
 	];
 	expect(examples.length).toBeGreaterThan(15);
 	const clashes = examples.flatMap((example) =>

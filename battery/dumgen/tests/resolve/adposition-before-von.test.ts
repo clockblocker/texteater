@@ -29,7 +29,7 @@ const luna = (canonicalForm: string) =>
 
 const genitive = {
 	member: null,
-	complement: { kind: "Case", governedCase: "Gen", referent: "Either" },
+	complement: { kind: "Case", governedCase: "Gen" },
 	realizedCase: "Gen",
 };
 

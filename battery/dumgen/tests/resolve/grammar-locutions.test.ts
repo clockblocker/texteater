@@ -311,7 +311,6 @@ test("a pronominal adverb that holds a Locution's fixed preposition marks its sl
 					coreFeatures: {},
 				},
 				governedCase: "Dat",
-				referent: "Something",
 			},
 			realizedCase: "Dat",
 		},

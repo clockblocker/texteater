@@ -80,7 +80,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("auf"),
 						governedCase: "Acc",
-						referent: "Either",
 					},
 				],
 			},
@@ -97,7 +96,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("mit"),
 						governedCase: "Dat",
-						referent: "Something",
 					},
 				],
 			},
@@ -109,9 +107,7 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Nom", referent: "Someone" },
-				],
+				complements: [{ kind: "Case", governedCase: "Nom" }],
 			},
 			{
 				status: "Optional",
@@ -120,7 +116,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("auf"),
 						governedCase: "Acc",
-						referent: "Either",
 					},
 				],
 			},
@@ -142,7 +137,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("auf"),
 						governedCase: "Acc",
-						referent: "Either",
 					},
 				],
 			},
@@ -159,9 +153,7 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
-				],
+				complements: [{ kind: "Case", governedCase: "Dat" }],
 			},
 		],
 		heading: "`jM` auf den Keks gehen",
@@ -181,15 +173,12 @@ const cases: readonly {
 					{
 						kind: "Case",
 						governedCase: "Acc",
-						referent: "Something",
 					},
 				],
 			},
 			{
 				status: "Optional",
-				complements: [
-					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
-				],
+				complements: [{ kind: "Case", governedCase: "Dat" }],
 			},
 		],
 		heading: "(`jM`) `jN` zur Verfügung stellen",
@@ -206,7 +195,6 @@ const cases: readonly {
 					{
 						kind: "Case",
 						governedCase: "Acc",
-						referent: "Something",
 					},
 				],
 			},
@@ -224,7 +212,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("an"),
 						governedCase: "Acc",
-						referent: "Either",
 					},
 				],
 			},
@@ -267,9 +254,7 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Nom", referent: "Either" },
-				],
+				complements: [{ kind: "Case", governedCase: "Nom" }],
 			},
 			{
 				status: "Required",
@@ -278,7 +263,6 @@ const cases: readonly {
 						kind: "Preposition",
 						preposition: adp("mit"),
 						governedCase: "Dat",
-						referent: "Either",
 					},
 				],
 			},
@@ -301,9 +285,7 @@ for (const { lemma, frame, heading } of cases) {
 const mitZuTunHaben: ValencyFrame = [
 	{
 		status: "Required",
-		complements: [
-			{ kind: "Case", governedCase: "Nom", referent: "Either" },
-		],
+		complements: [{ kind: "Case", governedCase: "Nom" }],
 	},
 	{
 		status: "Required",
@@ -312,7 +294,6 @@ const mitZuTunHaben: ValencyFrame = [
 				kind: "Preposition",
 				preposition: adp("mit"),
 				governedCase: "Dat",
-				referent: "Either",
 			},
 		],
 	},
@@ -368,7 +349,6 @@ test("a free slot's preposition takes the preposition style", () => {
 					kind: "Preposition",
 					preposition: adp("auf"),
 					governedCase: "Acc",
-					referent: "Either",
 				},
 			],
 		},
@@ -401,7 +381,6 @@ test("a heading without a frame to show cites the Canonical Form", () => {
 						{
 							kind: "Case",
 							governedCase: "Nom",
-							referent: "Someone",
 						},
 					],
 				},
@@ -420,13 +399,11 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 					kind: "Preposition",
 					preposition: adp("über"),
 					governedCase: "Acc",
-					referent: "Either",
 				},
 				{
 					kind: "Preposition",
 					preposition: adp("von"),
 					governedCase: "Dat",
-					referent: "Either",
 				},
 			],
 		},
@@ -458,7 +435,6 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 						{
 							kind: "Case",
 							governedCase: "Dat",
-							referent: "Someone",
 						},
 					],
 				},

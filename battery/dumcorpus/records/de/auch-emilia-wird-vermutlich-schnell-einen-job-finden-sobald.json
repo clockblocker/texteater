@@ -83,8 +83,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -93,8 +92,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}

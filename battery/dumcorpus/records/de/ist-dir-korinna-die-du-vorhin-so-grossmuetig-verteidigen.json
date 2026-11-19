@@ -590,8 +590,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -600,8 +599,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -758,8 +756,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								}
 							]
 						}

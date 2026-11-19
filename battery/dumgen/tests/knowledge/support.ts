@@ -348,7 +348,6 @@ export const attestedPreposition = (
 		kind: "Preposition",
 		preposition: adp(preposition),
 		governedCase,
-		referent: "Something",
 	},
 	realizedCase: governedCase,
 });

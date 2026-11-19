@@ -356,11 +356,6 @@ export const question = {
 		"If {m} is or holds the preposition heading the head's complement, which case does that complement take here?",
 		rules.government,
 	),
-	governedReferent: paragraph(
-		"question.governedReferent",
-		"If {m} is the preposition the head selects, does its complement here name a person or a thing?",
-		rules.government,
-	),
 	cell: paragraph(
 		"question.cell",
 		"Which form of {lemma} is {m} in this sentence? A determiner bears the case, number and gender of its noun's phrase and a pronoun those of its own: read the case from the role that phrase plays in its clause, which each option names, never from the spelling, which fits several forms.",

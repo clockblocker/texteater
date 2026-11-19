@@ -27,7 +27,7 @@ const besideOneself = {
 };
 const subject = {
 	status: "Required",
-	complements: [{ kind: "Case", governedCase: "Nom", referent: "Someone" }],
+	complements: [{ kind: "Case", governedCase: "Nom" }],
 } as const;
 const reflexive = (
 	governedCase: "Acc" | "Dat",
@@ -151,16 +151,12 @@ test("a Reading without 🪞 makes a Required sich its ordinary object, drops it
 		subject,
 		{
 			status: "Required",
-			complements: [
-				{ kind: "Case", governedCase: "Acc", referent: "Either" },
-			],
+			complements: [{ kind: "Case", governedCase: "Acc" }],
 		},
 	]);
 	const object = {
 		status: "Required",
-		complements: [
-			{ kind: "Case", governedCase: "Acc", referent: "Something" },
-		],
+		complements: [{ kind: "Case", governedCase: "Acc" }],
 	} as const;
 	const beside = await frame("😳", [subject, reflexive("Acc"), object]);
 	expect(frameOf(beside.result.changes)).toEqual([subject, object]);

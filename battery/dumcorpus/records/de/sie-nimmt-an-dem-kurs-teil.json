@@ -84,8 +84,7 @@
 							"governors": [4, 22],
 							"offset": 10,
 							"preposition": "an",
-							"case": "Dat",
-							"referent": "Something"
+							"case": "Dat"
 						}
 					]
 				},

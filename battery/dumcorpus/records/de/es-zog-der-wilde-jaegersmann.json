@@ -45,7 +45,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "f0b9c8226ff45fb8"
+				"hash": "b0e43da9d292b84d"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -138,8 +138,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -148,8 +147,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -158,8 +156,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								}
 							]
 						}

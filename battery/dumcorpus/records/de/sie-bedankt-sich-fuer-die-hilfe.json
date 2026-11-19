@@ -55,8 +55,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -75,8 +74,7 @@
 								{
 									"kind": "Preposition",
 									"preposition": "bei",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								}
 							]
 						},
@@ -86,8 +84,7 @@
 								{
 									"kind": "Preposition",
 									"preposition": "für",
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								}
 							]
 						}

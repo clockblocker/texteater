@@ -639,8 +639,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -1392,8 +1391,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -1518,8 +1516,7 @@
 										"canonicalForm": "in",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -1753,8 +1750,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}
@@ -2002,8 +1998,7 @@
 										"canonicalForm": "zu",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Something"
+									"governedCase": "Dat"
 								},
 								{
 									"kind": "Clause",
@@ -2086,8 +2081,7 @@
 								"canonicalForm": "zu",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Something"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

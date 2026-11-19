@@ -41,9 +41,7 @@ const surface = {
 const valency = [
 	{
 		status: "Required",
-		complements: [
-			{ kind: "Case", governedCase: "Nom", referent: "Someone" },
-		],
+		complements: [{ kind: "Case", governedCase: "Nom" }],
 	},
 	{
 		status: "Required",
@@ -59,7 +57,6 @@ const valency = [
 					coreFeatures: {},
 				},
 				governedCase: "Dat",
-				referent: "Something",
 			},
 		],
 	},

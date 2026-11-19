@@ -117,7 +117,7 @@ type BreakdownFixture = {
 
 const subject: Dumrel.ValencySlot = {
 	status: "Required",
-	complements: [{ kind: "Case", governedCase: "Nom", referent: "Someone" }],
+	complements: [{ kind: "Case", governedCase: "Nom" }],
 };
 
 /** A lexical reflexive's Slot, after its fixed phrase's preposition if any (ADR 0052). */
@@ -151,7 +151,6 @@ const governed = (
 			kind: "Preposition",
 			preposition: adposition(preposition),
 			governedCase,
-			referent: "Either",
 		},
 	],
 });
@@ -468,9 +467,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			subject,
 			{
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Acc", referent: "Someone" },
-				],
+				complements: [{ kind: "Case", governedCase: "Acc" }],
 			},
 			governed("an", "Acc", "Required"),
 		],

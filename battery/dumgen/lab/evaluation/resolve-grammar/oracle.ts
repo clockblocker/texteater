@@ -379,20 +379,6 @@ const answeringByPrefix: readonly (readonly [string, Answering])[] = [
 			),
 	],
 	[
-		"governedReferent_m",
-		(gold, question, suffix) => {
-			const complement = gold.governedAt(Number(suffix))?.complement;
-			return picked(
-				option(
-					question,
-					(complement && "referent" in complement
-						? complement.referent
-						: undefined) ?? "Either",
-				),
-			);
-		},
-	],
-	[
 		"freeGoverned_s",
 		(gold, question, suffix) =>
 			picked(

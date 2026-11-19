@@ -162,8 +162,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Someone"
+									"governedCase": "Dat"
 								},
 								{
 									"kind": "Preposition",
@@ -175,8 +174,7 @@
 										"canonicalForm": "für",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Someone"
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -193,8 +191,7 @@
 										"canonicalForm": "auf",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								},
 								{
 									"kind": "Clause",
@@ -298,8 +295,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

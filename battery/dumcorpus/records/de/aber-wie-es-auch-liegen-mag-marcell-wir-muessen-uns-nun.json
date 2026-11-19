@@ -672,8 +672,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -1078,8 +1077,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								},
 								{
 									"kind": "Clause",
@@ -1103,8 +1101,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -1330,8 +1327,7 @@
 								"canonicalForm": "zu",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Something"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					},

@@ -307,8 +307,7 @@
 								"canonicalForm": "mit",
 								"coreFeatures": {}
 							},
-							"governedCase": "Dat",
-							"referent": "Either"
+							"governedCase": "Dat"
 						},
 						"realizedCase": "Dat"
 					}

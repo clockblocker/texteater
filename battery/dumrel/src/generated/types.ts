@@ -2042,18 +2042,12 @@ export type SemanticRelationProjection = {
 };
 export type GovernedCase = "Acc" | "Dat" | "Gen";
 export type ValencySlotStatus = "Required" | "Optional";
-type ValencyReferent = "Someone" | "Something" | "Either";
 export type GermanValencyComplement =
-	| {
-			kind: "Case";
-			governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			referent: ValencyReferent;
-	  }
+	| { kind: "Case"; governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
 			governedCase: GovernedCase;
-			referent: ValencyReferent;
 	  }
 	| {
 			kind: "Adverbial";
@@ -2080,37 +2074,27 @@ export type GermanValencyComplement =
 			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
 	  };
 export type HebrewValencyComplement =
-	| { kind: "Subject"; referent: ValencyReferent }
-	| { kind: "DirectObject"; referent: ValencyReferent }
+	| { kind: "Subject" }
+	| { kind: "DirectObject" }
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
-			referent: ValencyReferent;
 	  };
 export type EnglishValencyComplement =
-	| { kind: "Subject"; referent: ValencyReferent }
-	| { kind: "DirectObject"; referent: ValencyReferent }
-	| { kind: "IndirectObject"; referent: ValencyReferent }
-	| {
-			kind: "Preposition";
-			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
-			referent: ValencyReferent;
-	  }
+	| { kind: "Subject" }
+	| { kind: "DirectObject" }
+	| { kind: "IndirectObject" }
+	| { kind: "Preposition"; preposition: Dumling.Lemma<"en", "Lexeme", "ADP"> }
 	| {
 			kind: "Reflexive";
 			preposition?: Dumling.Lemma<"en", "Lexeme", "ADP"> | undefined;
 	  };
 export type ValencyComplement =
-	| {
-			kind: "Case";
-			governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			referent: ValencyReferent;
-	  }
+	| { kind: "Case"; governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
 			governedCase: GovernedCase;
-			referent: ValencyReferent;
 	  }
 	| {
 			kind: "Adverbial";
@@ -2136,21 +2120,13 @@ export type ValencyComplement =
 			governedCase: "Acc" | "Dat";
 			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
 	  }
-	| { kind: "Subject"; referent: ValencyReferent }
-	| { kind: "DirectObject"; referent: ValencyReferent }
-	| {
-			kind: "Preposition";
-			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
-			referent: ValencyReferent;
-	  }
-	| { kind: "Subject"; referent: ValencyReferent }
-	| { kind: "DirectObject"; referent: ValencyReferent }
-	| { kind: "IndirectObject"; referent: ValencyReferent }
-	| {
-			kind: "Preposition";
-			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
-			referent: ValencyReferent;
-	  }
+	| { kind: "Subject" }
+	| { kind: "DirectObject" }
+	| { kind: "Preposition"; preposition: Dumling.Lemma<"he", "Lexeme", "ADP"> }
+	| { kind: "Subject" }
+	| { kind: "DirectObject" }
+	| { kind: "IndirectObject" }
+	| { kind: "Preposition"; preposition: Dumling.Lemma<"en", "Lexeme", "ADP"> }
 	| {
 			kind: "Reflexive";
 			preposition?: Dumling.Lemma<"en", "Lexeme", "ADP"> | undefined;

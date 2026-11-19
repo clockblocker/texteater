@@ -17,7 +17,6 @@ test("valency evidence names the owned member realizing its preposition", () => 
 			kind: "Preposition",
 			preposition: preposition("auf"),
 			governedCase: "Acc",
-			referent: "Something",
 		},
 		realizedCase: "Acc",
 	};
@@ -64,7 +63,6 @@ test("valency evidence names the owned member realizing its preposition", () => 
 				complement: {
 					kind: "Case",
 					governedCase: "Dat",
-					referent: "Someone",
 				},
 			},
 		],
@@ -99,7 +97,6 @@ test("a German pronominal adverb spells the preposition it holds", () => {
 			kind: "Preposition",
 			preposition: preposition(canonicalForm),
 			governedCase: "Dat",
-			referent: "Something",
 		},
 		realizedCase: "Dat",
 	});
@@ -171,12 +168,11 @@ test("valency evidence names only Case and Preposition complements, by their gov
 			evidence({
 				kind: "Case",
 				governedCase: "Nom",
-				referent: "Someone",
 			}),
 		).success,
 	).toBe(true);
 	for (const complement of [
-		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "Case", case: "Nom" },
 		{ kind: "Adverbial", standIn: "Irgendwo" },
 		{ kind: "Predicative", of: "Subject", marker: "None" },
 		{ kind: "Clause", form: "Dass" },
@@ -210,7 +206,6 @@ test("a governor's preposition slot passes Dumling in any oblique case, listed o
 					kind: "Preposition",
 					preposition: preposition(canonicalForm),
 					governedCase: grammaticalCase,
-					referent: "Either",
 				},
 				realizedCase: grammaticalCase,
 			},
@@ -242,7 +237,6 @@ const adpAttestation = (
 						complement: {
 							kind: "Case",
 							governedCase: realizedCase,
-							referent: "Either",
 						},
 						realizedCase,
 					},
@@ -336,7 +330,6 @@ test("a Locution ADP Attestation records at most one bare-case slot", () => {
 							complement: {
 								kind: "Case",
 								governedCase: realizedCase,
-								referent: "Either",
 							},
 							realizedCase,
 						},
@@ -383,7 +376,6 @@ test("an adjective or noun Attestation names its owned governed preposition like
 			kind: "Preposition",
 			preposition: auf,
 			governedCase: "Acc",
-			referent: "Someone",
 		},
 		realizedCase: "Acc",
 	};
@@ -460,7 +452,6 @@ test("an adjective or noun Attestation names its owned governed preposition like
 					kind: "Preposition",
 					preposition: preposition("vor"),
 					governedCase: "Dat",
-					referent: "Something",
 				},
 				realizedCase: "Dat",
 			},
@@ -494,9 +485,8 @@ test("a Hebrew governor may name its governed preposition with no case", () => {
 			canonicalForm: "ב",
 			coreFeatures: { abbr: null, case: null },
 		},
-		referent: "Something",
 	};
-	const subject = { kind: "Subject", referent: "Someone" };
+	const subject = { kind: "Subject" };
 	const bachar = {
 		unitKind: "Attestation",
 		surface: {
@@ -572,7 +562,6 @@ test("a Hebrew governor may name its governed preposition with no case", () => {
 				complement: {
 					kind: "Case",
 					governedCase: "Acc",
-					referent: "Someone",
 				},
 			},
 		],
@@ -617,10 +606,9 @@ test("an English governor may name its governed preposition with no case", () =>
 	const on = {
 		kind: "Preposition",
 		preposition: onLemma,
-		referent: "Something",
 	};
-	const subject = { kind: "Subject", referent: "Someone" };
-	const indirectObject = { kind: "IndirectObject", referent: "Someone" };
+	const subject = { kind: "Subject" };
+	const indirectObject = { kind: "IndirectObject" };
 	const depend = {
 		unitKind: "Attestation",
 		surface: {
@@ -683,7 +671,6 @@ test("an English governor may name its governed preposition with no case", () =>
 				complement: {
 					kind: "Case",
 					governedCase: "Dat",
-					referent: "Someone",
 				},
 			},
 		],

@@ -250,8 +250,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -277,8 +276,7 @@
 										"canonicalForm": "von",
 										"coreFeatures": {}
 									},
-									"governedCase": "Dat",
-									"referent": "Something"
+									"governedCase": "Dat"
 								},
 								{
 									"kind": "Clause",

@@ -6,15 +6,12 @@ test("a Preposition complement covers the same preposition and case only, altern
 		kind: "Preposition",
 		preposition: { canonicalForm },
 		governedCase,
-		referent: "Either",
 	});
 	const knowledge = {
 		valency: [
 			{
 				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
-				],
+				complements: [{ kind: "Case", governedCase: "Dat" }],
 			},
 			{
 				status: "Optional",

@@ -4,11 +4,7 @@ import {
 	isCaselessValencyAttestation,
 } from "../../../validation/evidence-semantics.js";
 import { routePolicy } from "../../route-policy.js";
-import {
-	indexSchema,
-	plainLemmaSchema,
-	referentSchema,
-} from "../../unit-parts.js";
+import { indexSchema, plainLemmaSchema } from "../../unit-parts.js";
 import { EnAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
 
 /**
@@ -17,22 +13,15 @@ import { EnAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
  * `give him a book`), or a governed preposition's ADP Lemma (`depend on`).
  */
 const englishComplementSchema = z.union([
-	z.strictObject({ kind: z.literal("Subject"), referent: referentSchema }),
-	z.strictObject({
-		kind: z.literal("DirectObject"),
-		referent: referentSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("IndirectObject"),
-		referent: referentSchema,
-	}),
+	z.strictObject({ kind: z.literal("Subject") }),
+	z.strictObject({ kind: z.literal("DirectObject") }),
+	z.strictObject({ kind: z.literal("IndirectObject") }),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: plainLemmaSchema(
 			{ language: "en", family: "Lexeme", kind: "ADP" },
 			EnAdpositionFeatureBagsSchema.shape.core,
 		),
-		referent: referentSchema,
 	}),
 ]);
 

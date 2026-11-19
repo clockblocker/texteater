@@ -51,11 +51,6 @@ const readingValueReadingValidator = v.object({
 	emojiDescription: v.optional(v.string()),
 });
 
-const valencyReferentValidator = v.union(
-	v.literal("Someone"),
-	v.literal("Something"),
-	v.literal("Either"),
-);
 export const governedCaseValidator = v.union(
 	v.literal("Acc"),
 	v.literal("Dat"),
@@ -98,8 +93,8 @@ const clauseCorrelateValues = [
 /**
  * A Valency Frame Slot, as the Valency Block reads it: its status and its
  * alternatives (ADR 0034). German complements are marked by case, or are an
- * Adverbial, Predicative, Clause or Reflexive with no referent; Hebrew and
- * English ones are marked by function or position and preposition.
+ * Adverbial, Predicative, Clause or Reflexive; Hebrew and English ones are
+ * marked by function or position and preposition.
  */
 export const valencySlotValidator = v.object({
 	status: v.union(v.literal("Required"), v.literal("Optional")),
@@ -108,13 +103,11 @@ export const valencySlotValidator = v.object({
 			v.object({
 				kind: v.literal("Case"),
 				governedCase: v.union(v.literal("Nom"), governedCaseValidator),
-				referent: valencyReferentValidator,
 			}),
 			v.object({
 				kind: v.literal("Preposition"),
 				preposition: readingValueLemmaValidator,
 				governedCase: governedCaseValidator,
-				referent: valencyReferentValidator,
 			}),
 			v.object({
 				kind: v.literal("Adverbial"),
@@ -145,12 +138,10 @@ export const valencySlotValidator = v.object({
 					v.literal("DirectObject"),
 					v.literal("IndirectObject"),
 				),
-				referent: valencyReferentValidator,
 			}),
 			v.object({
 				kind: v.literal("Preposition"),
 				preposition: readingValueLemmaValidator,
-				referent: valencyReferentValidator,
 			}),
 		),
 	),

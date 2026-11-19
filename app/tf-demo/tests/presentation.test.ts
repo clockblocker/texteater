@@ -215,7 +215,6 @@ test("a stored Valency Frame reaches the Reading Note and renders in its heading
 					kind: "Preposition",
 					preposition: germanAdposition("auf"),
 					governedCase: "Acc",
-					referent: "Either",
 				},
 			],
 		},
@@ -304,9 +303,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 		}) as const;
 	const subject: Dumrel.ValencySlot = {
 		status: "Required",
-		complements: [
-			{ kind: "Case", governedCase: "Nom", referent: "Someone" },
-		],
+		complements: [{ kind: "Case", governedCase: "Nom" }],
 	};
 	const frames: readonly {
 		readonly lemma: ReturnType<typeof verb>;
@@ -323,13 +320,11 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 							kind: "Preposition",
 							preposition: germanAdposition("über"),
 							governedCase: "Acc",
-							referent: "Either",
 						},
 						{
 							kind: "Preposition",
 							preposition: germanAdposition("von"),
 							governedCase: "Dat",
-							referent: "Either",
 						},
 					],
 				},
@@ -368,7 +363,6 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 							kind: "Preposition",
 							preposition: germanAdposition("auf"),
 							governedCase: "Acc",
-							referent: "Either",
 						},
 						{ kind: "Clause", form: "Dass", correlate: "Required" },
 					],
@@ -384,7 +378,6 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 						{
 							kind: "Case",
 							governedCase: "Nom",
-							referent: "Something",
 						},
 						{ kind: "Clause", form: "Dass" },
 					],
@@ -395,7 +388,6 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 						{
 							kind: "Case",
 							governedCase: "Acc",
-							referent: "Something",
 						},
 						{ kind: "Clause", form: "Dass" },
 					],

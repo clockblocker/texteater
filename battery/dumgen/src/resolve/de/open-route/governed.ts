@@ -45,10 +45,6 @@ export type GovernedQuestions = Governable & {
 	readonly governed: ChoiceOf<typeof options.governed> | undefined;
 	/** A governor's case question, when the table lets the preposition take more than one. */
 	readonly governedCase: Choice<AdpCase> | undefined;
-	/** A governor's question of what the complement refers to; none for a pronominal adverb. */
-	readonly governedReferent:
-		| ChoiceOf<typeof options.governedReferent>
-		| undefined;
 };
 
 /**
@@ -118,7 +114,7 @@ function governableMembers(
  * governs (de/bracket-particle-or-circumposition,
  * de/governed-preposition-joins-its-governor). So the last twin is never
  * asked as a governed preposition and the earlier ones are governed
- * without asking; only their case and referent are asked. The answer is
+ * without asking; only their case is asked. The answer is
  * each twin's position: "Particle" for the last, "Governed" for the others.
  */
 function bracketTwins(
@@ -183,9 +179,8 @@ function governedChoice(
 
 /**
  * Asks, of each member no satellite `taken` that may be a preposition,
- * whether the head governs it; of a governor's, also the case it governs
- * and what its complement refers to, which a pronominal adverb's da-
- * settles as a thing. A VERB's twin prepositions are read by
+ * whether the head governs it; of a governor's, also the case it governs.
+ * A VERB's twin prepositions are read by
  * `bracketTwins` instead.
  */
 export function askGoverned(
@@ -212,7 +207,6 @@ export function askGoverned(
 				...chosen,
 				governed,
 				governedCase: undefined,
-				governedReferent: undefined,
 			};
 		const governedCase =
 			allowed.length > 1
@@ -222,14 +216,7 @@ export function askGoverned(
 						optionsOf(allowed, options.case),
 					)
 				: undefined;
-		const governedReferent = chosen.adverb
-			? undefined
-			: questionnaire.choice(
-					`governedReferent_m${member.position}`,
-					fill(question.governedReferent, { m: member.ref }),
-					options.governedReferent,
-				);
-		return { ...chosen, governed, governedCase, governedReferent };
+		return { ...chosen, governed, governedCase };
 	});
 }
 
@@ -253,7 +240,7 @@ export type GovernedMember = {
 
 /**
  * Reads which members the head governs, and a governor's valency evidence
- * for each. A pronominal adverb's complement is a thing.
+ * for each.
  */
 export const readGoverned = answerReader(function* (
 	governable: readonly GovernedQuestions[],
@@ -286,11 +273,6 @@ export const readGoverned = answerReader(function* (
 				kind: "Preposition",
 				preposition: prepositionLemma(preposition),
 				governedCase,
-				referent: adverb
-					? "Something"
-					: ((chosen.governedReferent &&
-							answered.peek(chosen.governedReferent)) ??
-						"Either"),
 			},
 			realizedCase: governedCase,
 		});

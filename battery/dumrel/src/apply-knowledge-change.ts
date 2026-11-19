@@ -11,7 +11,6 @@ import type {
 	ReadingKnowledge,
 	SemanticRelations,
 	Translation,
-	ValencyComplement,
 	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
@@ -169,9 +168,9 @@ function applyValency(
 	change: Extract<KnowledgeChange, { aspect: "valency" }>,
 ): void {
 	const frame = knowledge.valency ?? [];
+	const key = structuralKeys();
 	let next: ValencySlot[];
 	if (change.kind === "Retract") {
-		const key = structuralKeys();
 		const retracted = change.complement && key(change.complement);
 		next = retracted
 			? frame.flatMap((slot) => {
@@ -186,49 +185,20 @@ function applyValency(
 	} else if (change.kind === "Correct") next = structuredClone(change.value);
 	else {
 		next = [...frame];
-		for (const slot of change.value)
+		for (const slot of change.value) {
+			const contributed = new Set(slot.complements.map(key));
 			if (
 				!next.some((stored) =>
 					stored.complements.some((complement) =>
-						slot.complements.some((contributed) =>
-							fills(complement, contributed),
-						),
+						contributed.has(key(complement)),
 					),
 				)
 			)
 				next.push(structuredClone(slot));
+		}
 	}
 	if (next.length === 0) delete knowledge.valency;
 	else knowledge.valency = next;
-}
-
-/**
- * A stored complement already covers a contributed one when both are the same
- * apart from their referents, and those agree or one is Either: an attested
- * `auf` + Acc adds nothing to a proposed `auf` + Acc Someone. A complement
- * with no referent (an Adverbial, Predicative or Clause) covers only itself.
- */
-function fills(
-	stored: ValencyComplement,
-	contributed: ValencyComplement,
-): boolean {
-	const key = structuralKeys();
-	const [storedReferent, storedRest] = splitReferent(stored);
-	const [contributedReferent, contributedRest] = splitReferent(contributed);
-	return (
-		key(storedRest) === key(contributedRest) &&
-		(storedReferent === contributedReferent ||
-			storedReferent === "Either" ||
-			contributedReferent === "Either")
-	);
-}
-
-function splitReferent(
-	complement: ValencyComplement,
-): [string | undefined, object] {
-	if (!("referent" in complement)) return [undefined, complement];
-	const { referent, ...rest } = complement;
-	return [referent, rest];
 }
 
 type ReadingRelations = Extract<SemanticRelations, { targetKind: "reading" }>;

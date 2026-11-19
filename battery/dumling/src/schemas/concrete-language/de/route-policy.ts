@@ -22,7 +22,6 @@ import {
 	indexSchema,
 	memberSchema,
 	plainLemmaSchema,
-	referentSchema,
 } from "../../unit-parts.js";
 import { DeAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
 
@@ -37,8 +36,7 @@ const germanPrepositionSchema = plainLemmaSchema(
  * E-VALBU: a bare case, a preposition's ADP Lemma with the case it governs
  * in this construction, or a lexical reflexive with the case its Reading
  * fixes, and with the ADP Lemma it follows inside a fixed phrase (`außer sich
- * sein`: `außer` + Dat) (ADR 0052). `referent` says whether a Case or Preposition names a
- * person, a thing, or either. The field is `governedCase`, since an
+ * sein`: `außer` + Dat) (ADR 0052). The field is `governedCase`, since an
  * Attestation names no Feature Pool feature (ADR 0032). Evidence takes no
  * Adverbial, Predicative or Clause: nothing produces or reads them here.
  */
@@ -46,13 +44,11 @@ const germanComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Case"),
 		governedCase: germanCaseSchema,
-		referent: referentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: germanPrepositionSchema,
 		governedCase: germanCaseSchema.exclude(["Nom"]),
-		referent: referentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Reflexive"),

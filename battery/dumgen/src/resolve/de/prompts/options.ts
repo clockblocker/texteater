@@ -144,11 +144,6 @@ export const options = {
 		Governed: "Yes: the unit's own head selects that preposition here",
 		Free: "No: another word selects it, or it is an adjunct or a connective",
 	},
-	governedReferent: {
-		Someone: "A person or people",
-		Something: "A thing, place, event, fact or idea",
-		Either: "Either: the sentence leaves it open or it names both",
-	},
 } as const;
 
 /** A Case a NOUN's Case question may offer: a case, or Unmarked. */

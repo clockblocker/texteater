@@ -116,7 +116,6 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 								kind: "Preposition",
 								preposition: { canonicalForm: "vor" },
 								governedCase: "Dat",
-								referent: "Either",
 							},
 						],
 					},

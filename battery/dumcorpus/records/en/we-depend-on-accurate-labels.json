@@ -67,8 +67,7 @@
 								"kind": "ADP",
 								"canonicalForm": "on",
 								"coreFeatures": { "abbr": null, "extPos": null }
-							},
-							"referent": "Something"
+							}
 						}
 					}
 				]

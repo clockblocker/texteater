@@ -647,8 +647,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -665,8 +664,7 @@
 										"canonicalForm": "an",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								},
 								{
 									"kind": "Clause",
@@ -760,8 +758,7 @@
 								"canonicalForm": "an",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

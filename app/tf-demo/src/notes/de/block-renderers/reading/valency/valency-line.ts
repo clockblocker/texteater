@@ -48,7 +48,7 @@ export type ValencyLinePart =
 			readonly preposition: string | null;
 			/** Nom only on a Surface's line, as its subject `jD` (#1293). */
 			readonly case: SlotCase;
-			/** The person form of the case, whatever the referent: `jD`, `jN`, `jM` or `jS`. */
+			/** The person form of the case: `jD`, `jN`, `jM` or `jS`. */
 			readonly token: string;
 	  };
 

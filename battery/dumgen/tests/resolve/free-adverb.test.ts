@@ -48,7 +48,6 @@ test("a free pronominal adverb the head governs is its preposition's evidence wi
 					coreFeatures: {},
 				},
 				governedCase: "Acc",
-				referent: "Something",
 			},
 			realizedCase: "Acc",
 		},

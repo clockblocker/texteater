@@ -44,28 +44,15 @@ export const readRuns = (files: readonly string[]): RunRecord[] =>
 export function scoreCalls(
 	records: readonly RunRecord[],
 	cases: ReadonlyMap<string, ValencyCase>,
-	options: {
-		readonly ignoreReferent?: boolean;
-		/** What a revision's answer reads as in production's notation. */
-		readonly adapt?: (revision: string, output: unknown) => unknown;
-	} = {},
 ): Scored[] {
 	return records.map((record) => {
 		const entry = cases.get(record.caseId);
 		if (!entry) throw Error(`${record.caseId} is no bench case`);
 		let unreadable = record.output === undefined;
-		const verdict = verdictOf(
-			entry.goldCase,
-			() =>
-				record.output === undefined
-					? { ok: false, message: record.failure ?? "no answer" }
-					: {
-							ok: true,
-							output: options.adapt
-								? options.adapt(record.revision, record.output)
-								: record.output,
-						},
-			{ ignoreReferent: options.ignoreReferent ?? false },
+		const verdict = verdictOf(entry.goldCase, () =>
+			record.output === undefined
+				? { ok: false, message: record.failure ?? "no answer" }
+				: { ok: true, output: record.output },
 		);
 		if (verdict.failed?.startsWith("Luna")) unreadable = true;
 		return {

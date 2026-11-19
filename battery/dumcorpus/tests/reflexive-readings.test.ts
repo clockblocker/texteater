@@ -26,11 +26,10 @@ const reading = (canonicalForm: string, emojiDescription: string) =>
 		lemma: lemma(canonicalForm),
 		emojiDescription,
 	}) as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-const nom = { kind: "Case", governedCase: "Nom", referent: "Someone" } as const;
+const nom = { kind: "Case", governedCase: "Nom" } as const;
 const acc = {
 	kind: "Case",
 	governedCase: "Acc",
-	referent: "Something",
 } as const;
 const frame = (
 	status: Dumrel.ValencySlotStatus,

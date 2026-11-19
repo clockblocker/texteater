@@ -65,28 +65,14 @@ export type Verdict = {
 	readonly frame?: unknown;
 };
 
-/** A frame with every complement's referent left out, for a notation that names none. */
-const withoutReferents = (frame: unknown): unknown =>
-	Array.isArray(frame)
-		? frame.map((slot) => ({
-				...slot,
-				complements: slot.complements.map(
-					({ referent: _, ...complement }: Record<string, unknown>) =>
-						complement,
-				),
-			}))
-		: frame;
-
 /**
  * Runs `produceValency` on a case with `answer` standing in for Luna:
  * correct when no valency failure stands and the frame equals gold's, an
  * aspect reviewed empty being right only when nothing was produced.
- * `ignoreReferent` compares the frames with no complement's referent.
  */
 export function verdictOf(
 	goldCase: KnowledgeCase,
 	answer: (draft: LunaDraft) => Answered,
-	options: { readonly ignoreReferent?: boolean } = {},
 ): Verdict {
 	const write: Write = (stage, draft, check) => {
 		const answered = answer(draft);
@@ -108,20 +94,8 @@ export function verdictOf(
 	const [change] = changes;
 	const frame = change && "value" in change ? change.value : undefined;
 	const status = goldCase.gold?.coverage.valency;
-	const authored =
-		status === "Authored" ? (goldCase.gold?.knowledge ?? {}) : {};
-	const gold =
-		options.ignoreReferent && authored.valency
-			? { ...authored, valency: withoutReferents(authored.valency) }
-			: authored;
-	const produced =
-		frame === undefined
-			? {}
-			: {
-					valency: options.ignoreReferent
-						? withoutReferents(frame)
-						: frame,
-				};
+	const gold = status === "Authored" ? (goldCase.gold?.knowledge ?? {}) : {};
+	const produced = frame === undefined ? {} : { valency: frame };
 	const correct =
 		failures.length === 0 &&
 		sameAspect(

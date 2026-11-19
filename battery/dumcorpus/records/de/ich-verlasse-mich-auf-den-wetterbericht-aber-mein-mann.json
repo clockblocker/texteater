@@ -273,8 +273,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Either"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}
@@ -546,8 +545,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Something"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

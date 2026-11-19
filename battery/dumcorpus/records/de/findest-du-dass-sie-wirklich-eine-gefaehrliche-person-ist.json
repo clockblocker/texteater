@@ -1734,8 +1734,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Either"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -1744,8 +1743,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Acc",
-									"referent": "Something"
+									"governedCase": "Acc"
 								},
 								{
 									"kind": "Clause",
@@ -1764,8 +1762,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Dat",
-									"referent": "Either"
+									"governedCase": "Dat"
 								}
 							]
 						}

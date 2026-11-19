@@ -125,7 +125,6 @@ export const readFreeAdverbs = answerReader(function* (
 				kind: "Preposition",
 				preposition: prepositionLemma(adverb.preposition),
 				governedCase,
-				referent: "Something",
 			},
 			realizedCase: governedCase,
 		});

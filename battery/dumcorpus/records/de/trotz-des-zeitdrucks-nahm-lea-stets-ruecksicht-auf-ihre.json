@@ -98,8 +98,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"governedCase": "Gen",
-							"referent": "Either"
+							"governedCase": "Gen"
 						},
 						"realizedCase": "Gen"
 					}
@@ -160,8 +159,7 @@
 							"complements": [
 								{
 									"kind": "Case",
-									"governedCase": "Nom",
-									"referent": "Someone"
+									"governedCase": "Nom"
 								}
 							]
 						},
@@ -178,8 +176,7 @@
 										"canonicalForm": "auf",
 										"coreFeatures": {}
 									},
-									"governedCase": "Acc",
-									"referent": "Either"
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -249,8 +246,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": {}
 							},
-							"governedCase": "Acc",
-							"referent": "Someone"
+							"governedCase": "Acc"
 						},
 						"realizedCase": "Acc"
 					}

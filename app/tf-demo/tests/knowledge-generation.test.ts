@@ -113,7 +113,6 @@ test("intake attests no government, so a Full Reading with its translations dema
 							kind: "Preposition",
 							preposition: { canonicalForm: "vor" },
 							governedCase: "Dat",
-							referent: "Either",
 						},
 					],
 				},

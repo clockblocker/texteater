@@ -28,7 +28,6 @@ const caseSlot = (realizedCase: string) => ({
 	complement: {
 		kind: "Case",
 		governedCase: realizedCase,
-		referent: "Either",
 	},
 	realizedCase,
 });
@@ -140,7 +139,6 @@ const prepositionComplement = (
 	kind: "Preposition",
 	preposition: adposition(canonicalForm),
 	governedCase: grammaticalCase,
-	referent: "Either",
 });
 const frame = (canonicalForm: string, grammaticalCase: string) =>
 	[
@@ -449,7 +447,6 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 						kind: "Preposition",
 						preposition: adposition(preposition),
 						governedCase: grammaticalCase,
-						referent: "Either",
 					},
 					realizedCase: grammaticalCase,
 				},
