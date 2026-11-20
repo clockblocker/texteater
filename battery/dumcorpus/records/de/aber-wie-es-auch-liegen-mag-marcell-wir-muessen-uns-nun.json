@@ -1110,7 +1110,6 @@
 							"complements": [
 								{
 									"kind": "Predicative",
-									"of": "Object",
 									"marker": "None"
 								}
 							]

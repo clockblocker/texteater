@@ -413,9 +413,7 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 		},
 		{
 			status: "Optional",
-			complements: [
-				{ kind: "Predicative", of: "Subject", marker: "Als" },
-			],
+			complements: [{ kind: "Predicative", marker: "Als" }],
 		},
 		{
 			status: "Optional",

@@ -64,12 +64,6 @@ export const adverbialStandInValues = [
 ] as const;
 
 /**
- * What a German Predicative complement describes: the subject (`gut
- * aussehen`) or the object (`jN für dumm halten`).
- */
-export const predicativeOfValues = ["Subject", "Object"] as const;
-
-/**
  * The free word that marks a German Predicative: none (`aussehen`), `als`
  * (`sich zeigen`) or `für` (`halten`). It is never a member and never a
  * Preposition complement (ADR 0034).
@@ -90,9 +84,12 @@ export const clauseFormValues = [
 ] as const;
 
 /**
- * Whether a Clause complement needs the word that anticipates it: `es` in a
- * Nom or Acc Slot, `da(r)-` with the Slot's preposition in a Preposition Slot
- * (`sich freuen auf`: Required `darauf`).
+ * Whether a Clause complement needs the word that anticipates it, or may
+ * take it. The word itself derives from the Clause's Slot: `da(r)-` with the
+ * Slot's one Preposition when it has one (`sich freuen auf`: Required
+ * `darauf`), else the pronoun of the Slot's Case: `es` for Nom or Acc, `dem`
+ * for Dat, `dessen` for Gen. A Slot with neither gives no word, so a Clause
+ * alone in its Slot takes no correlate (ADR 0034).
  */
 export const clauseCorrelateValues = ["Required", "Optional"] as const;
 

@@ -362,8 +362,8 @@ test("a complement the word requires is a Slot whatever marks it", () => {
 	for (const invalid of [
 		{ kind: "Adverbial", standIn: "Irgendwann" },
 		{ ...irgendwo, referent: "Something" },
-		{ kind: "Predicative", of: "Subject", marker: "Wie" },
-		{ kind: "Predicative", of: "Subject" },
+		{ kind: "Predicative", marker: "Wie" },
+		{ kind: "Predicative" },
 		{ kind: "Clause", form: "Wenn" },
 		{ ...dassClause, correlate: "Never" },
 	])
@@ -459,11 +459,7 @@ test("an Adverbial, Predicative or Clause may recur in another Slot, never in it
 			knowledge: { valency: twoPlaces },
 		}),
 	).toEqual({ success: true, value: { valency: twoPlaces } });
-	const predicative = {
-		kind: "Predicative",
-		of: "Subject",
-		marker: "None",
-	} as const;
+	const predicative = { kind: "Predicative", marker: "None" } as const;
 	for (const complement of [dassClause, irgendwo, predicative]) {
 		const repeated = parseReadingKnowledge({
 			source: wohnenReading,
@@ -489,11 +485,7 @@ test("each German route allows its own complement kinds", () => {
 			source,
 			knowledge: { valency: [optional(complement)] },
 		}).success;
-	const predicative = {
-		kind: "Predicative",
-		of: "Subject",
-		marker: "None",
-	} as const;
+	const predicative = { kind: "Predicative", marker: "None" } as const;
 	const zuInfinitive = { kind: "Clause", form: "ZuInfinitive" } as const;
 	// Verbs take every German kind: a copula's Predicative of its subject.
 	for (const complement of [irgendwo, predicative, zuInfinitive])

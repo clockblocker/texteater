@@ -27,7 +27,13 @@ governor's Valency Frame
 ([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)),
 alternatives included, is validated against the table: `warten` `auf` + Acc
 and `bestehen` `auf` + Dat pass, `für` + Dat fails. A governed preposition
-has no ADP Attestation; its case lives in the governor's frame.
+has no ADP Attestation; its case lives in the governor's frame. Every
+Preposition complement names its case, a one-case preposition's too: the
+Valency Block prints it (`mit jM`), and a two-way preposition needs it. A
+frame Luna proposes is held to the table where it enters: its notation's
+pattern writes each preposition a governor selects only with the cases its
+Prep position allows, so `mit` + Acc can't be written, and nothing turns a
+wrong letter into the one case a preposition takes.
 
 **A free ADP occurrence records its case.** It records the case it took as
 `realizedCase` in its `valencyEvidence`, from the judgement Grammatical

@@ -174,7 +174,7 @@ test("valency evidence names only Case and Preposition complements, by their gov
 	for (const complement of [
 		{ kind: "Case", case: "Nom" },
 		{ kind: "Adverbial", standIn: "Irgendwo" },
-		{ kind: "Predicative", of: "Subject", marker: "None" },
+		{ kind: "Predicative", marker: "None" },
 		{ kind: "Clause", form: "Dass" },
 		{ kind: "Clause", form: "ZuInfinitive", correlate: "Optional" },
 	])

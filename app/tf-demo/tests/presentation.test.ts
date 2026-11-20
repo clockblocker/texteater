@@ -346,9 +346,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 				subject,
 				{
 					status: "Required",
-					complements: [
-						{ kind: "Predicative", of: "Subject", marker: "None" },
-					],
+					complements: [{ kind: "Predicative", marker: "None" }],
 				},
 			],
 		},

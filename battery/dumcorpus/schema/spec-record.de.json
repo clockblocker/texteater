@@ -17637,13 +17637,6 @@
 							"type": "string",
 							"const": "Predicative"
 						},
-						"of": {
-							"type": "string",
-							"enum": [
-								"Subject",
-								"Object"
-							]
-						},
 						"marker": {
 							"type": "string",
 							"enum": [
@@ -17655,7 +17648,6 @@
 					},
 					"required": [
 						"kind",
-						"of",
 						"marker"
 					],
 					"additionalProperties": false

@@ -4,10 +4,12 @@
  * shape of #674, holding only the complement kinds the route allows
  * (`allowedComplementKinds`). Luna writes it in German dictionary
  * notation in case letters (`N (A|(es) dass)`, `valency-notation.ts`),
- * one string a strict schema's pattern holds, read back into those Slots.
- * Dumrel checks them Slot by Slot: a Slot it refuses, such as a Place on a
- * German noun, is dropped and named in a `DroppedValencySlots` event, and
- * its siblings stay (#675).
+ * one string a strict schema's pattern holds, read back into those Slots:
+ * the pattern holds only a preposition a governor selects, with a case it
+ * governs. Dumrel checks them Slot by Slot: a Slot it refuses, such as a
+ * Place on a German noun, a Nom past the first Slot or a correlate with no
+ * Case or Preposition to take its word from, is dropped and named in a
+ * `DroppedValencySlots` event, and its siblings stay (#675).
  *
  * The occurrence's `valencyEvidence` joins the frame only when the
  * occurrence created the Reading (`origin` New, #677): each governed
@@ -28,9 +30,7 @@
  * `außer` + Dat).
  */
 
-import { isRecord } from "common-utils";
 import {
-	germanAdpositionAllows,
 	germanGovernablePrepositions,
 	reflexiveMarker,
 } from "dumcorpus/inventories";
@@ -52,7 +52,12 @@ import {
 	write,
 } from "./context.js";
 import { shared, valency } from "./prompts.js";
-import { germanFramePattern, parseGermanFrame } from "./valency-notation.js";
+import {
+	germanFramePattern,
+	type ProposedComplement,
+	type ProposedSlot,
+	parseGermanFrame,
+} from "./valency-notation.js";
 import { examplesParagraph, notationParagraphs } from "./valency-prompts.js";
 
 /**
@@ -98,11 +103,12 @@ const frameAnswer = { type: "string", pattern: germanFramePattern } as const;
 
 /**
  * The Slots Luna's notation reads as, each preposition its Canonical Form,
- * or why it reads as none: under the pattern only a frame the German table
- * refuses (a correlate before a noun phrase, a case its preposition cannot
- * take) fails, as an answer outside the schema did.
+ * or why it reads as none: the parser reads exactly what the pattern holds,
+ * so only an answer outside the schema fails.
  */
-function frameOf(output: unknown): readonly unknown[] | InvalidModelOutput {
+function frameOf(
+	output: unknown,
+): readonly ProposedSlot[] | InvalidModelOutput {
 	if (typeof output !== "string")
 		return unusable("valency", "Luna answered no frame");
 	const read = parseGermanFrame(output);
@@ -126,71 +132,35 @@ const prepositionLemma = (
 	coreFeatures: {},
 });
 
-/**
- * A proposed complement in Dumrel's shape: a preposition becomes its ADP
- * Lemma.
- */
-function complementOf(value: unknown): unknown {
-	if (
-		!isRecord(value) ||
-		(value.kind !== "Preposition" && value.kind !== "Reflexive") ||
-		typeof value.preposition !== "string"
-	)
-		return value;
-	return { ...value, preposition: prepositionLemma(value.preposition) };
+/** A proposed complement in Dumrel's shape: a preposition becomes its ADP Lemma. */
+function germanComplementOf(
+	complement: ProposedComplement,
+): Dumrel.GermanValencyComplement {
+	if (complement.kind === "Preposition")
+		return {
+			...complement,
+			preposition: prepositionLemma(complement.preposition),
+		};
+	if (complement.kind === "Reflexive" && complement.preposition !== undefined)
+		return {
+			...complement,
+			preposition: prepositionLemma(complement.preposition),
+		};
+	if (complement.kind === "Reflexive")
+		return { kind: "Reflexive", governedCase: complement.governedCase };
+	return complement;
 }
 
 /**
- * A Slot as Luna proposed it, each preposition made its ADP Lemma: model
- * output, so nothing about it is known until Dumgen and Dumrel check it.
- */
-type ProposedSlot = Readonly<Record<string, unknown>> & {
-	readonly complements: readonly unknown[];
-};
-
-/** Why Dumgen refuses a Slot before Dumrel sees it, if it does. */
-function slotProblem(slot: ProposedSlot): string | undefined {
-	for (const complement of slot.complements) {
-		if (!isRecord(complement)) continue;
-		// A Reflexive's preposition is a fixed phrase's, so any the ADP Case
-		// Table lists; a Preposition complement's is one a governor selects.
-		const reflexive = complement.kind === "Reflexive";
-		if (
-			!(complement.kind === "Preposition") &&
-			!(reflexive && complement.preposition !== undefined)
-		)
-			continue;
-		const { preposition, governedCase } = complement;
-		const form =
-			isRecord(preposition) &&
-			typeof preposition.canonicalForm === "string"
-				? preposition.canonicalForm
-				: undefined;
-		if (form === undefined || (!reflexive && !governable.has(form)))
-			return `${form} is no preposition a governor selects`;
-		if (typeof governedCase !== "string")
-			return `${form} names no case it governs`;
-		if (
-			!germanAdpositionAllows(
-				{ family: "Lexeme", canonicalForm: form },
-				governedCase,
-			)
-		)
-			return `${form} governs no ${governedCase}`;
-	}
-	return undefined;
-}
-
-/**
- * Whether Dumrel accepts `candidate` onto the Slots kept before it, which
- * makes it a German Slot; `refused` hears why it does not.
+ * Whether Dumrel accepts `candidate` onto the Slots kept before it;
+ * `refused` hears why it does not.
  */
 function acceptedSlot(
 	reading: Dumling.Reading<"de">,
 	kept: readonly GermanSlot[],
-	candidate: ProposedSlot,
+	candidate: GermanSlot,
 	refused: (reason: string) => void,
-): candidate is ProposedSlot & GermanSlot {
+): boolean {
 	const applied = applyKnowledgeChange({
 		source: reading,
 		knowledge: {},
@@ -210,27 +180,21 @@ function acceptedSlot(
  */
 function validFrame(
 	reading: Dumling.Reading<"de">,
-	slots: readonly unknown[],
+	slots: readonly ProposedSlot[],
 ): {
 	readonly kept: GermanSlot[];
-	readonly dropped: { readonly slot: unknown; readonly reason: string }[];
+	readonly dropped: {
+		readonly slot: ProposedSlot;
+		readonly reason: string;
+	}[];
 } {
 	const kept: GermanSlot[] = [];
-	const dropped: { slot: unknown; reason: string }[] = [];
+	const dropped: { slot: ProposedSlot; reason: string }[] = [];
 	for (const slot of slots) {
-		const candidate: ProposedSlot | undefined =
-			isRecord(slot) && Array.isArray(slot.complements)
-				? { ...slot, complements: slot.complements.map(complementOf) }
-				: undefined;
-		if (!candidate) {
-			dropped.push({ slot, reason: "Expected a Slot with complements" });
-			continue;
-		}
-		const problem = slotProblem(candidate);
-		if (problem) {
-			dropped.push({ slot, reason: problem });
-			continue;
-		}
+		const candidate: GermanSlot = {
+			status: slot.status,
+			complements: slot.complements.map(germanComplementOf),
+		};
 		if (
 			acceptedSlot(reading, kept, candidate, (reason) =>
 				dropped.push({ slot, reason }),

@@ -532,9 +532,10 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 	]);
 });
 
-test("a preposition in a case it never governs is dropped too", async () => {
+test("a preposition in a case it never governs is outside the pattern, and reads as no frame", async () => {
+	expect(new RegExp(germanFramePattern, "u").test("N (an G)")).toBe(false);
 	const luna = knowledgeLuna({ valency: "N (an G)" });
-	const { result, trace } = await produceOnce(
+	const { result } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(
 			verb("kämpfen"),
@@ -546,9 +547,32 @@ test("a preposition in a case it never governs is dropped too", async () => {
 			},
 		),
 	);
-	const change = { value: frameOf(result.changes) };
-	expect(change?.value).toHaveLength(1);
-	expect(trace?.events?.[0]?.name).toBe("DroppedValencySlots");
+	expect(result.changes).toEqual([]);
+	expect(
+		result.failures.map(({ aspect, code }) => ({ aspect, code })),
+	).toEqual([{ aspect: "valency", code: "InvalidModelOutput" }]);
+});
+
+test("a lone correlated clause and a Nom past the first Slot read as written, and Dumrel drops their Slots", async () => {
+	for (const [valency, kept] of [
+		["N (es) dass", 1],
+		["N A N", 2],
+	] as const) {
+		const luna = knowledgeLuna({ valency });
+		const { result, trace } = await produceOnce(
+			{ jev: knowledgeJev().ask, luna: luna.ask },
+			knowledgeInput(verb("wissen"), "🧠", "Sie wusste es.", ["wusste"], {
+				request: { valency: null },
+			}),
+		);
+		expect({ valency, kept: frameOf(result.changes)?.length }).toEqual({
+			valency,
+			kept,
+		});
+		expect(trace?.events?.map(({ name }) => name)).toEqual([
+			"DroppedValencySlots",
+		]);
+	}
 });
 
 test("a Closed Route or an authored Reading answers every requested aspect with a CatalogMiss and no call (#883 point 8)", async () => {

@@ -67,10 +67,6 @@ const adverbialStandInValues = [
 	"IrgendwieLange",
 	"IrgendwieViel",
 ] as const satisfies readonly GermanComplement<"Adverbial">["standIn"][];
-const predicativeOfValues = [
-	"Subject",
-	"Object",
-] as const satisfies readonly GermanComplement<"Predicative">["of"][];
 const predicativeMarkerValues = [
 	"None",
 	"Als",
@@ -115,7 +111,6 @@ export const valencySlotValidator = v.object({
 			}),
 			v.object({
 				kind: v.literal("Predicative"),
-				of: literalUnion(predicativeOfValues),
 				marker: literalUnion(predicativeMarkerValues),
 			}),
 			v.object({

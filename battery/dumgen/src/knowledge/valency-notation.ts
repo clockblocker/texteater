@@ -6,7 +6,8 @@
  * prefix word (a preposition, a predicative's marker, a correlate), the
  * prefix itself Optional in `( … )` (`(es) dass`). A frame may open with an
  * opener word (German expletive `es`), and an empty frame is one word of
- * its own.
+ * its own. A frame reads only in the spelling `printFrame` gives it: one
+ * space between Slots and after a prefix, none inside `( … )` or around `|`.
  *
  * What the words mean is a language's word table (`de/valency-notation.ts`;
  * English's and Hebrew's later): which words are
@@ -38,8 +39,16 @@ export type FrameWords = {
 	/** How many words, from `index` on, make one head; 0 when none starts there. */
 	readonly headLength: (words: readonly string[], index: number) => number;
 	readonly isOpener: (word: string) => boolean;
-	/** Whether a prefix stands before this head (German es before a clause, not before D). */
-	readonly combines: (prefix: string, head: string) => boolean;
+	/**
+	 * Whether a prefix stands before this head, `alone` when nothing else
+	 * shares its Slot: German es stands before a clause that has a sibling,
+	 * never before D, and a lone clause's leading es is the opener.
+	 */
+	readonly combines: (
+		prefix: string,
+		head: string,
+		alone: boolean,
+	) => boolean;
 	/** What an empty frame is written as. */
 	readonly empty: string;
 };
@@ -48,10 +57,7 @@ type ParseResult =
 	| { readonly ok: true; readonly frame: RawFrame }
 	| { readonly ok: false; readonly error: string };
 
-/**
- * A word, with any case or role marker written onto it (`sich(A)`,
- * `ADJ(subj)`), or one of `(`, `)`, `|`.
- */
+/** A word, with any case marker written onto it (`sich(A)`), or one of `(`, `)`, `|`. */
 const tokenPattern = /\(|\)|\||[^\s()|]+(?:\([^\s()|]*\))?/gu;
 
 /** The tokens of `text`, or the stray text between them. */
@@ -72,15 +78,26 @@ function tokensOf(
 	return { tokens };
 }
 
-/** Reads a frame's structure: its opener, its Slots, their alternatives. */
+/**
+ * Reads a frame's structure, its opener, its Slots and their alternatives,
+ * from text in the spelling `printFrame` gives it.
+ */
 export function parseFrame(text: string, words: FrameWords): ParseResult {
-	const lexed = tokensOf(text.trim());
+	const read = structureOf(text, words);
+	if (!read.ok) return read;
+	return printFrame(read.frame, words) === text
+		? read
+		: {
+				ok: false,
+				error: `«${text}» is not spelled as the notation writes it`,
+			};
+}
+
+function structureOf(text: string, words: FrameWords): ParseResult {
+	const lexed = tokensOf(text);
 	if ("error" in lexed) return { ok: false, error: lexed.error };
 	const { tokens } = lexed;
-	if (
-		tokens.length === 0 ||
-		(tokens.length === 1 && tokens[0] === words.empty)
-	)
+	if (tokens.length === 1 && tokens[0] === words.empty)
 		return { ok: true, frame: { slots: [] } };
 	let index = 0;
 	const fail = (error: string): ParseResult => ({ ok: false, error });
@@ -133,21 +150,24 @@ export function parseFrame(text: string, words: FrameWords): ParseResult {
 	};
 	let opener: string | undefined;
 	const [first] = tokens;
+	const following = words.headLength(tokens, 1);
 	if (
 		first !== undefined &&
 		words.isOpener(first) &&
-		// An opener that is also a prefix opens only where no head follows it.
+		// An opener that is also a prefix opens unless the head after it takes it.
 		!(
 			words.isPrefix(first) &&
-			words.headLength(tokens, 1) > 0 &&
+			following > 0 &&
 			words.combines(
 				first,
-				tokens.slice(1, 1 + words.headLength(tokens, 1)).join(" "),
+				tokens.slice(1, 1 + following).join(" "),
+				tokens[1 + following] !== "|",
 			)
 		)
 	) {
 		opener = first;
 		index = 1;
+		if (index === tokens.length) return fail(`«${first}» opens no Slot`);
 	}
 	const slots: RawSlot[] = [];
 	while (index < tokens.length) {

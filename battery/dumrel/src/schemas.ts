@@ -29,7 +29,6 @@ import {
 	participleMeaningValues,
 	pluralPatternValues,
 	predicativeMarkerValues,
-	predicativeOfValues,
 	reflexiveCaseValues,
 	sayingTypeValues,
 	translationLanguageValues,
@@ -62,16 +61,17 @@ export const governedCaseSchema = z.enum(governedCaseValues);
 export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
 
 /**
- * German complements, after E-VALBU (ADR 0034): a bare case (`jemandem`, Dat);
- * a governed preposition with the ADP Lemma it selects and the case it governs
- * in this construction (`warten auf` + Acc, `bestehen auf` + Dat); an
- * Adverbial named by its stand-in (`wohnen` irgendwo); a Predicative of the
- * subject or object with its free marker (`jN für dumm halten`); or a Clause
- * of one form, with the correlate it may need (`freuen` 🪞 `auf`: Dass,
- * Required `darauf`); or a lexical Reflexive with its case, and with the ADP
- * Lemma it follows when it is the object of a fixed phrase's preposition
- * (`außer sich sein`: `außer` + Dat), the case that preposition governs
- * (ADR 0052).
+ * German complements, after E-VALBU (ADR 0034): a bare case (`jemandem`, Dat),
+ * the subject's Nom only in the frame's first Slot; a governed preposition
+ * with the ADP Lemma it selects and the case it governs in this construction
+ * (`warten auf` + Acc, `bestehen auf` + Dat); an Adverbial named by its
+ * stand-in (`wohnen` irgendwo); a Predicative with its free marker (`jN für
+ * dumm halten`); or a Clause of one form, with whether it needs or may take a
+ * correlate, whose word its Slot's Preposition or Case gives (`freuen` 🪞
+ * `auf`: Dass, Required `darauf`); or a lexical Reflexive with its case, and
+ * with the ADP Lemma it follows when it is the object of a fixed phrase's
+ * preposition (`außer sich sein`: `außer` + Dat), the case that preposition
+ * governs (ADR 0052).
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
@@ -89,7 +89,6 @@ export const germanValencyComplementSchema = z.union([
 	}),
 	z.strictObject({
 		kind: z.literal("Predicative"),
-		of: z.enum(predicativeOfValues),
 		marker: z.enum(predicativeMarkerValues),
 	}),
 	z.strictObject({
@@ -161,10 +160,13 @@ export const valencySlotSchema = z.strictObject({
 	complements: z.array(valencyComplementSchema).min(1),
 });
 /**
- * The owning Reading's Valency Frame: its Slots in order. A Case or
- * Preposition complement sits in at most one of them; an Adverbial,
- * Predicative or Clause may recur in another Slot (ADR 0034). A Reflexive is
- * alone in its Slot, at most one per frame (ADR 0052). The governor owns
+ * The owning Reading's Valency Frame: its Slots in order. A Preposition
+ * complement sits in at most one of them; a Case, Adverbial, Predicative or
+ * Clause may recur in another Slot (ADRs 0034, 0057). A German Nom stands only
+ * in the first Slot, the subject's, and a German frame with none has no
+ * subject. A Clause with a correlate shares its Slot with the Case or
+ * Preposition its word derives from (ADR 0034). A Reflexive is alone in its
+ * Slot, at most one per frame (ADR 0052). The governor owns
  * every claim; a preposition's side is a read-time projection. Fixed parts
  * (a separable prefix, a Locution's wording) come from Lemma identity and
  * are never Slots.

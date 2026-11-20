@@ -195,8 +195,9 @@ A German complement that describes its subject or object. See [ADR 0034].
 _Avoid_: prepositional object, for the `für` or `als` phrase
 
 **Correlate**:
-The `es` or `da(r)-` word that anticipates a German Clause complement in its
-Slot. It is a unit of its own. See [ADR 0034].
+The word that anticipates a German Clause complement, derived from its Slot:
+`da(r)-` with the Slot's Preposition, else `es`, `dem` or `dessen` for its
+Case. It is a unit of its own. See [ADR 0034].
 _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 
 [ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md

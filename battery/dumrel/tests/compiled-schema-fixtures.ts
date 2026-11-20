@@ -110,7 +110,7 @@ export const samples: Record<string, unknown[]> = {
 		{
 			kind: "Retract",
 			aspect: "valency",
-			complement: { kind: "Predicative", of: "Object", marker: "Für" },
+			complement: { kind: "Predicative", marker: "Für" },
 		},
 		{
 			kind: "Contribute",
@@ -254,8 +254,8 @@ export const samples: Record<string, unknown[]> = {
 		},
 		{ kind: "Adverbial", standIn: "IrgendwieLange" },
 		{ kind: "Adverbial", standIn: "Irgendwo", referent: "Something" },
-		{ kind: "Predicative", of: "Subject", marker: "Als" },
-		{ kind: "Predicative", of: "Subject", marker: "Als", case: "Nom" },
+		{ kind: "Predicative", marker: "Als" },
+		{ kind: "Predicative", marker: "Als", case: "Nom" },
 		{ kind: "Clause", form: "ZuInfinitive" },
 		{ kind: "Clause", form: "Ob", correlate: "Optional" },
 		{ kind: "Clause", form: "Wenn" },
@@ -280,7 +280,7 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Case", governedCase: "Nom" },
 		{ kind: "Subject" },
 		{ kind: "Adverbial", standIn: "IrgendwieViel" },
-		{ kind: "Predicative", of: "Object", marker: "None" },
+		{ kind: "Predicative", marker: "None" },
 		{ kind: "Clause", form: "BareInfinitive" },
 	],
 	hebrewValencyComplement: [

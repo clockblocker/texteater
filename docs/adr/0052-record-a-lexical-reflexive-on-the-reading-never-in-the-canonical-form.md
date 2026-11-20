@@ -98,7 +98,12 @@ of the Canonical Form, since the phrase holds it, and Dumrel checks that.
 against the ADP Case Table
 ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).
 The preposition is a fixed member, not a governed one. It makes no
-Preposition Slot, and its ADP lists no Governor. The user ruled this on
+Preposition Slot, and its ADP lists no Governor. A free `sich` after a
+governed preposition is not this: in *er denkt an sich* it is a free PRON in
+the `an` + Acc Preposition Slot of `denken`, as *sie* is in *er denkt an
+sie*. The fixed-member test splits the two, as it splits a Reflexive Acc
+from a Case Acc, so the Reflexive names its preposition and the line places
+`sich` by it. The user ruled this on
 [#1285](https://github.com/clockblocker/texteater/issues/1285) on
 2026-10-25.
 

@@ -180,7 +180,7 @@ describe("public storage-facing schemas", () => {
 		});
 		for (const complements of [
 			[{ kind: "Adverbial", standIn: "Irgendwohin" }],
-			[{ kind: "Predicative", of: "Subject", marker: "Als" }],
+			[{ kind: "Predicative", marker: "Als" }],
 			[
 				{ kind: "Case", governedCase: "Acc" },
 				{ kind: "Clause", form: "Dass", correlate: "Optional" },

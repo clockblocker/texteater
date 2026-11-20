@@ -2058,11 +2058,7 @@ export type GermanValencyComplement =
 				| "IrgendwieLange"
 				| "IrgendwieViel";
 	  }
-	| {
-			kind: "Predicative";
-			of: "Subject" | "Object";
-			marker: "None" | "Als" | "Für";
-	  }
+	| { kind: "Predicative"; marker: "None" | "Als" | "Für" }
 	| {
 			kind: "Clause";
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
@@ -2105,11 +2101,7 @@ export type ValencyComplement =
 				| "IrgendwieLange"
 				| "IrgendwieViel";
 	  }
-	| {
-			kind: "Predicative";
-			of: "Subject" | "Object";
-			marker: "None" | "Als" | "Für";
-	  }
+	| { kind: "Predicative"; marker: "None" | "Als" | "Für" }
 	| {
 			kind: "Clause";
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";

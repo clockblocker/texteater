@@ -73,7 +73,7 @@ vocabulary. German follows E-VALBU:
 { kind: "Case", governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
 { kind: "Preposition", preposition: /* ADP Lexeme Lemma */, governedCase: "Acc" | "Dat" | "Gen" }
 { kind: "Adverbial", standIn: "Irgendwo" | "Irgendwohin" | "Irgendwie" | "IrgendwieLange" | "IrgendwieViel" }
-{ kind: "Predicative", of: "Subject" | "Object", marker: "None" | "Als" | "Für" }
+{ kind: "Predicative", marker: "None" | "Als" | "Für" }
 { kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", correlate?: "Required" | "Optional" }
 { kind: "Reflexive", governedCase: "Acc" | "Dat", preposition?: /* ADP Lexeme Lemma */ }
 ```
@@ -95,13 +95,14 @@ No complement names its referent, whether a person or a thing fills it
   requires one. The preposition inside it is free
   (see "An occurrence"). Its field is not named `meaning`, since meaning
   belongs to the Reading and its Emoji Description.
-- **Predicative** is E-VALBU's Kprd: `aussehen` takes one of its subject with
-  no marker, and `jN für dumm halten` one of its object marked `für`. It has
-  no case. Its marker `als` or `für` is a free word, and it
-  never makes a Preposition Slot. A copula (`sein`, `werden`, `bleiben`,
-  `scheinen`, `wirken`, `sich zeigen`) has a Required Nom and a Required
-  Predicative of its subject, marked `als` for `sich zeigen` and unmarked for
-  the rest. Whether a complement is Manner or Predicative follows E-VALBU per
+- **Predicative** is E-VALBU's Kprd: `aussehen` takes one with no marker,
+  and `jN für dumm halten` one marked `für`. It has no case, and
+  describes the frame's Acc object, else its subject. Its
+  marker `als` or `für` is a free word, and it never makes a Preposition
+  Slot. A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich
+  zeigen`) has a Required Nom and a Required Predicative, marked `als` for
+  `sich zeigen` and unmarked for the rest. Whether a complement is Manner or
+  Predicative follows E-VALBU per
   Reading. Where E-VALBU lacks the verb, it is Predicative when "X is ADJ"
   holds (`die Suppe sieht lecker aus`: `die Suppe ist lecker`) and Manner
   otherwise (`er benimmt sich gut`).
@@ -110,13 +111,13 @@ No complement names its referent, whether a person or a thing fills it
   Clause ZuInfinitive; `wissen` Acc | Clause Dass | Clause Ob | Clause W), and
   it has a Slot of its own where none can (`sich weigern`). Modals take a
   Clause BareInfinitive, and `helfen` takes Clause BareInfinitive | Clause
-  ZuInfinitive besides its Dat. `correlate` says whether the clause needs a
-  word that anticipates it: `es` in a Nom or Acc Slot, and `da(r)-` with the
-  Slot's preposition in a Preposition Slot. `sich freuen auf` has the Slot
-  `auf` + Acc | Clause Dass with a Required correlate (*darauf*), and `sich
-  freuen über` the same with an Optional one. Since the correlate takes its
-  preposition from the Slot, a Clause with a correlate in a Preposition Slot
-  shares it with exactly one Preposition. A correlate is a unit of its own,
+  ZuInfinitive besides its Dat. `correlate` says only whether the clause
+  needs or may take a word that anticipates it. The word comes from the
+  Slot: `da(r)-` with its one Preposition, else its Case's pronoun (`es`,
+  `dem`, `dessen`). `sich freuen auf` has the Slot `auf` + Acc |
+  Clause Dass with a Required correlate (*darauf*), and `sich freuen über`
+  the same with an Optional one. So a correlated Clause needs a Case or a
+  Preposition beside it, never two Prepositions. A correlate is a unit of its own,
   never a member: `es` stays a PRON and `darauf` an ADV. Recording a clause
   form as a field on the Acc or Preposition complement was rejected in favour
   of Clause alternatives.
@@ -144,8 +145,8 @@ beside a Preposition (`die Freude darauf, dass …`) and in a Slot of its own
 ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)),
 takes no frame.
 
-The subject is a slot too. In German it is the Nom Slot, and it is not
-rendered. A subject clause is an alternative in it: the Nom Slot of `freuen`
+The subject is a slot too. In German it is the Nom Slot, always the first,
+and it is not rendered. A subject clause is an alternative in it: the Nom Slot of `freuen`
 'please' is Nom | Clause Dass with an Optional correlate (`Es freut mich, dass
 du kommst`). A verb with no subject has no Nom slot, and its experiencer is a
 Dat or Acc slot: `mir graut vor` is Required Dat, Optional `vor` + Dat. An

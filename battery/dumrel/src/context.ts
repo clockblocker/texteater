@@ -319,6 +319,41 @@ const onceInFrame: ReadonlySet<ValencyComplement["kind"]> = new Set([
 ]);
 
 /**
+ * Why a Slot's correlated Clause has no word to take, if it has none: its
+ * word is `da(r)-` with the Slot's one Preposition, or else the pronoun of
+ * its Case (ADR 0034).
+ */
+function correlateIssue(
+	complements: readonly ValencyComplement[],
+	path: Path,
+): ParsingError | undefined {
+	const correlated = complements.findIndex(
+		(complement) =>
+			complement.kind === "Clause" && complement.correlate !== undefined,
+	);
+	if (correlated === -1) return undefined;
+	const correlatePath = [...path, "complements", correlated, "correlate"];
+	const prepositions = complements.filter(
+		({ kind }) => kind === "Preposition",
+	).length;
+	if (prepositions > 1)
+		return issue(
+			correlatePath,
+			"A Clause with a correlate in a Preposition Slot needs exactly one Preposition alternative there",
+		);
+	if (
+		!complements.some(
+			({ kind }) => kind === "Case" || kind === "Preposition",
+		)
+	)
+		return issue(
+			correlatePath,
+			"A Clause with a correlate shares its Slot with the Case or Preposition its correlate's word derives from",
+		);
+	return undefined;
+}
+
+/**
  * A frame whose complements the source's route allows. A Preposition
  * complement, and a Hebrew or English Subject or object, appears once in the
  * frame. A German Case complement, like an Adverbial, Predicative or Clause,
@@ -326,9 +361,12 @@ const onceInFrame: ReadonlySet<ValencyComplement["kind"]> = new Set([
  * an Acc in two Slots, and `Dass er kommt, bedeutet, dass …` a Clause Dass in
  * its Nom Slot and in its Acc Slot. Which complements belong in one Slot is
  * the proposal's call; only the correlate is checked: a Clause with a
- * correlate takes its `da(r)-` from the Slot's preposition, so a Slot that
- * holds one has at most one Preposition (ADRs 0034, 0057). A Reflexive is the only
- * complement of its Slot, and a frame has at most one (ADR 0052).
+ * correlate takes its word from its Slot, `da(r)-` with the Slot's one
+ * Preposition or else the pronoun of its Case, so a Slot that holds one has a
+ * Case or Preposition and at most one Preposition (ADRs 0034, 0057). A German
+ * Nom stands only in the first Slot, which makes that Slot the subject's. A
+ * Reflexive is the only complement of its Slot, and a frame has at most one
+ * (ADR 0052).
  */
 function parseValencyFrame<R extends Dumling.Reading>(
 	source: R,
@@ -366,21 +404,19 @@ function parseValencyFrame<R extends Dumling.Reading>(
 					);
 				inFrame.add(identity);
 			}
+			if (
+				index > 0 &&
+				complement.kind === "Case" &&
+				complement.governedCase === "Nom"
+			)
+				return issue(
+					[...complementPath, "governedCase"],
+					"A Nom Case complement stands only in a frame's first Slot, the subject's",
+				);
 			complements.push(complement);
 		}
-		const correlated = complements.findIndex(
-			(complement) =>
-				complement.kind === "Clause" &&
-				complement.correlate !== undefined,
-		);
-		const prepositions = complements.filter(
-			({ kind }) => kind === "Preposition",
-		).length;
-		if (correlated !== -1 && prepositions > 1)
-			return issue(
-				[...path, index, "complements", correlated, "correlate"],
-				"A Clause with a correlate in a Preposition Slot needs exactly one Preposition alternative there",
-			);
+		const correlate = correlateIssue(complements, [...path, index]);
+		if (correlate) return correlate;
 		slots.push({ status: slot.status, complements });
 	}
 	return slots;
