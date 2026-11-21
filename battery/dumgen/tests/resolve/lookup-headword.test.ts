@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
+import { lunaRequestAhead } from "../../src/resolve/luna-ahead.js";
 import {
 	attested,
 	fakeJev,
@@ -161,4 +163,75 @@ test("an adverb is never looked up: a bare w-word or mehr spelled as a stored ad
 	);
 	expect(attested(result).surface.lemma.canonicalForm).toBe("viel");
 	expect(luna.sent).toHaveLength(1);
+});
+
+test("a stored NOUN or VERB Lexeme with a guessed governed preposition is likely looked up, while a Locution is unaffected", async () => {
+	// Der0 _1 Geruch2 _3 von4 _5 Blumen6 .7
+	const geruch = lemmaOf("NOUN", "Geruch", { gender: "Masc" });
+	const nounInput = {
+		language: "de" as const,
+		neighbours: {},
+		sentence: sentenceOf("Der Geruch von Blumen."),
+		unit: unitOf([0, 2, 4], "Lexeme/NOUN"),
+		lemmaCandidates: [{ lemma: geruch, foundUnder: ["Geruch"] }],
+	};
+	expect(Effect.runSync(lunaRequestAhead(nounInput))).toBeUndefined();
+	const nounLuna = writes("never asked");
+	const noun = await resolveOnce(
+		{
+			jev: fakeJev({
+				number: "Sing",
+				case: "Nom",
+				governed_m2: "Governed",
+			}).ask,
+			luna: nounLuna.ask,
+		},
+		nounInput,
+	);
+	expect(attested(noun.result).surface.lemma).toMatchObject({
+		canonicalForm: "Geruch",
+		coreFeatures: { gender: "Masc" },
+	});
+	expect(nounLuna.sent).toEqual([]);
+
+	// Sie0 _1 träumt2 _3 von4 _5 ihm6 .7
+	const träumen = lemmaOf("VERB", "träumen", { hasSepPrefix: null });
+	const verbInput = {
+		language: "de" as const,
+		neighbours: {},
+		sentence: sentenceOf("Sie träumt von ihm."),
+		unit: unitOf([2, 4], "Lexeme/VERB"),
+		lemmaCandidates: [{ lemma: träumen, foundUnder: ["träumt"] }],
+	};
+	expect(Effect.runSync(lunaRequestAhead(verbInput))).toBeUndefined();
+	const verbLuna = writes("never asked");
+	const verb = await resolveOnce(
+		{
+			jev: fakeJev({ governed_m1: "Governed" }).ask,
+			luna: verbLuna.ask,
+		},
+		verbInput,
+	);
+	expect(attested(verb.result).surface.lemma.canonicalForm).toBe("träumen");
+	expect(verbLuna.sent).toEqual([]);
+
+	// A Locution's governed preposition stays inside the headword, so it is
+	// not dropped as a satellite in lookupHeadword.likely.
+	// Sie0 _1 nahm2 _3 Rücksicht4 _5 auf6 _7 ihn8 .9
+	const rücksicht: Dumling.Lemma<"de"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Locution",
+		kind: "VERB",
+		canonicalForm: "Rücksicht nehmen",
+		coreFeatures: {},
+	};
+	const locutionInput = {
+		language: "de" as const,
+		neighbours: {},
+		sentence: sentenceOf("Sie nahm Rücksicht auf ihn."),
+		unit: unitOf([2, 4, 6], "Locution/VERB"),
+		lemmaCandidates: [{ lemma: rücksicht, foundUnder: ["nahm Rücksicht"] }],
+	};
+	expect(Effect.runSync(lunaRequestAhead(locutionInput))).toBeDefined();
 });

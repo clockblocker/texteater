@@ -155,9 +155,12 @@ export function ResolutionInspector() {
 											{click.selectionKind === "Analysis"
 												? "Sentence splitting & analysis"
 												: click.selectionKind ===
-														"Available"
-													? "Stored result"
-													: "Resolution"}
+														"PronounExplanation"
+													? "Pronoun explanation"
+													: click.selectionKind ===
+															"Available"
+														? "Stored result"
+														: "Resolution"}
 											<ChevronRightIcon size={14} />
 										</span>
 									</button>
@@ -341,7 +344,10 @@ function InspectionDetail({
 							? "Captured duration"
 							: detail.click.selectionKind === "Analysis"
 								? "Analysis duration"
-								: "Reading resolved"}{" "}
+								: detail.click.selectionKind ===
+										"PronounExplanation"
+									? "Pronoun explained"
+									: "Reading resolved"}{" "}
 						<strong>{time(resolvedMs ?? total)}</strong>
 					</span>
 					<span className="inspection-chain-reference">

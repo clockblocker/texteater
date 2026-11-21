@@ -61,7 +61,7 @@ describe("Resolution Session execution", () => {
 			}).pipe(capturedLogs().capture),
 		);
 
-		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
+		expect(advances).toEqual([]);
 		expect(settlements).toEqual([]);
 		expect(records).toEqual([
 			{
@@ -129,7 +129,7 @@ describe("Resolution Session execution", () => {
 			}).pipe(capturedLogs().capture),
 		);
 
-		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
+		expect(advances).toEqual([]);
 		expect(records).toEqual([]);
 		expect(progress).toEqual([
 			{

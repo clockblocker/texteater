@@ -1,22 +1,20 @@
 import { z } from "zod";
 import {
 	germanAdpositionAttestationError,
-	germanValencyAttestationError,
-	germanVerbalAttestationError,
-	isGermanAdpositionAttestation,
-	isGermanValencyAttestation,
-	isGermanVerbalAttestation,
-} from "../../../validation/evidence-semantics.js";
-import {
 	germanClosedClassSurfaceError,
 	germanNounSurfaceError,
 	germanProperNounSurfaceError,
+	germanValencyAttestationError,
+	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
+	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanNounSurface,
 	isGermanProperNounSurface,
+	isGermanValencyAttestation,
+	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
-} from "../../../validation/semantics.js";
+} from "../../../validation/languages/de/semantics.js";
 import { routePolicy } from "../../route-policy.js";
 import {
 	indexSchema,

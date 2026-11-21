@@ -17,7 +17,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "./linguisticIdentity";
-import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
+import { parseGermanReading } from "./operationalParsing";
 import type {
 	NonResolvedGrammatical,
 	OrchestrationPersistence,
@@ -50,9 +50,7 @@ type TfDemoOrchestratorOptions<R = never> = {
 	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
 	readonly findStoredReadings: (
 		lemma: Dumling.Lemma<"de">,
-	) =>
-		| Effect.Effect<readonly Dumling.Reading<"de">[], Cause.UnknownError>
-		| Promise<readonly Dumling.Reading<"de">[]>;
+	) => Promise<readonly Dumling.Reading<"de">[]>;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 	/**
@@ -306,10 +304,12 @@ function resolveReadingAndCommit<R>(
 	grammarSaved: Effect.Effect<void, Cause.UnknownError>,
 ) {
 	return Effect.gen(function* () {
-		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
+		const { lemma } = grammatical.attestation.surface;
 		const storedReadings = checkpoints.reading
 			? null
-			: yield* effectFrom(options.findStoredReadings(lemma)).pipe(
+			: yield* Effect.tryPromise(() =>
+					options.findStoredReadings(lemma),
+				).pipe(
 					Effect.withSpan(
 						"Find stored Readings",
 						inspectionStep("battery/dumdict", { lemma }),
@@ -414,7 +414,17 @@ function saveGrammar<R>(
 	const { observer } = options;
 	return checkpoints.grammatical || !observer
 		? Effect.void
-		: Effect.tryPromise(() => observer.grammarAvailable({ grammatical }));
+		: Effect.tryPromise(() =>
+				observer.grammarAvailable({ grammatical }),
+			).pipe(
+				Effect.withSpan(
+					"Save GrammarAvailable",
+					inspectionStep("app/tf-demo · resolutionSessions", {
+						progress: "GrammarAvailable",
+						grammatical,
+					}),
+				),
+			);
 }
 
 /** The Reading a checkpoint holds, a Foreign Lemma's one Reading, or the one judged over the stored candidates. */
@@ -597,13 +607,6 @@ function loadedReadings(
 ): readonly Dumling.Reading<"de">[] {
 	if (!storedReadings) throw new Error("Reading candidates were not loaded.");
 	return storedReadings;
-}
-
-/** Test-port boundary: production Dumdict returns Effects, a test may return a Promise. */
-function effectFrom<Value, Error>(
-	value: Effect.Effect<Value, Error> | Promise<Value>,
-): Effect.Effect<Value, Error | Cause.UnknownError> {
-	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 
 function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {

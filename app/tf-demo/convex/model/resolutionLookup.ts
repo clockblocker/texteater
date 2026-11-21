@@ -90,7 +90,6 @@ export async function loadSentenceForResolution(
 	return {
 		sentenceId,
 		scrollId: sentence.scrollId,
-		segmentedSentenceId: sentence.segmentedSentenceId,
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
 		segments: segments.map(({ index, kind, text, surface }) => ({

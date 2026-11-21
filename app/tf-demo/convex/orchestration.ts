@@ -8,7 +8,6 @@ import {
 	dumgenTraced,
 	inspected,
 	inspectionStep,
-	spanHops,
 } from "../server/inspectionCapture";
 import { unsupportedLanguageMessage } from "../server/intake";
 import {
@@ -173,44 +172,36 @@ export const runResolutionSession = internalAction({
 			guard.requestId,
 			inspect === true,
 		);
-		// Lifecycle hops are promises; they run with the session's services so
-		// their spans sit under the session's.
-		const session = Effect.flatMap(Effect.context<never>(), (services) =>
-			executeResolutionSession({
-				identity: guard,
-				lifecycle: createResolutionSessionLifecycle(
-					ctx,
-					guard,
-					spanHops(services),
-				),
-				// The click's Dumgen is built here, once, inside the run, so
-				// a click that fails to build it is recorded as failed. Under
-				// DEV inspection every Dumgen operation renders as inspection
-				// rows, with payloads (#885).
-				resolve: (selection, checkpoints, observer, context) =>
-					orchestratorFor(ctx, guard, observer)
-						.resolveSegment(selection, checkpoints, context)
-						.pipe(
-							Effect.withSpan(
-								"Resolve selected segment",
-								inspectionStep(
-									"app/tf-demo · linguisticOrchestration",
-									{ selection, checkpoints },
-								),
-							),
-							dumgenTraced(inspection),
-							Effect.provide(
-								clickDumgen(async (requestKey) => {
-									const answer = await ctx.runQuery(
-										internal.lunaAheadBatches.storedAnswer,
-										{ requestKey },
-									);
-									return answer ?? undefined;
-								}),
+		const session = executeResolutionSession({
+			identity: guard,
+			lifecycle: createResolutionSessionLifecycle(ctx, guard),
+			// The click's Dumgen is built here, once, inside the run, so
+			// a click that fails to build it is recorded as failed. Under
+			// DEV inspection every Dumgen operation renders as inspection
+			// rows, with payloads (#885).
+			resolve: (selection, checkpoints, observer, context) =>
+				orchestratorFor(ctx, guard, observer)
+					.resolveSegment(selection, checkpoints, context)
+					.pipe(
+						Effect.withSpan(
+							"Resolve selected segment",
+							inspectionStep(
+								"app/tf-demo · linguisticOrchestration",
+								{ selection, checkpoints },
 							),
 						),
-			}),
-		).pipe(
+						dumgenTraced(inspection),
+						Effect.provide(
+							clickDumgen(async (requestKey) => {
+								const answer = await ctx.runQuery(
+									internal.lunaAheadBatches.storedAnswer,
+									{ requestKey },
+								);
+								return answer ?? undefined;
+							}),
+						),
+					),
+		}).pipe(
 			Effect.withSpan("Resolution session", {
 				...inspectionStep(
 					"app/tf-demo · orchestration.runResolutionSession",

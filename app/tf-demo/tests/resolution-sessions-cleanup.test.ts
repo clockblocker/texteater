@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { api, internal } from "../convex/_generated/api";
+import { advanceResolutionSession } from "../convex/model/resolutionSessions";
 import { createTestConvex } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
 import {
@@ -84,11 +85,13 @@ describe("Resolution Session", () => {
 			progress: "GrammarAvailable",
 			grammar: grammarProjection("loser"),
 		});
-		await t.mutation(internal.resolutionSessions.advance, {
-			guard: failing,
-			progress: "ReadingAvailable",
-			reading: readingProjection("🧪", "loser"),
-		});
+		await t.run((ctx) =>
+			advanceResolutionSession(ctx, {
+				guard: failing,
+				progress: "ReadingAvailable",
+				reading: readingProjection("🧪", "loser"),
+			}),
+		);
 		const winner = await commitBankOccurrence(
 			t,
 			select("request-winner", "visitor-3"),

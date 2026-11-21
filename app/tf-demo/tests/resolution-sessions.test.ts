@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { api, internal } from "../convex/_generated/api";
+import { advanceResolutionSession } from "../convex/model/resolutionSessions";
 import { STALE_RUN_AFTER_MS } from "../server/resolutionLifecycle";
 import { createTestConvex, submitText } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
@@ -14,6 +15,7 @@ import {
 	grammarProjection,
 	patchSession,
 	pendingScheduled,
+	readingProjection,
 	rows,
 	segmentState,
 	session,
@@ -493,11 +495,18 @@ describe("Resolution Session", () => {
 		const guard = await startSession(t, select("request-1"));
 		const advance = (args: {
 			guard: SessionGuard;
-			progress: "RouteAvailable" | "GrammarAvailable";
-			grammar?: ReturnType<typeof grammarProjection>;
+			progress: "GrammarAvailable";
+			grammar: ReturnType<typeof grammarProjection>;
 		}) => t.mutation(internal.resolutionSessions.advance, args);
 
-		expect(await advance({ guard, progress: "RouteAvailable" })).toBe(true);
+		await expect(
+			advance({
+				guard,
+				progress: "GrammarAvailable",
+				grammar: grammarProjection(),
+			}),
+		).rejects.toThrow("GrammarAvailable cannot follow Starting");
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
 		expect(
 			await advance({
 				guard,
@@ -505,9 +514,22 @@ describe("Resolution Session", () => {
 				grammar: grammarProjection(),
 			}),
 		).toBe(true);
-		expect(await advance({ guard, progress: "RouteAvailable" })).toBe(
-			false,
-		);
+		expect(
+			await advance({
+				guard,
+				progress: "GrammarAvailable",
+				grammar: grammarProjection(),
+			}),
+		).toBe(false);
+		expect(
+			await t.run((ctx) =>
+				advanceResolutionSession(ctx, {
+					guard,
+					progress: "ReadingAvailable",
+					reading: readingProjection(),
+				}),
+			),
+		).toBe(true);
 		expect(
 			await advance({
 				guard,
@@ -518,7 +540,8 @@ describe("Resolution Session", () => {
 		await expect(
 			advance({
 				guard: { ...guard, runToken: "old" },
-				progress: "RouteAvailable",
+				progress: "GrammarAvailable",
+				grammar: grammarProjection(),
 			}),
 		).rejects.toThrow("no longer active");
 	});

@@ -39,7 +39,11 @@ import type { Target } from "../target.js";
 import { codeHeadword, readingsMayExist } from "./code-headword.js";
 import type { FirstRead, Plan } from "./first-request.js";
 import { lookupHeadword } from "./lookup-headword.js";
-import { guessedJudgment, guessMisses } from "./luna-guess.js";
+import {
+	compareGuess,
+	excludedWordMisses,
+	guessedJudgment,
+} from "./luna-guess.js";
 import { verbGuessMisses } from "./verbal.js";
 
 /** The headword once jev has judged: code's, or Luna's. */
@@ -158,6 +162,7 @@ export const startHeadword = Effect.fnUntraced(function* (
 		return Effect.andThen(
 			draft ? Fiber.interrupt(draft) : Effect.void,
 			rewritten(
+				target,
 				log,
 				write,
 				request,
@@ -197,11 +202,13 @@ const verbMissesOf = (first: FirstRead, planned: Plan) => {
 
 /**
  * Luna's headword once jev has judged. The guessed answer stands when jev
- * changed nothing Luna reads and, on a VERB Lexeme, judged away no
- * prefix the guessed headword carries; otherwise Luna writes again with
- * jev's answers.
+ * changed nothing Luna reads — or only added members to `outsideHeadword`
+ * whose words the guessed headword already omits — and, on a VERB Lexeme,
+ * judged away no prefix the guessed headword carries; otherwise Luna
+ * writes again with jev's answers.
  */
 function rewritten(
+	target: Target,
 	log: CallLog["Service"],
 	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
 	request: (judged: Judged) => LunaDraft,
@@ -216,11 +223,23 @@ function rewritten(
 ): Effect.Effect<Written, AskFailure> {
 	return Effect.gen(function* () {
 		if (!guessed) return yield* write(judged);
-		let missed = guessMisses(request(guessed.judged), request(judged));
-		if (missed) yield* Fiber.interrupt(guessed.fiber);
-		else {
+		const comparison = compareGuess(
+			request(guessed.judged),
+			request(judged),
+		);
+		let missed: string | undefined;
+		if (comparison.kind === "miss") {
+			missed = comparison.reason;
+			yield* Fiber.interrupt(guessed.fiber);
+		} else {
 			const written = yield* Fiber.join(guessed.fiber);
-			missed = verbMisses?.(written.canonicalForm);
+			missed =
+				excludedWordMisses(
+					target,
+					judged,
+					comparison.newlyExcluded,
+					written.canonicalForm,
+				) ?? verbMisses?.(written.canonicalForm);
 			if (!missed) return written;
 		}
 		log.event({

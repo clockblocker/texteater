@@ -18,6 +18,7 @@ export const inspectionTables = {
 			v.literal("Available"),
 			v.literal("Resolving"),
 			v.literal("Analysis"),
+			v.literal("PronounExplanation"),
 		),
 		resolutionState: v.optional(v.string()),
 		finishedAt: v.optional(v.number()),

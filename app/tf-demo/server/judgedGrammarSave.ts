@@ -1,6 +1,7 @@
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type { OnJudged } from "./clickResolution";
+import { inspectionStep } from "./inspectionCapture";
 import type { ResolutionProgressObserver } from "./orchestrationPorts";
 
 /**
@@ -42,6 +43,14 @@ export function judgedGrammarSave(
 							? Effect.void
 							: Effect.tryPromise(() =>
 									grammarJudged.call(observer, input),
+								).pipe(
+									Effect.withSpan(
+										"Save the judged Grammar",
+										inspectionStep(
+											"app/tf-demo · resolutionSessions",
+											input.judged,
+										),
+									),
 								),
 					),
 				),

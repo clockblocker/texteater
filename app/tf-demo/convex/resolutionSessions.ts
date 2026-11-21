@@ -42,7 +42,6 @@ import {
 	readingCheckpointValidator,
 	resolutionGrammarProjectionValidator,
 	resolutionJudgedProjectionValidator,
-	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
 	storedUnitValidator,
@@ -106,14 +105,14 @@ export const selectSegment = mutation({
 	handler: async (ctx, args) => {
 		const startedAt = Date.now();
 		const inspect = args.inspect === true && inspectionEnabled();
+		assertIdentifier(args.requestId, "requestId");
+		assertIdentifier(args.visitorId, "visitorId");
+		const { sentence, segment } = await requireClickableSegment(
+			ctx,
+			args.sentenceId,
+			args.clickedSegmentIndex,
+		);
 		const select = async () => {
-			assertIdentifier(args.requestId, "requestId");
-			assertIdentifier(args.visitorId, "visitorId");
-			const { sentence, segment } = await requireClickableSegment(
-				ctx,
-				args.sentenceId,
-				args.clickedSegmentIndex,
-			);
 			const unit = unitsByMember(sentence.units).get(
 				args.clickedSegmentIndex,
 			);
@@ -239,21 +238,12 @@ export const selectSegment = mutation({
 				)
 				.unique();
 			if (!existing) {
-				const sentence = await ctx.db.get(args.sentenceId);
-				const segment = await ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q
-							.eq("sentenceId", args.sentenceId)
-							.eq("index", args.clickedSegmentIndex),
-					)
-					.unique();
 				await ctx.db.insert("inspectionClicks", {
 					requestId: args.requestId,
 					visitorId: args.visitorId,
 					sentenceId: args.sentenceId,
-					selectedSegment: segment?.text ?? "",
-					sentence: sentence?.stitchedText ?? "",
+					selectedSegment: segment.text,
+					sentence: sentence.stitchedText,
 					startedAt,
 					selectionKind: result.kind,
 				});
@@ -391,15 +381,9 @@ export const beginRun = internalMutation({
 export const advance = internalMutation({
 	args: {
 		guard: resolutionSessionGuardValidator,
-		progress: v.union(
-			v.literal("RouteAvailable"),
-			v.literal("GrammarAvailable"),
-			v.literal("ReadingAvailable"),
-		),
-		grammar: v.optional(resolutionGrammarProjectionValidator),
-		reading: v.optional(resolutionReadingProjectionValidator),
+		progress: v.literal("GrammarAvailable"),
+		grammar: resolutionGrammarProjectionValidator,
 		grammaticalCheckpoint: v.optional(resolvedGrammaticalValidator),
-		readingCheckpoint: v.optional(readingCheckpointValidator),
 	},
 	returns: v.boolean(),
 	handler: (ctx, args) => advanceResolutionSession(ctx, args),

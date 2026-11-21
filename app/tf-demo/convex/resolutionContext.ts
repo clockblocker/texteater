@@ -25,7 +25,6 @@ export const resolutionContextValidator = v.object({
 		v.object({
 			sentenceId: v.id("sentences"),
 			scrollId: v.id("scrolls"),
-			segmentedSentenceId: v.string(),
 			/** The Detected Language; a click lands only on the target's. */
 			language: v.optional(detectedLanguageValidator),
 			stitchedText: v.string(),

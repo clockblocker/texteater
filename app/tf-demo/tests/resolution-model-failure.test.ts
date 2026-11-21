@@ -73,7 +73,6 @@ const persistence: OrchestrationPersistence = {
 			sentence: {
 				sentenceId: "sentence-1",
 				scrollId: "scroll-1",
-				segmentedSentenceId: "sentence-1",
 				language: "de",
 				stitchedText: "Banken",
 				segments: [

@@ -2,6 +2,7 @@ import type { JudgedGrammar } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
+import { inspectionStep, markSpanFailed } from "./inspectionCapture";
 import type {
 	ResolutionCheckpoints,
 	ResolutionContext,
@@ -39,17 +40,16 @@ export type ResolutionSessionRunInput = {
 };
 
 /**
- * The progress a run saves on its own. ReadingAvailable is saved by the
- * commit it precedes (`ResolutionProgressObserver.committing`).
+ * The progress a run saves on its own: `begin` publishes RouteAvailable when
+ * claiming the run, and ReadingAvailable is saved by the commit it precedes
+ * (`ResolutionProgressObserver.committing`).
  */
-export type ResolutionSessionAdvance =
-	| { readonly progress: "RouteAvailable" }
-	| {
-			readonly progress: "GrammarAvailable";
-			readonly grammatical: Parameters<
-				ResolutionProgressObserver["grammarAvailable"]
-			>[0]["grammatical"];
-	  };
+export type ResolutionSessionAdvance = {
+	readonly progress: "GrammarAvailable";
+	readonly grammatical: Parameters<
+		ResolutionProgressObserver["grammarAvailable"]
+	>[0]["grammatical"];
+};
 
 /**
  * A catalog miss is the one outcome no commit settles; every other outcome
@@ -114,6 +114,14 @@ function recordedByCommit(result: ResolveSegmentResult): boolean {
 	return "readingResolution" in result;
 }
 
+const LIFECYCLE_OWNER = "app/tf-demo · resolutionSessions";
+
+function lifecycleHop<T>(name: string, input: unknown, run: () => Promise<T>) {
+	return Effect.tryPromise(run).pipe(
+		Effect.withSpan(name, inspectionStep(LIFECYCLE_OWNER, input)),
+	);
+}
+
 /**
  * Executes one guarded Resolution Session run. Callers cross one seam; this
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
@@ -168,11 +176,12 @@ export function executeResolutionSession({
 			},
 		};
 
-		const input = yield* Effect.tryPromise(() => lifecycle.begin());
-		if (!input) return;
-		yield* Effect.tryPromise(() =>
-			lifecycle.advance({ progress: "RouteAvailable" }),
+		const input = yield* lifecycleHop(
+			"Load checkpoints and start run",
+			{},
+			() => lifecycle.begin(),
 		);
+		if (!input) return;
 		phase = input.checkpoints.reading
 			? "Commit"
 			: input.checkpoints.grammatical
@@ -185,28 +194,31 @@ export function executeResolutionSession({
 			input.context,
 		);
 		if ("catalogMiss" in result) {
-			yield* Effect.tryPromise(() =>
-				lifecycle.settle({
-					kind: "CatalogMiss",
-					miss: result.catalogMiss,
-				}),
+			const settlement: ResolutionSessionSettlement = {
+				kind: "CatalogMiss",
+				miss: result.catalogMiss,
+			};
+			yield* lifecycleHop(`Settle ${settlement.kind}`, settlement, () =>
+				lifecycle.settle(settlement),
 			);
-			yield* Effect.tryPromise(() =>
-				lifecycle.record({
-					kind: "Succeeded",
-					phase,
-					generationEvents,
-				}),
+			const succeeded: ResolutionSessionRunRecord = {
+				kind: "Succeeded",
+				phase,
+				generationEvents,
+			};
+			yield* lifecycleHop(`Record ${succeeded.kind}`, succeeded, () =>
+				lifecycle.record(succeeded),
 			);
 			return;
 		}
 		if (recordedByCommit(result)) return;
-		yield* Effect.tryPromise(() =>
-			lifecycle.record({
-				kind: "Succeeded",
-				phase,
-				generationEvents,
-			}),
+		const succeeded: ResolutionSessionRunRecord = {
+			kind: "Succeeded",
+			phase,
+			generationEvents,
+		};
+		yield* lifecycleHop(`Record ${succeeded.kind}`, succeeded, () =>
+			lifecycle.record(succeeded),
 		);
 	}).pipe(
 		Effect.catchCause((cause) => {
@@ -214,33 +226,43 @@ export function executeResolutionSession({
 			const classified = classifyRunCause(cause);
 			const diagnosticId = createDiagnosticId();
 			if (classified.kind === "Generation") {
-				return Effect.tryPromise(() =>
-					lifecycle.record({
-						kind: "GenerationFailed",
-						phase,
-						failure: classified.failure,
-						generationEvents,
-					}),
+				const failed: ResolutionSessionRunRecord = {
+					kind: "GenerationFailed",
+					phase,
+					failure: classified.failure,
+					generationEvents,
+				};
+				return markSpanFailed.pipe(
+					Effect.andThen(
+						lifecycleHop(`Record ${failed.kind}`, failed, () =>
+							lifecycle.record(failed),
+						),
+					),
 				);
 			}
-			return Effect.logError("ResolutionRunInternalFailure").pipe(
-				Effect.annotateLogs({
-					...identity,
-					phase,
-					diagnosticId,
-					errorName: classified.errorName,
-					errorFingerprint: classified.errorFingerprint,
-				}),
+			const failed: ResolutionSessionRunRecord = {
+				kind: "InternalFailed",
+				phase,
+				diagnosticId,
+				errorName: classified.errorName,
+				errorFingerprint: classified.errorFingerprint,
+				generationEvents,
+			};
+			return markSpanFailed.pipe(
 				Effect.andThen(
-					Effect.tryPromise(() =>
-						lifecycle.record({
-							kind: "InternalFailed",
+					Effect.logError("ResolutionRunInternalFailure").pipe(
+						Effect.annotateLogs({
+							...identity,
 							phase,
 							diagnosticId,
 							errorName: classified.errorName,
 							errorFingerprint: classified.errorFingerprint,
-							generationEvents,
 						}),
+					),
+				),
+				Effect.andThen(
+					lifecycleHop(`Record ${failed.kind}`, failed, () =>
+						lifecycle.record(failed),
 					),
 				),
 				Effect.catch((recordingError) =>

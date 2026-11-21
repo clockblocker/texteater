@@ -25,5 +25,32 @@ module.exports = {
 			},
 			to: { path: "^src/schemas/universal/(?!index\\.ts$)" },
 		},
+		{
+			name: "validation-does-not-import-schemas",
+			comment:
+				"Runtime validation modules must never reach Zod or src/schemas/ (ADR 0001).",
+			severity: "error",
+			from: { path: "^src/validation/" },
+			to: { path: "^src/schemas/" },
+		},
+		{
+			name: "universal-semantics-do-not-import-languages",
+			comment:
+				"Universal semantic validation modules must stay decoupled from concrete language modules.",
+			severity: "error",
+			from: { path: "^src/validation/(?:semantics|syncretism)\\.ts$" },
+			to: { path: "^src/validation/languages/" },
+		},
+		{
+			name: "language-validation-is-self-contained",
+			comment:
+				"A language's validation folder must not import another language's validation folder.",
+			severity: "error",
+			from: { path: "^src/validation/languages/([^/]+)/" },
+			to: {
+				path: "^src/validation/languages/([^/]+)/",
+				pathNot: "^src/validation/languages/$1/",
+			},
+		},
 	],
 };

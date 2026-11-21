@@ -1,5 +1,6 @@
 export {
 	canonicalFormKey,
+	foldCase,
 	lemmaIdentityKey,
 	readingIdentityKey,
 	sameLemma,
@@ -12,7 +13,7 @@ export {
 	cellKeyOf,
 	parseTableSchemaFor,
 } from "./table-schema.js";
-export { foldCase, normalizeForm } from "./validation/semantics.js";
+export { normalizeForm } from "./validation/semantics.js";
 export {
 	isSyncreticUnit,
 	isSyncretism,

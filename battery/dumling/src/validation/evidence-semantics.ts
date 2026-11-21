@@ -1,78 +1,5 @@
 import type { Language } from "../types.js";
-import { foldCase, normalizeForm } from "./semantics.js";
-
-type ExpletiveEvidence = { attested: string; orthography: string };
-
-/**
- * A German verbal Attestation names owned valency evidence, and expletive
- * evidence exactly when its Surface has a subject expletive: an owned member
- * of a complete realization, whose finite verb agrees in third person
- * singular. Whether that member spells `es` (`es`, or a clitic `'s`) is a
- * fact about German, checked in dumcorpus (ADR 0041).
- */
-export function isGermanVerbalAttestation(value: {
-	surface: {
-		inflectionalFeatures: {
-			expletive: string | null;
-			verbForm: string;
-			person: string | null;
-			number: string | null;
-		} | null;
-	};
-	expletiveEvidence: ExpletiveEvidence | null;
-	valencyEvidence: ValencyEvidence[];
-	members: { attested: string; orthography: string }[];
-	realizationCoverage: string;
-}): boolean {
-	if (!isOwnedValencyEvidence(value.valencyEvidence, value.members, true))
-		return false;
-	const bag = value.surface.inflectionalFeatures;
-	if (!bag?.expletive) return value.expletiveEvidence === null;
-	const evidence = value.expletiveEvidence;
-	if (!evidence || value.realizationCoverage !== "Full") return false;
-	if (bag.verbForm === "Fin" && (bag.person !== "3" || bag.number !== "Sing"))
-		return false;
-	return value.members.some(
-		(member) =>
-			member.attested === evidence.attested &&
-			member.orthography === evidence.orthography,
-	);
-}
-export function germanVerbalAttestationError(): string {
-	return "Subject expletive requires third-person singular agreement and owned expletive evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, keeping the slot's case, and at most one Reflexive, named by its owned member, in its case where it names one";
-}
-
-/**
- * A German adjective or noun Attestation names the owned members realizing
- * the valency slots it attests, as a verbal one does (ADR 0034), but no
- * lexical reflexive: only a verb has one (ADR 0052).
- */
-export function isGermanValencyAttestation(value: {
-	valencyEvidence: ValencyEvidence[];
-	members: { attested: string; orthography: string }[];
-}): boolean {
-	return isOwnedValencyEvidence(value.valencyEvidence, value.members, false);
-}
-export function germanValencyAttestationError(): string {
-	return "Valency evidence must name distinct owned members spelling its preposition, keeping the slot's case, and no Reflexive";
-}
-
-type ValencyEvidence = {
-	member: number | null;
-	complement:
-		| { kind: "Case"; governedCase: string }
-		| {
-				kind: "Preposition";
-				preposition: { canonicalForm: string };
-				governedCase: string;
-		  }
-		| {
-				kind: "Reflexive";
-				governedCase?: string;
-				preposition?: { canonicalForm: string };
-		  };
-	realizedCase?: string;
-};
+import { languageNormalizations } from "./languages/normalizations.js";
 
 type ValencySlot = {
 	member: number | null;
@@ -88,95 +15,52 @@ type ValencySlot = {
 		| { kind: "Preposition"; preposition: { canonicalForm: string } };
 };
 
-/**
- * Whether `word`, folded, spells the preposition `preposition` or, in
- * German, the pronominal adverb that holds it: `da`, `wo` or `hier` before
- * it, with an `r` between `da` or `wo` and a vowel (`damit`, `darauf`,
- * `wovon`, `hiermit`). The adverb stays one member and marks the slot
- * (ADR 0029).
- */
-function spellsPreposition(
-	word: string,
-	preposition: string,
-	language: Language,
-): boolean {
-	if (word === preposition) return true;
-	if (language !== "de") return false;
-	const linker = /^[aeiouäöü]/u.test(preposition) ? "r" : "";
-	return [`da${linker}`, `wo${linker}`, "hier"].some(
-		(prefix) => word === `${prefix}${preposition}`,
-	);
+function exactPrepositionMatch(word: string, preposition: string): boolean {
+	return word === preposition;
 }
 
 /**
  * Each slot names a distinct owned member, or none. A Preposition slot's
- * member spells its preposition, or a German pronominal adverb holding it,
- * compared without case, unless it is a Typo.
+ * member spells its preposition, compared through the language's normalization
+ * hook and optional matcher, unless it is a Typo.
  */
-function namesMarkerMembers(
+export function namesMarkerMembers(
 	evidence: readonly ValencySlot[],
 	members: readonly { attested: string; orthography: string }[],
 	language: Language,
+	matchesPreposition: (
+		word: string,
+		preposition: string,
+	) => boolean = exactPrepositionMatch,
 ): boolean {
 	const named = evidence.flatMap((slot) =>
 		slot.member === null ? [] : [slot.member],
 	);
 	if (new Set(named).size !== named.length) return false;
+	const normalization = languageNormalizations[language];
 	return evidence.every(({ member: index, complement }) => {
 		if (index === null || complement.kind !== "Preposition") return true;
 		const member = members[index];
 		return (
 			member !== undefined &&
 			(member.orthography === "Typo" ||
-				spellsPreposition(
-					foldCase(normalizeForm(member.attested), language),
-					foldCase(complement.preposition.canonicalForm, language),
-					language,
+				matchesPreposition(
+					normalization.canonicalFormKey(member.attested),
+					normalization.foldCase(
+						complement.preposition.canonicalForm,
+					),
 				))
 		);
 	});
 }
 
 /**
- * German slots also keep their case: a preposition slot's occurrence shows
- * the case the slot governs, and a bare-case slot has no marker member. A
- * Reflexive, allowed only where `reflexive` says so, names its owned member,
- * at most once, and the case its Reading fixes where it names one; after a
- * fixed phrase's preposition (`außer sich`) that is the case the preposition
- * governs, and the member is still the reflexive (ADR 0052). Which cases a
- * preposition takes, which forms spell a reflexive, and so when the
- * occurrence shows the case and must name it, are facts about German,
- * checked in dumcorpus (ADR 0041).
- */
-function isOwnedValencyEvidence(
-	evidence: readonly ValencyEvidence[],
-	members: readonly { attested: string; orthography: string }[],
-	reflexive: boolean,
-): boolean {
-	const reflexives = evidence.filter(
-		({ complement }) => complement.kind === "Reflexive",
-	);
-	return (
-		reflexives.length <= (reflexive ? 1 : 0) &&
-		reflexives.every(
-			({ member }) => member !== null && members[member] !== undefined,
-		) &&
-		namesMarkerMembers(evidence, members, "de") &&
-		evidence.every(({ member, complement, realizedCase }) =>
-			complement.kind === "Case"
-				? member === null
-				: realizedCase === complement.governedCase,
-		)
-	);
-}
-
-/**
- * A Hebrew or English governor Attestation (VERB, ADJ, NOUN) may name the
- * valency slots it realizes, with no case (ADR 0034): `on` of `depend on`,
- * spelled in any case, or `על` of `סמך על`. A Fused member spells its Fusion
- * component, so `ב` of `בבית` in `בחר בבית` counts. A Subject, DirectObject
- * or IndirectObject slot has no marker member. The language comes from the
- * Attestation's Surface.
+ * A caseless governor Attestation (such as Hebrew or English VERB, ADJ, NOUN)
+ * may name the valency slots it realizes, with no case (ADR 0034): `on` of
+ * `depend on`, spelled in any case, or `על` of `סמך על`. A Fused member spells
+ * its Fusion component, so `ב` of `בבית` in `בחר בבית` counts. A Subject,
+ * DirectObject or IndirectObject slot has no marker member. The language comes
+ * from the Attestation's Surface.
  */
 export function isCaselessValencyAttestation(value: {
 	surface: { language: Language };
@@ -194,28 +78,4 @@ export function isCaselessValencyAttestation(value: {
 }
 export function caselessValencyAttestationError(): string {
 	return "Valency evidence must name distinct owned members spelling its preposition; a Subject, DirectObject or IndirectObject slot names no member";
-}
-
-/**
- * A German ADP Attestation, Lexeme or Locution, records at most one slot: the
- * oblique bare case its complement took (`auf dem Tisch` Dat, `um des
- * Friedens willen` Gen), marked by no member. An ADP with no case-marked
- * complement records none. Which cases the ADP takes is a fact about German,
- * checked in dumcorpus (ADR 0041); no table is consulted here.
- */
-export function isGermanAdpositionAttestation(value: {
-	valencyEvidence: ValencyEvidence[];
-}): boolean {
-	const [slot, ...rest] = value.valencyEvidence;
-	if (!slot) return true;
-	return (
-		rest.length === 0 &&
-		slot.member === null &&
-		slot.complement.kind === "Case" &&
-		slot.complement.governedCase === slot.realizedCase &&
-		slot.realizedCase !== "Nom"
-	);
-}
-export function germanAdpositionAttestationError(): string {
-	return "ADP valency evidence is at most one oblique bare-case slot with no member, realized in its case";
 }

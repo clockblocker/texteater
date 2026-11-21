@@ -1,5 +1,4 @@
 import emojiRegex from "emoji-regex";
-import type { Language } from "../types.js";
 
 /** Shared by Zod authoring and compiled validation operations. */
 export function hasMarkedFeature(bag: Record<string, unknown>): boolean {
@@ -17,15 +16,6 @@ export function nonEmptyFeatureBagError(): string {
  */
 export function normalizeForm(value: string): string {
 	return value.trim().normalize("NFC").replaceAll("...", "…");
-}
-/**
- * Folds letter case by the language's own rules, so spellings that differ
- * only in case compare equal: `LOL` and `lol` both fold to `lol`. Lemma
- * identity compares Canonical Forms this way (system ADR 0002). Hebrew has no
- * case and folds to itself.
- */
-export function foldCase(value: string, language: Language): string {
-	return value.toLocaleLowerCase(language);
 }
 const finalPunctuation = /[.!?,;:…‽]$/u;
 /**
@@ -122,77 +112,6 @@ export function emojiDescriptionError(): string {
 	return "Emoji Description must contain one to four emoji graphemes";
 }
 
-/** Null records no marked distinction; it never substitutes for a known gender. */
-export function isGermanPronounCore(core: Record<string, unknown>): boolean {
-	if ((core.gender ?? null) === null) return true;
-	if (core.number === "Plur") return false;
-	return (
-		core.pronType !== "Prs" ||
-		(core.person === "3" && core.number === "Sing")
-	);
-}
-export function germanPronounCoreError(): string {
-	return "German pronoun gender must agree with its subtype, person and number";
-}
-
-/** Plural agreement has no marked gender; a cell never guesses one. */
-export function isGermanDeterminerCore(core: Record<string, unknown>): boolean {
-	return core.gender === null || core.number !== "Plur";
-}
-export function germanDeterminerCoreError(): string {
-	return "German determiner plural agreement has no marked gender";
-}
-
-/**
- * German PART is closed and typed (system ADR 0032): every Lemma names
- * exactly one type, polarity Neg for nicht, partType Inf for infinitive zu
- * or partType Mod for a modal particle.
- */
-export function isGermanParticleCore(core: Record<string, unknown>): boolean {
-	return (
-		((core.partType ?? null) === null) !==
-		((core.polarity ?? null) === null)
-	);
-}
-export function germanParticleCoreError(): string {
-	return "A German PART names exactly one type: polarity Neg, partType Inf or partType Mod";
-}
-
-const cellCoordinates = ["case", "number", "gender"] as const;
-/**
- * A pillar Lemma marks its Paradigm Cell in Core; a stem Lemma marks it on
- * each Surface. A coordinate is never marked in both, and plural agreement
- * marks no gender on either. A stem whose gender is inherent rather than
- * agreement (`wer` Masc, `was` Neut) marks it in Core and its case on the
- * Surface.
- */
-export function isGermanClosedClassSurface(value: {
-	lemma: { coreFeatures: Record<string, unknown> };
-	inflectionalFeatures: Record<string, unknown> | null;
-}): boolean {
-	const core = value.lemma.coreFeatures;
-	const bag = value.inflectionalFeatures;
-	if (!bag) return true;
-	if (
-		cellCoordinates.some(
-			(coordinate) =>
-				(core[coordinate] ?? null) !== null &&
-				(bag[coordinate] ?? null) !== null,
-		)
-	)
-		return false;
-	if (
-		core.poss !== "Yes" &&
-		((bag["gender[psor]"] ?? null) !== null ||
-			(bag["number[psor]"] ?? null) !== null)
-	)
-		return false;
-	return !(bag.number === "Plur" && (bag.gender ?? null) !== null);
-}
-export function germanClosedClassSurfaceError(): string {
-	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender; only a possessive marks possessor features";
-}
-
 /**
  * A feature value set as `featureValueTupleSchema` stores it: two or more
  * distinct values in their catalog order, so one set has one spelling and
@@ -213,53 +132,6 @@ export function isFeatureValueSet(values: readonly string[]): boolean {
 }
 export function featureValueSetError(): string {
 	return "A feature value set names two or more distinct values in catalog order; one value is written alone";
-}
-
-/**
- * A German common noun Surface is the noun's own form and says nothing about
- * its article (ADR 0040). A noun whose Lemma has no gender, such as an
- * adjectival noun for a person, marks on a singular Surface the gender its
- * form shows (der Reisende, ein Verletzter), so its article can agree. No
- * other Surface marks gender, and a singular with neither fails.
- */
-export function isGermanNounSurface(value: {
-	inflectionalFeatures: {
-		gender: string | null;
-		number: string | null;
-	} | null;
-	lemma: { coreFeatures: { gender: unknown } };
-}): boolean {
-	const bag = value.inflectionalFeatures;
-	if (!bag) return true;
-	const lemmaGender = value.lemma.coreFeatures.gender;
-	if (bag.gender !== null)
-		return lemmaGender === null && bag.number === "Sing";
-	return bag.number !== "Sing" || lemmaGender !== null;
-}
-export function germanNounSurfaceError(): string {
-	return "A singular noun Surface marks gender only when its Lemma has none, and then must; a plural marks none";
-}
-
-/**
- * A German proper noun Surface marks gender only where its Lemma has none, a
- * surname or coined name, and only in the singular: the gender its owned
- * article or an agreeing adjective shows (der junge Schwarzkopf). Unlike a
- * noun's, the mark is not required here; dumcorpus requires it wherever the
- * name owns an article (ADR 0040).
- */
-export function isGermanProperNounSurface(value: {
-	inflectionalFeatures: {
-		gender: string | null;
-		number: string | null;
-	} | null;
-	lemma: { coreFeatures: { gender: string | null } };
-}): boolean {
-	const bag = value.inflectionalFeatures;
-	if (!bag || bag.gender === null) return true;
-	return value.lemma.coreFeatures.gender === null && bag.number === "Sing";
-}
-export function germanProperNounSurfaceError(): string {
-	return "A proper noun Surface marks gender only in the singular and only when its Lemma has none";
 }
 
 type Fusion = { spelling: string; components: { span: string }[] };
@@ -292,11 +164,12 @@ export function fusedMemberError(): string {
  * (`[das, Berlin]`, `[die, Schweiz]`). A Head without an article has no
  * article evidence and Full coverage; an owned article keeps Full coverage; a
  * shared article or a hidden Fusion component leaves the Head Partial.
- * Hebrew adds its own condition, `isHebrewArticleAttestation`. A NOUN
- * Locution owns its article the same way (`[a, walk, in, the, park]`), but
- * its other fixed words decide its coverage too (ADR 0039), so only a shared
- * or hidden article ties it to Partial. Whether the article agrees with its Head is a
- * fact about the language, checked in dumcorpus (ADR 0041).
+ * Languages may layer their own conditions on top (such as Hebrew's definite
+ * article check). A NOUN Locution owns its article the same way (`[a, walk,
+ * in, the, park]`), but its other fixed words decide its coverage too (ADR
+ * 0039), so only a shared or hidden article ties it to Partial. Whether the
+ * article agrees with its Head is a fact about the language, checked in
+ * dumcorpus (ADR 0041).
  */
 export function isArticleAttestation(value: {
 	surface: { lemma: { family: string } };
@@ -330,55 +203,11 @@ export function articleAttestationError(): string {
 }
 
 /**
- * Hebrew marks its article with `definite: Def` on the noun or adjective it
- * prefixes, and only such a form, or a proper noun cited with its article,
- * names article evidence; a `Def` form may name none (ADR 0040).
- */
-export function isHebrewArticleAttestation(value: {
-	surface: {
-		inflectionalFeatures: { definite?: string | null } | null;
-		lemma: { kind: string; coreFeatures: { article?: string | null } };
-	};
-	articleEvidence?: unknown;
-}): boolean {
-	const { surface } = value;
-	if (!value.articleEvidence) return true;
-	return surface.lemma.kind === "PROPN"
-		? surface.lemma.coreFeatures.article === "Definite"
-		: surface.inflectionalFeatures?.definite === "Def";
-}
-export function hebrewArticleAttestationError(): string {
-	return "A Hebrew Head names article evidence only on a Def form, or as a proper noun cited with its article";
-}
-
-export function isGermanVerbalSurface(value: {
-	normalizedSurface: string;
-	inflectionalFeatures: {
-		expletive: string | null;
-		verbForm: string;
-		person: string | null;
-		number: string | null;
-		mood: string | null;
-	} | null;
-}): boolean {
-	const bag = value.inflectionalFeatures;
-	if (!bag?.expletive) return true;
-	return (
-		value.normalizedSurface.split(" ").includes("es") &&
-		(bag.verbForm !== "Fin" ||
-			(bag.person === "3" && bag.number === "Sing" && bag.mood !== "Imp"))
-	);
-}
-export function germanVerbalSurfaceError(): string {
-	return "Subject-expletive Surface requires normalized es and compatible verbal agreement";
-}
-
-/**
- * Comparability decides Degree on a German or English ADV or ADJ Surface (ADR
- * 0042). A comparable Lemma's Surface always marks it, `Pos` in a citation
- * (`mild`) included. A non-comparable Lemma's never does, which leaves a
- * non-comparable ADV no inflection and an ADJ only its attributive case,
- * gender and number (`der tote Mann`).
+ * Comparability decides Degree on an ADV or ADJ Surface where a language marks
+ * it (ADR 0042). A comparable Lemma's Surface always marks it, `Pos` in a
+ * citation (`mild`) included. A non-comparable Lemma's never does, which
+ * leaves a non-comparable ADV no inflection and an ADJ only its attributive
+ * agreement features (`der tote Mann`).
  */
 export function isComparabilitySurface(value: {
 	lemma: { coreFeatures: { comparable?: string | null } };

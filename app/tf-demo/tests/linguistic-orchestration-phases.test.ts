@@ -64,7 +64,6 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 const sentence: PersistedSentence = {
 	sentenceId: "sentence-1",
 	scrollId: "text-1",
-	segmentedSentenceId: "sentence-1",
 	language: "de",
 	stitchedText: "Die Banken",
 	segments: [

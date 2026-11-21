@@ -169,7 +169,7 @@ export async function loadOccurrenceAttestation(
 	);
 	const memberSegmentIndices = orderedMembers.map(({ index }) => index);
 	const sentenceValue = encounterSentenceOf({
-		segmentedSentenceId: sentence.segmentedSentenceId,
+		sentenceId,
 		segments: orderedSentenceSegments,
 	});
 	const encounter = {

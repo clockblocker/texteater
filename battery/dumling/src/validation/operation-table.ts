@@ -1,13 +1,9 @@
 import {
 	caselessValencyAttestationError,
-	germanAdpositionAttestationError,
-	germanValencyAttestationError,
-	germanVerbalAttestationError,
 	isCaselessValencyAttestation,
-	isGermanAdpositionAttestation,
-	isGermanValencyAttestation,
-	isGermanVerbalAttestation,
 } from "./evidence-semantics.js";
+import { languageValidationOperations } from "./languages/index.js";
+import type { ValidationOperationEntry } from "./languages/types.js";
 import {
 	articleAttestationError,
 	comparabilitySurfaceError,
@@ -16,15 +12,7 @@ import {
 	foreignSurfaceError,
 	fusedMemberError,
 	fusionError,
-	germanClosedClassSurfaceError,
-	germanDeterminerCoreError,
-	germanNounSurfaceError,
-	germanParticleCoreError,
-	germanPronounCoreError,
-	germanProperNounSurfaceError,
-	germanVerbalSurfaceError,
 	hasMarkedFeature,
-	hebrewArticleAttestationError,
 	isArticleAttestation,
 	isComparabilitySurface,
 	isEmojiDescription,
@@ -32,14 +20,6 @@ import {
 	isForeignSurface,
 	isFusedMember,
 	isFusion,
-	isGermanClosedClassSurface,
-	isGermanDeterminerCore,
-	isGermanNounSurface,
-	isGermanParticleCore,
-	isGermanPronounCore,
-	isGermanProperNounSurface,
-	isGermanVerbalSurface,
-	isHebrewArticleAttestation,
 	isSayingCanonicalForm,
 	isVariantTagCombination,
 	isVariantTagList,
@@ -61,46 +41,13 @@ import {
 	syncretismViewError,
 } from "./syncretism.js";
 
-/**
- * Every Dumling validation operation, once. The runtime derives its operation
- * map from this table, and codegen registers it with the Zod compiler
- * (`codegen/operations.ts`) and names it in the emitted types.
- */
-export const operationTable = [
+const universalOperations = [
 	{
 		construct: "custom",
 		implementation: isComparabilitySurface,
 		error: comparabilitySurfaceError,
 		name: "dumling.comparability.surface",
 		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanVerbalSurface,
-		error: germanVerbalSurfaceError,
-		name: "dumling.de-verbal.surface",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanVerbalAttestation,
-		error: germanVerbalAttestationError,
-		name: "dumling.de-verbal.attestation",
-		version: 6,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanAdpositionAttestation,
-		error: germanAdpositionAttestationError,
-		name: "dumling.de-adposition.attestation",
-		version: 2,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanValencyAttestation,
-		error: germanValencyAttestationError,
-		name: "dumling.de-valency.attestation",
-		version: 3,
 	},
 	{
 		construct: "custom",
@@ -111,23 +58,9 @@ export const operationTable = [
 	},
 	{
 		construct: "custom",
-		implementation: isGermanNounSurface,
-		error: germanNounSurfaceError,
-		name: "dumling.de-noun.surface",
-		version: 5,
-	},
-	{
-		construct: "custom",
 		implementation: isFeatureValueSet,
 		error: featureValueSetError,
 		name: "dumling.feature-value-set",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanProperNounSurface,
-		error: germanProperNounSurfaceError,
-		name: "dumling.de-proper-noun.surface",
 		version: 1,
 	},
 	{
@@ -136,13 +69,6 @@ export const operationTable = [
 		error: articleAttestationError,
 		name: "dumling.article.attestation",
 		version: 2,
-	},
-	{
-		construct: "custom",
-		implementation: isHebrewArticleAttestation,
-		error: hebrewArticleAttestationError,
-		name: "dumling.he-article.attestation",
-		version: 1,
 	},
 	{
 		construct: "custom",
@@ -163,13 +89,6 @@ export const operationTable = [
 		implementation: isFusedMember,
 		error: fusedMemberError,
 		name: "dumling.fused-member",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanPronounCore,
-		error: germanPronounCoreError,
-		name: "dumling.de-pronoun.core",
 		version: 1,
 	},
 	{
@@ -198,27 +117,6 @@ export const operationTable = [
 		implementation: isSurfaceSyncretism,
 		error: surfaceSyncretismError,
 		name: "dumling.syncretism.surface",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanDeterminerCore,
-		error: germanDeterminerCoreError,
-		name: "dumling.de-determiner.core",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanParticleCore,
-		error: germanParticleCoreError,
-		name: "dumling.de-particle.core",
-		version: 1,
-	},
-	{
-		construct: "custom",
-		implementation: isGermanClosedClassSurface,
-		error: germanClosedClassSurfaceError,
-		name: "dumling.de-closed-class.surface",
 		version: 1,
 	},
 	{
@@ -268,4 +166,15 @@ export const operationTable = [
 		name: "dumling.normalize-emoji-description",
 		version: 1,
 	},
-] as const;
+] as const satisfies readonly ValidationOperationEntry[];
+
+/**
+ * Every Dumling validation operation, once: universal operations composed with
+ * each language's registered validation operations. The runtime derives its
+ * operation map from this table, and codegen registers it with the Zod
+ * compiler (`codegen/operations.ts`) and names it in the emitted types.
+ */
+export const operationTable: readonly ValidationOperationEntry[] = [
+	...universalOperations,
+	...Object.values(languageValidationOperations).flat(),
+];

@@ -6,7 +6,7 @@ import {
 import {
 	hebrewArticleAttestationError,
 	isHebrewArticleAttestation,
-} from "../../../validation/semantics.js";
+} from "../../../validation/languages/he/semantics.js";
 import { routePolicy } from "../../route-policy.js";
 import { indexSchema, plainLemmaSchema } from "../../unit-parts.js";
 import { HeAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";

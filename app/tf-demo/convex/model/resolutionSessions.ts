@@ -5,7 +5,6 @@ import {
 	MAX_RESOLUTION_RUNS,
 	phaseForProgress,
 	RECOVERY_DEADLINE_MS,
-	type ResolutionProgress,
 	type ResolutionSessionGuard,
 	resolutionProgressHasReached,
 	STALE_RUN_AFTER_MS,
@@ -435,20 +434,21 @@ export async function claimResolutionRun(
 
 export async function advanceResolutionSession(
 	ctx: MutationCtx,
-	args: {
-		readonly guard: ResolutionSessionGuard;
-		/** Committing is written only by the commit transaction itself. */
-		readonly progress: Exclude<
-			ResolutionProgress,
-			"Starting" | "Committing"
-		>;
-		readonly grammar?: StoredResolutionGrammar;
-		readonly reading?: StoredResolutionReading;
-		readonly grammaticalCheckpoint?: Infer<
-			typeof resolvedGrammaticalValidator
-		>;
-		readonly readingCheckpoint?: ReadingCheckpoint;
-	},
+	args:
+		| {
+				readonly guard: ResolutionSessionGuard;
+				readonly progress: "GrammarAvailable";
+				readonly grammar: StoredResolutionGrammar;
+				readonly grammaticalCheckpoint?: Infer<
+					typeof resolvedGrammaticalValidator
+				>;
+		  }
+		| {
+				readonly guard: ResolutionSessionGuard;
+				readonly progress: "ReadingAvailable";
+				readonly reading: StoredResolutionReading;
+				readonly readingCheckpoint?: ReadingCheckpoint;
+		  },
 ): Promise<boolean> {
 	const session = await requireActiveResolutionSession(ctx, args.guard);
 	const { lifecycle } = session;
@@ -457,12 +457,6 @@ export async function advanceResolutionSession(
 		return false;
 	}
 	assertResolutionProgressTransition(lifecycle.progress, args.progress);
-	if (args.progress === "GrammarAvailable" && !args.grammar) {
-		throw new Error("GrammarAvailable requires a Grammar projection.");
-	}
-	if (args.progress === "ReadingAvailable" && !args.reading) {
-		throw new Error("ReadingAvailable requires a Reading projection.");
-	}
 	await ctx.db.patch(session._id, {
 		lifecycle: {
 			state: "Active",
@@ -470,14 +464,20 @@ export async function advanceResolutionSession(
 			activity: "Running",
 		},
 		// Grammar replaces what jev judged, which nothing reads after it.
-		...(args.grammar ? { grammar: args.grammar, judged: undefined } : {}),
-		...(args.reading ? { reading: args.reading } : {}),
-		...(args.grammaticalCheckpoint
-			? { grammaticalCheckpoint: args.grammaticalCheckpoint }
-			: {}),
-		...(args.readingCheckpoint
-			? { readingCheckpoint: args.readingCheckpoint }
-			: {}),
+		...(args.progress === "GrammarAvailable"
+			? {
+					grammar: args.grammar,
+					judged: undefined,
+					...(args.grammaticalCheckpoint
+						? { grammaticalCheckpoint: args.grammaticalCheckpoint }
+						: {}),
+				}
+			: {
+					reading: args.reading,
+					...(args.readingCheckpoint
+						? { readingCheckpoint: args.readingCheckpoint }
+						: {}),
+				}),
 		updatedAt: Date.now(),
 	});
 	return true;

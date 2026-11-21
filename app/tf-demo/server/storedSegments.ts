@@ -204,13 +204,14 @@ export function unitsByMember(
 }
 
 /**
- * The Sentence a click resolves against: the stored Segments as they are,
- * so a fused word arrives as its pieces (`i` + `m`), each with the word it
- * stands for where intake stored one, and a click's index is the stored
- * index. The caller validates the stored Segments.
+ * The Sentence a click resolves against: keyed by its bounded stored
+ * `sentenceId`, with its stored Segments as they are, so a fused word arrives
+ * as its pieces (`i` + `m`), each with the word it stands for where intake
+ * stored one, and a click's index is the stored index. The caller validates
+ * the stored Segments.
  */
 export function encounterSentenceOf(stored: {
-	readonly segmentedSentenceId: string;
+	readonly sentenceId: string;
 	readonly segments: readonly StoredSegment[];
 }): {
 	readonly id: string;
@@ -221,7 +222,7 @@ export function encounterSentenceOf(stored: {
 	>[];
 } {
 	return Object.freeze({
-		id: stored.segmentedSentenceId,
+		id: stored.sentenceId,
 		language: "de",
 		segments: Object.freeze(
 			[...stored.segments]

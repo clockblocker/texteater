@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { assertIdentifier } from "../server/identifiers";
+import { inspectionJson } from "../server/inspectionPayload";
 import {
 	CONTEXT_MAX_SENTENCES,
 	type ExplainedSentence,
@@ -19,9 +20,11 @@ import {
 	type QueryCtx,
 	query,
 } from "./_generated/server";
+import { inspectionEnabled } from "./deploymentFlags";
 import { loadStoredSegments } from "./model/storedSegments";
 import { antecedentValidator } from "./model/tables/explanations";
 import { consumeRateLimit } from "./rateLimits";
+import { saveInspectionStep } from "./resolutionInspection";
 import { readableScroll } from "./scrollViews";
 
 /*
@@ -84,13 +87,19 @@ export const request = mutation({
 		visitorId: v.string(),
 		sentenceId: v.string(),
 		pronoun: v.array(v.number()),
+		requestId: v.optional(v.string()),
+		inspect: v.optional(v.boolean()),
 	},
 	returns: v.union(
 		v.object({ kind: v.literal("Asked") }),
 		v.object({ kind: v.literal("Rejected"), message: v.string() }),
 	),
-	handler: async (ctx, { visitorId, sentenceId: value, pronoun }) => {
+	handler: async (
+		ctx,
+		{ visitorId, sentenceId: value, pronoun, requestId, inspect },
+	) => {
 		assertIdentifier(visitorId, "visitorId");
+		if (requestId !== undefined) assertIdentifier(requestId, "requestId");
 		const sentenceId = ctx.db.normalizeId("sentences", value);
 		const sentence = sentenceId ? await ctx.db.get(sentenceId) : null;
 		if (
@@ -136,10 +145,53 @@ export const request = mutation({
 					state: pending,
 				});
 		if (existing) await ctx.db.patch(existing._id, { state: pending });
+		const inspectRequestId =
+			inspect === true && inspectionEnabled()
+				? (requestId ?? crypto.randomUUID())
+				: undefined;
+		if (inspectRequestId !== undefined) {
+			const stored = await loadStoredSegments(ctx, sentence._id);
+			const byIndex = new Map(
+				stored.map((segment) => [segment.index, segment.text]),
+			);
+			const selectedSegment = unit.segments
+				.map((index) => byIndex.get(index) ?? "")
+				.filter((text) => text.length > 0)
+				.join(" ");
+			await ctx.db.insert("inspectionClicks", {
+				requestId: inspectRequestId,
+				visitorId,
+				sentenceId: sentence._id,
+				selectedSegment: selectedSegment || "Pronoun",
+				sentence: sentence.stitchedText,
+				startedAt: now,
+				selectionKind: "PronounExplanation",
+				resolutionState: "Running",
+			});
+			await saveInspectionStep(ctx, inspectRequestId, {
+				id: `${inspectRequestId}:selection`,
+				name: "Explain pronoun · schedule run",
+				kind: "Code",
+				owner: "app/tf-demo · pronounExplanations.request",
+				startedAt: now,
+				durationMs: 0,
+				timing: "Unmeasured",
+				status: "Success",
+				payloadJson: inspectionJson({
+					input: { visitorId, sentenceId: sentence._id, pronoun },
+					output: { explanationId, run },
+					timing: "Convex mutation clock is transaction-frozen; duration is not measured.",
+				}),
+			});
+		}
 		await ctx.scheduler.runAfter(
 			0,
 			internal.pronounExplanationActions.explain,
-			{ explanationId, run },
+			{
+				explanationId,
+				run,
+				...(inspectRequestId === undefined ? {} : { inspectRequestId }),
+			},
 		);
 		return { kind: "Asked" as const };
 	},
@@ -249,15 +301,34 @@ export const settle = internalMutation({
 			}),
 			v.object({ kind: v.literal("Failed"), message: v.string() }),
 		),
+		inspectRequestId: v.optional(v.string()),
 	},
 	returns: v.null(),
-	handler: async (ctx, { explanationId, run, outcome }) => {
+	handler: async (ctx, { explanationId, run, outcome, inspectRequestId }) => {
 		const explanation = await pendingRun(ctx, explanationId, run);
 		if (!explanation) return null;
+		const finishInspection = async (
+			state: "Complete" | "PermanentFailure",
+		) => {
+			if (inspectRequestId === undefined) return;
+			const click = await ctx.db
+				.query("inspectionClicks")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", inspectRequestId),
+				)
+				.unique();
+			if (click?.selectionKind === "PronounExplanation") {
+				await ctx.db.patch(click._id, {
+					resolutionState: state,
+					finishedAt: Date.now(),
+				});
+			}
+		};
 		if (outcome.kind === "Failed") {
 			await ctx.db.patch(explanationId, {
 				state: { kind: "Failed", run, message: outcome.message },
 			});
+			await finishInspection("PermanentFailure");
 			return null;
 		}
 		const antecedents = [];
@@ -280,6 +351,7 @@ export const settle = internalMutation({
 		await ctx.db.patch(explanationId, {
 			state: { kind: "Resolved", antecedents },
 		});
+		await finishInspection("Complete");
 		return null;
 	},
 });

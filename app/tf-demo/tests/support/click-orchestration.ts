@@ -85,7 +85,6 @@ export function context(
 		sentence: {
 			sentenceId: "sentence-1",
 			scrollId: "text-1",
-			segmentedSentenceId: "sentence-1",
 			language: "de",
 			stitchedText: "Banken",
 			segments: [{ index: 0, kind: "ResolvableText", text: "Banken" }],
@@ -190,7 +189,7 @@ export function setup(
 	};
 	const orchestrator = createTfDemoOrchestrator({
 		resolution: options.resolution ?? fake.resolution,
-		findStoredReadings: () => Effect.succeed(options.candidates ?? []),
+		findStoredReadings: async () => options.candidates ?? [],
 		persistence,
 		...(options.observer ? { observer: options.observer } : {}),
 	});

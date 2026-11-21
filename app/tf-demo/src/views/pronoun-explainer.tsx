@@ -76,6 +76,9 @@ export function PronounExplainer({
 		convexQuery(api.pronounExplanations.forScroll, { scrollId, visitorId }),
 	);
 	const request = useMutation(api.pronounExplanations.request);
+	const recordSelectionTiming = useMutation(
+		api.resolutionInspection.recordSelectionTiming,
+	);
 	const pin = useAtomSet(pinnedPronounAtom);
 	// A refusal is this Visitor's alone, so it stays here, by pronoun.
 	const [refusals, setRefusals] = useState<ReadonlyMap<string, string>>(
@@ -123,21 +126,50 @@ export function PronounExplainer({
 				const key = keyOf(target.sentenceId, target.pronoun);
 				if (stored.get(key)?.state === "Resolved") return;
 				refuse(key, null);
+				const inspect = import.meta.env.DEV;
+				const requestId = inspect ? crypto.randomUUID() : undefined;
+				const startedAt = Date.now();
+				const clock = performance.now();
 				request({
 					visitorId,
 					sentenceId: target.sentenceId,
 					pronoun: [...target.pronoun],
+					...(requestId === undefined
+						? {}
+						: { requestId, inspect: true }),
 				})
 					.then((answer) => {
-						if (answer.kind === "Rejected")
+						if (answer.kind === "Rejected") {
 							refuse(key, answer.message);
+							return;
+						}
+						if (requestId !== undefined) {
+							void recordSelectionTiming({
+								requestId,
+								visitorId,
+								startedAt,
+								durationMs: performance.now() - clock,
+							}).catch(() =>
+								console.warn(
+									"Pronoun explanation timing could not be recorded.",
+								),
+							);
+						}
 					})
 					.catch((cause: unknown) =>
 						refuse(key, visitorErrorMessage(cause)),
 					);
 			},
 		};
-	}, [pin, refusals, refuse, request, stored, visitorId]);
+	}, [
+		pin,
+		recordSelectionTiming,
+		refusals,
+		refuse,
+		request,
+		stored,
+		visitorId,
+	]);
 
 	return (
 		<ScrollExplainerContext.Provider value={explainer}>

@@ -305,7 +305,9 @@ export const recordSelectionTiming = mutation({
 				name:
 					click.selectionKind === "Available"
 						? "Select segment · reuse stored result"
-						: "Select segment · schedule resolution",
+						: click.selectionKind === "PronounExplanation"
+							? "Explain pronoun · schedule run"
+							: "Select segment · schedule resolution",
 				owner: "app/tf-demo · browser → Convex (round trip)",
 				startedAt: args.startedAt,
 				durationMs: args.durationMs,

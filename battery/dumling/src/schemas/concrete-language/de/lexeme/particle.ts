@@ -1,7 +1,7 @@
 import {
 	germanParticleCoreError,
 	isGermanParticleCore,
-} from "../../../../validation/semantics.js";
+} from "../../../../validation/languages/de/semantics.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,

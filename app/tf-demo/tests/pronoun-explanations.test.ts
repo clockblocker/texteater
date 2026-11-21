@@ -102,6 +102,7 @@ async function runScheduled(t: TestConvexDb) {
 			args[0] as {
 				explanationId: Id<"pronounExplanations">;
 				run: number;
+				inspectRequestId?: string;
 			},
 		);
 }
@@ -276,4 +277,89 @@ test("Analysis Stripping removes a Sentence's explanations with its units", asyn
 		fromPosition = step.nextPosition;
 	}
 	expect(await explanations(t)).toEqual([]);
+});
+
+test("under TF_INSPECTION, an inspected pronoun explanation records its click, steps, and model payload", async () => {
+	const previous = process.env.TF_INSPECTION;
+	process.env.TF_INSPECTION = "1";
+	try {
+		const t = createTestConvex();
+		const { sentenceIds } = await scroll(t);
+		const sentenceId = sentenceIds[1] as Id<"sentences">;
+		const requestId = "pronoun-req-1";
+		await t.mutation(api.pronounExplanations.request, {
+			visitorId: VISITOR,
+			sentenceId,
+			pronoun: [0],
+			requestId,
+			inspect: true,
+		});
+		fakeLuna(() => ({ refersTo: "Candidates", ids: ["n1"] }));
+		await runScheduled(t);
+
+		const detail = await t.query(api.resolutionInspection.detail, {
+			visitorId: VISITOR,
+			requestId,
+		});
+		expect(detail).toMatchObject({
+			state: "Complete",
+			click: {
+				requestId,
+				visitorId: VISITOR,
+				sentenceId,
+				selectedSegment: "Er",
+				sentence: "Er bellte laut.",
+				selectionKind: "PronounExplanation",
+				resolutionState: "Complete",
+			},
+		});
+		expect(detail?.finishedAt).toEqual(expect.any(Number));
+
+		const steps = await t.query(api.resolutionInspection.steps, {
+			visitorId: VISITOR,
+			requestId,
+			paginationOpts: { numItems: 50, cursor: null },
+		});
+		const names = steps.page.map((step) => step.name);
+		expect(names).toEqual(
+			expect.arrayContaining([
+				"Explain pronoun · schedule run",
+				"Explain pronoun",
+				"Load pronoun passage",
+				"explain.pronoun",
+				"Settle pronoun explanation",
+			]),
+		);
+		expect(steps.page.some((step) => step.kind === "LLM")).toBe(true);
+	} finally {
+		if (previous === undefined) delete process.env.TF_INSPECTION;
+		else process.env.TF_INSPECTION = previous;
+	}
+});
+
+test("without TF_INSPECTION, an inspected pronoun explanation captures nothing", async () => {
+	const previous = process.env.TF_INSPECTION;
+	delete process.env.TF_INSPECTION;
+	try {
+		const t = createTestConvex();
+		const { sentenceIds } = await scroll(t);
+		const sentenceId = sentenceIds[1] as Id<"sentences">;
+		await t.mutation(api.pronounExplanations.request, {
+			visitorId: VISITOR,
+			sentenceId,
+			pronoun: [0],
+			requestId: "pronoun-req-off",
+			inspect: true,
+		});
+		fakeLuna(() => ({ refersTo: "Candidates", ids: ["n1"] }));
+		await runScheduled(t);
+
+		const clicks = await t.run((ctx) =>
+			ctx.db.query("inspectionClicks").collect(),
+		);
+		expect(clicks).toEqual([]);
+	} finally {
+		if (previous === undefined) delete process.env.TF_INSPECTION;
+		else process.env.TF_INSPECTION = previous;
+	}
 });

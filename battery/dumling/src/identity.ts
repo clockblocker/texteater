@@ -1,22 +1,29 @@
 import type { Language, Lemma, Reading } from "./types.js";
-import {
-	foldCase,
-	normalizeEmojiDescription,
-	normalizeForm,
-} from "./validation/semantics.js";
+import { languageNormalizations } from "./validation/languages/normalizations.js";
+import { normalizeEmojiDescription } from "./validation/semantics.js";
+
+/**
+ * Folds letter case by the language's own rules, so spellings that differ
+ * only in case compare equal: `LOL` and `lol` both fold to `lol`. Lemma
+ * identity compares Canonical Forms this way (system ADR 0002). Hebrew has no
+ * case and folds to itself.
+ */
+export function foldCase(value: string, language: Language): string {
+	return languageNormalizations[language].foldCase(value);
+}
 
 /**
  * A Canonical Form as Lemma identity compares it: normalized as parsing
- * normalizes it, then case-folded by the language's rules (system ADR 0002).
- * `Um ... willen` and `um … willen` give one key. Consumers that compare a
- * bare Canonical Form, such as a Unit Shadow's, use this key so they agree
- * with {@link lemmaIdentityKey}.
+ * normalizes it, then folded by the language's normalization hook (system ADR
+ * 0002). `Um ... willen` and `um … willen` give one key. Consumers that
+ * compare a bare Canonical Form, such as a Unit Shadow's, use this key so they
+ * agree with {@link lemmaIdentityKey}.
  */
 export function canonicalFormKey(
 	canonicalForm: string,
 	language: Language,
 ): string {
-	return foldCase(normalizeForm(canonicalForm), language);
+	return languageNormalizations[language].canonicalFormKey(canonicalForm);
 }
 
 /**

@@ -1,19 +1,14 @@
 "use node";
 
-import type { Infer } from "convex/values";
 import { operations } from "dumgen";
 import type { ReadingResolution } from "../../server/clickResolution";
 import { dumgenClickResolution } from "../../server/dumgenClickResolution";
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import { createTfDemoOrchestrator } from "../../server/linguisticOrchestration";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-} from "../../server/operationalParsing";
+import { parseGermanReading } from "../../server/operationalParsing";
 import type {
 	LateResolvedClickCommit,
 	OrchestrationPersistence,
-	ResolutionContext,
 	ResolutionProgressObserver,
 	ResolvedClickCommit,
 	ResolveSegmentInput,
@@ -26,9 +21,13 @@ import { storedUnitOf } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
-import type { resolutionContextValidator } from "../resolutionContext";
 import { requireJev, resegment } from "./deploymentDumgen";
-import { convexId } from "./resolutionSessionLifecycle";
+import {
+	convexId,
+	parsedResolutionContext,
+} from "./resolutionSessionLifecycle";
+
+export { parsedResolutionContext };
 
 /**
  * The click orchestrator for one action. Its grammar is Dumgen's
@@ -67,25 +66,6 @@ export function orchestratorFor(
 		persistence: createConvexPersistence(ctx, sessionGuard),
 		...(observer ? { observer } : {}),
 	});
-}
-
-/**
- * A Resolution Context as `resolutionContext.load` returns it, its Lemma
- * candidates parsed: the click's, and the one a batch asks a click's Luna
- * request ahead from (#1351).
- */
-export function parsedResolutionContext(
-	context: Infer<typeof resolutionContextValidator>,
-): ResolutionContext {
-	return {
-		...context,
-		lemmaCandidates: context.lemmaCandidates.map(
-			({ lemma, foundUnder }) => ({
-				lemma: parseGermanLemma(lemma),
-				foundUnder,
-			}),
-		),
-	} as ResolutionContext;
 }
 
 /**

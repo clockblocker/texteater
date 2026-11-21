@@ -54,9 +54,8 @@ test("a governed preposition is the verb's valencyEvidence and stays out of its 
 		},
 	]);
 	expect(attestation.surface.normalizedSurface).toBe("wartet");
-	// The guess had no governed member, so Luna wrote again.
-	expect(luna.sent).toHaveLength(2);
-	expect(luna.sent[1]?.input).toHaveProperty("outsideHeadword", ["m1"]);
+	// The guessed headword already omitted `auf`, so Luna writes once.
+	expect(luna.sent).toHaveLength(1);
 });
 
 test("a VERB Lexeme's headword drops the preposition it governs and the slot words Luna cites it with", async () => {

@@ -32,6 +32,7 @@ import { checkWritten, type Judged, type Written } from "../canonical-form.js";
 import type { Target } from "../target.js";
 import { asWritten } from "./code-headword.js";
 import type { FirstRead, Plan } from "./first-request.js";
+import { guessedGoverned } from "./luna-guess.js";
 
 /** The routes where the lookup was at least as right as Luna on dev. */
 const lookedUpRoutes = new Set([
@@ -61,8 +62,9 @@ const lookedUpRoutes = new Set([
 export type LookedUpHeadword = {
 	/**
 	 * Whether a stored Lemma is found under the members jev is likely to
-	 * leave in the headword: all but the article and a VERB's satellites.
-	 * Luna is then not asked before jev answers.
+	 * leave in the headword: all but the article, a VERB's satellites, and a
+	 * Lexeme's guessed governed prepositions. Luna is then not asked before
+	 * jev answers.
 	 */
 	readonly likely: boolean;
 	/** The headword once jev has judged, or undefined where Luna writes it. */
@@ -141,6 +143,7 @@ export function lookupHeadword(
 			...(planned.article ? [planned.article.member] : []),
 			...(planned.verbal?.reflexive ? [planned.verbal.reflexive] : []),
 			...(planned.verbal?.auxiliaries.map(({ member }) => member) ?? []),
+			...guessedGoverned(planned).map(({ member }) => member),
 		].map(({ position }) => position),
 	]);
 	const positions = (outside: ReadonlySet<number>) =>

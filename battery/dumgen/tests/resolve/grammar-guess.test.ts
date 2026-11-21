@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { ProviderFailure } from "../../src/errors.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
@@ -192,6 +193,260 @@ test("a VERB Lexeme's guess takes its haben satellite as an auxiliary and a prep
 	);
 	expect(hungry.sent).toHaveLength(1);
 	expect(hungry.sent[0]?.input).not.toHaveProperty("auxiliaries");
+});
+
+test("any governing Lexeme (NOUN, ADJ, INTJ) guesses its governable preposition outsideHeadword, while Locutions leave it to jev", async () => {
+	// Der0 _1 Geruch2 _3 von4 _5 Blumen6 .7
+	const smell = fakeLuna((input) => ({
+		canonicalForm: "judged" in input ? "never asked" : "Geruch",
+		members: input.members.map(({ text }) => text),
+		article: "der",
+	}));
+	const noun = await resolveOnce(
+		{
+			jev: fakeJev({
+				number: "Sing",
+				case: "Nom",
+				governed_m2: "Governed",
+			}).ask,
+			luna: smell.ask,
+		},
+		{
+			sentence: sentenceOf("Der Geruch von Blumen."),
+			unit: unitOf([0, 2, 4], "Lexeme/NOUN"),
+		},
+	);
+	expect(attested(noun.result).surface.lemma.canonicalForm).toBe("Geruch");
+	expect(smell.sent).toHaveLength(1);
+	expect(smell.sent[0]?.input).toMatchObject({
+		outsideHeadword: ["m0", "m2"],
+	});
+	expect(noun.trace?.events).toBeUndefined();
+
+	// If jev judges the guessed preposition Free, outsideHeadword shrinks and Luna rewrites.
+	const freeNoun = fakeLuna((input) => ({
+		canonicalForm: "judged" in input ? "Geruch" : "Geruch",
+		members: input.members.map(({ text }) => text),
+		article: "der",
+	}));
+	const shrunk = await resolveOnce(
+		{
+			jev: fakeJev({
+				number: "Sing",
+				case: "Nom",
+				governed_m2: "Free",
+			}).ask,
+			luna: freeNoun.ask,
+		},
+		{
+			sentence: sentenceOf("Der Geruch von Blumen."),
+			unit: unitOf([0, 2, 4], "Lexeme/NOUN"),
+		},
+	);
+	expect(freeNoun.sent).toHaveLength(2);
+	expect(shrunk.trace?.events).toEqual([
+		{
+			name: "CanonicalRewritten",
+			data: { reason: "jev changed what Luna reads" },
+		},
+	]);
+
+	// Sie0 _1 ist2 _3 stolz4 _5 auf6 _7 ihn8 .9
+	const proud = writesOnGuess("stolz", "never asked");
+	const adj = await resolveOnce(
+		{
+			jev: fakeJev({
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: proud.ask,
+		},
+		{
+			sentence: sentenceOf("Sie ist stolz auf ihn."),
+			unit: unitOf([4, 6], "Lexeme/ADJ"),
+		},
+	);
+	expect(attested(adj.result).surface.lemma.canonicalForm).toBe("stolz");
+	expect(proud.sent).toHaveLength(1);
+	expect(proud.sent[0]?.input).toMatchObject({ outsideHeadword: ["m1"] });
+	expect(adj.trace?.events).toBeUndefined();
+
+	// Danke0 _1 für2 _3 alles4 .5
+	const thanks = writesOnGuess("danke", "never asked");
+	const intj = await resolveOnce(
+		{
+			jev: fakeJev({ governed_m1: "Governed" }).ask,
+			luna: thanks.ask,
+		},
+		{
+			sentence: sentenceOf("Danke für alles."),
+			unit: unitOf([0, 2], "Lexeme/INTJ"),
+		},
+	);
+	expect(attested(intj.result).surface.lemma.canonicalForm).toBe("danke");
+	expect(thanks.sent).toHaveLength(1);
+	expect(thanks.sent[0]?.input).toMatchObject({ outsideHeadword: ["m1"] });
+	expect(intj.trace?.events).toBeUndefined();
+
+	// Locution/VERB keeps its governed preposition out of guessed outsideHeadword.
+	// Sie0 _1 nahm2 _3 Rücksicht4 _5 auf6 _7 ihn8 .9
+	const care = writesOnGuess("Rücksicht nehmen", "never asked");
+	await resolveOnce(
+		{
+			jev: fakeJev({
+				governed_m2: "Governed",
+				governedCase_m2: "Acc",
+			}).ask,
+			luna: care.ask,
+		},
+		{
+			sentence: sentenceOf("Sie nahm Rücksicht auf ihn."),
+			unit: unitOf([2, 4, 6], "Locution/VERB"),
+		},
+	);
+	expect(care.sent).toHaveLength(1);
+	expect(care.sent[0]?.input).not.toHaveProperty("outsideHeadword");
+});
+
+test("when jev only adds members to outsideHeadword, keep the guessed headword if it already omits those words, else rewrite", async () => {
+	// Sie0 _1 warten2 _3 auf4 _5 ihn6 .7: auf may be a separable prefix, so
+	// the guess leaves it inside the headword; jev then judges it Governed.
+	const wait = {
+		sentence: sentenceOf("Sie warten auf ihn."),
+		unit: unitOf([2, 4], "Lexeme/VERB"),
+	};
+
+	// Guessed answer already omits "auf": keep it, no CanonicalRewritten.
+	const clean = writesOnGuess("warten", "never asked");
+	const kept = await resolveOnce(
+		{
+			jev: fakeJev({
+				prefix: "None",
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: clean.ask,
+		},
+		wait,
+	);
+	expect(attested(kept.result).surface.lemma.canonicalForm).toBe("warten");
+	expect(attested(kept.result).surface.normalizedSurface).toBe("warten");
+	expect(clean.sent).toHaveLength(1);
+	expect(clean.sent[0]?.input).not.toHaveProperty("outsideHeadword");
+	expect(kept.trace?.events).toBeUndefined();
+
+	// Guessed answer included "auf" as a token: rewrite with jev's answers.
+	const included = writesOnGuess("warten auf", "warten");
+	const rewritten = await resolveOnce(
+		{
+			jev: fakeJev({
+				prefix: "None",
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: included.ask,
+		},
+		wait,
+	);
+	expect(attested(rewritten.result).surface.lemma.canonicalForm).toBe(
+		"warten",
+	);
+	expect(included.sent).toHaveLength(2);
+	expect(rewritten.trace?.events).toEqual([
+		{
+			name: "CanonicalRewritten",
+			data: {
+				reason: "jev excluded a member Luna wrote in the headword",
+			},
+		},
+	]);
+
+	// Guessed answer prefixed "auf" (aufwarten): verbMisses still forces a rewrite.
+	const prefixed = writesOnGuess("aufwarten", "warten");
+	const prefixRewritten = await resolveOnce(
+		{
+			jev: fakeJev({
+				prefix: "None",
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: prefixed.ask,
+		},
+		wait,
+	);
+	expect(attested(prefixRewritten.result).surface.lemma.canonicalForm).toBe(
+		"warten",
+	);
+	expect(prefixed.sent).toHaveLength(2);
+	expect(prefixRewritten.trace?.events).toEqual([
+		{
+			name: "CanonicalRewritten",
+			data: { reason: "jev judged the verb without a separable prefix" },
+		},
+	]);
+
+	// Orthography also changed (Typo on m0): interrupt and rewrite even when
+	// the guessed answer would have omitted "auf".
+	const slow = fakeLuna(
+		(input) => ({
+			canonicalForm: "warten",
+			members: input.members.map(({ text }) => text),
+		}),
+		{ delayMs: 50 },
+	);
+	const typo = await resolveOnce(
+		{
+			jev: fakeJev({
+				orthography: "t0",
+				prefix: "None",
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: slow.ask,
+		},
+		wait,
+	);
+	expect(slow.sent).toHaveLength(2);
+	expect(slow.aborted).toEqual(["canonical"]);
+	expect(typo.trace?.events).toEqual([
+		{
+			name: "CanonicalRewritten",
+			data: { reason: "jev changed what Luna reads" },
+		},
+	]);
+
+	// A candidate that matched only the newly-excluded preposition changes
+	// lemmaCandidates between guess and judged, so Luna still rewrites.
+	const aufmachen: Dumling.Lemma<"de"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm: "aufmachen",
+		coreFeatures: { hasSepPrefix: "auf" },
+	};
+	const hinted = writesOnGuess("warten", "warten");
+	const hintChanged = await resolveOnce(
+		{
+			jev: fakeJev({
+				prefix: "None",
+				governed_m1: "Governed",
+				governedCase_m1: "Acc",
+			}).ask,
+			luna: hinted.ask,
+		},
+		{
+			...wait,
+			lemmaCandidates: [{ lemma: aufmachen, foundUnder: ["macht auf"] }],
+		},
+	);
+	expect(hinted.sent).toHaveLength(2);
+	expect(hintChanged.trace?.events).toEqual([
+		{
+			name: "CanonicalRewritten",
+			data: { reason: "jev changed what Luna reads" },
+		},
+	]);
 });
 
 test("a failed or Unresolved grammar request ends the guessed call before the trace is emitted", async () => {

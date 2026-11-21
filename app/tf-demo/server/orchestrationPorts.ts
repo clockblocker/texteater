@@ -22,7 +22,6 @@ import type { StoredSegment, StoredUnit } from "./storedSegments";
 export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly scrollId: string;
-	readonly segmentedSentenceId: string;
 	/** The Detected Language; only a German Sentence is clicked. */
 	readonly language?: DetectedLanguage;
 	readonly stitchedText: string;

@@ -258,65 +258,99 @@ const articleEvidence = {
 	// Optional, so Attestations recorded before a NOUN Locution owned its
 	// article stay valid.
 	locutionArticleOwner: articleEvidenceSchema.nullable().optional(),
-} satisfies { [Condition in RouteCondition]?: unknown };
-/** The schemas language `L`'s route policy gives the evidence field `Field`, by condition. */
-type Evidence<
-	L extends keyof RoutePolicies,
-	Field extends "expletiveEvidence" | "valencyEvidence",
-> = RoutePolicies[L]["attestationEvidence"] extends {
-	readonly [Name in Field]: infer Entry;
-}
-	? Entry
-	: Record<never, never>;
-/**
- * The Attestation's evidence fields, in field order, each with its schema on
- * the routes of every route condition that adds it. A language's route policy
- * adds its own; no route meets two conditions that add one field.
- */
-type AttestationEvidence = {
-	articleEvidence: typeof articleEvidence;
-	expletiveEvidence: Evidence<"de", "expletiveEvidence">;
-	valencyEvidence: Evidence<"de", "valencyEvidence"> &
-		Evidence<"he", "valencyEvidence"> &
-		Evidence<"en", "valencyEvidence">;
-};
-/** The route condition under which `Entry` gives the route `Key` names a field. */
-type HeldCondition<Key extends string, Entry> = {
-	[Condition in keyof Entry & RouteCondition]: Key extends RoutesOf<Condition>
-		? Condition
+} satisfies { [Condition in RouteCondition]?: z.core.$ZodType };
+
+/** Every Attestation evidence field name declared by any language's route policy. */
+type PolicyEvidenceField = {
+	[L in keyof RoutePolicies]: keyof RoutePolicies[L]["attestationEvidence"];
+}[keyof RoutePolicies];
+
+/** Every Attestation evidence field: universal `articleEvidence` plus all policy-defined fields. */
+type AttestationEvidenceField = "articleEvidence" | PolicyEvidenceField;
+
+/** The schema universal `articleEvidence` adds to the route `Key` names, or `never`. */
+type ArticleEvidenceSchema<Key extends string> = {
+	[Condition in keyof typeof articleEvidence &
+		RouteCondition]: Key extends RoutesOf<Condition>
+		? (typeof articleEvidence)[Condition]
 		: never;
-}[keyof Entry & RouteCondition];
-/** A route's evidence field `Field`, or no such field where no condition adds it. */
-type EvidenceField<
+}[keyof typeof articleEvidence & RouteCondition];
+
+/** The schema any language's route policy gives evidence field `Field` on route `Key`, or `never`. */
+type PolicyFieldSchema<
 	Key extends string,
-	Field extends keyof AttestationEvidence,
-	Held = HeldCondition<Key, AttestationEvidence[Field]>,
-> = [Held] extends [never]
-	? Record<never, never>
-	: {
-			[Name in Field]: AttestationEvidence[Field][Held &
-				keyof AttestationEvidence[Field]];
-		};
+	Field extends PolicyEvidenceField,
+> = {
+	[L in keyof RoutePolicies]: RoutePolicies[L]["attestationEvidence"] extends {
+		readonly [Name in Field]: infer Entry extends Readonly<
+			Record<string, z.core.$ZodType>
+		>;
+	}
+		? {
+				[Condition in keyof Entry &
+					keyof Conditions[L]]: Conditions[L][Condition] extends readonly (infer Route)[]
+					? Key extends Route
+						? Entry[Condition]
+						: never
+					: never;
+			}[keyof Entry & keyof Conditions[L]]
+		: never;
+}[keyof RoutePolicies];
+
+/** The schema evidence field `Field` gives route `Key`, or `never` when no condition adds it. */
+type EvidenceFieldSchema<
+	Key extends string,
+	Field extends AttestationEvidenceField,
+> = Field extends "articleEvidence"
+	? ArticleEvidenceSchema<Key>
+	: Field extends PolicyEvidenceField
+		? PolicyFieldSchema<Key, Field>
+		: never;
+
 /**
- * The evidence field `Field` of the route `key` names, read from its route
- * policy, which states the conditions its type reads.
+ * All Attestation evidence fields that apply to the route `Key` names, derived
+ * generically across every language in `RoutePolicies` so adding a language or
+ * new evidence field requires no edit here.
  */
-function evidenceField<
-	Key extends string,
-	Field extends keyof AttestationEvidence,
->(policy: RoutePolicy, key: Key, field: Field) {
-	const evidence: Partial<Record<string, Record<string, unknown>>> =
-		policy.attestationEvidence;
-	const entry: Record<string, unknown> =
-		field === "articleEvidence" ? articleEvidence : (evidence[field] ?? {});
-	const held = Object.keys(entry).find((condition) =>
+type EvidenceFields<Key extends string> = {
+	[Field in AttestationEvidenceField as [
+		EvidenceFieldSchema<Key, Field>,
+	] extends [never]
+		? never
+		: Field]: EvidenceFieldSchema<Key, Field>;
+};
+
+/**
+ * All Attestation evidence fields of the route `key` names, read from the
+ * universal `articleEvidence` table and the route's language policy in
+ * declaration order.
+ */
+function evidenceFields<Key extends string>(
+	policy: RoutePolicy,
+	key: Key,
+): EvidenceFields<Key> {
+	const fields: Record<string, unknown> = {};
+	const articleCondition = Object.keys(articleEvidence).find((condition) =>
 		holdsNamed(policy, condition, key),
 	);
-	// TypeScript can't evaluate the conditional `EvidenceField` for a generic
-	// key; the runtime finds the field from the same table.
-	return (
-		held === undefined ? {} : { [field]: entry[held] }
-	) as EvidenceField<Key, Field>;
+	if (articleCondition !== undefined) {
+		fields.articleEvidence =
+			articleEvidence[articleCondition as keyof typeof articleEvidence];
+	}
+	const policyEvidence: Readonly<
+		Record<string, Readonly<Record<string, unknown>>>
+	> = policy.attestationEvidence;
+	for (const [field, entry] of Object.entries(policyEvidence)) {
+		const held = Object.keys(entry).find((condition) =>
+			holdsNamed(policy, condition, key),
+		);
+		if (held !== undefined) {
+			fields[field] = entry[held];
+		}
+	}
+	// TypeScript can't evaluate the conditional `EvidenceFields` for a generic
+	// key; the runtime collects fields from the same route-policy tables.
+	return fields as EvidenceFields<Key>;
 }
 
 /** The schema with each check refined onto it, in order. */
@@ -385,16 +419,20 @@ export function buildUnitSchemas<
 		attestationChecks.push([isArticleAttestation, articleAttestationError]);
 	for (const [condition, ...check] of policy.attestationChecks)
 		if (holds(policy, condition, key)) attestationChecks.push(check);
+	const attestationShape = {
+		unitKind: z.literal(UnitKindSchema.enum.Attestation),
+		surface: Surface,
+		members: z.tuple([memberSchema], memberSchema),
+		realizationCoverage: z.enum(["Full", "Partial"]),
+	};
 	const Attestation = withChecks(
 		z.strictObject({
-			unitKind: z.literal(UnitKindSchema.enum.Attestation),
-			surface: Surface,
-			members: z.tuple([memberSchema], memberSchema),
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			...evidenceField(policy, key, "articleEvidence"),
-			...evidenceField(policy, key, "expletiveEvidence"),
-			...evidenceField(policy, key, "valencyEvidence"),
-		}),
+			...attestationShape,
+			...evidenceFields(policy, key),
+		}) as z.ZodObject<
+			typeof attestationShape & EvidenceFields<typeof key>,
+			z.core.$strict
+		>,
 		attestationChecks,
 	);
 	return { Lemma: base.Lemma, Surface, Reading: base.Reading, Attestation };

@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
 
 import { loadOccurrenceAttestation } from "../convex/model/occurrenceAttestations";
+import { loadResolutionContext } from "../convex/resolutionContext";
+import { clickSentenceOf } from "../server/clickGrammarInput";
 import { createTestConvex } from "./support/convex";
 
 test("reconstructs mixed, discontinuous occurrence evidence in source order", async () => {
@@ -70,6 +72,7 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 	});
 
 	expect(occurrence?.memberSegmentIndices).toEqual([0, 4]);
+	expect(occurrence?.encounter.sentence.id).toBe(occurrence?.sentence._id);
 	expect(occurrence?.encounter.target.memberSegmentIndices).toEqual([0, 4]);
 	expect(occurrence?.publicAttestation).toMatchObject({
 		unitKind: "Attestation",
@@ -80,4 +83,41 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 		realizationCoverage: "Partial",
 		surface: { lemma: { canonicalForm: "aufmachen" } },
 	});
+});
+
+test("encounter.sentence.id uses the bounded Convex sentenceId rather than raw paste text in segmentedSentenceId", async () => {
+	const t = createTestConvex();
+	const rawPaste = `text:v1:${"Langer eingefügter Text. ".repeat(120)}`;
+	const result = await t.run(async (ctx) => {
+		const scrollId = await ctx.db.insert("scrolls", {
+			submissionKey: rawPaste,
+			sourceText: "Die Banken.",
+		});
+		const sentenceId = await ctx.db.insert("sentences", {
+			segmentedSentenceId: `${rawPaste}#0`,
+			scrollId,
+			position: 0,
+			paragraph: 0,
+			language: "de",
+			stitchedText: "Die Banken.",
+		});
+		for (const [index, kind, text] of [
+			[0, "ResolvableText", "Die"],
+			[1, "Whitespace", " "],
+			[2, "ResolvableText", "Banken"],
+			[3, "Punctuation", "."],
+		] as const) {
+			await ctx.db.insert("segments", { sentenceId, index, kind, text });
+		}
+		const context = await loadResolutionContext(ctx, {
+			sentenceId,
+			clickedSegmentIndex: 2,
+		});
+		return { sentenceId, context };
+	});
+
+	expect(result.context.sentence).not.toBeNull();
+	expect(JSON.stringify(result.context)).not.toContain("text:v1:");
+	if (!result.context.sentence) throw new Error("Expected a Sentence.");
+	expect(clickSentenceOf(result.context.sentence).id).toBe(result.sentenceId);
 });

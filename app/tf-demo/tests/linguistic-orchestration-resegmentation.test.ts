@@ -139,7 +139,7 @@ function failedSentenceRun(
 			...fake.resolution,
 			reading: () => Effect.fail(providerFailure("stop after grammar")),
 		},
-		findStoredReadings: () => Effect.succeed([]),
+		findStoredReadings: async () => [],
 		persistence,
 		...(resegment ? { resegment } : {}),
 	});

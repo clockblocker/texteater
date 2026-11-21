@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
 	germanDeterminerCoreError,
 	isGermanDeterminerCore,
-} from "../../../../validation/semantics.js";
+} from "../../../../validation/languages/de/semantics.js";
 import {
 	FeatureBagKind,
 	featureBags,

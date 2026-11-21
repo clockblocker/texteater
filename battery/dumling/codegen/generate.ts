@@ -6,28 +6,82 @@ import {
 	emitLinkedValidationRegistry,
 } from "common-utils/validation-compiler";
 import { UnitKindSchema, VariantTagSchema } from "../src/schemas/unit-parts.js";
+import { mergeEncodedValidationArtifacts } from "../src/validation/merge-artifacts.js";
 import { inflectionalVocabulary } from "./inflectional-vocabulary.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
 
 const kinds = UnitKindSchema.options;
 const routes = await loadRoutes();
-const schemas = Object.fromEntries(
-	routes.flatMap((route) =>
-		kinds.map((kind) => [`${kind}/${route.key}`, route.schemas[kind]]),
-	),
-);
-const compiled = compileZodValidationArtifacts({
-	schemas,
-	operations: registrations,
-});
+const languages = [
+	...new Set(routes.map((route) => route.language)),
+].toSorted();
 // Every Dumling operation keeps its input's structural type.
 const typePreservingOperations = registrations.map(({ name }) => name);
-const lines = routes.map(
-	(route) =>
-		`${JSON.stringify(route.key)}:{${kinds.map((kind) => `${kind}:${emitInlineOutputType({ artifact: compiled, root: `${kind}/${route.key}`, typePreservingOperations })};`).join("\n")}};`,
+
+const pascalLanguage = (language: string) =>
+	language.charAt(0).toUpperCase() + language.slice(1);
+
+const languageOutputs: Record<string, string> = {};
+const languageEncodedArtifacts: (readonly [string, string])[] = [];
+
+for (const language of languages) {
+	const languageRoutes = routes.filter(
+		(route) => route.language === language,
+	);
+	const languageSchemas = Object.fromEntries(
+		languageRoutes.flatMap((route) =>
+			kinds.map((kind) => [`${kind}/${route.key}`, route.schemas[kind]]),
+		),
+	);
+	const languageCompiled = compileZodValidationArtifacts({
+		schemas: languageSchemas,
+		operations: registrations,
+	});
+	const encodedLanguageValidation = JSON.stringify(languageCompiled);
+	languageEncodedArtifacts.push([language, encodedLanguageValidation]);
+
+	const languageTypeLines = languageRoutes.map(
+		(route) =>
+			`${JSON.stringify(route.key)}:{${kinds.map((kind) => `${kind}:${emitInlineOutputType({ artifact: languageCompiled, root: `${kind}/${route.key}`, typePreservingOperations })};`).join("\n")}};`,
+	);
+	languageOutputs[`languages/${language}/units.ts`] =
+		`// Generated from canonical Zod unit schemas. Run bun run generate.\nexport interface UnitMap {${languageTypeLines.join("\n")}}\n`;
+	languageOutputs[`languages/${language}/inflectional-features.ts`] =
+		`// Generated from canonical Zod unit schemas. Run bun run generate.\nexport const inflectionalFeatures: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = ${JSON.stringify(
+			Object.fromEntries(
+				languageRoutes.flatMap((route) => {
+					const bag: unknown = route.bag.shape.inflectional;
+					return bag === undefined
+						? []
+						: [[route.key, inflectionalVocabulary(bag)]];
+				}),
+			),
+		)};\n`;
+	languageOutputs[`languages/${language}/validation.ts`] =
+		`// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(encodedLanguageValidation)};\n`;
+	languageOutputs[`languages/${language}/linked-validation.ts`] =
+		emitLinkedValidationRegistry([
+			{ owner: `dumling/${language}`, registry: languageCompiled },
+		]);
+}
+
+const mergedEncodedValidation = mergeEncodedValidationArtifacts(
+	languageEncodedArtifacts,
 );
-const types = `// Generated from canonical Zod unit schemas. Run bun run generate.\nexport interface UnitMap {${lines.join("\n")}}\n
+const mergedValidation = JSON.parse(mergedEncodedValidation);
+
+const unitMapImports = languages
+	.map(
+		(language) =>
+			`import type { UnitMap as ${pascalLanguage(language)}UnitMap } from "./languages/${language}/units.js";`,
+	)
+	.join("\n");
+const unitMapExtends = languages
+	.map((language) => `${pascalLanguage(language)}UnitMap`)
+	.join(", ");
+
+const types = `// Generated from canonical Zod unit schemas. Run bun run generate.\n${unitMapImports}\nexport interface UnitMap extends ${unitMapExtends} {}\n
 export type UnitKind=${kinds.map((value) => JSON.stringify(value)).join("|")};
 export type VariantTag=${VariantTagSchema.options.map((value) => JSON.stringify(value)).join("|")};
 export type Language=UnitMap[keyof UnitMap]["Lemma"]["language"];
@@ -48,22 +102,38 @@ export type UnitRoute={ [R in keyof UnitMap]: Pick<UnitMap[R]["Lemma"],"language
 // check relates every route to the whole union and grows cubically with routes.
 export type ParsedUnit<R extends UnitRoute=UnitRoute>=R extends unknown ? { [U in R["unitKind"]]: {unitKind:U;language:R["language"];family:R["family"];kind:R["kind"];value:UnitMap[Extract<\`\${R["language"]}/\${R["family"]}/\${R["kind"]}\`,keyof UnitMap>][U]} }[R["unitKind"]] : never;
 `;
+
+const inflectionalImports = languages
+	.map(
+		(language) =>
+			`import { inflectionalFeatures as ${language}InflectionalFeatures } from "./languages/${language}/inflectional-features.js";`,
+	)
+	.join("\n");
+const inflectionalSpreads = languages
+	.map((language) => `...${language}InflectionalFeatures,`)
+	.join("\n");
+
+const validationImports = languages
+	.map(
+		(language) =>
+			`import { encodedValidation as ${language}EncodedValidation } from "./languages/${language}/validation.js";`,
+	)
+	.join("\n");
+const validationEntries = languages
+	.map(
+		(language) =>
+			`[${JSON.stringify(language)}, ${language}EncodedValidation],`,
+	)
+	.join("\n");
+
 const outputs = {
+	...languageOutputs,
 	"linked-validation.ts": emitLinkedValidationRegistry([
-		{ owner: "dumling", registry: compiled },
+		{ owner: "dumling", registry: mergedValidation },
 	]),
 	"units.ts": types,
-	"inflectional-features.ts": `// Generated from canonical Zod unit schemas. Run bun run generate.\n/**\n * Each inflecting route's inflectional bag as plain data: every feature it\n * may mark and every value it may mark it with, over all of the bag's\n * branches. A route whose Surfaces don't inflect is absent.\n */\nexport const inflectionalFeatures: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = ${JSON.stringify(
-		Object.fromEntries(
-			routes.flatMap((route) => {
-				const bag: unknown = route.bag.shape.inflectional;
-				return bag === undefined
-					? []
-					: [[route.key, inflectionalVocabulary(bag)]];
-			}),
-		),
-	)};\n`,
-	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
+	"inflectional-features.ts": `// Generated from canonical Zod unit schemas. Run bun run generate.\n${inflectionalImports}\n/**\n * Each inflecting route's inflectional bag as plain data: every feature it\n * may mark and every value it may mark it with, over all of the bag's\n * branches. A route whose Surfaces don't inflect is absent.\n */\nexport const inflectionalFeatures: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = {\n${inflectionalSpreads}\n};\n`,
+	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nimport { mergeEncodedValidationArtifacts } from "../validation/merge-artifacts.js";\n${validationImports}\nexport const encodedValidation: string = mergeEncodedValidationArtifacts([\n${validationEntries}\n]);\n`,
 	...Object.fromEntries(
 		routes.map((route) => [
 			`schemas/${route.modulePath.replace(/\.js$/, ".ts")}`,

@@ -28,13 +28,15 @@ export function inspectionStep(
 	return { attributes: { [OWNER]: owner, [INPUT]: input } };
 }
 
+/** Fails the enclosing inspection step although its Effect returns normally. */
+export const markSpanFailed = Effect.annotateCurrentSpan(FAILED, true);
+
 /**
  * Runs promise work as spans under the span current where `services` were
  * taken, for callers outside a fiber. A hop rethrows its own error.
  */
 export function spanHops(services: Context.Context<never>) {
-	const markFailed = () =>
-		Effect.runSyncWith(services)(Effect.annotateCurrentSpan(FAILED, true));
+	const markFailed = () => Effect.runSyncWith(services)(markSpanFailed);
 	return {
 		run: Effect.runPromiseWith(services),
 		async hop<T>(

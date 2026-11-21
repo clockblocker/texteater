@@ -25,7 +25,7 @@ type ConditionalCheck<Condition extends string> = readonly [
 
 /** The Attestation evidence fields a language's route policy may add. */
 type PolicyEvidence<Condition extends PropertyKey> = {
-	readonly [Field in "expletiveEvidence" | "valencyEvidence"]?: {
+	readonly [Field: string]: {
 		readonly [Name in Condition]?: z.core.$ZodType;
 	};
 };
