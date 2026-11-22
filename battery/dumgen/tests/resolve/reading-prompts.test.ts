@@ -44,9 +44,16 @@ test("the demonstrations come in the input shape production sends, es gibt, a fu
 	});
 	for (const demonstration of readingDemonstrations) {
 		expect(Object.keys(demonstration).sort()).toEqual(
-			["emojiDescription", "lemma", "markedSentence", "text"].sort(),
+			[
+				"emojiDescription",
+				"lemma",
+				"markedSentence",
+				"sense",
+				"text",
+			].sort(),
 		);
 		expect(demonstration.markedSentence).toContain("<TARGET>");
+		expect(demonstration.sense.length).toBeGreaterThan(0);
 		expect(generationPrompt).toContain(demonstration.text);
 	}
 	expect(

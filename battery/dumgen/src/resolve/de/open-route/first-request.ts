@@ -284,6 +284,9 @@ export function judgedOf(
 			...(first.inflection ? { inflection: first.inflection } : {}),
 		},
 		outsideHeadword,
+		...(planned.article
+			? { ownedArticle: planned.article.member.position }
+			: {}),
 		auxiliaries: new Set(
 			(planned.verbal?.auxiliaries ?? []).flatMap(
 				({ member, use: asked }) => {

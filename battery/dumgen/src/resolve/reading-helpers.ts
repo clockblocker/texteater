@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { closedRoute, reflexiveMarker } from "dumcorpus/inventories";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -78,6 +79,43 @@ export function markedSentence(
 		.join("");
 }
 
+/**
+ * The member position of an Attestation's owned article, when it has one.
+ * Owned articles are grammatical satellites (ADR 0040) that carry no lexical
+ * sense of their own; leaving them unmarked in Reading prompts prevents
+ * discontinuous `<TARGET>article</TARGET> adj <TARGET>noun</TARGET>` brackets
+ * from pulling intervening modifiers into the noun's Emoji Description.
+ */
+export function ownedArticleMember(
+	attestation: Dumling.Attestation<"de">,
+): number | undefined {
+	return "articleEvidence" in attestation &&
+		attestation.articleEvidence?.kind === "Owned"
+		? attestation.articleEvidence.member
+		: undefined;
+}
+
+/**
+ * The Sentence marked for Reading resolution and Emoji Description generation:
+ * `markedSentence`, omitting an owned article member when other members remain
+ * so intervening attributive modifiers are never bracketed inside `<TARGET>`
+ * spans while the article stays visible in the sentence text.
+ */
+export function markedReadingSentence(
+	segments: readonly {
+		readonly kind?: Segment["kind"];
+		readonly text: string;
+	}[],
+	unitSegments: readonly number[],
+	ownedArticle?: number,
+): string {
+	const kept =
+		ownedArticle !== undefined && unitSegments.length > 1
+			? unitSegments.filter((_, position) => position !== ownedArticle)
+			: unitSegments;
+	return markedSentence(segments, kept.length > 0 ? kept : unitSegments);
+}
+
 /** The judge's policy block, the same for every click. */
 export const policyBlock = {
 	task: judgePolicy.task,
@@ -135,6 +173,13 @@ export function draftsEmojiDescription(route: Route): boolean {
 	return !closedRoute(route) && route.family !== "Foreign";
 }
 
+/** The short German dictionary-sense schema written before `emojiDescription`. */
+export const emojiSenseSchema = {
+	type: "string",
+	minLength: 1,
+	description: generation.senseSchema,
+} as const;
+
 /**
  * The string schema Luna answers under. Strict mode stays off, E10's arm RS
  * (#526, ruled 2026-10-03), so the provider enforces none of it: the schema
@@ -146,20 +191,37 @@ export const emojiDescriptionSchema = {
 	description: generation.schema,
 } as const;
 
+/**
+ * The object schema standalone `emojiDescription` calls answer under: a short
+ * `sense` gloss of the target headword alone, then `emojiDescription` drawn
+ * from that sense.
+ */
+const emojiDescriptionResponseSchema = {
+	type: "object",
+	properties: {
+		sense: emojiSenseSchema,
+		emojiDescription: emojiDescriptionSchema,
+	},
+	required: ["sense", "emojiDescription"],
+	additionalProperties: false,
+} as const;
+
 /** The stage of Luna's Emoji Description call, as its trace and a host's stored answers name it. */
 export const emojiDescriptionStage = "emojiDescription";
 
 /**
- * The most tokens the Emoji Description call may write: at most 25 over
- * 9,113 cached answers, and four emoji in ZWJ sequences stay well under.
+ * The most tokens the Emoji Description call may write: a short `sense` gloss
+ * plus one to four emoji stay well under 128 tokens.
  */
 const emojiDescriptionOutputLimit = 128;
 
 /**
  * The Emoji Description request Luna gets, without its configuration. Luna
- * answers JSON under a string schema with strict mode off, E10's arm RS
- * (#526, ruled 2026-10-03): fewer lost clicks than free text. An answer
- * that is no Emoji Description is still refused, never salvaged.
+ * answers JSON with `sense` then `emojiDescription` under strict mode off:
+ * `sense` isolates the headword's lexical sense from neighbouring modifiers
+ * and scene before the emoji are written, and Dumling's emoji-grapheme parse
+ * enforces the description itself. An answer that is no Emoji Description is
+ * still refused, never salvaged.
  */
 export function emojiDescriptionRequest(input: {
 	readonly markedSentence: string;
@@ -170,8 +232,15 @@ export function emojiDescriptionRequest(input: {
 		input,
 		maxOutputTokens: emojiDescriptionOutputLimit,
 		outputFormat: "json",
-		outputSchema: emojiDescriptionSchema,
+		outputSchema: emojiDescriptionResponseSchema,
 	};
+}
+
+/** Extracts the raw `emojiDescription` string from a standalone Emoji Description answer. */
+export function writtenEmojiDescription(output: unknown): string | undefined {
+	if (!isRecord(output) || typeof output.emojiDescription !== "string")
+		return undefined;
+	return output.emojiDescription;
 }
 
 /** An Emoji Description as Dumling parses it, or undefined when it is none. */

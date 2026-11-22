@@ -92,6 +92,7 @@ export function guessedJudgment(
 			governed,
 			shape,
 		),
+		...(article ? { ownedArticle: article.member.position } : {}),
 		...(auxiliaries.length > 0
 			? { auxiliaries: new Set(auxiliaries) }
 			: {}),

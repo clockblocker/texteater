@@ -143,7 +143,7 @@ function recordingLuna() {
 		const members = membersOf(request);
 		return {
 			output: isEmojiDraft(request)
-				? "🔁"
+				? { sense: "Gegensatz", emojiDescription: "🔁" }
 				: { canonicalForm: members.join(" "), members },
 			metadata: { usage: { input_tokens: 1500, output_tokens: 20 } },
 		};

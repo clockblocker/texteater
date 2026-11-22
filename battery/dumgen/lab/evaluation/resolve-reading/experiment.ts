@@ -46,7 +46,8 @@ import type { OperationTrace } from "../../../src/operation-trace.js";
 import { operations } from "../../../src/operations.js";
 import {
 	draftsEmojiDescription,
-	markedSentence,
+	markedReadingSentence,
+	ownedArticleMember,
 } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import {
@@ -468,9 +469,12 @@ async function evaluateReadingSet(
 										route: routeKey(goldCase),
 										lemma: goldCase.attestation.surface
 											.lemma.canonicalForm,
-										markedSentence: markedSentence(
+										markedSentence: markedReadingSentence(
 											goldCase.sentence.segments,
 											goldCase.unit.segments,
+											ownedArticleMember(
+												goldCase.attestation,
+											),
 										),
 										ideal: goldCase.ideal,
 										candidates: candidatesOf(goldCase, arm)

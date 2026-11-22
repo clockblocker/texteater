@@ -209,7 +209,10 @@ test("a click whose members hold a lexical reflexive is offered only the 🪞 Re
 	// Er0 _1 erinnert2 _3 sich4 .5
 	const click = await clickOn("Er erinnert sich.", [2, 4], "erinnern");
 	const jev = fakeJev({ reading: "NoMatch" });
-	const luna = fakeLuna(() => "🧠");
+	const luna = fakeLuna(() => ({
+		sense: "sich ins Gedächtnis rufen",
+		emojiDescription: "🧠",
+	}));
 	const result = await readOnce(click, jev, luna, {
 		candidates: ["💭", "🪞🧠"],
 	});
@@ -236,7 +239,10 @@ test("a click with no lexical reflexive is offered no 🪞 Reading, and Luna's �
 	const result = await readOnce(
 		click,
 		jev,
-		fakeLuna(() => "🪞💭"),
+		fakeLuna(() => ({
+			sense: "jemanden an etwas erinnern",
+			emojiDescription: "🪞💭",
+		})),
 		{ candidates: ["🪞🧠"] },
 	);
 	expect(jev.sent).toEqual([]);
@@ -264,7 +270,7 @@ test("a click with a lexical reflexive is offered a Reading whose Reflexive Slot
 	const written = await readOnce(
 		click,
 		fakeJev({ reading: "NoMatch" }),
-		fakeLuna(() => "😴"),
+		fakeLuna(() => ({ sense: "sich erholen", emojiDescription: "😴" })),
 		{ candidates, optionallyReflexive: ["😴"] },
 	);
 	expect(written).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
@@ -294,7 +300,7 @@ test("a Reading Knowledge has given no frame yet falls back to the 🪞 rule", a
 	const result = await readOnce(
 		click,
 		jev,
-		fakeLuna(() => "😴"),
+		fakeLuna(() => ({ sense: "sich erholen", emojiDescription: "😴" })),
 		{
 			candidates: ["😴", "🪞🧘"],
 		},

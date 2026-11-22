@@ -233,7 +233,9 @@ test("a unit whose headword code writes has its emoji draft asked ahead, and its
 	});
 	expect(draft?.maxOutputTokens).toBe(128);
 	fake.end("completed", (request) =>
-		isEmojiDraft(request) ? responseBody("➕") : writesMembers(request),
+		isEmojiDraft(request)
+			? responseBody({ sense: "Gegensatz", emojiDescription: "➕" })
+			: writesMembers(request),
 	);
 	await t.action(internal.lunaAheadBatchActions.poll, { batchId: row._id });
 	expect((await batches(t))[0]).toMatchObject({

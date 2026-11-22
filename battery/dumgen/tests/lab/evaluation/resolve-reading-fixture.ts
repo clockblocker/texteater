@@ -17,7 +17,10 @@ import {
 	readingOracle,
 } from "../../../lab/evaluation/resolve-reading/oracle.js";
 import type { LunaAsk } from "../../../src/luna.js";
-import { markedSentence } from "../../../src/resolve/reading.js";
+import {
+	markedReadingSentence,
+	ownedArticleMember,
+} from "../../../src/resolve/reading.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 
 const repository = resolve(import.meta.dir, "../../../../..");
@@ -73,9 +76,10 @@ const caseOf = (input: unknown) => {
 	const marked = draft ? draft.markedSentence : fields.markedSentence;
 	const found = sample.find(
 		(goldCase) =>
-			markedSentence(
+			markedReadingSentence(
 				goldCase.sentence.segments,
 				goldCase.unit.segments,
+				ownedArticleMember(goldCase.attestation),
 			) === marked &&
 			(draft !== undefined ||
 				goldCase.attestation.surface.lemma.canonicalForm ===

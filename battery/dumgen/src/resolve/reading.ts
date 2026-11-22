@@ -56,10 +56,12 @@ import {
 	emojiDescriptionRequest,
 	emojiDescriptionStage,
 	holdsReflexive,
-	markedSentence,
+	markedReadingSentence,
+	ownedArticleMember,
 	parsedDescription,
 	policyBlock,
 	withReflexiveMarker,
+	writtenEmojiDescription,
 } from "./reading-helpers.js";
 import type { ReadingResolution, ResolveReadingInput } from "./types.js";
 
@@ -69,10 +71,14 @@ export {
 	emojiDescriptionRequest,
 	emojiDescriptionSchema,
 	emojiDescriptionStage,
+	emojiSenseSchema,
 	generationPrompt,
+	markedReadingSentence,
 	markedSentence,
+	ownedArticleMember,
 	parsedDescription,
 	withReflexiveMarker,
+	writtenEmojiDescription,
 } from "./reading-helpers.js";
 
 /** One option the judge sees: an Emoji Description, and whether dumcorpus authors it. */
@@ -219,7 +225,11 @@ const validateReadingInput = Effect.fnUntraced(function* (
 		reflexive: holdsReflexive(attestation),
 		optional: new Set((input.optionallyReflexive ?? []).map(keyOf)),
 		state: {
-			markedSentence: markedSentence(sentence.segments, unit.segments),
+			markedSentence: markedReadingSentence(
+				sentence.segments,
+				unit.segments,
+				ownedArticleMember(attestation),
+			),
 			lemma: lemma.canonicalForm,
 		},
 	};
@@ -335,21 +345,21 @@ const askOpenEmojiDescription = (
 	state: { readonly markedSentence: string; readonly lemma: string },
 	reflexive: boolean,
 ) =>
-	askLuna(
-		emojiDescriptionStage,
-		emojiDescriptionRequest(state),
-		(output) =>
+	askLuna(emojiDescriptionStage, emojiDescriptionRequest(state), (output) => {
+		const description = writtenEmojiDescription(output);
+		return (
 			parsedDescription(
 				lemma,
-				typeof output === "string"
-					? withReflexiveMarker(output, reflexive)
+				description !== undefined
+					? withReflexiveMarker(description, reflexive)
 					: output,
 			) ??
 			new InvalidModelOutput({
 				stage: emojiDescriptionStage,
 				message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
-			}),
-	);
+			})
+		);
+	});
 
 /** Resolves an Open Route click via offered options, draft/written shortcuts, jev, and Luna. */
 const resolveOpenRouteReading = Effect.fnUntraced(function* (

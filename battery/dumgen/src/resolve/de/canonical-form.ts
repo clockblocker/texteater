@@ -18,7 +18,8 @@ import type { LunaDraft } from "../../luna.js";
 import {
 	draftPrompt,
 	emojiDescriptionSchema,
-	markedSentence,
+	emojiSenseSchema,
+	markedReadingSentence,
 } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import type { MemberOrthography } from "./member-spelling.js";
@@ -39,6 +40,8 @@ export type Judged = {
 	readonly features?: Readonly<Record<string, unknown>>;
 	/** Members that are no part of the headword: an owned article, a governed preposition. */
 	readonly outsideHeadword: ReadonlySet<number>;
+	/** Member position of the unit's owned article, when it has one. */
+	readonly ownedArticle?: number;
 	/**
 	 * A verbal unit's members judged auxiliaries: part of its Surface, never
 	 * of its headword (Rule de/auxiliary-joins-the-verb-it-serves).
@@ -54,7 +57,7 @@ export type Written = {
 	readonly members: readonly string[];
 	/** A NOUN's definite article in the nominative singular, or none (#876). */
 	readonly article?: "der" | "die" | "das" | "none";
-	/** The Emoji Description Luna drafted before the headword, unchecked. */
+	/** The Emoji Description Luna drafted before the headword through `sense`, unchecked. */
 	readonly drafted?: string;
 };
 
@@ -144,14 +147,16 @@ export function hintsFor(
 
 /**
  * The Canonical Form request, without its configuration. With `drafts`,
- * Luna writes the Emoji Description too, from the unit marked as
- * `resolve.reading` marks it, in `emojiDescriptionInput`, and the headword
- * alone. The draft's input block and its field come first, so Luna writes
- * the description with the marked Sentence in front of it: written after
- * the headword, it took the headword's most common sense, «Bank» 🏦 for a
- * bench (#1165). No stored Reading reaches the request: the hints are
- * Lemmas, their Canonical Form and Core Features only, and only those
- * found under the members `judged` leaves in the headword (`hintsFor`).
+ * Luna writes `sense` and `emojiDescription` first, before the headword,
+ * from the unit marked as `resolve.reading` marks it (omitting any owned
+ * article so intervening modifiers are never bracketed inside `<TARGET>`
+ * spans), in `emojiDescriptionInput`, and the headword alone. Writing them
+ * first keeps homonyms from taking the bare headword's most common sense
+ * (#1165), while `sense` isolates the target headword's dictionary sense
+ * from neighbouring modifiers and scene before `emojiDescription` is drawn.
+ * No stored Reading reaches the request: the hints are Lemmas, their
+ * Canonical Form and Core Features only, and only those found under the
+ * members `judged` leaves in the headword (`hintsFor`).
  */
 export function canonicalFormRequest(
 	target: Target,
@@ -180,9 +185,10 @@ export function canonicalFormRequest(
 			...(drafts
 				? {
 						emojiDescriptionInput: {
-							markedSentence: markedSentence(
+							markedSentence: markedReadingSentence(
 								target.segments,
 								target.members.map(({ segment }) => segment),
+								judged.ownedArticle,
 							),
 						},
 					}
@@ -223,7 +229,12 @@ export function canonicalFormRequest(
 		outputSchema: {
 			type: "object",
 			properties: {
-				...(drafts ? { emojiDescription: emojiDescriptionSchema } : {}),
+				...(drafts
+					? {
+							sense: emojiSenseSchema,
+							emojiDescription: emojiDescriptionSchema,
+						}
+					: {}),
 				canonicalForm: { type: "string", minLength: 1 },
 				members: {
 					type: "array",
@@ -236,7 +247,7 @@ export function canonicalFormRequest(
 					: {}),
 			},
 			required: [
-				...(drafts ? ["emojiDescription"] : []),
+				...(drafts ? ["sense", "emojiDescription"] : []),
 				"canonicalForm",
 				"members",
 				...(writesArticle(target) ? ["article"] : []),

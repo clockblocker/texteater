@@ -26,6 +26,7 @@ import {
 	emojiDescriptionRequest,
 	emojiDescriptionStage,
 	markedSentence,
+	writtenEmojiDescription,
 } from "../../reading.js";
 import type { LemmaCandidate } from "../../types.js";
 import {
@@ -142,7 +143,7 @@ export const startHeadword = Effect.fnUntraced(function* (
 	const draft = drafted
 		? yield* Effect.forkScoped(
 				luna(emojiDescriptionStage, drafted, (output) =>
-					typeof output === "string" ? output.trim() : undefined,
+					writtenEmojiDescription(output)?.trim(),
 				),
 				{ startImmediately: true },
 			)

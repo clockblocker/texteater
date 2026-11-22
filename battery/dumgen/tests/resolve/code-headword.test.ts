@@ -17,10 +17,11 @@ import {
 const luna = (canonicalForm: string) =>
 	fakeLuna((input) =>
 		"markedSentence" in input && input.members.length === 0
-			? "➕"
+			? { sense: "Gegensatz", emojiDescription: "➕" }
 			: {
 					canonicalForm,
 					members: input.members.map(() => canonicalForm),
+					sense: "Bedeutung",
 					emojiDescription: "🔁",
 				},
 	);
@@ -86,10 +87,11 @@ test("a member jev judges a Typo, or a spelling no dictionary gives first, sends
 		const writer = fakeLuna(
 			(input) =>
 				"markedSentence" in input && input.members.length === 0
-					? "➕"
+					? { sense: "Gegensatz", emojiDescription: "➕" }
 					: {
 							canonicalForm: "aber",
 							members: ["aber"],
+							sense: "Gegensatz",
 							emojiDescription: "🔁",
 						},
 			{ delayMs: 20 },

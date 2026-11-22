@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import { operations } from "../../src/operations.js";
@@ -230,12 +232,75 @@ test("an Open Route's Lemma whose authored Readings miss the sense gets a New on
 	expect(collided.trace?.resolution?.reason).toBe("Collision");
 });
 
-test("Luna answers the Emoji Description as JSON under a string schema (#526, E10's arm RS)", async () => {
+test("Luna answers the Emoji Description as JSON with sense before emojiDescription", async () => {
 	const luna = writes("🔐");
 	await readOnce(fakeJev(), luna, { candidates: [] });
 	expect(luna.sent[0]).toMatchObject({
 		outputFormat: "json",
-		outputSchema: { type: "string", minLength: 1 },
+		outputSchema: {
+			type: "object",
+			properties: {
+				sense: { type: "string", minLength: 1 },
+				emojiDescription: { type: "string", minLength: 1 },
+			},
+			required: ["sense", "emojiDescription"],
+			additionalProperties: false,
+		},
+	});
+});
+
+test("resolve.reading leaves an owned article unmarked in markedSentence so intervening modifiers stay outside <TARGET>", async () => {
+	const typ: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Typ",
+		coreFeatures: { gender: "Masc" },
+	};
+	const parsed = parseUnit(
+		{
+			unitKind: "Attestation",
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				lemma: typ,
+				normalizedSurface: "Typen",
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Acc",
+					gender: null,
+					number: "Sing",
+				},
+			},
+			members: [
+				{ attested: "den", orthography: "Standard" },
+				{ attested: "Typen", orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
+			articleEvidence: { kind: "Owned", member: 0 },
+			valencyEvidence: [],
+		},
+		{
+			unitKind: "Attestation",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+		},
+	);
+	if (!parsed.success) throw parsed.error;
+	const luna = writes("👤");
+	await readOnce(fakeJev(), luna, {
+		attestation: parsed.chain.value,
+		// Ich0 _1 sah2 _3 den4 _5 toten6 _7 Typen8 .9
+		sentence: sentenceOf("Ich sah den toten Typen."),
+		unit: unitOf([4, 8], "Lexeme/NOUN"),
+		candidates: [],
+	});
+	expect(luna.sent[0]?.input).toEqual({
+		markedSentence: "Ich sah den toten <TARGET>Typen</TARGET>.",
+		lemma: "Typ",
 	});
 });
 

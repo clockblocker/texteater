@@ -150,12 +150,21 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 	expect(request?.systemPrompt).toContain(generation.draftScope);
 	const outputSchema = request?.outputSchema;
 	const schema = isRecord(outputSchema) ? outputSchema : {};
-	// The description comes first, before the headword: written after it,
-	// it took the headword's most common sense (#1165).
+	// `sense` and `emojiDescription` come first, before the headword:
+	// writing before `canonicalForm` keeps homonyms from collapsing to the
+	// bare headword's most common sense (#1165), while `sense` strips
+	// neighbouring modifiers and scene before `emojiDescription` is drawn.
 	expect(
 		Object.keys(isRecord(schema.properties) ? schema.properties : {}),
-	).toEqual(["emojiDescription", "canonicalForm", "members", "article"]);
+	).toEqual([
+		"sense",
+		"emojiDescription",
+		"canonicalForm",
+		"members",
+		"article",
+	]);
 	expect(schema.required).toEqual([
+		"sense",
 		"emojiDescription",
 		"canonicalForm",
 		"members",
@@ -165,6 +174,33 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 	expect(request?.systemPrompt).toContain(generation.copula);
 	// Dumling's parse drops the variation selector.
 	expect(result).toMatchObject({ _tag: "Resolved", drafted: "🏰" });
+});
+
+test("an owned article is left unmarked in emojiDescriptionInput so intervening modifiers stay outside <TARGET>", async () => {
+	// Ich0 _1 sah2 _3 den4 _5 toten6 _7 Typen8 .9
+	const luna = fakeLuna(({ members }) => ({
+		canonicalForm: "Typ",
+		members: members.map(({ text }) => text),
+		article: "der",
+		sense: "männliche Person",
+		emojiDescription: "👤",
+	}));
+	const { result } = await resolveOnce(
+		{
+			jev: fakeJev({ gender: "der", number: "Sing", case: "Acc" }).ask,
+			luna: luna.ask,
+		},
+		{
+			sentence: sentenceOf("Ich sah den toten Typen."),
+			unit: unitOf([4, 8], "Lexeme/NOUN"),
+		},
+	);
+	expect(result).toMatchObject({ _tag: "Resolved", drafted: "👤" });
+	expect(luna.sent[0]?.input).toMatchObject({
+		emojiDescriptionInput: {
+			markedSentence: "Ich sah den toten <TARGET>Typen</TARGET>.",
+		},
+	});
 });
 
 test("a draft that is no Emoji Description is dropped and the headword kept, and Foreign material or a closed PART drafts none", async () => {

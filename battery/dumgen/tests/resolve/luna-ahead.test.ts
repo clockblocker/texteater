@@ -262,7 +262,10 @@ const storedAber: Dumling.Lemma<"de"> = {
 };
 
 test("a unit whose headword code writes has its emoji draft ahead, the request the click sends beside jev", async () => {
-	const luna = fakeLuna(() => "➕");
+	const luna = fakeLuna(() => ({
+		sense: "Gegensatz, Einschränkung",
+		emojiDescription: "➕",
+	}));
 	await clickOver(luna.ask, aber);
 	const [sent] = luna.sent;
 	if (!sent) throw Error("Expected the click to draft with Luna");
@@ -284,21 +287,30 @@ test("a unit whose headword code writes, where a stored Lemma's Readings may exi
 		...aber,
 		lemmaCandidates: [{ lemma: storedAber, foundUnder: ["Aber"] }],
 	};
-	const luna = fakeLuna(() => "➕");
+	const luna = fakeLuna(() => ({
+		sense: "Gegensatz, Einschränkung",
+		emojiDescription: "➕",
+	}));
 	await clickOver(luna.ask, stored);
 	expect(luna.sent).toEqual([]);
 	expect(ahead(stored)).toBeUndefined();
 });
 
 test("a click whose emoji draft has a stored answer asks Luna nothing, and keeps the stored draft", async () => {
-	const luna = fakeLuna(() => "🔁");
+	const luna = fakeLuna(() => ({
+		sense: "Gegensatz, Einschränkung",
+		emojiDescription: "🔁",
+	}));
 	const stored = await storedFor([
 		{
 			input: aber,
-			body: completedResponse("➕", {
-				input_tokens: 400,
-				output_tokens: 4,
-			}),
+			body: completedResponse(
+				{ sense: "Gegensatz, Einschränkung", emojiDescription: "➕" },
+				{
+					input_tokens: 400,
+					output_tokens: 4,
+				},
+			),
 		},
 	]);
 	const { result, trace } = await clickOver(

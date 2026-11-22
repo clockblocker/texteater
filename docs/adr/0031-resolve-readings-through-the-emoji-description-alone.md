@@ -41,22 +41,28 @@ left this call to the implementer on 2026-11-10
 so a click waits on one Luna call instead of two in a row. That call may start
 before jev has judged the grammar. Most of what the call reads serves the
 Canonical Form. The description's one input is the marked sentence, in its own
-`emojiDescriptionInput` block, and the prompt tells Luna to rest the
-description on that and the headword, and to ignore every other input and the
-Canonical Form instructions. **The description is the answer's first field,
-and its input block comes first.** Written after the headword, the draft took
-the headword's most common sense: 🏦 for a bench «Bank» in 13 of 40 samples,
-and the castle, the rooster and the mother for a lock «Schloss», a tap «Hahn»
-and a nut «Mutter». Written first, it named the sentence's sense
-([#1165](https://github.com/clockblocker/texteater/issues/1165)). The call
+`emojiDescriptionInput` block, omitting any owned article from `<TARGET>…</TARGET>`
+so attributive modifiers between article and noun are never bracketed inside the
+target span while the article remains in the sentence text. **`sense` and
+`emojiDescription` are the answer's first fields, and their input block comes
+first.** Written after the headword, the draft took the headword's most common
+sense: 🏦 for a bench «Bank» in 13 of 40 samples, and the castle, the rooster
+and the mother for a lock «Schloss», a tap «Hahn» and a nut «Mutter»
+([#1165](https://github.com/clockblocker/texteater/issues/1165)). Writing a bare
+emoji straight from the sentence without isolating a short `sense` first let
+surrounding modifiers and scene details bleed into the emoji (💀 for *den toten
+Typen*, 😠 for *dem wütenden Chef*, 🕰 for copula *Es war gegen halb 12 Uhr*).
+Both the Canonical Form draft and the standalone generation call therefore write
+a 2–5 word German dictionary `sense` of the target headword alone—stripped of
+neighbouring modifiers and scene—immediately before `emojiDescription`. The call
 never carries stored Emoji Descriptions or Readings; its Lemma hints carry
 Canonical Form and Core Features only. The judge never sees the draft. Without
 a usable draft, as on a click resumed from its Grammar checkpoint, the judge
-decides first and a standalone generation prompt writes the description after
-NoMatch. Measured, a click spends 1.0–1.8 s on Luna calls, against about
-1.8 s with the two calls in a row. Where code settles the headword (an
-authored particle or adposition, a conjunction, an adverb in its positive),
-there is no Canonical Form call
+decides first and a standalone generation prompt writes `sense` and
+`emojiDescription` after NoMatch. Measured, a click spends 1.0–1.8 s on Luna
+calls, against about 1.8 s with the two calls in a row. Where code settles the
+headword (an authored particle or adposition, a conjunction, an adverb in its
+positive), there is no Canonical Form call
 ([#1326](https://github.com/clockblocker/texteater/issues/1326)). A Lemma with
 no stored or authored Reading then gets its draft from the standalone prompt,
 started beside jev; any other is judged first, and the standalone prompt

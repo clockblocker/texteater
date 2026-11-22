@@ -75,9 +75,9 @@ export const schlossAttestation = attestationOf(schloss, {
 export const sentence = sentenceOf("Das Schloss klemmt.");
 export const nounUnit = unitOf([2], "Lexeme/NOUN");
 
-/** Luna writing `emojiDescription`, keeping what it was sent. */
-export const writes = (emojiDescription: unknown) =>
-	fakeLuna(() => emojiDescription);
+/** Luna writing `{ sense, emojiDescription }`, keeping what it was sent. */
+export const writes = (emojiDescription: unknown, sense = "Bedeutung") =>
+	fakeLuna(() => ({ sense, emojiDescription }));
 
 export async function readOnce(
 	jev: ReturnType<typeof fakeJev>,

@@ -87,18 +87,20 @@ export const grammarCaseOf = (goldCase: ReadingCase): GrammarCase => ({
 });
 
 /**
- * What gold writes: in the Canonical Form call, gold's headword and
- * spellings with its description drafted first; asked alone, its own
+ * What gold writes: in the Canonical Form call, gold's sense and description
+ * drafted before its headword and spellings; asked alone, its sense and
  * description.
  */
 const goldReadingWritten = (
 	{ goldCase }: ReadingAttempt,
 	input: unknown,
 ): unknown => {
+	const sense = goldCase.attestation.surface.lemma.canonicalForm;
 	if (!isRecord(input) || !("emojiDescriptionInput" in input))
-		return goldCase.ideal;
+		return { sense, emojiDescription: goldCase.ideal };
 	const written = goldWritten(grammarCaseOf(goldCase), input);
 	return {
+		sense,
 		emojiDescription: goldCase.ideal,
 		...(isRecord(written) ? written : {}),
 	};

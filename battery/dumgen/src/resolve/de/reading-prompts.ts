@@ -132,14 +132,14 @@ export const judgeQuestion = {
 export const generation = {
 	task: paragraph(
 		"generation.task",
-		"You write the Emoji Description of one German unit: one to four emoji naming what it means where `markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. `lemma` is its dictionary headword.",
+		"You write the `sense` and Emoji Description (`emojiDescription`) of one German unit where `markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries and a subject es included. `lemma` is its dictionary headword. First write `sense`: two to five German words naming the one dictionary sense of `lemma` that <TARGET>…</TARGET> has here, stripped of every other word in the sentence — no modifying adjective, attribute, mood, state, participant, object, time, place or scene from outside <TARGET>…</TARGET>. Other words choose which dictionary sense of `lemma` applies, then stay out of `sense`. For a copula, light verb or modal verb, name only its own role (e.g. Kopula/Sein, Notwendigkeit, Möglichkeit). Then write `emojiDescription`: one to four emoji naming `sense` alone, never anything omitted from `sense`.",
 		rules.meaning,
 		rules.auxiliary,
 		rules.expletive,
 	),
 	meaning: paragraph(
 		"generation.meaning",
-		"The description is the label of one sense of the Lemma, the same in every sentence with that sense. Name the sense the marked words have here, a figurative use included: not another sense of the word, even one the same word has elsewhere in the sentence, and not the sentence's scene, its participants or objects, a time, place or amount other words mention, or a neighbouring word's meaning. Those words still decide which sense the target has, the less common one included: «Birne» screwed into a lamp is the light bulb, not the pear. They only stay out of the label. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
+		"The description is the label of one sense of the Lemma, the same in every sentence with that sense. Name the sense the marked words have here, a figurative use included: not another sense of the word, even one the same word has elsewhere in the sentence, and not the sentence's scene, its participants or objects, a time, place or amount other words mention, or a neighbouring word's meaning. Those words still decide which sense the target has, the less common one included: «Birne» screwed into a lamp is the light bulb, not the pear. They only stay out of `sense` and the label. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
 		rules.meaning,
 		rules.distinct,
 	),
@@ -178,8 +178,14 @@ export const generation = {
 	),
 	json: paragraph(
 		"generation.output.json",
-		"Answer with the emoji alone as the JSON string: one to four emoji and nothing else. Never a letter, a word in any language or script, a bare digit, punctuation or a sign that is no emoji: write a number with keycap emoji, and describe a sign or symbol by what it means instead of copying it.",
+		"Answer as JSON with `sense` first and `emojiDescription` second. Give `emojiDescription` as the emoji alone: one to four emoji and nothing else. Never a letter, a word in any language or script, a bare digit, punctuation or a sign that is no emoji: write a number with keycap emoji, and describe a sign or symbol by what it means instead of copying it.",
 		rules.meaning,
+	),
+	senseSchema: paragraph(
+		"generation.output.senseSchema",
+		"Two to five German words naming the one dictionary sense of the target headword here, stripped of every modifying adjective, attribute, state, participant, object, time, place or scene from other words.",
+		rules.meaning,
+		rules.distinct,
 	),
 	schema: paragraph(
 		"generation.output.schema",
@@ -188,23 +194,25 @@ export const generation = {
 	),
 	examples: paragraph(
 		"generation.examples",
-		"Examples, each an input and the description it takes:",
+		"Examples, each an input and the `sense` and `emojiDescription` it takes:",
 		rules.meaning,
 	),
-	// The Canonical Form call drafts the description before its headword,
-	// so the click needs no second Luna call: these two stand in for `task`
-	// and `json` there. Written after the headword, the draft took the
-	// headword's most common sense: «Bank» 🏦 for a bench (#1165).
+	// The Canonical Form call drafts `sense` and `emojiDescription` first,
+	// before the headword, so the click needs no second Luna call: writing
+	// before `canonicalForm` keeps homonyms from collapsing to their bare
+	// headword's most common sense (#1165), while `sense` isolates the
+	// target headword's dictionary sense from neighbouring modifiers and
+	// scene before `emojiDescription` is drawn.
 	draft: paragraph(
 		"generation.draft.task",
-		"Write the unit's Emoji Description first, in `emojiDescription`, before its Canonical Form: one to four emoji naming what it means where `emojiDescriptionInput.markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you write after it, which the examples give as `lemma`.",
+		"Write `sense` and then `emojiDescription` first, before `canonicalForm`, from `emojiDescriptionInput.markedSentence` and the `canonicalForm` you write after them, which the examples give as `lemma`. Every marked span belongs to the one unit, its auxiliaries and a subject es included. First write `sense`: two to five German words naming the one dictionary sense of that headword that <TARGET>…</TARGET> has in `emojiDescriptionInput.markedSentence`, stripped of every other word in the sentence — no modifying adjective, attribute, mood, state, participant, object, time, place or scene from outside <TARGET>…</TARGET>. Other words choose which dictionary sense applies, then stay out of `sense`. For a copula, light verb or modal verb, name only its own role (e.g. Kopula/Sein, Notwendigkeit, Möglichkeit). Then write `emojiDescription`: one to four emoji naming `sense` alone, never anything omitted from `sense`.",
 		rules.meaning,
 		rules.auxiliary,
 		rules.expletive,
 	),
 	draftScope: paragraph(
 		"generation.draft.scope",
-		"The description rests on `emojiDescriptionInput.markedSentence` and that headword alone. Ignore every other input for it: the route, `sentence`, `marked`, the members and their orthography, `fixedMembers`, `judged`, `outsideHeadword`, `auxiliaries` and `lemmaCandidates`, and the Canonical Form instructions and their examples above.",
+		"Both `sense` and `emojiDescription` rest on `emojiDescriptionInput.markedSentence` and that headword alone. Ignore every other input for them: the route, `sentence`, `marked`, the members and their orthography, `fixedMembers`, `judged`, `outsideHeadword`, `auxiliaries` and `lemmaCandidates`, and the Canonical Form instructions and their examples above.",
 		rules.meaning,
 	),
 	draftJson: paragraph(
@@ -214,10 +222,11 @@ export const generation = {
 	),
 } as const;
 
-/** One demonstration: an input as production sends it and its description. */
+/** One demonstration: an input as production sends it and its sense and description. */
 export type ReadingDemonstration = {
 	readonly markedSentence: string;
 	readonly lemma: string;
+	readonly sense: string;
 	readonly emojiDescription: string;
 	/** The demonstration's line in the generation prompt. */
 	readonly text: string;
@@ -226,15 +235,16 @@ export type ReadingDemonstration = {
 function demonstration(
 	name: string,
 	input: { readonly markedSentence: string; readonly lemma: string },
+	sense: string,
 	emojiDescription: string,
 	...cites: Cite[]
 ): ReadingDemonstration {
 	const text = paragraph(
 		`generation.demonstration.${name}`,
-		`${JSON.stringify(input)} → ${emojiDescription}`,
+		`${JSON.stringify(input)} → ${JSON.stringify({ sense, emojiDescription })}`,
 		...cites,
 	);
-	return { ...input, emojiDescription, text };
+	return { ...input, sense, emojiDescription, text };
 }
 
 /**
@@ -251,6 +261,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Der Aufstieg war <TARGET>mühsam</TARGET>.",
 			lemma: "mühsam",
 		},
+		"anstrengend, beschwerlich",
 		"😓",
 		rules.meaning,
 		rules.polarity,
@@ -262,6 +273,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"Vergiss deinen <TARGET>Regenschirm</TARGET> nicht!",
 			lemma: "Regenschirm",
 		},
+		"Schutz vor Regen",
 		"☂",
 		rules.meaning,
 	),
@@ -272,6 +284,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"Er <TARGET>hat</TARGET> die Hose gestern <TARGET>geflickt</TARGET>.",
 			lemma: "flicken",
 		},
+		"ausbessern, reparieren",
 		"🩹",
 		rules.meaning,
 		rules.auxiliary,
@@ -283,6 +296,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"Wir <TARGET>beeilen</TARGET> <TARGET>uns</TARGET> lieber.",
 			lemma: "beeilen",
 		},
+		"schnell handeln",
 		"⏩",
 		rules.meaning,
 		rules.distinct,
@@ -293,6 +307,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Die Lage <TARGET>scheint</TARGET> ernst.",
 			lemma: "scheinen",
 		},
+		"den Eindruck erwecken",
 		"👀",
 		rules.copula,
 	),
@@ -302,6 +317,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Er trank Tee <TARGET>anstatt</TARGET> Kaffee.",
 			lemma: "anstatt",
 		},
+		"an Stelle von",
 		"🔄",
 		rules.meaning,
 	),
@@ -311,6 +327,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Die Katze hat <TARGET>neun</TARGET> Leben.",
 			lemma: "neun",
 		},
+		"Zahl 9",
 		"9⃣",
 		rules.meaning,
 	),
@@ -320,6 +337,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Die Toleranz beträgt <TARGET>±</TARGET> 0,5 mm.",
 			lemma: "±",
 		},
+		"plus oder minus",
 		"➕➖",
 		rules.meaning,
 	),
@@ -330,6 +348,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"Ich <TARGET>drücke</TARGET> dir morgen <TARGET>die</TARGET> <TARGET>Daumen</TARGET>.",
 			lemma: "die Daumen drücken",
 		},
+		"viel Glück wünschen",
 		"🤞",
 		rules.multiword,
 		rules.idiom,
@@ -341,6 +360,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"<TARGET>Es</TARGET> <TARGET>gibt</TARGET> hier keinen Empfang.",
 			lemma: "geben",
 		},
+		"existieren, vorhanden sein",
 		"🌍",
 		rules.existential,
 		rules.expletive,
