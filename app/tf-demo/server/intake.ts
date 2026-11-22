@@ -1,5 +1,13 @@
-import { type Scroll, splitScroll } from "dumgen";
+import {
+	needsStructureRecovery,
+	type operations,
+	rebuildScrollParagraphs,
+	recoverParagraphsDeterministic,
+	type Scroll,
+	splitScroll,
+} from "dumgen";
 import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
 import { annotateInspectionStep } from "./inspectionCapture";
@@ -109,6 +117,8 @@ function submittedSentences(
 	);
 }
 
+type SubmitIntakeDumgen = IntakeDumgen & Pick<typeof operations, "structure">;
+
 const splitExtractedScroll = Effect.fn("Split text into sentences")(function* (
 	extractedText: Scroll,
 ) {
@@ -118,9 +128,40 @@ const splitExtractedScroll = Effect.fn("Split text into sentences")(function* (
 	return splitScroll(extractedText);
 });
 
+const recoverParagraphStructure = Effect.fn("Recover paragraph structure")(
+	function* (
+		dumgen: SubmitIntakeDumgen,
+		paragraphs: readonly { readonly sentences: readonly string[] }[],
+	) {
+		yield* annotateInspectionStep("battery/dumgen · structure.recover", {
+			paragraphs,
+		});
+		return yield* dumgen.structure.recover({ paragraphs });
+	},
+);
+
+/** Regroups flat analyzed Sentences into `paragraphs` by count; returns undefined on mismatch. */
+function regroupByParagraphs(
+	flat: readonly AnalyzedSentence[],
+	paragraphs: readonly { readonly sentences: readonly string[] }[],
+): readonly (readonly AnalyzedSentence[])[] | undefined {
+	const total = paragraphs.reduce(
+		(sum, { sentences }) => sum + sentences.length,
+		0,
+	);
+	if (total !== flat.length) return undefined;
+	const grouped: (readonly AnalyzedSentence[])[] = [];
+	let cursor = 0;
+	for (const { sentences } of paragraphs) {
+		grouped.push(flat.slice(cursor, cursor + sentences.length));
+		cursor += sentences.length;
+	}
+	return grouped;
+}
+
 export function createIntake(options: {
-	/** Dumgen's `language.detect` and `segment.inUnits`: `operations`. */
-	readonly dumgen: IntakeDumgen;
+	/** Dumgen's `language.detect`, `structure.recover` and `segment.inUnits`: `operations`. */
+	readonly dumgen: SubmitIntakeDumgen;
 	readonly persistence: IntakePersistence;
 	/**
 	 * Hears which Sentences go to `segment.inUnits` and which end Plain, by
@@ -151,17 +192,43 @@ export function createIntake(options: {
 		if (sentences.length === 0)
 			throw new Error("Text submission contains no sentences.");
 
-		const analyzed = yield* analyzeParagraphs(
-			options.dumgen,
-			paragraphs,
-			input.language,
-			options.observer,
+		const shouldRecover = needsStructureRecovery(paragraphs);
+		const [recovered, analyzed] = yield* Effect.all(
+			[
+				shouldRecover
+					? recoverParagraphStructure(
+							options.dumgen,
+							paragraphs,
+						).pipe(
+							Effect.result,
+							Effect.map((result) =>
+								Result.isFailure(result)
+									? recoverParagraphsDeterministic(paragraphs)
+									: result.success,
+							),
+						)
+					: Effect.succeed({ paragraphs }),
+				analyzeParagraphs(
+					options.dumgen,
+					paragraphs,
+					input.language,
+					options.observer,
+				),
+			],
+			{ concurrency: "unbounded" },
 		);
+		const regrouped = shouldRecover
+			? (regroupByParagraphs(analyzed.flat(), recovered.paragraphs) ??
+				analyzed)
+			: analyzed;
+		const extractedText = shouldRecover
+			? rebuildScrollParagraphs(input.extractedText, recovered.paragraphs)
+			: input.extractedText;
 		const submission: SubmittedScroll = {
 			submissionKey: input.submissionKey,
 			sourceText: input.sourceText,
-			extractedText: input.extractedText,
-			sentences: submittedSentences(input.submissionKey, analyzed),
+			extractedText,
+			sentences: submittedSentences(input.submissionKey, regrouped),
 		};
 		const persisted = yield* persistSubmittedScroll(submission);
 		return { submission, persisted };

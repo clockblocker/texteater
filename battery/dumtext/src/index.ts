@@ -17,6 +17,14 @@
  * filler-de, outside this repository, so knip's baseline keeps it.
  */
 export {
+	analyzeQuotationFlow,
+	needsParagraphRecovery,
+	needsStructureRecovery,
+	type QuoteFlow,
+	rebuildScrollParagraphs,
+	recoverParagraphsDeterministic,
+} from "./dialogue.js";
+export {
 	type ExtractedText,
 	extractPastedText,
 	type Scroll,

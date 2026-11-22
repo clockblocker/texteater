@@ -537,3 +537,65 @@ test("re-running intake from the stored Extracted Text rebuilds the same Scroll"
 		await t.run((ctx) => persistSubmittedScroll(ctx, persistable(second))),
 	).toEqual({ ...persisted, deduplicated: true });
 });
+
+test("intake recovers paragraphs and dialogue turns on a flattened paste and stores the recovered Extracted Text", async () => {
+	const FLATTENED =
+		"Wir gingen los. »Ey, dein Freund –« »Fast-Freund«, stellte ich richtig. »Egal!«";
+	const jev = fakeJev({
+		answers: germanAnswers,
+		paragraphBreaks: ["»Ey, dein Freund –«", "»Egal!«"],
+	});
+	const { stored, submit } = intakeWith(jev, 4);
+	await submit(FLATTENED);
+
+	const [submission] = stored;
+	expect(
+		submission?.sentences.map(({ position, paragraph, stitchedText }) => ({
+			position,
+			paragraph,
+			stitchedText,
+		})),
+	).toEqual([
+		{ position: 0, paragraph: 0, stitchedText: "Wir gingen los." },
+		{ position: 1, paragraph: 1, stitchedText: "»Ey, dein Freund –«" },
+		{
+			position: 2,
+			paragraph: 2,
+			stitchedText: "»Fast-Freund«, stellte ich richtig.",
+		},
+		{ position: 3, paragraph: 3, stitchedText: "»Egal!«" },
+	]);
+	// The stored Extracted Text now holds the recovered Paragraph blocks, so
+	// a later re-run preserves them with zero structure.recover jev calls.
+	expect(submission?.extractedText.blocks).toHaveLength(4);
+	const storedScroll = parseScroll(submission?.extractedText);
+	const rerunJev = fakeJev({ answers: germanAnswers });
+	const rerun = intakeWith(rerunJev, 4);
+	await rerun.submit(FLATTENED, "de", storedScroll);
+	expect(
+		rerunJev.sent.filter(({ stage }) => stage === "structure"),
+	).toHaveLength(0);
+	expect(
+		rerun.stored[0]?.sentences.map(({ paragraph }) => paragraph),
+	).toEqual([0, 1, 2, 3]);
+});
+
+test("intake falls back to deterministic dialogue splits when structure.recover fails", async () => {
+	const FLATTENED = "Wir gingen los. »Hallo!« »Tschüss!«";
+	const jev = fakeJev({
+		answers: germanAnswers,
+		fail: (_request, stage) => stage === "structure",
+	});
+	const { stored, submit } = intakeWith(jev, 3);
+	await submit(FLATTENED);
+	expect(
+		stored[0]?.sentences.map(({ paragraph, stitchedText }) => ({
+			paragraph,
+			stitchedText,
+		})),
+	).toEqual([
+		{ paragraph: 0, stitchedText: "Wir gingen los." },
+		{ paragraph: 0, stitchedText: "»Hallo!«" },
+		{ paragraph: 1, stitchedText: "»Tschüss!«" },
+	]);
+});

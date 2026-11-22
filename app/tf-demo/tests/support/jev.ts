@@ -23,42 +23,69 @@ const picked = (choice: string): Answer => ({
  * `"Er gibt auf."` with `germanAnswers` comes back as `Er` (Lexeme PRON) and
  * `gibt … auf` (Lexeme VERB); `"Er wohnt im Haus."` cuts `im` into `i` + `m`.
  */
+function answerFakeQuestion(
+	id: string,
+	question: Question,
+	sentences: readonly string[] | undefined,
+	options: {
+		readonly answers?: Readonly<Record<string, Answer>>;
+		readonly languages?: Readonly<Record<string, string>>;
+	},
+	breakSet: ReadonlySet<string>,
+): Answer {
+	const asked = /^Which language is `sentences\[(\d+)\]`/u.exec(
+		String(question.instructions),
+	)?.[1];
+	if (asked !== undefined) {
+		const sentence = sentences?.[Number(asked)] ?? "";
+		return picked(options.languages?.[sentence] ?? "German");
+	}
+	const boundary =
+		/decide whether `sentences\[(\d+)\]` starts a new paragraph/u.exec(
+			String(question.instructions),
+		)?.[1];
+	if (boundary !== undefined) {
+		const sentence = sentences?.[Number(boundary)] ?? "";
+		return picked(
+			breakSet.has(sentence) ? "NewParagraph" : "SameParagraph",
+		);
+	}
+	const known = options.answers?.[id];
+	if (known) return known;
+	if (question.type === "noul") return { type: "noul", noul: 0.1 };
+	return picked(
+		Object.keys(question.type === "choice" ? question.criteria : {}).at(
+			-1,
+		) ?? "",
+	);
+}
+
 export function fakeJev(
 	options: {
 		readonly answers?: Readonly<Record<string, Answer>>;
 		readonly languages?: Readonly<Record<string, string>>;
+		readonly paragraphBreaks?: readonly string[];
 		readonly fail?: (request: JevRequest, stage: string) => boolean;
 	} = {},
 ) {
+	const breakSet = new Set(options.paragraphBreaks ?? []);
 	const sent: (JevRequest & { readonly stage: string })[] = [];
 	const ask: JevAsk = async (request, { stage }) => {
 		sent.push({ ...request, stage });
 		if (options.fail?.(request, stage)) throw Error("jev is down");
+		const sentences = request.state.sentences as string[] | undefined;
 		const answers: Record<string, Answer> = {};
 		for (const [id, question] of Object.entries(request.questions) as [
 			string,
 			Question,
 		][]) {
-			const known = options.answers?.[id];
-			const asked = /^Which language is `sentences\[(\d+)\]`/u.exec(
-				String(question.instructions),
-			)?.[1];
-			if (asked !== undefined) {
-				const sentence = (request.state.sentences as string[])[
-					Number(asked)
-				];
-				answers[id] = picked(
-					options.languages?.[sentence ?? ""] ?? "German",
-				);
-			} else if (known) answers[id] = known;
-			else if (question.type === "noul")
-				answers[id] = { type: "noul", noul: 0.1 };
-			else
-				answers[id] = picked(
-					Object.keys(
-						question.type === "choice" ? question.criteria : {},
-					).at(-1) ?? "",
-				);
+			answers[id] = answerFakeQuestion(
+				id,
+				question,
+				sentences,
+				options,
+				breakSet,
+			);
 		}
 		return {
 			model: request.model,

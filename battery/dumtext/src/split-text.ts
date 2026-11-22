@@ -31,9 +31,10 @@ const sentenceInternalEnding =
 
 /**
  * A short abbreviation before a number (`Jan. 3`, `Nr. 5`, `Vol. 2`,
- * `S. 45`) continues into it: prose rarely opens a Sentence with digits.
+ * `S. 45`, `(pp. 11-14)`) continues into it: prose rarely opens a Sentence
+ * with digits.
  */
-const abbreviationEnding = /(?:^|\s)\p{L}{1,4}\.$/u;
+const abbreviationEnding = /(?:^|[\s"„“‚‘»«›‹([])\p{L}{1,4}\.$/u;
 const numberOpening = /^\d/u;
 
 /** A German ordinal (`am 3. Mai`, `der 1. Sieger`) continues into its noun. */
@@ -150,7 +151,7 @@ function continuesInto(piece: string, next: string | undefined): boolean {
 
 const paragraphBreak = /\r?\n[^\S\r\n]*(?:\r?\n\s*)+/u;
 const lineBreak = /[^\S\r\n]*\r?\n[^\S\r\n]*/u;
-const sentenceFinalEnding = /[.!?…]["'“”‘’»«›‹)\]]*$/u;
+const sentenceFinalEnding = /(?:[.!?…]["'“”‘’»«›‹)\]]*|[–—]["'“”‘’»«›‹])$/u;
 const titleEnding = /[\p{L}\p{N}]$/u;
 /** A capital, or a letter of a script without case such as Hebrew. */
 const sentenceOpening = /^["'„“‚‘»«›‹([]*[\p{Lu}\p{Lo}]/u;
@@ -230,23 +231,51 @@ const strandedClosingQuote = /^[»›”’"](?:\s|$)/u;
 const lowercaseOpening = /^["'„“‚‘»«›‹([]*\p{Ll}/u;
 
 /**
+ * Interrupted or trailing dialogue (`»Ey, dein Freund –« »Fast-Freund«`,
+ * `Er hat nicht mal …« Da sah ich ihn.`, `"Wait—" "Stop!"`, `« Attends … »
+ * Elle partit.`) that ICU left joined because dashes and U+2026 are not
+ * sentence terminators. A lowercase dialogue tag after the closing quote
+ * (`»Warte …« flüsterte sie.`) does not match `sentenceOpening` and stays
+ * attached.
+ */
+const interruptedDialogueBreak =
+	/((?:[–—…]|\.{3})[«»“”‘’"‹›]|(?:[–—…]|\.{3})[^\S\r\n]+[»›])([^\S\r\n]+)(?=["'„“‚‘»«›‹([]*[\p{Lu}\p{Lo}])/gu;
+
+/** Splits one piece wherever interrupted/trailing dialogue closes before a new Sentence. */
+function splitInterruptedDialogue(piece: string): string[] {
+	const parts: string[] = [];
+	let from = 0;
+	for (const match of piece.matchAll(interruptedDialogueBreak)) {
+		const closing = match[1] ?? "";
+		const gap = match[2] ?? "";
+		const cut = match.index + closing.length + gap.length;
+		parts.push(piece.slice(from, cut));
+		from = cut;
+	}
+	if (parts.length === 0) return [piece];
+	parts.push(piece.slice(from));
+	return parts;
+}
+
+/**
  * ICU's sentence pieces of a block, rejoined where they run on: after an
  * abbreviation or ordinal, and before a lower-case continuation such as a
  * dialogue tag (`"Go!" he said.`). A stranded closing quote goes back to
- * the piece it closes.
+ * the piece it closes, and interrupted or trailing dialogue splits before a
+ * new Sentence opening.
  */
 function splitBlock(block: string): string[] {
-	const pieces = Array.from(
+	const raw = Array.from(
 		sentenceSegmenter.segment(block),
 		({ segment }) => segment,
 	);
-	for (let index = 1; index < pieces.length; index++) {
-		const piece = pieces[index] ?? "";
+	for (let index = 1; index < raw.length; index++) {
+		const piece = raw[index] ?? "";
 		if (!strandedClosingQuote.test(piece)) continue;
-		pieces[index - 1] =
-			`${(pieces[index - 1] ?? "").trimEnd()} ${piece[0]} `;
-		pieces[index] = piece.slice(1).trimStart();
+		raw[index - 1] = `${(raw[index - 1] ?? "").trimEnd()} ${piece[0]} `;
+		raw[index] = piece.slice(1).trimStart();
 	}
+	const pieces = raw.flatMap(splitInterruptedDialogue);
 	const sentences: string[] = [];
 	let pending = "";
 	for (const [index, piece] of pieces.entries()) {

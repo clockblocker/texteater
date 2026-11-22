@@ -99,6 +99,7 @@ export type OperationEvent = {
 export type OperationTrace = {
 	readonly operation:
 		| "language.detect"
+		| "structure.recover"
 		| "segment.inUnits"
 		| "segment.inConstituents"
 		| "segment.inMorphemes"

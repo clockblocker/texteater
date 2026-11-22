@@ -226,6 +226,57 @@ test("an ordinal before a Sentence-opening word closes its Sentence", () => {
 	]);
 });
 
+test("splits interrupted and trailing dialogue before a new Sentence opening, while keeping lowercase dialogue tags attached", () => {
+	expect(
+		sentencesOf(
+			"»Ey, dein Freund\u00A0–« »Fast-Freund«, stellte ich richtig. Er hat nicht mal\u00A0…« Da sah ich ihn. »Warte …« flüsterte sie. »Stopp –« rief er.",
+		),
+	).toEqual([
+		"»Ey, dein Freund\u00A0–«",
+		"»Fast-Freund«, stellte ich richtig.",
+		"Er hat nicht mal\u00A0…«",
+		"Da sah ich ihn.",
+		"»Warte …« flüsterte sie.",
+		"»Stopp –« rief er.",
+	]);
+	expect(
+		sentencesOf(
+			'"Hey, wait—" "Stop!" she yelled. "I didn\'t mean..." Then he left.',
+		),
+	).toEqual([
+		'"Hey, wait—"',
+		'"Stop!" she yelled.',
+		'"I didn\'t mean..."',
+		"Then he left.",
+	]);
+	expect(
+		sentencesOf("« Attends … » Elle partit. Sie sagte – »Hallo!«"),
+	).toEqual(["« Attends … »", "Elle partit.", "Sie sagte – »Hallo!«"]);
+});
+
+test("keeps a parenthesized abbreviation before a number joined, such as Kindle page citations", () => {
+	expect(
+		sentencesOf(
+			"Cast, P.C.; Cast, Kristin. Gezeichnet: House of Night (German Edition) (pp. 11-14). (Function). Kindle Edition.",
+		),
+	).toEqual([
+		"Cast, P.C.; Cast, Kristin.",
+		"Gezeichnet: House of Night (German Edition) (pp. 11-14).",
+		"(Function).",
+		"Kindle Edition.",
+	]);
+});
+
+test("a single line break after interrupted dialogue starts a new paragraph", () => {
+	expect(
+		splitText("»Ey, dein Freund –«\n»Fast-Freund«, stellte ich richtig.")
+			.paragraphs,
+	).toEqual([
+		{ sentences: ["»Ey, dein Freund –«"] },
+		{ sentences: ["»Fast-Freund«, stellte ich richtig."] },
+	]);
+});
+
 test("splits a Text mixing German, English, French and Hebrew paragraphs the same way as each alone", () => {
 	const paragraphs = [
 		"Die Lehrerin sagt: Open your books, please. Dann lesen wir Nr. 5.",

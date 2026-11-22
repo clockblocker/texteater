@@ -45,6 +45,11 @@ import type {
 } from "./segment/breakdown-pieces.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
+import {
+	type RecoveredText,
+	type RecoverStructureInput,
+	recoverStructure,
+} from "./structure/recover.js";
 import { translateSentence } from "./translate/sentence.js";
 import type { TranslateSentenceInput } from "./translate/types.js";
 
@@ -62,6 +67,20 @@ export const operations = {
 			input: DetectLanguagesInput,
 		): Effect.Effect<LanguagedText, ModelFailure, Jev> =>
 			runOperation("language.detect", detectLanguages(input)),
+	},
+	structure: {
+		/**
+		 * Restores lost paragraph and dialogue-turn breaks in flattened
+		 * paragraphs (such as Kindle or PDF pastes) while keeping every
+		 * Sentence verbatim and in order. Well-formatted paragraphs pass
+		 * through with zero model calls; boundaries inside an open quotation
+		 * stay joined in code, direct quote-to-quote turns split in code,
+		 * and jev judges the remaining candidate boundaries in windows.
+		 */
+		recover: (
+			input: RecoverStructureInput,
+		): Effect.Effect<RecoveredText, ModelFailure, Jev> =>
+			runOperation("structure.recover", recoverStructure(input)),
 	},
 	segment: {
 		/**

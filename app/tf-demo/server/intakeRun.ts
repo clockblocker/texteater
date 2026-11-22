@@ -52,6 +52,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 		operation: (trace: OperationTrace) => {
 			if (
 				trace.operation !== "language.detect" &&
+				trace.operation !== "structure.recover" &&
 				trace.operation !== "segment.inUnits"
 			)
 				return;
