@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { api } from "../convex/_generated/api";
-import {
-	MAX_SOURCE_SENTENCES,
-	MAX_SOURCE_TEXT_CHARACTERS,
-} from "../server/textSubmissionLimits";
+import { MAX_SOURCE_TEXT_CHARACTERS } from "../server/textSubmissionLimits";
 import {
 	createTestConvex,
 	submitText,
@@ -101,14 +98,15 @@ test("Scroll projection shares current truth through Visitor Encounter history",
 });
 
 test("a maximum-length Scroll view reads Visitor Encounters once per Sentence, not once per Segment", async () => {
-	// A Scroll at the submission limits: 25 Sentences of about 400 characters,
+	// A Scroll at the character limit: 25 Sentences of about 400 characters,
 	// short words that make close to 4,000 Segments. Reading it may use 8
 	// index ranges per Sentence, far below one per Segment.
+	const sentenceCount = 25;
 	const t = createTestConvex({
-		transactionLimits: { databaseQueries: 8 * MAX_SOURCE_SENTENCES },
+		transactionLimits: { databaseQueries: 8 * sentenceCount },
 	});
 	const words = ["Haus", "Baum", "Tier", "Wege"];
-	const sentences = Array.from({ length: MAX_SOURCE_SENTENCES }, () => [
+	const sentences = Array.from({ length: sentenceCount }, () => [
 		...Array.from({ length: 79 }, (_, index) => [
 			...(index === 0 ? [] : [" "]),
 			words[index % words.length] ?? "",
@@ -134,7 +132,7 @@ test("a maximum-length Scroll view reads Visitor Encounters once per Sentence, n
 		scrollId,
 		visitorId: "visitor-1",
 	});
-	expect(view?.sentences).toHaveLength(MAX_SOURCE_SENTENCES);
+	expect(view?.sentences).toHaveLength(sentenceCount);
 	for (const sentence of view?.sentences ?? []) {
 		expect(
 			sentence.segments.filter(({ encountered }) => encountered),

@@ -9,14 +9,8 @@
  * reads.
  */
 
-// TODO: https://github.com/clockblocker/texteater/issues/510
-// The paste limits were picked together as a Convex audit stopgap; the
-// sentence count is decided by the splitter, not the user. See the issue
-// before changing any of them.
 /** Paste: bounds the model work one synchronous submission may start. */
 export const MAX_SOURCE_TEXT_CHARACTERS = 10_000;
-/** Paste: bounds the Sentences a paste re-reads when it is submitted again. */
-export const MAX_SOURCE_SENTENCES = 25;
 /**
  * Paste: bounds one Sentence's segmentation questions, which grow with it;
  * a longer Sentence rejects the paste. A book's longer Sentence is read in
@@ -33,9 +27,9 @@ const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
 export const MAX_SCROLL_TEXT_BYTES = 900 * 1024;
 
 /**
- * The Sentences one Scroll may hold: the reader reads a Scroll's
- * Sentences in one query, inside Convex's read limits. The longest
- * Gutenberg chapters seen hold about 650.
+ * The Sentences one Scroll may hold: the reader and submission dedupe read
+ * a Scroll's Sentences in one query, inside Convex's read limits. The
+ * longest Gutenberg chapters seen hold about 650.
  */
 export const MAX_SENTENCES_PER_SCROLL = 2_000;
 
@@ -64,8 +58,8 @@ export function textSubmissionLimitViolation(
 ): string | undefined {
 	if (exceedsCharacterLimit(sourceText, MAX_SOURCE_TEXT_CHARACTERS))
 		return `Source text is limited to ${MAX_SOURCE_TEXT_CHARACTERS} characters.`;
-	if (sourceSentences.length > MAX_SOURCE_SENTENCES)
-		return `At most ${MAX_SOURCE_SENTENCES} sentences are allowed.`;
+	if (sourceSentences.length > MAX_SENTENCES_PER_SCROLL)
+		return `At most ${MAX_SENTENCES_PER_SCROLL} sentences are allowed.`;
 	for (const sentence of sourceSentences) {
 		if (exceedsCharacterLimit(sentence, MAX_SOURCE_SENTENCE_CHARACTERS))
 			return `Each sentence is limited to ${MAX_SOURCE_SENTENCE_CHARACTERS} characters.`;

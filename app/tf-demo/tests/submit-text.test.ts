@@ -7,6 +7,10 @@ import {
 	GERMAN_ONLY_MESSAGE,
 	INTAKE_NOT_CONFIGURED_MESSAGE,
 } from "../server/intake";
+import {
+	MAX_SENTENCES_PER_SCROLL,
+	MAX_SOURCE_TEXT_CHARACTERS,
+} from "../server/textSubmissionLimits";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import { visitorErrorMessage } from "../src/lib/visitor-error";
 import {
@@ -141,16 +145,39 @@ test("a Scroll in another language is Rejected with the German-only message befo
 	expect(await intakeRuns(t)).toEqual([]);
 });
 
-test("a text over the sentence limit is Rejected with its reason before any work", async () => {
+test("a pasted text with more than 25 sentences is accepted and deduplicated on re-submission", async () => {
 	const providers = typeSafe();
-	const sourceText = Array.from(
-		{ length: 26 },
-		(_, index) => `Satz ${index + 1} ist hier.`,
-	).join(" ");
+	const sourceText = Array.from({ length: 30 }, () => "Er gibt auf.").join(
+		"\n",
+	);
 	const t = createTestConvex();
-	await expect(submit(t, sourceText)).resolves.toEqual({
+	const result = await submit(t, sourceText, { submissionKey: "lyrics-30" });
+	expect(result).toMatchObject({ status: "Accepted" });
+	expect(await sentences(t)).toHaveLength(30);
+
+	const asked = providers.jev.sent.length;
+	expect(await submit(t, sourceText, { submissionKey: "lyrics-30" })).toEqual(
+		result,
+	);
+	expect(providers.jev.sent.length).toBe(asked);
+});
+
+test("a text over the character or Scroll sentence limit is Rejected with its reason before any work", async () => {
+	const providers = typeSafe();
+	const t = createTestConvex();
+	await expect(
+		submit(t, "a".repeat(MAX_SOURCE_TEXT_CHARACTERS + 1)),
+	).resolves.toEqual({
 		status: "Rejected",
-		message: "At most 25 sentences are allowed.",
+		message: `Source text is limited to ${MAX_SOURCE_TEXT_CHARACTERS} characters.`,
+	});
+	const tooManySentences = Array.from(
+		{ length: MAX_SENTENCES_PER_SCROLL + 1 },
+		() => "Ja!",
+	).join(" ");
+	await expect(submit(t, tooManySentences)).resolves.toEqual({
+		status: "Rejected",
+		message: `At most ${MAX_SENTENCES_PER_SCROLL} sentences are allowed.`,
 	});
 	expect(await storedScrolls(t)).toEqual([]);
 	expect(providers.requests).toEqual([]);

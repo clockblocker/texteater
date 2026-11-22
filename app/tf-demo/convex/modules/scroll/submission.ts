@@ -6,7 +6,7 @@ import {
 } from "../../../server/storedSegments";
 import {
 	assertTextSubmissionWithinLimits,
-	MAX_SOURCE_SENTENCES,
+	MAX_SENTENCES_PER_SCROLL,
 } from "../../../server/textSubmissionLimits";
 import { isPlainSentence } from "../../../shared/supported-target-language";
 import type { Doc, Id } from "../../_generated/dataModel";
@@ -65,7 +65,7 @@ export async function findAnalyzedSubmission(
 		.withIndex("by_scroll_id_and_position", (q) =>
 			q.eq("scrollId", scroll._id),
 		)
-		.take(MAX_SOURCE_SENTENCES);
+		.take(MAX_SENTENCES_PER_SCROLL);
 	if (sentences.length === 0) return null;
 	for (const sentence of sentences) {
 		if (isPlainSentence(sentence.language)) continue;
@@ -307,7 +307,7 @@ async function resumeSubmittedScroll(
 		.withIndex("by_scroll_id_and_position", (q) =>
 			q.eq("scrollId", existingScroll._id),
 		)
-		.take(MAX_SOURCE_SENTENCES);
+		.take(MAX_SENTENCES_PER_SCROLL);
 	const submittedSentences = bySentencePosition(input.sentences);
 	const existingSegments = await Promise.all(
 		existingSentences.map((sentence) =>
