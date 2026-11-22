@@ -8,6 +8,7 @@ import {
 import { parseGermanReading } from "../../server/operationalParsing";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
+import { inspectRequestIdFor } from "./inspection";
 import {
 	occurrenceCommitArgs,
 	openOccurrenceCommit,
@@ -249,7 +250,12 @@ export async function commitResolvedClick(
 
 	// The dictionary plan is built and applied here, against the state this
 	// transaction reads, so the occurrence never carries a stale plan.
-	const dictionaryCommit = await planAndCommitDictionary(ctx, args);
+	const inspectRequestId = await inspectRequestIdFor(ctx, session.requestId);
+	const dictionaryCommit = await planAndCommitDictionary(
+		ctx,
+		args,
+		inspectRequestId ? { inspectRequestId } : undefined,
+	);
 	if (dictionaryCommit.status !== "committed") {
 		await settleResolutionSession(ctx, session, {
 			kind: "PermanentFailure",
@@ -326,6 +332,7 @@ export async function commitResolvedClick(
 		ctx,
 		session,
 		attestationId,
+		{ inspect: inspectRequestId !== undefined },
 	);
 	// The new occurrence may add translations (ADR 0047) or a concrete
 	// Valency Pattern (ADR 0034) its Reading lacks.
@@ -333,8 +340,12 @@ export async function commitResolvedClick(
 		scheduleTranslationAccumulation(ctx, {
 			visitorId: session.visitorId,
 			attestationId,
+			...(inspectRequestId ? { inspectRequestId } : {}),
 		}),
-		scheduleValencyAccumulation(ctx, { attestationId }),
+		scheduleValencyAccumulation(ctx, {
+			attestationId,
+			...(inspectRequestId ? { inspectRequestId } : {}),
+		}),
 	]);
 	return { status: "Committed" as const, ...completed, deduplicated: false };
 }

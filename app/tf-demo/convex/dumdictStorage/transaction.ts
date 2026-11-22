@@ -348,9 +348,14 @@ async function applyCreateLemma(
 	await moveLinksToStoredLemma(ctx, lemma);
 }
 
+type ApplyPlanOptions = {
+	readonly inspectRequestId?: string;
+};
+
 async function applyCreateReading(
 	ctx: MutationCtx,
 	change: Extract<PlannedChange, { type: "createReading" }>,
+	options?: ApplyPlanOptions,
 ): Promise<void> {
 	const entry = withAuthoredArticleKnowledge(change.entry);
 	// Stored and compared as Dumling parses it (ADR 0031).
@@ -399,7 +404,12 @@ async function applyCreateReading(
 		await syncRelationEdges(ctx, source, edit);
 	const baseKnowledge = withoutSemanticRelationTargets(entry.knowledge);
 	if (baseKnowledge !== undefined) {
-		await replaceAccumulatedKnowledge(ctx, readingKey, baseKnowledge);
+		await replaceAccumulatedKnowledge(
+			ctx,
+			readingKey,
+			baseKnowledge,
+			options,
+		);
 	} else if (entry.knowledge !== undefined) {
 		await ensureAccumulatedKnowledgeStatus(ctx, readingKey);
 	}
@@ -408,6 +418,7 @@ async function applyCreateReading(
 async function applyCreateOwnedSurface(
 	ctx: MutationCtx,
 	change: Extract<PlannedChange, { type: "createOwnedSurface" }>,
+	options?: ApplyPlanOptions,
 ): Promise<void> {
 	const { entry } = change;
 	const [storedLemma, canonical] = await Promise.all([
@@ -432,7 +443,8 @@ async function applyCreateOwnedSurface(
 	if (entry.id !== makeSurfaceId(surface.language, surface))
 		throw new Error("Surface Entry key does not match its current value");
 	const reference = deriveGrammaticalComponent(surface);
-	if (reference) await materializeGrammaticalComponent(ctx, reference);
+	if (reference)
+		await materializeGrammaticalComponent(ctx, reference, options);
 	if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
 		throw new Error(
 			"Canonical Surface does not match its dictionary proposal.",
@@ -466,6 +478,7 @@ async function applyPatchReading(
 	ctx: MutationCtx,
 	change: Extract<PlannedChange, { type: "patchReading" }>,
 	preflight?: PreflightState,
+	options?: ApplyPlanOptions,
 ): Promise<void> {
 	const stored = await findReading(ctx, change.reading);
 	if (!stored) throw divergedFromPreflight();
@@ -496,6 +509,7 @@ async function applyPatchReading(
 			ctx,
 			stored.readingKey,
 			baseKnowledge,
+			options,
 		);
 	} else if (
 		knowledgeChanges.some(
@@ -506,6 +520,7 @@ async function applyPatchReading(
 			ctx,
 			stored.readingKey,
 			undefined,
+			options,
 		);
 		if (!replaced) {
 			await ensureAccumulatedKnowledgeStatus(ctx, stored.readingKey);
@@ -554,16 +569,17 @@ async function applyChange(
 	ctx: MutationCtx,
 	change: PlannedChange,
 	preflight?: PreflightState,
+	options?: ApplyPlanOptions,
 ): Promise<void> {
 	switch (change.type) {
 		case "createLemma":
 			return applyCreateLemma(ctx, change);
 		case "createReading":
-			return applyCreateReading(ctx, change);
+			return applyCreateReading(ctx, change, options);
 		case "createOwnedSurface":
-			return applyCreateOwnedSurface(ctx, change);
+			return applyCreateOwnedSurface(ctx, change, options);
 		case "patchReading":
-			return applyPatchReading(ctx, change, preflight);
+			return applyPatchReading(ctx, change, preflight, options);
 		case "createPendingSemanticRelation":
 			return applyCreatePendingSemanticRelation(ctx, change);
 		case "deletePendingSemanticRelation":
@@ -586,6 +602,7 @@ async function applyChange(
 export async function applyDumdictPlanInTransaction(
 	ctx: MutationCtx,
 	args: { readonly changes: readonly unknown[] },
+	options?: ApplyPlanOptions,
 ) {
 	if (args.changes.length > MAX_PLANNED_CHANGES) {
 		throw new Error(
@@ -608,7 +625,8 @@ export async function applyDumdictPlanInTransaction(
 		}
 		await advancePreflightState(ctx, change, shadow);
 	}
-	for (const change of changes) await applyChange(ctx, change, shadow);
+	for (const change of changes)
+		await applyChange(ctx, change, shadow, options);
 
 	return { status: "committed" as const, nextRevision: DICTIONARY_REVISION };
 }
@@ -617,6 +635,7 @@ export async function applyDumdictPlanInTransaction(
 export async function materializeGrammaticalComponent(
 	ctx: MutationCtx,
 	reference: GrammaticalComponent,
+	options?: ApplyPlanOptions,
 ) {
 	const { reading, surface } = reference;
 	const note = { notes: "", attestedTranslations: [] };
@@ -627,12 +646,17 @@ export async function materializeGrammaticalComponent(
 			preconditions: [],
 		});
 	if (!(await readingEntryExists(ctx, reading)))
-		await applyChange(ctx, {
-			type: "createReading",
-			entry: { reading, ...note, attestationLinks: [] },
-			preconditions: [],
-		});
-	await completeAuthoredComponentKnowledge(ctx, reading);
+		await applyChange(
+			ctx,
+			{
+				type: "createReading",
+				entry: { reading, ...note, attestationLinks: [] },
+				preconditions: [],
+			},
+			undefined,
+			options,
+		);
+	await completeAuthoredComponentKnowledge(ctx, reading, options);
 	const id = makeSurfaceId("de", surface);
 	if (!(await ownedSurfaceExists(ctx, id)))
 		await applyChange(ctx, {

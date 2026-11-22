@@ -78,6 +78,19 @@ const requestContextExpression = (requestIdVariable: string) => `
 		.query("visitorEncounters")
 		.withIndex("by_request_id", (q) => q.eq("requestId", ${requestIdVariable}))
 		.unique();
+	const knowledgeAttempt = await ctx.db
+		.query("knowledgeGenerationAttempts")
+		.withIndex("by_attempt_key", (q) => q.eq("attemptKey", ${requestIdVariable}))
+		.unique();
+	const readingId = knowledgeAttempt?.readingId ?? session?.readingId ?? visitorEncounter?.readingId;
+	const reading = readingId ? await ctx.db.get(readingId) : null;
+	const ownerReadingKey = knowledgeAttempt?.ownerReadingKey ?? reading?.readingKey;
+	const definitionText = ownerReadingKey
+		? await ctx.db
+			.query("definitionTexts")
+			.withIndex("by_owner_reading_key", (q) => q.eq("ownerReadingKey", ownerReadingKey))
+			.unique()
+		: null;
 	const runs = await ctx.db
 		.query("resolutionRuns")
 		.withIndex("by_request_id_and_run_number", (q) => q.eq("requestId", ${requestIdVariable}))
@@ -124,7 +137,7 @@ export function inspectResolutionStep(
 			payload,
 			ancestors,
 			children: requestSteps.filter((candidate) => candidate.parentId === step.id),
-			request: { click, session, visitorEncounter },
+			request: { click, session, visitorEncounter, knowledgeAttempt, definitionText },
 			run: matchingRun,
 			segment,
 			sentence,
@@ -166,7 +179,7 @@ export function inspectResolutionRequest(
 			})),
 		);
 		return {
-			request: { click, session, visitorEncounter },
+			request: { click, session, visitorEncounter, knowledgeAttempt, definitionText },
 			runs,
 			segment,
 			sentence,
@@ -192,7 +205,7 @@ export function inspectResolutionRun(
 		const runEnd = run.finishedAt ?? run.expiresAt;
 		return {
 			run,
-			request: { click, session, visitorEncounter },
+			request: { click, session, visitorEncounter, knowledgeAttempt, definitionText },
 			segment,
 			sentence,
 			steps: allSteps.filter((step) => step.startedAt >= run.startedAt && step.startedAt <= runEnd),

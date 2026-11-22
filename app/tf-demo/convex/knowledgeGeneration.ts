@@ -17,6 +17,7 @@ import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { createDumdictTransaction } from "./model/dumdictTransaction";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
+import { inspectRequestIdFor } from "./model/inspection";
 import {
 	claimKnowledgeRun,
 	endKnowledgeRun,
@@ -408,6 +409,11 @@ export const publish = internalMutation({
 
 		// The changes arrive as v.any(); Dumdict parses them here, refusing
 		// another language as the planner would.
+		const inspectRequestId = changes.some(
+			(change) => change?.aspect === "definition",
+		)
+			? await inspectRequestIdFor(ctx, attempt.attemptKey)
+			: undefined;
 		const request = checkApplyGeneratedKnowledgeRequest("de", {
 			reading: ownerReading,
 			changes,
@@ -415,9 +421,10 @@ export const publish = internalMutation({
 		});
 		const dictionary =
 			request.status === "ok"
-				? await createDumdictTransaction(ctx).applyGeneratedKnowledge(
-						request.request,
-					)
+				? await createDumdictTransaction(
+						ctx,
+						inspectRequestId ? { inspectRequestId } : undefined,
+					).applyGeneratedKnowledge(request.request)
 				: request;
 		// Nothing above wrote, so the action may split this batch and resend.
 		if (dictionary.status === "overBudget")
@@ -503,6 +510,7 @@ export const publish = internalMutation({
 					(args.final && complete) || accumulated?.status === "Full"
 						? "Full"
 						: "Partial",
+				...(inspectRequestId ? { inspectRequestId } : {}),
 			},
 		);
 		const refreshed = await findAccumulatedKnowledge(

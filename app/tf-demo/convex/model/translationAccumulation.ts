@@ -18,6 +18,7 @@ export async function scheduleTranslationAccumulation(
 	input: {
 		readonly visitorId: string;
 		readonly attestationId: Id<"attestations">;
+		readonly inspectRequestId?: string;
 	},
 ): Promise<void> {
 	const attestation = await ctx.db.get(input.attestationId);
@@ -46,6 +47,12 @@ export async function scheduleTranslationAccumulation(
 	await ctx.scheduler.runAfter(
 		0,
 		internal.translationAccumulationActions.accumulate,
-		{ attestationId: input.attestationId, languages },
+		{
+			attestationId: input.attestationId,
+			languages,
+			...(input.inspectRequestId
+				? { inspectRequestId: input.inspectRequestId }
+				: {}),
+		},
 	);
 }

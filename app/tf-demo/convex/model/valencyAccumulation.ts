@@ -22,6 +22,7 @@ export async function scheduleValencyAccumulation(
 	ctx: MutationCtx,
 	input: {
 		readonly attestationId: Id<"attestations">;
+		readonly inspectRequestId?: string;
 	},
 ): Promise<void> {
 	const attestation = await ctx.db.get(input.attestationId);
@@ -48,6 +49,11 @@ export async function scheduleValencyAccumulation(
 	await ctx.scheduler.runAfter(
 		0,
 		internal.valencyAccumulationActions.accumulate,
-		{ attestationId: input.attestationId },
+		{
+			attestationId: input.attestationId,
+			...(input.inspectRequestId
+				? { inspectRequestId: input.inspectRequestId }
+				: {}),
+		},
 	);
 }

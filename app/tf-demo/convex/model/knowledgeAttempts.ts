@@ -122,8 +122,10 @@ async function knowledgeCooldownRemaining(
 async function startRun(
 	ctx: MutationCtx,
 	attempt: Pick<KnowledgeAttempt, "attemptKey" | "runNumber">,
+	knownInspect?: boolean,
 ): Promise<void> {
-	const inspect = await inspectionRequested(ctx, attempt.attemptKey);
+	const inspect =
+		knownInspect ?? (await inspectionRequested(ctx, attempt.attemptKey));
 	await ctx.scheduler.runAfter(
 		0,
 		internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -201,38 +203,42 @@ export async function demandKnowledgeAttempt(
 		readonly attestationId: Id<"attestations">;
 		readonly ownerReadingKey: string;
 		readonly translationLanguages: readonly Dumrel.TranslationLanguage[];
+		readonly inspect?: boolean;
 	},
 ): Promise<void> {
-	const existing = await findKnowledgeAttempt(ctx, demand.attemptKey);
+	const { inspect, ...attemptRow } = demand;
+	const existing = await findKnowledgeAttempt(ctx, attemptRow.attemptKey);
 	if (existing) {
 		if (
-			existing.visitorId !== demand.visitorId ||
-			existing.readingId !== demand.readingId ||
-			existing.attestationId !== demand.attestationId ||
-			existing.ownerReadingKey !== demand.ownerReadingKey
+			existing.visitorId !== attemptRow.visitorId ||
+			existing.readingId !== attemptRow.readingId ||
+			existing.attestationId !== attemptRow.attestationId ||
+			existing.ownerReadingKey !== attemptRow.ownerReadingKey
 		) {
 			throw new Error("attemptKey collides with a different occurrence.");
 		}
 		if (
 			existing.state === "Failed" &&
-			(await knowledgeCooldownRemaining(ctx, demand.ownerReadingKey)) ===
-				0
+			(await knowledgeCooldownRemaining(
+				ctx,
+				attemptRow.ownerReadingKey,
+			)) === 0
 		)
 			await retryFailedAttempt(ctx, existing);
 		return;
 	}
-	if ((await knowledgeCooldownRemaining(ctx, demand.ownerReadingKey)) > 0)
+	if ((await knowledgeCooldownRemaining(ctx, attemptRow.ownerReadingKey)) > 0)
 		return;
-	const waiting = await hasActiveAttempt(ctx, demand.ownerReadingKey);
+	const waiting = await hasActiveAttempt(ctx, attemptRow.ownerReadingKey);
 	const now = Date.now();
 	await ctx.db.insert("knowledgeGenerationAttempts", {
-		...demand,
-		translationLanguages: [...demand.translationLanguages],
+		...attemptRow,
+		translationLanguages: [...attemptRow.translationLanguages],
 		state: waiting ? "Waiting" : "Scheduled",
 		createdAt: now,
 		updatedAt: now,
 	});
-	if (!waiting) await startRun(ctx, demand);
+	if (!waiting) await startRun(ctx, attemptRow, inspect);
 }
 
 /**

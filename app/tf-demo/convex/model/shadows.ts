@@ -469,7 +469,10 @@ export async function replaceAccumulatedKnowledge(
 	ctx: MutationCtx,
 	ownerReadingKey: string,
 	knowledge: unknown,
-	options: { readonly status?: "Partial" | "Full" } = {},
+	options: {
+		readonly status?: "Partial" | "Full";
+		readonly inspectRequestId?: string;
+	} = {},
 ): Promise<Id<"accumulatedKnowledge"> | null> {
 	const existing = await ctx.db
 		.query("accumulatedKnowledge")
@@ -481,7 +484,14 @@ export async function replaceAccumulatedKnowledge(
 	if (knowledge === undefined && !existing) return null;
 	const content = knowledge ?? {};
 	await syncStructuralShadowReferences(ctx, ownerReadingKey, content);
-	await syncDefinitionText(ctx, ownerReadingKey, content);
+	await syncDefinitionText(
+		ctx,
+		ownerReadingKey,
+		content,
+		options.inspectRequestId
+			? { inspectRequestId: options.inspectRequestId }
+			: undefined,
+	);
 	const sourceLemmaKey = sourceLemmaKeyOf(content);
 	if (existing) {
 		// Coverage evidence outlives the content it was recorded beside.

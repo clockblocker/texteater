@@ -5,6 +5,11 @@ import type { Jev, Luna } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import {
+	annotateInspectionStep,
+	markSpanFailed,
+	recordFailedStep,
+} from "../server/inspectionCapture";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
@@ -15,8 +20,15 @@ import {
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
-import { ConvexActionCtx, runConvexEffect } from "./model/convexEffect";
+import {
+	inspectedMutation,
+	inspectedQuery,
+	runConvexEffect,
+} from "./model/convexEffect";
 import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
+import { inspectionFor } from "./model/inspectionAction";
+
+const OWNER = "app/tf-demo · valencyAccumulationActions";
 
 /**
  * The production ValencyAccumulator: Dumgen's `knowledge.accumulateValency`,
@@ -35,6 +47,7 @@ function productionValencyAccumulator():
 export const accumulate = internalAction({
 	args: {
 		attestationId: v.id("attestations"),
+		inspectRequestId: v.optional(v.string()),
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
@@ -44,66 +57,90 @@ export const accumulate = internalAction({
 	},
 });
 
-const runValencyAccumulation = Effect.fn("ValencyAccumulation.run")(function* (
-	args: { readonly attestationId: Id<"attestations"> },
-	accumulate: ValencyAccumulator<Jev | Luna>,
-) {
-	const actionCtx = yield* ConvexActionCtx;
-	const occurrence = yield* actionCtx.runQuery(
-		internal.valencyAccumulation.begin,
-		{ attestationId: args.attestationId },
-	);
-	if (!occurrence) return;
-	const reading = parseGermanReading(occurrence.reading);
-	const { encounter, attestation } = parseResolvedGrammar({
-		encounter: occurrence.encounter,
-		attestation: occurrence.attestation,
-	});
-	const exit = yield* Effect.exit(
-		accumulate({
-			encounter,
-			reading,
-			attestation,
-			valency: occurrence.valency,
-		}).pipe(Effect.provide(deploymentDumgen())),
-	);
-	if (Exit.isFailure(exit)) {
-		if (Cause.hasInterruptsOnly(exit.cause)) return yield* Effect.interrupt;
-		yield* Effect.logError("ValencyAccumulationFailed").pipe(
-			Effect.annotateLogs({
-				attestationId: args.attestationId,
-				...internalErrorDescriptor(Cause.squash(exit.cause)),
-			}),
+const runValencyAccumulation = Effect.fn("Accumulate valency", { root: true })(
+	function* (
+		args: { readonly attestationId: Id<"attestations"> },
+		accumulate: ValencyAccumulator<Jev | Luna>,
+	) {
+		yield* annotateInspectionStep(OWNER, args);
+		const occurrence = yield* inspectedQuery(
+			"Load valency accumulation input",
+			OWNER,
+			args,
+			internal.valencyAccumulation.begin,
+			{ attestationId: args.attestationId },
 		);
-		return;
-	}
-	const { changes, realizedPattern, failures } = exit.value;
-	if (failures.length > 0)
-		yield* Effect.logError("ValencyAccumulationFailed").pipe(
-			Effect.annotateLogs({
-				attestationId: args.attestationId,
-				failures: failures.map(({ leaf, code }) => ({ leaf, code })),
-			}),
+		if (!occurrence) return;
+		const reading = parseGermanReading(occurrence.reading);
+		const { encounter, attestation } = parseResolvedGrammar({
+			encounter: occurrence.encounter,
+			attestation: occurrence.attestation,
+		});
+		const exit = yield* Effect.exit(
+			accumulate({
+				encounter,
+				reading,
+				attestation,
+				valency: occurrence.valency,
+			}).pipe(Effect.provide(deploymentDumgen())),
 		);
-	if (changes.length === 0 && realizedPattern === null) return;
-	const published = yield* actionCtx.runMutation(
-		internal.valencyAccumulation.publish,
-		{
+		if (Exit.isFailure(exit)) {
+			if (Cause.hasInterruptsOnly(exit.cause))
+				return yield* Effect.interrupt;
+			const error = Cause.squash(exit.cause);
+			yield* recordFailedStep(
+				"Valency accumulation failed",
+				OWNER,
+				args,
+				error,
+			);
+			yield* Effect.logError("ValencyAccumulationFailed").pipe(
+				Effect.annotateLogs({
+					attestationId: args.attestationId,
+					...internalErrorDescriptor(error),
+				}),
+			);
+			return;
+		}
+		const { changes, realizedPattern, failures } = exit.value;
+		if (failures.length > 0) {
+			yield* markSpanFailed;
+			yield* Effect.logError("ValencyAccumulationFailed").pipe(
+				Effect.annotateLogs({
+					attestationId: args.attestationId,
+					failures: failures.map(({ leaf, code }) => ({
+						leaf,
+						code,
+					})),
+				}),
+			);
+		}
+		if (changes.length === 0 && realizedPattern === null) return;
+		const publishArgs = {
 			attestationId: args.attestationId,
 			readingId: occurrence.readingId,
 			reading: occurrence.reading,
 			changes: [...changes],
 			realizedPattern,
-		},
-	);
-	if (published.status === "Rejected")
-		yield* Effect.logError("ValencyAccumulationRejected").pipe(
-			Effect.annotateLogs({
-				attestationId: args.attestationId,
-				message: published.message,
-			}),
+		};
+		const published = yield* inspectedMutation(
+			"Publish accumulated valency",
+			OWNER,
+			publishArgs,
+			internal.valencyAccumulation.publish,
+			publishArgs,
 		);
-});
+		if (published.status === "Rejected") {
+			yield* markSpanFailed;
+			yield* Effect.logError("ValencyAccumulationRejected").pipe(
+				Effect.annotateLogs({
+					attestationId: args.attestationId,
+					message: published.message,
+				}),
+			);
+		}
+	},
+);
 
 /**
  * One run: the occurrence and its Reading's stored patterns, the model work,
@@ -111,8 +148,17 @@ const runValencyAccumulation = Effect.fn("ValencyAccumulation.run")(function* (
  */
 export async function accumulateValency(
 	ctx: Pick<ActionCtx, "runQuery" | "runMutation">,
-	args: { readonly attestationId: Id<"attestations"> },
+	args: {
+		readonly attestationId: Id<"attestations">;
+		readonly inspectRequestId?: string;
+	},
 	accumulate: ValencyAccumulator<Jev | Luna>,
 ): Promise<void> {
-	await runConvexEffect(ctx, runValencyAccumulation(args, accumulate));
+	const { inspectRequestId, ...input } = args;
+	const inspection = inspectRequestId
+		? inspectionFor(ctx, inspectRequestId, true, "PostClick")
+		: undefined;
+	await runConvexEffect(ctx, runValencyAccumulation(input, accumulate), {
+		inspection,
+	});
 }

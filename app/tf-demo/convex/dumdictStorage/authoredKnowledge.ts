@@ -15,6 +15,7 @@ type GermanReadingEntry = ReadingEntry<"de">;
 export async function completeAuthoredComponentKnowledge(
 	ctx: MutationCtx,
 	reading: unknown,
+	options: { readonly inspectRequestId?: string } = {},
 ) {
 	const authored = authoredReading(reading);
 	if (!authored) return false;
@@ -46,6 +47,9 @@ export async function completeAuthoredComponentKnowledge(
 	// An authored member stores all its Knowledge (ADR 0021).
 	await replaceAccumulatedKnowledge(ctx, stored.readingKey, knowledge, {
 		status: "Full",
+		...(options.inspectRequestId
+			? { inspectRequestId: options.inspectRequestId }
+			: {}),
 	});
 	return true;
 }

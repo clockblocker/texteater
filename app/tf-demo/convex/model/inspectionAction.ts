@@ -6,7 +6,7 @@ import {
 import { saveTrace } from "../../server/traceWrite";
 import { internal } from "../_generated/api";
 import type { ActionCtx } from "../_generated/server";
-import type { CapturedInspectionStep } from "./inspection";
+import type { CapturedInspectionStep, InspectionScope } from "./inspection";
 
 /** Keep one batch well under Convex's argument size limit; payloads are the bulk. */
 const MAX_BATCH_PAYLOAD_BYTES = 4 * 1024 * 1024;
@@ -49,10 +49,10 @@ function batches(
  * mutations as their payload allows, normally one.
  */
 export function inspectionFor(
-	ctx: ActionCtx,
+	ctx: Pick<ActionCtx, "runMutation">,
 	requestId: string,
 	enabled: boolean,
-	scope: "Resolution" | "Knowledge" = "Resolution",
+	scope: InspectionScope = "Resolution",
 ): ActionInspection | undefined {
 	if (!enabled) return undefined;
 	const capture = createInspectionCapture();

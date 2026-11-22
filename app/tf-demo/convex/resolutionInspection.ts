@@ -7,14 +7,37 @@ import {
 	internalMutation,
 	type MutationCtx,
 	mutation,
+	type QueryCtx,
 	query,
 } from "./_generated/server";
+import { findDefinitionText } from "./model/definitionTexts";
 import {
 	type CapturedInspectionStep,
 	inspectionPayloadChunks,
+	inspectionScopeValidator,
 	inspectionStepValidator,
 } from "./model/inspection";
 import schema from "./schema";
+
+async function findInspectionDefinitionText(
+	ctx: QueryCtx | MutationCtx,
+	requestId: string,
+	ownerReadingKey?: string,
+	readingId?: Parameters<typeof ctx.db.get<"readings">>[0],
+) {
+	if (ownerReadingKey) return findDefinitionText(ctx, ownerReadingKey);
+	const resolvedReadingId =
+		readingId ??
+		(
+			await ctx.db
+				.query("visitorEncounters")
+				.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+				.unique()
+		)?.readingId;
+	if (!resolvedReadingId) return null;
+	const reading = await ctx.db.get(resolvedReadingId);
+	return reading ? findDefinitionText(ctx, reading.readingKey) : null;
+}
 
 export async function saveInspectionStep(
 	ctx: MutationCtx,
@@ -86,9 +109,7 @@ export const finishAnalysis = internalMutation({
 export const recordSteps = internalMutation({
 	args: {
 		requestId: v.string(),
-		scope: v.optional(
-			v.union(v.literal("Resolution"), v.literal("Knowledge")),
-		),
+		scope: v.optional(inspectionScopeValidator),
 		steps: v.array(
 			inspectionStepValidator.extend({ payloadJson: v.string() }),
 		),
@@ -102,18 +123,30 @@ export const recordSteps = internalMutation({
 		if (!click) return null;
 		let rootFailed = false;
 		if (steps.some((step) => !step.parentId)) {
-			const session = await ctx.db
-				.query("resolutionSessions")
-				.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
-				.unique();
-			const knowledge = await ctx.db
-				.query("knowledgeGenerationAttempts")
-				.withIndex("by_attempt_key", (q) =>
-					q.eq("attemptKey", requestId),
-				)
-				.unique();
+			const [session, knowledge] = await Promise.all([
+				ctx.db
+					.query("resolutionSessions")
+					.withIndex("by_request_id", (q) =>
+						q.eq("requestId", requestId),
+					)
+					.unique(),
+				ctx.db
+					.query("knowledgeGenerationAttempts")
+					.withIndex("by_attempt_key", (q) =>
+						q.eq("attemptKey", requestId),
+					)
+					.unique(),
+			]);
+			const definitionText = await findInspectionDefinitionText(
+				ctx,
+				requestId,
+				knowledge?.ownerReadingKey,
+				session?.readingId,
+			);
 			rootFailed =
 				(scope === "Knowledge" && knowledge?.state === "Failed") ||
+				(scope === "DefinitionText" &&
+					definitionText?.state === "Failed") ||
 				(scope === "Resolution" &&
 					session?.lifecycle.state === "Terminal" &&
 					session.lifecycle.outcome === "PermanentFailure");
@@ -125,6 +158,9 @@ export const recordSteps = internalMutation({
 						}
 					: {}),
 				...(knowledge ? { knowledgeState: knowledge.state } : {}),
+				...(definitionText
+					? { definitionTextState: definitionText.state }
+					: {}),
 			});
 		}
 		for (const step of steps) {
@@ -172,6 +208,7 @@ export const detail = query({
 			state: v.string(),
 			finishedAt: v.union(v.number(), v.null()),
 			knowledgeState: v.union(v.string(), v.null()),
+			definitionTextState: v.union(v.string(), v.null()),
 		}),
 	),
 	handler: async (ctx, args) => {
@@ -182,18 +219,26 @@ export const detail = query({
 			)
 			.unique();
 		if (!click || click.visitorId !== args.visitorId) return null;
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		const knowledge = await ctx.db
-			.query("knowledgeGenerationAttempts")
-			.withIndex("by_attempt_key", (q) =>
-				q.eq("attemptKey", args.requestId),
-			)
-			.unique();
+		const [session, knowledge] = await Promise.all([
+			ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", args.requestId),
+				)
+				.unique(),
+			ctx.db
+				.query("knowledgeGenerationAttempts")
+				.withIndex("by_attempt_key", (q) =>
+					q.eq("attemptKey", args.requestId),
+				)
+				.unique(),
+		]);
+		const definitionText = await findInspectionDefinitionText(
+			ctx,
+			args.requestId,
+			knowledge?.ownerReadingKey,
+			session?.readingId,
+		);
 		return {
 			click,
 			state:
@@ -209,6 +254,8 @@ export const detail = query({
 					? session.updatedAt
 					: (click.finishedAt ?? null),
 			knowledgeState: knowledge?.state ?? click.knowledgeState ?? null,
+			definitionTextState:
+				definitionText?.state ?? click.definitionTextState ?? null,
 		};
 	},
 });

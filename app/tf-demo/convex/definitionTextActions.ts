@@ -5,12 +5,25 @@ import { type OperationTrace, operations } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
+import {
+	annotateInspectionStep,
+	inspectionStep,
+	markSpanFailed,
+	recordFailedStep,
+} from "../server/inspectionCapture";
 import { storedUnitOf } from "../server/storedSegments";
 import { internal } from "./_generated/api";
 import { type ActionCtx, internalAction } from "./_generated/server";
-import { ConvexActionCtx, runConvexEffect } from "./model/convexEffect";
+import {
+	type ConvexActionCtx,
+	inspectedMutation,
+	runConvexEffect,
+} from "./model/convexEffect";
 import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
+import { inspectionFor } from "./model/inspectionAction";
 import { stripScrollAnalysisGraph } from "./model/scrollAnalysisStripping";
+
+const OWNER = "app/tf-demo · definitionTextActions";
 
 const DEFINITION_SEGMENTATION_MESSAGES: Record<
 	"MissingJevKey" | "UnsupportedLanguage" | "EmptySegmentation",
@@ -77,89 +90,121 @@ const segmentDefinition = Effect.fn("DefinitionText.segment")(function* (
 });
 
 type MaterializeOutcome =
+	| { kind: "Settled" }
 	| { kind: "Ready" }
 	| { kind: "Retracted" }
 	| { kind: "Failed" };
 
-const materializeDefinition = Effect.fn("DefinitionText.materialize")(
-	function* (ctx: ActionCtx, ownerReadingKey: string) {
-		const actionCtx = yield* ConvexActionCtx;
-		const runNumber = yield* actionCtx.runMutation(
-			internal.definitionTexts.markRunning,
-			{ ownerReadingKey },
-		);
-		if (runNumber === null) return;
-		const sync = yield* actionCtx.runQuery(
-			internal.definitionTexts.loadSync,
-			{ ownerReadingKey },
-		);
-		if (!sync) return;
-		const outcome = yield* Effect.gen(function* (): Effect.fn.Return<
-			MaterializeOutcome,
-			DefinitionSegmentationError | Cause.UnknownError
-		> {
-			const replace =
-				sync.scrollId !== undefined &&
-				sync.materializedDefinition !== sync.definition;
-			if (sync.scrollId && replace) {
-				const scrollId = sync.scrollId;
-				yield* Effect.tryPromise(() =>
-					stripScrollAnalysisGraph(ctx, scrollId, {
-						protectedReadingKeys: [ownerReadingKey],
-					}),
-				);
-				yield* actionCtx.runMutation(
-					internal.definitionTexts.deleteScrollRows,
-					{ ownerReadingKey, scrollId },
-				);
-			}
-			if (sync.definition === undefined) return { kind: "Retracted" };
-			if (sync.scrollId && !replace) return { kind: "Ready" };
-			if (sync.language !== "de")
-				return yield* new DefinitionSegmentationError({
-					reason: "UnsupportedLanguage",
-					language: sync.language ?? undefined,
-				});
-			const sentence = yield* segmentDefinition(sync.definition);
-			yield* actionCtx.runMutation(
-				internal.definitionTexts.persistSegmented,
-				{
-					ownerReadingKey,
-					runNumber,
-					definition: sync.definition,
-					language: "de",
-					stitchedText: sentence.text,
-					segments: sentence.segments.map(
-						({ kind, text, surface }) =>
-							surface === undefined
-								? { kind, text }
-								: { kind, text, surface },
-					),
-					units: sentence.units.map(storedUnitOf),
-					...(sentence.failed
-						? { segmentationFailed: true as const }
-						: {}),
-				},
+const materializeDefinition = Effect.fn("Materialize Definition Text", {
+	root: true,
+})(function* (
+	ctx: ActionCtx,
+	ownerReadingKey: string,
+	inspectRequestId?: string,
+) {
+	yield* annotateInspectionStep(OWNER, { ownerReadingKey });
+	const claimed = yield* inspectedMutation(
+		"Claim and load definition",
+		OWNER,
+		{ ownerReadingKey },
+		internal.definitionTexts.begin,
+		{ ownerReadingKey },
+	);
+	if (!claimed) return;
+	const { runNumber, sync } = claimed;
+	const outcome = yield* Effect.gen(function* (): Effect.fn.Return<
+		MaterializeOutcome,
+		DefinitionSegmentationError | Cause.UnknownError,
+		ConvexActionCtx
+	> {
+		const replace =
+			sync.scrollId !== undefined &&
+			sync.materializedDefinition !== sync.definition;
+		if (sync.scrollId && replace) {
+			const scrollId = sync.scrollId;
+			yield* Effect.tryPromise(() =>
+				stripScrollAnalysisGraph(ctx, scrollId, {
+					protectedReadingKeys: [ownerReadingKey],
+				}),
+			).pipe(
+				Effect.withSpan(
+					"Strip previous Definition Text",
+					inspectionStep(OWNER, { ownerReadingKey, scrollId }),
+				),
 			);
-			return { kind: "Ready" };
-		}).pipe(
-			Effect.catchCause((cause) => {
-				if (Cause.hasInterruptsOnly(cause)) return Effect.interrupt;
-				const squashed = Cause.squash(cause);
-				console.error(
-					"Definition Text materialization failed",
-					Cause.isUnknownError(squashed) ? squashed.cause : squashed,
-				);
-				return Effect.succeed<MaterializeOutcome>({ kind: "Failed" });
-			}),
-		);
-		yield* actionCtx.runMutation(internal.definitionTexts.settle, {
+			yield* inspectedMutation(
+				"Delete previous Definition Text rows",
+				OWNER,
+				{ ownerReadingKey, scrollId },
+				internal.definitionTexts.deleteScrollRows,
+				{ ownerReadingKey, scrollId },
+			);
+		}
+		if (sync.definition === undefined) return { kind: "Retracted" };
+		if (sync.scrollId && !replace) return { kind: "Ready" };
+		if (sync.language !== "de")
+			return yield* new DefinitionSegmentationError({
+				reason: "UnsupportedLanguage",
+				language: sync.language ?? undefined,
+			});
+		const sentence = yield* segmentDefinition(sync.definition);
+		if (sentence.failed) yield* markSpanFailed;
+		const persistArgs = {
 			ownerReadingKey,
 			runNumber,
-			outcome,
-		});
-	},
-);
+			definition: sync.definition,
+			language: "de" as const,
+			stitchedText: sentence.text,
+			segments: sentence.segments.map(({ kind, text, surface }) =>
+				surface === undefined
+					? { kind, text }
+					: { kind, text, surface },
+			),
+			units: sentence.units.map(storedUnitOf),
+			...(sentence.failed ? { segmentationFailed: true as const } : {}),
+		};
+		const persisted = yield* inspectedMutation(
+			"Persist segmented definition",
+			OWNER,
+			persistArgs,
+			internal.definitionTexts.persistSegmented,
+			persistArgs,
+		);
+		// `persistSegmented` already wrote state "Ready" and cleared
+		// `interruptedRuns`; only a Stale write (definition changed mid-run)
+		// needs `settle` to reschedule.
+		return persisted === "Ready" ? { kind: "Settled" } : { kind: "Ready" };
+	}).pipe(
+		Effect.catchCause((cause) => {
+			if (Cause.hasInterruptsOnly(cause)) return Effect.interrupt;
+			const squashed = Cause.squash(cause);
+			const error = Cause.isUnknownError(squashed)
+				? squashed.cause
+				: squashed;
+			console.error("Definition Text materialization failed", error);
+			return recordFailedStep(
+				"Definition segmentation failed",
+				OWNER,
+				{ ownerReadingKey },
+				error,
+			).pipe(Effect.as<MaterializeOutcome>({ kind: "Failed" }));
+		}),
+	);
+	if (outcome.kind === "Settled") return;
+	const settleArgs = {
+		ownerReadingKey,
+		runNumber,
+		outcome,
+		...(inspectRequestId ? { inspectRequestId } : {}),
+	};
+	yield* inspectedMutation(
+		"Settle definition materialization",
+		OWNER,
+		settleArgs,
+		internal.definitionTexts.settle,
+		settleArgs,
+	);
+});
 
 /**
  * Brings one Reading's Definition Text in line with its Knowledge: strips and
@@ -171,13 +216,19 @@ const materializeDefinition = Effect.fn("DefinitionText.materialize")(
  * before settling by the watchdog its scheduling set.
  */
 export const materialize = internalAction({
-	args: { ownerReadingKey: v.string() },
+	args: {
+		ownerReadingKey: v.string(),
+		inspectRequestId: v.optional(v.string()),
+	},
 	returns: v.null(),
-	handler: async (ctx, { ownerReadingKey }) => {
+	handler: async (ctx, { ownerReadingKey, inspectRequestId }) => {
+		const inspection = inspectRequestId
+			? inspectionFor(ctx, inspectRequestId, true, "DefinitionText")
+			: undefined;
 		await runConvexEffect(
 			ctx,
-			materializeDefinition(ctx, ownerReadingKey),
-			{ traceSink: logFailedSentence },
+			materializeDefinition(ctx, ownerReadingKey, inspectRequestId),
+			{ inspection, traceSink: logFailedSentence },
 		);
 		return null;
 	},

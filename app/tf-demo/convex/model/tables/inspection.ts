@@ -23,6 +23,7 @@ export const inspectionTables = {
 		resolutionState: v.optional(v.string()),
 		finishedAt: v.optional(v.number()),
 		knowledgeState: v.optional(v.string()),
+		definitionTextState: v.optional(v.string()),
 	})
 		.index("by_request_id", ["requestId"])
 		.index("by_visitor_id_and_started_at", ["visitorId", "startedAt"]),

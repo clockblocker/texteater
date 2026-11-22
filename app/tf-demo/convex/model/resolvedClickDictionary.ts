@@ -59,8 +59,9 @@ export async function planAndCommitDictionary(
 		readonly readingDecision: Infer<typeof readingDecisionValidator>;
 		readonly occurrence: Infer<typeof occurrenceAttestationInputValidator>;
 	},
+	options?: { readonly inspectRequestId?: string },
 ): Promise<DumdictTransactionOutcome> {
-	const dictionary = createDumdictTransaction(ctx);
+	const dictionary = createDumdictTransaction(ctx, options);
 	const reading = parseGermanReading(args.reading);
 	const ownedSurface = {
 		surface: parseGermanAttestation(args.occurrence.attestation).surface,

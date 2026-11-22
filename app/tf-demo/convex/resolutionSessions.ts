@@ -158,6 +158,7 @@ export const selectSegment = mutation({
 					visitorId: args.visitorId,
 					readingId: canonical.readingId,
 					attestationId,
+					inspect,
 				});
 				return { kind: "Available" as const, canonical };
 			}

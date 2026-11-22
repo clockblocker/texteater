@@ -5,6 +5,7 @@ import type { MutationCtx } from "../_generated/server";
 import { loadKnowledgeSettings } from "../knowledgeSettings";
 import { projectReadingValue } from "../modules/notes/projections";
 import { completeAuthoredComponentKnowledge } from "./dumdictTransaction";
+import { inspectRequestIdFor } from "./inspection";
 import { demandKnowledgeAttempt } from "./knowledgeAttempts";
 import {
 	findAccumulatedKnowledge,
@@ -25,6 +26,7 @@ export async function scheduleKnowledgeGeneration(
 		visitorId: string;
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
+		inspect?: boolean;
 	},
 ): Promise<void> {
 	assertIdentifier(input.attemptKey, "attemptKey");
@@ -39,11 +41,17 @@ export async function scheduleKnowledgeGeneration(
 		);
 	}
 	const ownerReadingKey = occurrence.reading.readingKey;
+	const inspectRequestId = await inspectRequestIdFor(
+		ctx,
+		input.attemptKey,
+		input.inspect,
+	);
 	// An exact authored Reading publishes its reviewed Knowledge with no
 	// model call (ADR 0021); Dumgen would answer it with a Catalog Miss.
 	await completeAuthoredComponentKnowledge(
 		ctx,
 		projectReadingValue(occurrence.reading, occurrence.lemma),
+		inspectRequestId ? { inspectRequestId } : undefined,
 	);
 	const [accumulated, settings] = await Promise.all([
 		findAccumulatedKnowledge(ctx, ownerReadingKey),
@@ -56,6 +64,7 @@ export async function scheduleKnowledgeGeneration(
 	if (nothingMissing(missing)) return;
 	await demandKnowledgeAttempt(ctx, {
 		...input,
+		inspect: inspectRequestId !== undefined,
 		ownerReadingKey,
 		translationLanguages,
 	});

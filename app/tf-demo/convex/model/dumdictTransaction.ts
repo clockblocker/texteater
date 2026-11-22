@@ -131,7 +131,10 @@ export type DumdictTransaction = {
  * it was built from, so Convex's optimistic concurrency, not a revision check
  * or a retry loop, resolves concurrent writers.
  */
-export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
+export function createDumdictTransaction(
+	ctx: MutationCtx,
+	options?: { readonly inspectRequestId?: string },
+): DumdictTransaction {
 	const planner = createDumdictPlanner("de");
 	function contextArgs(load: ReadingEntryContextLoad<"de">) {
 		return readingEntryContextArgs(planner.contextRequest(load));
@@ -151,7 +154,7 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 	): Promise<DumdictTransactionOutcome> {
 		if (outcome.status !== "planned") return outcome;
 		const plan = dictionaryPlanResult(outcome.plan);
-		const commit = await applyDumdictPlanInTransaction(ctx, plan);
+		const commit = await applyDumdictPlanInTransaction(ctx, plan, options);
 		return commit.status === "committed"
 			? { status: "committed", plan, message: outcome.summary.message }
 			: commit;

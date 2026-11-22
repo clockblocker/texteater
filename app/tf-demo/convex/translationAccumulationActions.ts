@@ -5,6 +5,11 @@ import type { Jev, Luna } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import {
+	annotateInspectionStep,
+	markSpanFailed,
+	recordFailedStep,
+} from "../server/inspectionCapture";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
@@ -15,9 +20,16 @@ import {
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
-import { ConvexActionCtx, runConvexEffect } from "./model/convexEffect";
+import {
+	inspectedMutation,
+	inspectedQuery,
+	runConvexEffect,
+} from "./model/convexEffect";
 import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
+import { inspectionFor } from "./model/inspectionAction";
 import { translationLanguageValidator } from "./model/validators";
+
+const OWNER = "app/tf-demo · translationAccumulationActions";
 
 /**
  * The production TranslationAccumulator: Dumgen's
@@ -39,6 +51,7 @@ export const accumulate = internalAction({
 	args: {
 		attestationId: v.id("attestations"),
 		languages: v.array(translationLanguageValidator),
+		inspectRequestId: v.optional(v.string()),
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
@@ -48,76 +61,94 @@ export const accumulate = internalAction({
 	},
 });
 
-const runTranslationAccumulation = Effect.fn("TranslationAccumulation.run")(
-	function* (
-		args: {
-			readonly attestationId: Id<"attestations">;
-			readonly languages: readonly ("en" | "ru")[];
-		},
-		accumulate: TranslationAccumulator<Jev | Luna>,
-	) {
-		const actionCtx = yield* ConvexActionCtx;
-		const occurrence = yield* actionCtx.runQuery(
-			internal.translationAccumulation.begin,
-			{
-				attestationId: args.attestationId,
-				languages: [...args.languages],
-			},
-		);
-		if (!occurrence) return;
-		const reading = parseGermanReading(occurrence.reading);
-		const { encounter, attestation } = parseResolvedGrammar({
-			encounter: occurrence.encounter,
-			attestation: occurrence.attestation,
-		});
-		const exit = yield* Effect.exit(
-			accumulate({
-				encounter,
-				reading,
-				attestation,
-				translations: occurrence.translations,
-			}).pipe(Effect.provide(deploymentDumgen())),
-		);
-		if (Exit.isFailure(exit)) {
-			if (Cause.hasInterruptsOnly(exit.cause))
-				return yield* Effect.interrupt;
-			yield* Effect.logError("TranslationAccumulationFailed").pipe(
-				Effect.annotateLogs({
-					attestationId: args.attestationId,
-					...internalErrorDescriptor(Cause.squash(exit.cause)),
-				}),
-			);
-			return;
-		}
-		const { changes, failures } = exit.value;
-		if (failures.length > 0)
-			yield* Effect.logError("TranslationAccumulationFailed").pipe(
-				Effect.annotateLogs({
-					attestationId: args.attestationId,
-					failures: failures.map(({ leaf, code }) => ({
-						leaf,
-						code,
-					})),
-				}),
-			);
-		if (changes.length === 0) return;
-		const published = yield* actionCtx.runMutation(
-			internal.translationAccumulation.publish,
-			{
-				readingId: occurrence.readingId,
-				reading: occurrence.reading,
-				changes: [...changes],
-			},
-		);
-		if (published.status === "Rejected")
-			yield* Effect.logError("TranslationAccumulationRejected").pipe(
-				Effect.annotateLogs({
-					attestationId: args.attestationId,
-					message: published.message,
-				}),
-			);
+const runTranslationAccumulation = Effect.fn("Accumulate translations", {
+	root: true,
+})(function* (
+	args: {
+		readonly attestationId: Id<"attestations">;
+		readonly languages: readonly ("en" | "ru")[];
 	},
-);
+	accumulate: TranslationAccumulator<Jev | Luna>,
+) {
+	yield* annotateInspectionStep(OWNER, args);
+	const beginArgs = {
+		attestationId: args.attestationId,
+		languages: [...args.languages],
+	};
+	const occurrence = yield* inspectedQuery(
+		"Load translation accumulation input",
+		OWNER,
+		beginArgs,
+		internal.translationAccumulation.begin,
+		beginArgs,
+	);
+	if (!occurrence) return;
+	const reading = parseGermanReading(occurrence.reading);
+	const { encounter, attestation } = parseResolvedGrammar({
+		encounter: occurrence.encounter,
+		attestation: occurrence.attestation,
+	});
+	const exit = yield* Effect.exit(
+		accumulate({
+			encounter,
+			reading,
+			attestation,
+			translations: occurrence.translations,
+		}).pipe(Effect.provide(deploymentDumgen())),
+	);
+	if (Exit.isFailure(exit)) {
+		if (Cause.hasInterruptsOnly(exit.cause)) return yield* Effect.interrupt;
+		const error = Cause.squash(exit.cause);
+		yield* recordFailedStep(
+			"Translation accumulation failed",
+			OWNER,
+			args,
+			error,
+		);
+		yield* Effect.logError("TranslationAccumulationFailed").pipe(
+			Effect.annotateLogs({
+				attestationId: args.attestationId,
+				...internalErrorDescriptor(error),
+			}),
+		);
+		return;
+	}
+	const { changes, failures } = exit.value;
+	if (failures.length > 0) {
+		yield* markSpanFailed;
+		yield* Effect.logError("TranslationAccumulationFailed").pipe(
+			Effect.annotateLogs({
+				attestationId: args.attestationId,
+				failures: failures.map(({ leaf, code }) => ({
+					leaf,
+					code,
+				})),
+			}),
+		);
+	}
+	if (changes.length === 0) return;
+	const publishArgs = {
+		readingId: occurrence.readingId,
+		reading: occurrence.reading,
+		changes: [...changes],
+	};
+	const published = yield* inspectedMutation(
+		"Publish accumulated translations",
+		OWNER,
+		publishArgs,
+		internal.translationAccumulation.publish,
+		publishArgs,
+	);
+	if (published.status === "Rejected") {
+		yield* markSpanFailed;
+		yield* Effect.logError("TranslationAccumulationRejected").pipe(
+			Effect.annotateLogs({
+				attestationId: args.attestationId,
+				message: published.message,
+			}),
+		);
+	}
+});
 
 /**
  * One run: the occurrence and its Reading's stored translations, the
@@ -129,8 +160,15 @@ export async function accumulateTranslations(
 	args: {
 		readonly attestationId: Id<"attestations">;
 		readonly languages: readonly ("en" | "ru")[];
+		readonly inspectRequestId?: string;
 	},
 	accumulate: TranslationAccumulator<Jev | Luna>,
 ): Promise<void> {
-	await runConvexEffect(ctx, runTranslationAccumulation(args, accumulate));
+	const { inspectRequestId, ...input } = args;
+	const inspection = inspectRequestId
+		? inspectionFor(ctx, inspectRequestId, true, "PostClick")
+		: undefined;
+	await runConvexEffect(ctx, runTranslationAccumulation(input, accumulate), {
+		inspection,
+	});
 }

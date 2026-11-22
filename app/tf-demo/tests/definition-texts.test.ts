@@ -425,3 +425,26 @@ test("a run that settles ends the row's streak of dead runs", async () => {
 		"interruptedRuns",
 	);
 });
+
+test("begin claims a Scheduled row and returns its sync snapshot in one mutation", async () => {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Ein Gebäude." });
+
+	const claimed = await t.mutation(internal.definitionTexts.begin, {
+		ownerReadingKey: READING_KEY,
+	});
+	expect(claimed).toEqual({
+		runNumber: 1,
+		sync: {
+			state: "Running",
+			definition: "Ein Gebäude.",
+			language: "de",
+		},
+	});
+	expect(
+		await t.mutation(internal.definitionTexts.begin, {
+			ownerReadingKey: READING_KEY,
+		}),
+	).toBeNull();
+});

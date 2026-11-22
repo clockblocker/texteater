@@ -31,6 +31,7 @@ export async function completeResolutionSession(
 	ctx: MutationCtx,
 	session: ResolutionSession,
 	attestationId: Id<"attestations">,
+	options: { readonly inspect?: boolean } = {},
 ) {
 	const sentence = await ctx.db.get(session.sentenceId);
 	if (!sentence) throw new Error("The session's Sentence does not exist.");
@@ -69,6 +70,7 @@ export async function completeResolutionSession(
 		visitorId: session.visitorId,
 		readingId,
 		attestationId,
+		...(options.inspect !== undefined ? { inspect: options.inspect } : {}),
 	});
 	return { encounterId, readingId, attestationId, occurrence };
 }

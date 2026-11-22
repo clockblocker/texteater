@@ -251,6 +251,8 @@ function InspectionDetail({
 		detail &&
 		(detail.knowledgeState === "Running" ||
 			detail.knowledgeState === "Scheduled" ||
+			detail.definitionTextState === "Running" ||
+			detail.definitionTextState === "Scheduled" ||
 			![
 				"Complete",
 				"Unresolved",
@@ -363,6 +365,9 @@ function InspectionDetail({
 					</span>
 					{detail.knowledgeState && (
 						<span>Knowledge: {detail.knowledgeState}</span>
+					)}
+					{detail.definitionTextState && (
+						<span>Definition: {detail.definitionTextState}</span>
 					)}
 				</div>
 			</DialogHeader>

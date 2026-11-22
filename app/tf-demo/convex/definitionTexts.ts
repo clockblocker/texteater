@@ -1,11 +1,12 @@
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
 	type MutationCtx,
+	type QueryCtx,
 } from "./_generated/server";
 import {
 	DEFINITION_FAILED_MESSAGE,
@@ -26,43 +27,80 @@ import {
 
 const MAX_SENTENCES_PER_DEFINITION = 8;
 
+const syncSnapshotValidator = v.object({
+	state: definitionTextStateValidator,
+	definition: v.optional(v.string()),
+	materializedDefinition: v.optional(v.string()),
+	scrollId: v.optional(v.id("scrolls")),
+	language: v.union(v.null(), languageValidator),
+});
+
+async function readSyncSnapshot(
+	ctx: QueryCtx | MutationCtx,
+	ownerReadingKey: string,
+	row: Doc<"definitionTexts">,
+) {
+	const reading = await ctx.db
+		.query("readings")
+		.withIndex("by_reading_key", (q) => q.eq("readingKey", ownerReadingKey))
+		.unique();
+	const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
+	const language = lemma?.language;
+	return {
+		state: row.state,
+		...(row.definition !== undefined ? { definition: row.definition } : {}),
+		...(row.materializedDefinition !== undefined
+			? { materializedDefinition: row.materializedDefinition }
+			: {}),
+		...(row.scrollId ? { scrollId: row.scrollId } : {}),
+		language:
+			language === "de" || language === "en" || language === "he"
+				? language
+				: null,
+	};
+}
+
 export const loadSync = internalQuery({
+	args: { ownerReadingKey: v.string() },
+	returns: v.union(v.null(), syncSnapshotValidator),
+	handler: async (ctx, { ownerReadingKey }) => {
+		const row = await findDefinitionText(ctx, ownerReadingKey);
+		if (!row) return null;
+		return readSyncSnapshot(ctx, ownerReadingKey, row);
+	},
+});
+
+/**
+ * Claims the Scheduled row for a new run and returns its sync snapshot in one
+ * transaction, saving a separate query hop. Any other state means the action
+ * is late or a duplicate and must not run.
+ */
+export const begin = internalMutation({
 	args: { ownerReadingKey: v.string() },
 	returns: v.union(
 		v.null(),
 		v.object({
-			state: definitionTextStateValidator,
-			definition: v.optional(v.string()),
-			materializedDefinition: v.optional(v.string()),
-			scrollId: v.optional(v.id("scrolls")),
-			language: v.union(v.null(), languageValidator),
+			runNumber: v.number(),
+			sync: syncSnapshotValidator,
 		}),
 	),
 	handler: async (ctx, { ownerReadingKey }) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
-		if (!row) return null;
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", ownerReadingKey),
-			)
-			.unique();
-		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
-		const language = lemma?.language;
-		return {
-			state: row.state,
-			...(row.definition !== undefined
-				? { definition: row.definition }
-				: {}),
-			...(row.materializedDefinition !== undefined
-				? { materializedDefinition: row.materializedDefinition }
-				: {}),
-			...(row.scrollId ? { scrollId: row.scrollId } : {}),
-			language:
-				language === "de" || language === "en" || language === "he"
-					? language
-					: null,
-		};
+		if (row?.state !== "Scheduled") return null;
+		const runNumber = (row.runNumber ?? 0) + 1;
+		await ctx.db.patch(row._id, {
+			state: "Running",
+			runNumber,
+			failureMessage: undefined,
+			updatedAt: Date.now(),
+		});
+		const sync = await readSyncSnapshot(ctx, ownerReadingKey, {
+			...row,
+			state: "Running",
+			runNumber,
+			failureMessage: undefined,
+		});
+		return { runNumber, sync };
 	},
 });
 
@@ -212,13 +250,17 @@ export const settle = internalMutation({
 			v.object({ kind: v.literal("Retracted") }),
 			v.object({ kind: v.literal("Failed") }),
 		),
+		inspectRequestId: v.optional(v.string()),
 	},
 	returns: v.union(
 		v.literal("Settled"),
 		v.literal("Rescheduled"),
 		v.literal("Ignored"),
 	),
-	handler: async (ctx, { ownerReadingKey, runNumber, outcome }) => {
+	handler: async (
+		ctx,
+		{ ownerReadingKey, runNumber, outcome, inspectRequestId },
+	) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
 		// A run that persisted its Scroll already left the row Ready.
 		if (
@@ -237,7 +279,7 @@ export const settle = internalMutation({
 				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
-			await scheduleDefinitionTextRun(ctx, row);
+			await scheduleDefinitionTextRun(ctx, row, inspectRequestId);
 			return "Rescheduled";
 		}
 		if (outcome.kind === "Failed") {
@@ -256,7 +298,7 @@ export const settle = internalMutation({
 				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
-			await scheduleDefinitionTextRun(ctx, row);
+			await scheduleDefinitionTextRun(ctx, row, inspectRequestId);
 			return "Rescheduled";
 		}
 		if (row.state !== "Ready") {

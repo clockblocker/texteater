@@ -16,12 +16,12 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 const materializeDefinitionText = makeFunctionReference<
 	"action",
-	{ ownerReadingKey: string },
+	{ ownerReadingKey: string; inspectRequestId?: string },
 	null
 >("definitionTextActions:materialize") as unknown as FunctionReference<
 	"action",
 	"internal",
-	{ ownerReadingKey: string },
+	{ ownerReadingKey: string; inspectRequestId?: string },
 	null
 >;
 
@@ -79,6 +79,7 @@ export async function syncDefinitionText(
 	ctx: MutationCtx,
 	ownerReadingKey: string,
 	knowledge: unknown,
+	options: { readonly inspectRequestId?: string } = {},
 ): Promise<void> {
 	const definition = definitionOf(knowledge) ?? undefined;
 	const existing = await findDefinitionText(ctx, ownerReadingKey);
@@ -90,7 +91,11 @@ export async function syncDefinitionText(
 			state: "Scheduled",
 			updatedAt: Date.now(),
 		});
-		await scheduleDefinitionTextRun(ctx, { ownerReadingKey });
+		await scheduleDefinitionTextRun(
+			ctx,
+			{ ownerReadingKey },
+			options.inspectRequestId,
+		);
 		return;
 	}
 	const settled = existing.state === "Ready" || existing.state === "Failed";
@@ -117,7 +122,12 @@ export async function syncDefinitionText(
 		...(settled ? { interruptedRuns: undefined } : {}),
 		updatedAt: Date.now(),
 	});
-	if (settled) await scheduleDefinitionTextRun(ctx, existing);
+	if (settled)
+		await scheduleDefinitionTextRun(
+			ctx,
+			existing,
+			options.inspectRequestId,
+		);
 }
 
 /**
@@ -127,9 +137,11 @@ export async function syncDefinitionText(
 export async function scheduleDefinitionTextRun(
 	ctx: MutationCtx,
 	row: Pick<Doc<"definitionTexts">, "ownerReadingKey" | "runNumber">,
+	inspectRequestId?: string,
 ): Promise<void> {
 	await ctx.scheduler.runAfter(0, materializeDefinitionText, {
 		ownerReadingKey: row.ownerReadingKey,
+		...(inspectRequestId ? { inspectRequestId } : {}),
 	});
 	await ctx.scheduler.runAfter(
 		STALE_DEFINITION_TEXT_RUN_AFTER_MS,

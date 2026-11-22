@@ -1,6 +1,14 @@
 import { type Infer, v } from "convex/values";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
+export const inspectionScopeValidator = v.union(
+	v.literal("Resolution"),
+	v.literal("Knowledge"),
+	v.literal("DefinitionText"),
+	v.literal("PostClick"),
+);
+export type InspectionScope = Infer<typeof inspectionScopeValidator>;
+
 export const inspectionStepValidator = v.object({
 	id: v.string(),
 	parentId: v.optional(v.string()),
@@ -48,4 +56,20 @@ export async function inspectionRequested(
 			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 			.unique()) !== null
 	);
+}
+
+/**
+ * Resolves the inspected request id to propagate into a scheduled follow-up
+ * action. Pass `known` when the caller already knows whether inspection is on
+ * (such as inside `selectSegment` before `inspectionClicks` is inserted);
+ * otherwise performs one indexed lookup.
+ */
+export async function inspectRequestIdFor(
+	ctx: QueryCtx | MutationCtx,
+	requestId: string | undefined,
+	known?: boolean,
+): Promise<string | undefined> {
+	if (!requestId) return undefined;
+	if (known !== undefined) return known ? requestId : undefined;
+	return (await inspectionRequested(ctx, requestId)) ? requestId : undefined;
 }
