@@ -84,7 +84,7 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Locution/ADP":
 		"Fixed multiword preposition or circumposition (im Vergleich zu, um … willen)",
 	"Locution/ADV":
-		"Fixed multiword adverbial (zum Teil, auf keinen Fall, so oder so, ganz und gar)",
+		"Fixed multiword adverbial with no main verb (zum Teil, auf keinen Fall, so oder so, ganz und gar)",
 	"Locution/CCONJ":
 		"Fixed correlative conjunction (entweder … oder, weder … noch, nicht nur … sondern auch)",
 	"Locution/DET": "Fixed multiword determiner (was für)",
@@ -96,7 +96,7 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Locution/SCONJ":
 		"Fixed multiword subordinator or correlator (um … zu, je … desto, ohne dass)",
 	"Locution/VERB":
-		"Idiom or collocation acting as a verb (den Faden verlieren, zur Verfügung stellen, Angst haben)",
+		"Idiom or collocation headed by a verb, including a verb with a fixed adverbial (den Faden verlieren, zur Verfügung stellen, Angst haben)",
 	"Saying/Saying":
 		"A complete proverb or quotation used as a saying (Morgenstund hat Gold im Mund)",
 	"Foreign/Foreign":

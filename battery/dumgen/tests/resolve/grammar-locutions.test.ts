@@ -239,6 +239,16 @@ test("a Locution's or interjection's headword drops placeholders and members out
 		"Locution/SCONJ",
 	);
 	expect(guardedHeadword(so, "so dass", new Set())).toBe("so … dass");
+	// When Canonical Form reorders members relative to the sentence (e.g. a
+	// verb moved to the end), sentence-index gaps must not inject a bogus ….
+	const reordered = at(
+		"Ich schwör dir hoch und heilig.",
+		[2, 6, 8, 10],
+		"Locution/ADV",
+	);
+	expect(
+		guardedHeadword(reordered, "hoch und heilig schwören", new Set()),
+	).toBe("hoch und heilig schwören");
 });
 
 test("a numeral Locution Luna cites as a slotted pattern takes its members' words, digits spelled", async () => {

@@ -22,10 +22,27 @@ import { foldCase } from "dumling";
 import type { Target } from "./target.js";
 
 const fold = (text: string) => foldCase(text, "de");
+const normalizeMember = (word: string) => fold(word).replaceAll("ß", "ss");
 const placeholder = /^(jemand(e[mns]?)?|etwas)$/u;
 const slotted = new Set(["ADP", "ADV", "CCONJ", "SCONJ"]);
 const isPreposition = (word: string) =>
 	germanAdpositionEntry({ family: "Lexeme", canonicalForm: word }) !== null;
+
+/**
+ * Whether a Canonical Form token corresponds to the attested member at the
+ * same position (so sentence-order gaps map onto headword token positions).
+ */
+function tokenMatchesMember(token: string, member: string): boolean {
+	const left = normalizeMember(token);
+	const right = normalizeMember(member);
+	if (left === right) return true;
+	const shared = Math.min(left.length, right.length);
+	return (
+		shared >= 3 &&
+		(left.startsWith(right.slice(0, shared)) ||
+			right.startsWith(left.slice(0, shared)))
+	);
+}
 
 /** Whether text other than whitespace and punctuation lies between two of the unit's members. */
 function gapAfter(target: Target, position: number): boolean {
@@ -107,7 +124,13 @@ export function guardedHeadword(
 			kind === "SCONJ" && fold(bare[bare.length - 1] ?? "") === "zu";
 		if (zu && bare.length > 1) gaps[bare.length - 2] = true;
 		if (!gaps.includes(true)) tokens = bare;
-		else if (bare.length === kept.length || zu)
+		else if (
+			(bare.length === kept.length &&
+				bare.every((token, index) =>
+					tokenMatchesMember(token, kept[index]?.text ?? ""),
+				)) ||
+			(zu && bare.length !== kept.length)
+		)
 			tokens = bare.flatMap((token, index) =>
 				gaps[index] ? [token, "…"] : [token],
 			);

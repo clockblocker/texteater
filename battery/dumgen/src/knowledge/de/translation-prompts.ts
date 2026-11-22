@@ -42,7 +42,7 @@ export const translation = {
 	),
 	citation: paragraph(
 		"translation.citation",
-		"Write each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it keeps the preposition it governs itself and a placeholder for the object it takes, and takes in nothing else, no neighbouring word and none of the object, negation, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).",
+		"Write each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it keeps the preposition it governs itself and a placeholder for the object it takes, and takes in nothing else, no neighbouring word and none of the object, negation, adverb or predicative outside the target («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).",
 		rules.translation,
 		rules.headword,
 		rules.ownPart,
@@ -59,7 +59,7 @@ export const translation = {
 	),
 	multiword: paragraph(
 		"translation.multiword",
-		"Translate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.",
+		"Translate a Locution or a Saying as a whole, keeping its full meaning, intensity and emphasis: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Every fixed word inside a Locution is part of the target — never strip an idiomatic or emphatic Locution down to its bare base word alone («auf Herz und Nieren prüfen»: examine thoroughly, put through its paces; тщательно проверять, проверять вдоль и поперёк — not examine, проверять). Never translate it word for word, and never give another expression that only shares its words or its image.",
 		rules.translation,
 		rules.multiword,
 		rules.idiom,
