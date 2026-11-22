@@ -36,6 +36,10 @@ import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import { scrollTitle } from "../../shared/scroll-title";
+import {
+	ACCEPTED_UPLOAD_FILES,
+	SUPPORTED_FILE_FORMATS_LABEL,
+} from "../../shared/text-file-limits";
 import { type CodexEntry, CodexEntryList, entryTarget } from "./codex-entries";
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
@@ -223,9 +227,9 @@ export function LibraryView() {
 						<DialogTitle>Add a text</DialogTitle>
 						<DialogDescription>
 							Paste German prose, lyrics, a book excerpt, or a
-							link to an article, or add a whole book as a .txt
-							file. Pasted text is split into sentences before
-							analysis.
+							link to an article, or upload an ebook or text file
+							({SUPPORTED_FILE_FORMATS_LABEL}). Pasted text is
+							split into sentences before analysis.
 						</DialogDescription>
 					</DialogHeader>
 					<form
@@ -252,14 +256,15 @@ export function LibraryView() {
 							</Field>
 							<Field data-disabled={isSubmitting || undefined}>
 								<FieldLabel htmlFor="library-text-file">
-									Or a .txt file, up to 16 MB
+									Or an ebook or text file (
+									{SUPPORTED_FILE_FORMATS_LABEL}), up to 16 MB
 								</FieldLabel>
 								<input
 									ref={fileInput}
 									id="library-text-file"
 									name="file"
 									type="file"
-									accept=".txt,text/plain"
+									accept={ACCEPTED_UPLOAD_FILES}
 									className="sr-only"
 									disabled={isSubmitting}
 									onChange={(event) => void handleFile(event)}

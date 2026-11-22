@@ -3,7 +3,7 @@
 import { type Infer, v } from "convex/values";
 import { assertIdentifier } from "../server/identifiers";
 import { unsupportedLanguageMessage } from "../server/intake";
-import { planTextFile, scrollBatches } from "../server/textFileIntake";
+import { planUploadedFile, scrollBatches } from "../server/textFileIntake";
 import {
 	MAX_TEXT_FILE_BYTES,
 	TEXT_FILE_TOO_LARGE_MESSAGE,
@@ -97,7 +97,7 @@ export const submitTextFile = action({
 		if (file.size > MAX_TEXT_FILE_BYTES)
 			return rejected(TEXT_FILE_TOO_LARGE_MESSAGE);
 		const bytes = new Uint8Array(await file.arrayBuffer());
-		const planned = planTextFile({ name: args.fileName, bytes });
+		const planned = await planUploadedFile({ name: args.fileName, bytes });
 		if (planned.kind === "Rejected") return rejected(planned.message);
 		const { plan } = planned;
 		const submissionKey = await submissionKeyOf(bytes);

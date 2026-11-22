@@ -5,6 +5,7 @@ import {
 	splitScroll,
 	stitchedText,
 } from "dumgen";
+import { extractUploadedFile } from "./ebookExtraction";
 import {
 	MAX_SCROLL_TEXT_BYTES,
 	MAX_SECTIONS_PER_FILE,
@@ -209,6 +210,20 @@ export function planTextFile(file: {
 	readonly bytes: Uint8Array;
 }): TextFilePlanResult {
 	return planExtractedText(extractTextFile(file));
+}
+
+/**
+ * The write plan of any supported uploaded book or text file (`.epub`,
+ * `.mobi`, `.azw3`, `.fb2`, `.txt`, `.md`, `.html`), read via
+ * `extractUploadedFile`.
+ */
+export async function planUploadedFile(file: {
+	readonly name: string;
+	readonly bytes: Uint8Array;
+}): Promise<TextFilePlanResult> {
+	const extracted = await extractUploadedFile(file);
+	if (extracted.kind === "Rejected") return extracted;
+	return planExtractedText(extracted.extracted);
 }
 
 /**

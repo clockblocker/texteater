@@ -80,7 +80,9 @@ export function scheduleTextFileSubmission(
 		((uploadUrl: string, file: File, signal: AbortSignal) =>
 			fetch(uploadUrl, {
 				method: "POST",
-				headers: { "Content-Type": file.type || "text/plain" },
+				headers: {
+					"Content-Type": file.type || "application/octet-stream",
+				},
 				body: file,
 				signal,
 			}));
