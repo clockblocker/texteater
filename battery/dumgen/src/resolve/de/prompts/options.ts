@@ -155,16 +155,19 @@ export type CaseOption = keyof typeof options.nounCase;
  * option lists them.
  */
 export const cellCoordinates = {
-	// Each case by the roles that take it, so the cell question asks the
-	// phrase's role in its clause, not the spelling (#1342).
+	// Compact role-anchored case labels + article-anchored genders so options stay scannable.
 	case: {
-		Nom: "nominative (the subject, a passive's subject included, or a predicate noun)",
-		Acc: "accusative (the direct object, the object of 'there is' included, a span or point of time, or after a preposition that takes it)",
-		Dat: "dative (the indirect object, or after a verb, adjective or preposition that takes it)",
-		Gen: "genitive (a possessor or a noun's attribute, or after a verb, adjective or preposition that takes it)",
+		Nom: "nominative (subject or predicate noun)",
+		Acc: "accusative (direct object, time span, or acc. prep.)",
+		Dat: "dative (indirect object, or dat. verb/adj./prep.)",
+		Gen: "genitive (possessor/attribute, or gen. verb/prep.)",
 	},
 	number: { Sing: "singular", Plur: "plural" },
-	gender: { Masc: "masculine", Fem: "feminine", Neut: "neuter" },
+	gender: {
+		Masc: "masculine (der)",
+		Fem: "feminine (die)",
+		Neut: "neuter (das)",
+	},
 	person: "person {n}",
 	polite: "formal address",
 } as const;

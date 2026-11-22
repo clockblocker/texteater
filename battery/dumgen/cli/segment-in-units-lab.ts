@@ -5,7 +5,7 @@
  *
  *   bun run segment-in-units-lab freeze [--force] [--only dev|heldout]
  *   bun run segment-in-units-lab run --arm pairwise --subset smoke --reps 1 [--opt render=tagged]
- *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.13.0]
+ *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.14.0]
  *   bun run segment-in-units-lab replay --run <runId> [--request-budget 12]
  *   bun run segment-in-units-lab report --run <runId> [--subset slice300]
  *   bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy]

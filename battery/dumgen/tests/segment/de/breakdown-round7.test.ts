@@ -56,7 +56,12 @@ test("a base's headwords are its letters as they stand, a noun's with its final 
 
 test("the affix test weighs the cut, naming the word it leaves, against no cut", async () => {
 	const seen: Record<string, string>[] = [];
-	const judge = senseJudge({ "Ge- (prefix) + büsch": 0.9 }, {}, "Busch");
+	const judge = senseJudge(
+		{ "Ge- (prefix) + büsch": 0.9 },
+		{},
+		"Lexeme/NOUN",
+		"Busch",
+	);
 	expect(
 		await run(
 			input("Lexeme", "NOUN", "Gebüsch", "🌳"),
@@ -125,7 +130,7 @@ test("the sense check asks which split gives the sense, and none wins when no sp
 	expect(
 		await run(input("Lexeme", "NOUN", "Verbeugung", "🙇"), judge.ask),
 	).toBe("NoConstituents");
-	expect(judge.texts().join(" ")).toContain(
-		"Think of Verbeugung in the sense 🙇. Which of these splits gives that sense",
-	);
+	const texts = judge.texts().join(" ");
+	expect(texts).toContain("Think of Verbeugung in the sense 🙇.");
+	expect(texts).toContain("Which of these splits gives that sense");
 });

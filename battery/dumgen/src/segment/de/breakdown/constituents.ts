@@ -51,6 +51,7 @@ import {
 	nounPartFormGuide,
 	onlyPronoun,
 	reflexiveFormGuide,
+	verbPartFormGuide,
 } from "./forms.js";
 import { interfixOf } from "./interfix.js";
 import { type WordingPiece, wordingPieces } from "./phraseme-parts.js";
@@ -64,6 +65,7 @@ import {
 import {
 	citedWord,
 	noSenseOption,
+	refinedSuffixGlosses,
 	senseInstructions,
 	senseOption,
 	senseQuestion,
@@ -75,6 +77,7 @@ import {
 	type Whole,
 } from "./targets.js";
 import {
+	headedKinds,
 	hyphenPrefixGlosses,
 	type WordAnalysis,
 	type WordPiece,
@@ -82,6 +85,8 @@ import {
 } from "./word-analyses.js";
 import {
 	adjectiveQuestion,
+	headIsRealWord,
+	headWordQuestion,
 	mayBeCranberry,
 	nounQuestion,
 	suffixBaseRoute,
@@ -97,9 +102,11 @@ import {
 import {
 	analysisInstructions,
 	compoundRouteGuide,
+	gePrefixRouteGuide,
 	noneOption,
 	prefixedBaseRouteGuide,
 	routeGuideOf,
+	suffixBaseRouteGuide,
 	verbFirstPartRouteGuide,
 } from "./word-prompts.js";
 import { senseChecked, weighedOptions } from "./word-senses.js";
@@ -271,19 +278,35 @@ const wordConstituents = Effect.fnUntraced(function* (
 	);
 	if (analysis === undefined) return none;
 	const [first, suffix, ...rest] = analysis.pieces;
-	// A compound the sense check chose over the pick won as two words, the
-	// first telling the head apart: it is no cranberry piece (#1241 round 4).
-	const cranberry =
-		cranberryShaped(analysis, kind) &&
-		!bySense &&
-		first !== undefined &&
-		(yield* mayBeCranberry(first.letters, whole, ask));
+	// A non-hyphenated headed compound's head must be a real standalone German
+	// word (kills non-word tails like `Fü + rst` or `Minister + ium`). Runs in
+	// parallel with `mayBeCranberry` when both apply.
+	const needsHeadCheck =
+		rest.length === 0 &&
+		first?.role === "Word" &&
+		suffix?.role === "Word" &&
+		headedKinds.has(kind);
+	const needsCranberryCheck =
+		cranberryShaped(analysis, kind) && !bySense && first !== undefined;
+	const [headValid, cranberry] = yield* Effect.all(
+		[
+			needsHeadCheck && suffix !== undefined
+				? headIsRealWord(suffix.letters, kind, whole, ask)
+				: Effect.succeed(true),
+			needsCranberryCheck && first !== undefined
+				? mayBeCranberry(first.letters, whole, ask)
+				: Effect.succeed(false),
+		],
+		{ concurrency: "unbounded" },
+	);
+	if (!headValid) return none;
 	const parts = openWordParts(analysis, kind, cranberry);
-	// A suffix's base with no one base Kind: its letters may settle its route.
+	// A suffix's base with no one base Kind (and not already narrowed, e.g. `-in`): its letters may settle its route.
 	const baseRoute =
 		first?.role === "Word" &&
 		suffix?.role === "Suffix" &&
 		suffix.baseKind === undefined &&
+		suffix.canonicalForm !== "-in" &&
 		rest.length === 0
 			? yield* suffixBaseRoute(first.letters, suffix.letters, whole, ask)
 			: undefined;
@@ -299,6 +322,7 @@ const wordConstituents = Effect.fnUntraced(function* (
 							? {}
 							: {
 									routeForms: {
+										...base.routeForms,
 										"Lexeme/NOUN": baseRoute.nouns,
 									},
 								}),
@@ -308,7 +332,7 @@ const wordConstituents = Effect.fnUntraced(function* (
 		whole,
 		ask,
 		routeGuideOf(analysis, kind),
-		{ NOUN: nounPartFormGuide },
+		{ NOUN: nounPartFormGuide, VERB: verbPartFormGuide },
 	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets, kind));
 });
@@ -332,12 +356,16 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	compoundRouteGuide,
 	verbFirstPartRouteGuide,
 	prefixedBaseRouteGuide,
+	suffixBaseRouteGuide,
+	gePrefixRouteGuide,
 	phrasemeRouteGuide,
 	cranberryOption,
 	reflexiveFormGuide,
 	nounPartFormGuide,
+	verbPartFormGuide,
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
+	headWordQuestion("word", "…"),
 	nounQuestion("word", "…"),
 	adjectiveQuestion("word", "…"),
 	prefixCutInstructions("word", "…"),
@@ -349,6 +377,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	senseInstructions("…", "…"),
 	senseOption({ pieces: [], label: "…" }, "NOUN"),
 	noSenseOption,
+	...refinedSuffixGlosses(),
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 ];
@@ -402,9 +431,25 @@ function partRoutes(
 	if (piece.reads.toLocaleLowerCase("de") === "zu") {
 		if (closesSlot(pieces, index)) return ["Lexeme/PART"];
 		if (beforeNoun(pieces, index)) return ["Lexeme/ADP"];
+		if (beforeInfinitive(pieces, index)) return ["Lexeme/PART"];
 	}
 	return lexemeRoutes;
 }
+
+/** Whether the part right after `zu` is a lowercase infinitive (`zu tun`, `zu bügeln`). */
+const beforeInfinitive = (pieces: readonly WordingPiece[], index: number) => {
+	const next = pieces[index + 1];
+	const part =
+		next?.role === "Filler" && next.letters === " "
+			? pieces[index + 2]
+			: next;
+	return (
+		part?.role === "Part" &&
+		part.article !== true &&
+		!/^\p{Lu}/u.test(part.reads) &&
+		/(?:en|[elr]n)$|^tun$/u.test(part.reads.toLocaleLowerCase("de"))
+	);
+};
 
 /**
  * Whether the part right after the piece at `index`, joined to it or one

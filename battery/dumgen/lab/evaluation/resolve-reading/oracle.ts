@@ -28,6 +28,12 @@ const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
+const nouled = (noul: number): Answer => ({
+	type: "noul",
+	noul,
+	confidence: 1,
+});
+
 /** The option naming gold's description, else NoMatch, else the first. */
 function readingChoice(goldCase: ReadingCase, question: Question): string {
 	if (question.type !== "choice") return "";
@@ -49,11 +55,23 @@ export function goldReadingAnswers(
 	{ goldCase }: ReadingAttempt,
 	questions: Questions,
 ): Answers {
+	const readingQuestion = questions.reading;
+	const ideal = descriptionKey(goldCase, goldCase.ideal);
+	const criteria =
+		readingQuestion?.type === "choice" ? readingQuestion.criteria : {};
 	return Object.fromEntries(
-		Object.entries(questions).map(([id, question]) => [
-			id,
-			picked(readingChoice(goldCase, question)),
-		]),
+		Object.entries(questions).map(([id, question]) => {
+			if (question.type === "noul") {
+				const suffix = id.replace(/^rival_/u, "");
+				const description =
+					criteria[`a${suffix}`] ?? criteria[`c${suffix}`];
+				const matchesGold =
+					typeof description === "string" &&
+					descriptionKey(goldCase, description) === ideal;
+				return [id, nouled(matchesGold ? 0 : 1)];
+			}
+			return [id, picked(readingChoice(goldCase, question))];
+		}),
 	);
 }
 

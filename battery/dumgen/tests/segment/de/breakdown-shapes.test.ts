@@ -52,13 +52,23 @@ describe("a cranberry piece links to its Root (ADR 0050, ADR 0051)", () => {
 
 	test("only a noun's first part is offered as one, never a head, a verb's or an adjective's part", async () => {
 		// eislaufen (DWDS: eisgelaufen, eiszulaufen): eis is no listed part, so jev is asked.
-		const verb = judgeWanting("eis + laufen", "r_0=Lexeme/NOUN", "Eis");
+		const verb = judgeWanting(
+			"eis + laufen",
+			"r_0=Lexeme/NOUN",
+			"Eis",
+			"laufen",
+		);
 		await run(input("Lexeme", "VERB", "eislaufen"), verb);
 		expect(verb.stages()).toContain("breakdown-routes");
 		expect(offered(verb, "breakdown-routes")).not.toContain(
 			"Morpheme/Root",
 		);
-		const adjective = judgeWanting("hell + blau", "r_0=Lexeme/ADJ", "hell");
+		const adjective = judgeWanting(
+			"hell + blau",
+			"r_0=Lexeme/ADJ",
+			"hell",
+			"blau",
+		);
 		await run(input("Lexeme", "ADJ", "hellblau"), adjective);
 		expect(offered(adjective, "breakdown-routes")).not.toContain(
 			"Morpheme/Root",
@@ -145,7 +155,12 @@ describe("a verb's head may be tun, German's one infinitive of three letters", (
 	});
 
 	test("a verb's first part is judged as a word written apart, not as a verb's stem", async () => {
-		const judge = judgeWanting("eis + laufen", "r_0=Lexeme/NOUN", "Eis");
+		const judge = judgeWanting(
+			"eis + laufen",
+			"r_0=Lexeme/NOUN",
+			"Eis",
+			"laufen",
+		);
 		await run(input("Lexeme", "VERB", "eislaufen"), judge);
 		const [routes] = judge
 			.requests()

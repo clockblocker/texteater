@@ -90,7 +90,17 @@ test("a compound the sense check chose over the pick is no cranberry piece", asy
 	expect(first).toStartWith("Lan→Lexeme/NOUN:");
 	expect(head).toBe("dung→Lexeme/NOUN:Dung");
 	// No cranberry gate is asked, so no route question offers a Root.
-	expect(judge.stages()).not.toContain("breakdown-words");
+	const routeOptions = judge
+		.requests()
+		.filter(({ stage }) => stage === "breakdown-routes")
+		.flatMap(({ questions }) =>
+			Object.values(questions).flatMap((question) =>
+				question.type === "choice"
+					? Object.keys(question.criteria)
+					: [],
+			),
+		);
+	expect(routeOptions).not.toContain("Morpheme/Root");
 });
 
 test("a compound the analysis question picked still takes the word test", async () => {

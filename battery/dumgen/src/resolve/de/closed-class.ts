@@ -256,6 +256,19 @@ function describe(member: AuthoredMember, cell: Cell | undefined): string {
 	return `${member.lemma.canonicalForm}${coordinates.length ? `: ${coordinates.join(", ")}` : ""}${glosses.length ? ` (${glosses.join(", ")})` : ""}`;
 }
 
+/** Compact summary of one cell's coordinates for open-syncretism labels. */
+function shortCell(member: AuthoredMember, cell: Cell | undefined): string {
+	const values = { ...coreOf(member), ...cell };
+	return [
+		values.case,
+		values.number,
+		values.gender,
+		values.polite === "Form" ? "formal" : undefined,
+	]
+		.filter(Boolean)
+		.join(" ");
+}
+
 /** The cell question: its options keyed `o0`, …, `s0`, …, and the answers they stand for. */
 export function cellQuestion(
 	lemma: string,
@@ -273,7 +286,7 @@ export function cellQuestion(
 		const cells =
 			"syncretism" in syncretism
 				? syncretism.units.map((unit) =>
-						describe(unit.member, unit.cell),
+						shortCell(unit.member, unit.cell),
 					)
 				: (isSyncretism(syncretism.lemma)
 						? syncretism.lemma.syncretized
@@ -283,18 +296,18 @@ export function cellQuestion(
 							lemmaIdentityKey(unit),
 						);
 						return authored
-							? describe(authored, undefined)
+							? `${authored.lemma.canonicalForm} (${shortCell(authored, undefined)})`
 							: unit.canonicalForm;
 					});
 		criteria[`s${index}`] = fill(question.cellOpen, {
-			cells: cells.join(" or "),
+			cells: cells.join(" / "),
 		});
 	}
 	questionnaire.choice(
 		"cell",
 		fill(question.cell, { lemma, m: reference }),
 		criteria,
-		referent ? ["referent"] : ["identity"],
+		referent ? ["referent", "closedCell"] : ["closedCell"],
 	);
 	return {
 		questionnaire,

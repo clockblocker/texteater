@@ -66,7 +66,7 @@ const contestFloor = 0.15;
  * How much the analysis weight counts beside the sense answer: a contender
  * scores fit × weight^weightExponent. Tuned on the tuning homographs only.
  */
-const weightExponent = 0.3;
+const weightExponent = 0.15;
 
 /** The analysis question's options with their weights, `a<i>` and `none`. */
 export function weighedOptions(

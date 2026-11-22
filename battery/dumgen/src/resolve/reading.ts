@@ -48,7 +48,7 @@ import { CallLog } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
 import { type Jev, stageAsk } from "../jev-call.js";
 import { askLuna, type Luna } from "../luna-call.js";
-import { type Ask, choice, choiceOf } from "../segment/ask.js";
+import { type Ask, choice, choiceOf, noul, noulOf } from "../segment/ask.js";
 import type { Route } from "../segment/segmented-sentence.js";
 import { judgeQuestion } from "./de/reading-prompts.js";
 import { targetOf } from "./de/target.js";
@@ -99,6 +99,29 @@ const pick = Effect.fnUntraced(function* (
 		: options.some(({ authored }) => authored)
 			? judgeQuestion.storedWithAuthored
 			: judgeQuestion.stored;
+	const verifyQuestions = open
+		? Object.fromEntries(
+				options.map((option, index) => [
+					`rival_${index}`,
+					noul(
+						judgeQuestion.verify.replaceAll(
+							"{emoji}",
+							option.description,
+						),
+						{
+							true: judgeQuestion.verifyTrue.replaceAll(
+								"{emoji}",
+								option.description,
+							),
+							false: judgeQuestion.verifyFalse.replaceAll(
+								"{emoji}",
+								option.description,
+							),
+						},
+					),
+				]),
+			)
+		: {};
 	const answers = yield* ask({
 		stage,
 		state: { ...state, policy: policyBlock },
@@ -112,6 +135,7 @@ const pick = Effect.fnUntraced(function* (
 				),
 				...(open ? { NoMatch: judgeQuestion.noMatch } : {}),
 			}),
+			...verifyQuestions,
 		},
 	});
 	const answer = choiceOf(answers, "reading").choice;
@@ -124,6 +148,8 @@ const pick = Effect.fnUntraced(function* (
 			stage,
 			message: `jev answered the Reading with ${answer}, no option of it`,
 		});
+	// Reject if Jev independently judges that the chosen emoji specifically names a rival sense of the lemma.
+	if (open && noulOf(answers, `rival_${index}`) >= 0.65) return undefined;
 	return index;
 });
 

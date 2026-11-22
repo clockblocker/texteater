@@ -39,6 +39,8 @@ export type OpenPart = {
 	readonly routeForms?: Readonly<
 		Partial<Record<RouteKey, readonly string[]>>
 	>;
+	/** Closes its route question, overriding the analysis-wide `routeGuide` when set. */
+	readonly routeGuide?: string;
 	/** Closes its headword question, when its forms need one. */
 	readonly formGuide?: string;
 };
@@ -109,14 +111,16 @@ export const partTargets = Effect.fnUntraced(function* (
 	);
 	const routeQuestions: Questions = {};
 	for (const [index, part] of parts.entries())
-		if ((offered[index] ?? []).length > 1)
+		if ((offered[index] ?? []).length > 1) {
+			const guide = part.routeGuide ?? routeGuide;
 			routeQuestions[`r_${index}`] = choice(
-				`In \`${whole.key}\`, the part "${part.reads}" is which kind of unit?${routeGuide ? ` ${routeGuide}` : ""}`,
+				`In \`${whole.key}\`, the part "${part.reads}" is which kind of unit?${guide ? ` ${guide}` : ""}`,
 				{
 					...routeCriteria(part.routes, true),
 					...(part.cranberry ? { [rootKey]: cranberryOption } : {}),
 				},
 			);
+		}
 	const routeAnswers = yield* askAny(ask, {
 		stage: "breakdown-routes",
 		state: whole.state,

@@ -149,12 +149,26 @@ describe("a suffix's base is a verb or a noun by its letters (fix 2)", () => {
 		expect(judge.stages()).not.toContain("breakdown-routes");
 	});
 
-	test("Musik is a noun and no verb's stem, so it is NOUN unasked", async () => {
-		const judge = judgeWanting("Musik + -er (suffix)", "Musik");
+	test("Musik is a capitalized noun/proper-noun base and no verb's stem, so VERB is not offered", async () => {
+		const judge = judgeWanting(
+			"Musik + -er (suffix)",
+			"r_0=Lexeme/NOUN",
+			"Musik",
+		);
 		expect(
 			await run(input("Lexeme", "NOUN", "Musiker", "🎻"), judge),
 		).toEqual(["Musik→Lexeme/NOUN:Musik", "er→Morpheme/Suffix:-er"]);
-		expect(judge.stages()).not.toContain("breakdown-routes");
+		const routeOptions = judge
+			.requests()
+			.filter(({ stage }) => stage === "breakdown-routes")
+			.flatMap(({ questions }) =>
+				Object.values(questions).flatMap((question) =>
+					question.type === "choice"
+						? Object.keys(question.criteria)
+						: [],
+				),
+			);
+		expect(routeOptions).toEqual(["Lexeme/NOUN", "Lexeme/PROPN"]);
 	});
 });
 

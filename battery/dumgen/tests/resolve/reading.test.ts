@@ -70,6 +70,17 @@ test("after NoMatch Luna writes a New one from the marked Sentence and the Canon
 	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Written" });
 });
 
+test("when jev flags the chosen candidate as naming a rival sense, it falls through to Luna for a New description", async () => {
+	const jev = fakeJev({ reading: "c0", rival_0: 0.8 });
+	const luna = writes("🔐");
+	const { result, trace } = await readOnce(jev, luna, {
+		candidates: ["🏰"],
+	});
+	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
+	expect(luna.sent).toHaveLength(1);
+	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Written" });
+});
+
 test("with nothing stored, Luna writes at once and jev is not asked", async () => {
 	const jev = fakeJev();
 	const luna = writes("🔐");

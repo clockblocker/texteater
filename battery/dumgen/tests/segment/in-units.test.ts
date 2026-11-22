@@ -440,7 +440,7 @@ test("cached lab answers replay through inUnits to the lab's own units", async (
 			};
 		};
 		const { text, traces } = await inUnits(
-			{ jev: ask },
+			{ jev: ask, jevModel: recorded.recordedFrom.model },
 			{ language: "de", paragraphs: [{ sentences: [sentence.text] }] },
 		);
 		const [result] = text.paragraphs[0]?.sentences ?? [];

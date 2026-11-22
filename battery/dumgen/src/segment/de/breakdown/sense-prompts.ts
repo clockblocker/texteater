@@ -12,6 +12,7 @@
  * Their wording names no Breakdown case (#693).
  */
 import { germanSuffixes } from "dumcorpus/inventories";
+import { withoutUmlaut } from "./forms.js";
 import {
 	headedKinds,
 	type WordAnalysis,
@@ -21,11 +22,19 @@ import {
 const capitalized = (text: string) =>
 	text.charAt(0).toLocaleUpperCase("de") + text.slice(1);
 
-/** What a suffix makes of its base, from the inventory, else a plain gloss. */
+/** Refined sense glosses for suffixes whose inventory wording is too narrow or too loose for Jev's sense check. */
+const refinedSuffixSenses: Readonly<Record<string, string>> = {
+	er: "a person, inhabitant, vehicle, tool or instrument that performs or comes from {base}",
+	bar: "having the quality of, or able to be done as, {base} names",
+	voll: "full of {base} (an abstract quality or substance filling something, NOT 'full up to' a physical edge or object)",
+};
+
+/** What a suffix makes of its base, using refined glosses where needed, else the inventory. */
 function suffixSense(suffix: WordPiece, base: string): string {
-	const sense = germanSuffixes.find(
-		({ spelled }) => spelled === suffix.letters.toLocaleLowerCase("de"),
-	)?.sense;
+	const key = suffix.letters.toLocaleLowerCase("de");
+	const sense =
+		refinedSuffixSenses[key] ??
+		germanSuffixes.find(({ spelled }) => spelled === key)?.sense;
 	return (
 		sense ?? "something whose sense comes from what {base} names"
 	).replaceAll("{base}", base);
@@ -50,15 +59,23 @@ function testOf(analysis: WordAnalysis, kind: string): string {
 		return `Does it mean ${second.letters}, in a way ${first.letters} tells apart? Answer no when it does not mean ${second.letters} at all.`;
 	}
 	if (first?.role === "Word" && second?.role === "Suffix" && !third)
-		return made(
-			`${first.letters}- with the suffix -${second.letters}`,
-			suffixSense(second, `${first.letters}-`),
-		);
-	if (first?.role === "Prefix" && second?.role === "Word" && !third)
-		return made(
-			`${second.letters} with the prefix ${first.letters}-`,
-			`still a kind of ${second.letters}, changed by the prefix`,
-		);
+		return `Was it made from ${first.letters}- with the suffix -${second.letters}, so that it is ${suffixSense(second, `${first.letters}-`)}? Answer no if this sense is an unrelated homonym or a loanword whose modern German sense does not come from ${first.letters}-.`;
+	if (first?.role === "Prefix" && second?.role === "Word" && !third) {
+		const plain = withoutUmlaut(second.letters);
+		const shown =
+			plain !== second.letters
+				? `${second.letters} (${plain})`
+				: second.letters;
+		return first.canonicalForm === "ge-" && kind === "NOUN"
+			? made(
+					`${shown} with the prefix ${first.letters}-`,
+					`a collective, action, sound or result formed from ${shown}`,
+				)
+			: made(
+					`${shown} with the prefix ${first.letters}-`,
+					`formed from ${shown} with ${first.letters}- (even if its meaning became specialized)`,
+				);
+	}
 	if (first?.role === "Prefix" && second?.role === "Word")
 		return made(
 			`${second.letters} with the prefix ${first.letters}- and the verb ending`,
@@ -67,13 +84,20 @@ function testOf(analysis: WordAnalysis, kind: string): string {
 	return made(analysis.label, "something whose sense comes from theirs");
 }
 
+/** Gender consistency reminder for noun sense questions. */
+const genderCue = (kind: string) =>
+	kind === "NOUN"
+		? " Check both the meaning and the grammatical gender of the article: a compound takes its head's gender, -ung nouns are always feminine (die), and agentive/person -er nouns are masculine (der) — an unrelated neuter or feminine homonym is not that derivation."
+		: "";
+
 /** Whether an analysis gives the sense `emoji` names of `cited` (`das Rentier`). */
 export const senseQuestion = (
 	analysis: WordAnalysis,
 	cited: string,
 	emoji: string,
 	kind: string,
-) => `Think of ${cited} in the sense ${emoji}. ${testOf(analysis, kind)}`;
+) =>
+	`Think of ${cited} in the sense ${emoji}.${genderCue(kind)} ${testOf(analysis, kind)}`;
 
 /** The claim an option makes about an analysis's sense, by its shape. */
 function claimOf(analysis: WordAnalysis, kind: string): string {
@@ -94,11 +118,22 @@ function claimOf(analysis: WordAnalysis, kind: string): string {
 			`${first.letters}- with the suffix -${second.letters}`,
 			suffixSense(second, `${first.letters}-`),
 		);
-	if (first?.role === "Prefix" && second?.role === "Word" && !third)
-		return made(
-			`${second.letters} with the prefix ${first.letters}-`,
-			`still a kind of ${second.letters}, changed by the prefix`,
-		);
+	if (first?.role === "Prefix" && second?.role === "Word" && !third) {
+		const plain = withoutUmlaut(second.letters);
+		const shown =
+			plain !== second.letters
+				? `${second.letters} (${plain})`
+				: second.letters;
+		return first.canonicalForm === "ge-" && kind === "NOUN"
+			? made(
+					`${shown} with the prefix ${first.letters}-`,
+					`a collective, action, sound or result formed from ${shown}`,
+				)
+			: made(
+					`${shown} with the prefix ${first.letters}-`,
+					`formed from ${shown} with ${first.letters}- (even if its meaning became specialized)`,
+				);
+	}
 	if (first?.role === "Prefix" && second?.role === "Word")
 		return `it was made from ${second.letters} with the prefix ${first.letters}- and the verb ending, so that it means to make, give, become or treat with ${second.letters}`;
 	return made("these parts", "something whose sense comes from theirs");
@@ -128,7 +163,11 @@ export function citedWord(word: string, gender: unknown): string {
 
 /** The sense question: which split gives the sense `emoji` names of `cited` (`das Rentier`). */
 export const senseInstructions = (cited: string, emoji: string) =>
-	`Think of ${cited} in the sense ${emoji}. Which of these splits gives that sense: which one was it made from?`;
+	`Think of ${cited} in the sense ${emoji}. Check both the meaning and the article's grammatical gender (a compound takes its head's gender; -ung nouns are feminine die; agentive -er nouns are masculine der). Which of these splits gives that sense: which one was it made from?`;
+
+/** Exported refined suffix glosses for the #693 disjointness test. */
+export const refinedSuffixGlosses = (): readonly string[] =>
+	Object.values(refinedSuffixSenses);
 
 /** A contender's option in the sense question: its analysis and its claim. */
 export const senseOption = (analysis: WordAnalysis, kind: string) =>

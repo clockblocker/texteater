@@ -22,9 +22,10 @@ import {
 } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import { checkedRouteKey, type RouteKey } from "../routes.js";
-import { onlyPronoun } from "./forms.js";
+import { nounHeadForms, onlyPronoun, wordVerbForms } from "./forms.js";
 import type { OpenPart } from "./targets.js";
 import { headedKinds, type WordAnalysis } from "./word-analyses.js";
+import { compoundRouteGuide, verbFirstPartRouteGuide } from "./word-prompts.js";
 
 /** The routes a part of a word may take. */
 const wordPartRoutes: readonly RouteKey[] = [
@@ -38,12 +39,12 @@ const wordPartRoutes: readonly RouteKey[] = [
 	"Lexeme/PROPN",
 ];
 
-/** The Kinds whose compounds take their head's Kind: a proper name's head is a noun. */
-const headRoutes: Readonly<Record<string, RouteKey>> = {
-	NOUN: "Lexeme/NOUN",
-	PROPN: "Lexeme/NOUN",
-	VERB: "Lexeme/VERB",
-	ADJ: "Lexeme/ADJ",
+/** The Kinds whose compounds take their head's Kind when not prefixed. */
+const headRoutes: Readonly<Record<string, readonly RouteKey[]>> = {
+	NOUN: ["Lexeme/NOUN"],
+	PROPN: ["Lexeme/PROPN", "Lexeme/NOUN"],
+	VERB: ["Lexeme/VERB"],
+	ADJ: ["Lexeme/ADJ"],
 };
 
 /**
@@ -83,6 +84,86 @@ export const cranberryShaped = (analysis: WordAnalysis, kind: string) =>
 	analysis.pieces.length === 2 &&
 	analysis.pieces.every(({ role }) => role === "Word");
 
+/** Open part for the head (last piece) of a prefixed noun or headed compound. */
+function headOpenPart(
+	letters: string,
+	kind: string,
+	firstPiece: WordAnalysis["pieces"][number] | undefined,
+	verbRouteForms: OpenPart["routeForms"],
+): OpenPart | undefined {
+	const prefixed = firstPiece?.role === "Prefix";
+	if (prefixed && kind === "NOUN") {
+		return {
+			reads: letters,
+			routes:
+				firstPiece.canonicalForm === "ge-"
+					? ["Lexeme/NOUN", "Lexeme/VERB"]
+					: ["Lexeme/NOUN"],
+			routeForms: verbRouteForms,
+		};
+	}
+	const head = headRoutes[kind];
+	if (head === undefined) return undefined;
+	const headNounForms =
+		!prefixed && kind === "NOUN"
+			? { "Lexeme/NOUN": nounHeadForms(letters) }
+			: {};
+	return {
+		reads: letters,
+		routes: head,
+		routeForms: { ...verbRouteForms, ...headNounForms },
+	};
+}
+
+/** Open part for a base immediately before a suffix whose base kind is constrained. */
+function suffixBaseOpenPart(
+	letters: string,
+	kind: string,
+	next: WordAnalysis["pieces"][number] | undefined,
+	verbRouteForms: OpenPart["routeForms"],
+): OpenPart | undefined {
+	if (next?.role !== "Suffix") return undefined;
+	if (next.baseKind !== undefined)
+		return {
+			reads: letters,
+			routes: [checkedRouteKey(`Lexeme/${next.baseKind}`)],
+			routeForms: verbRouteForms,
+		};
+	if (next.canonicalForm === "-in" && kind === "NOUN")
+		return { reads: letters, routes: ["Lexeme/NOUN", "Lexeme/PROPN"] };
+	return undefined;
+}
+
+/** Per-part route guide for the first piece of a two-word compound. */
+function firstPartGuide(
+	twoWords: boolean,
+	index: number,
+	kind: string,
+): string | undefined {
+	if (!twoWords || index !== 0) return undefined;
+	if (kind === "VERB") return verbFirstPartRouteGuide;
+	return headedKinds.has(kind) ? compoundRouteGuide : undefined;
+}
+
+/** Open part for a non-headed final adposition piece, if applicable. */
+function trailingAdpositionPart(
+	letters: string,
+	isLast: boolean,
+	kind: string,
+): OpenPart | undefined {
+	if (!isLast || headedKinds.has(kind)) return undefined;
+	const adposition = particleAdposition(
+		letters.toLocaleLowerCase("de"),
+		kind,
+	);
+	if (adposition === undefined) return undefined;
+	return {
+		reads: letters,
+		routes: ["Lexeme/ADP"],
+		forms: [adposition.canonicalForm],
+	};
+}
+
 /**
  * The open parts of `analysis` of a word of Kind `kind`, in order; its
  * first part may be a cranberry piece when `cranberry`.
@@ -93,44 +174,50 @@ export function openWordParts(
 	cranberry: boolean,
 ): OpenPart[] {
 	const { pieces } = analysis;
-	const head = headRoutes[kind];
 	const last = pieces.length - 1;
 	const ruled = ruledVerbFirstPart(analysis, kind);
 	const hyphenated = pieces.some(({ role }) => role === "Hyphen");
+	const [firstPiece] = pieces;
+	const twoWords =
+		pieces.every(({ role }) => role === "Word") && pieces.length >= 2;
+	const fallbackRoutes = headedKinds.has(kind)
+		? wordPartRoutes
+		: wordPartRoutes.filter((r) => r !== "Lexeme/PROPN");
+
 	return pieces.flatMap((piece, index): OpenPart[] => {
 		if (index === 0 && ruled !== undefined) return [ruled];
 		if (piece.role !== "Word") return [];
-		if (index === last && head !== undefined)
-			return [{ reads: piece.letters, routes: [head] }];
-		const next = pieces[index + 1];
-		if (next?.role === "Suffix" && next.baseKind !== undefined)
+		if (piece.article)
 			return [
 				{
-					reads: piece.letters,
-					routes: [checkedRouteKey(`Lexeme/${next.baseKind}`)],
+					reads: piece.letters.replace("-", " "),
+					routes: ["Lexeme/NOUN", "Lexeme/PROPN"],
 				},
 			];
-		const adposition =
-			index === last && !headedKinds.has(kind)
-				? particleAdposition(
-						piece.letters.toLocaleLowerCase("de"),
-						kind,
-					)
-				: undefined;
-		if (adposition !== undefined)
-			return [
-				{
-					reads: piece.letters,
-					routes: ["Lexeme/ADP"],
-					forms: [adposition.canonicalForm],
-				},
-			];
+		const verbRouteForms = {
+			"Lexeme/VERB": wordVerbForms(piece.letters),
+		} as const;
+		const fixed =
+			(index === last
+				? headOpenPart(piece.letters, kind, firstPiece, verbRouteForms)
+				: undefined) ??
+			suffixBaseOpenPart(
+				piece.letters,
+				kind,
+				pieces[index + 1],
+				verbRouteForms,
+			) ??
+			trailingAdpositionPart(piece.letters, index === last, kind);
+		if (fixed !== undefined) return [fixed];
 		if (hyphenated && onlyPronoun(piece.letters))
 			return [{ reads: piece.letters, routes: ["Lexeme/PRON"] }];
+		const guide = firstPartGuide(twoWords, index, kind);
 		return [
 			{
 				reads: piece.letters,
-				routes: wordPartRoutes,
+				routes: fallbackRoutes,
+				routeForms: verbRouteForms,
+				...(guide === undefined ? {} : { routeGuide: guide }),
 				...(cranberry && index === 0 ? { cranberry: true } : {}),
 			},
 		];

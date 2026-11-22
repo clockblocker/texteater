@@ -195,7 +195,7 @@ const withoutUnconfirmedPrefixes = Effect.fnUntraced(function* (
 
 /** The split question; its example is no Breakdown case (#693). */
 export const morphemesInstructions =
-	"Which split of `word` into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where the dictionary's word-formation analysis cuts it in this word: the DWDS Wortzerlegung, else the Wiktionary etymology. Otherwise it stays inside the root (Geselle: gesell · e).";
+	"Which split of `word` (in the sense `meaning`) into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where the dictionary's word-formation analysis cuts it in this sense: the DWDS Wortzerlegung, else the Wiktionary etymology. Otherwise it stays inside the root (Geselle: gesell · e). Never split an ordinary personal or family proper name (`PROPN`), and never cut a suffix or prefix off letters that only look like one inside an unrelated stem.";
 
 /** German `segment.inMorphemes` on a single-word Lexeme. */
 export const germanMorphemes = Effect.fnUntraced(function* (

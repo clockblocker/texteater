@@ -99,7 +99,24 @@ export const judgeQuestion = {
 	),
 	noMatch: paragraph(
 		"judge.question.NoMatch",
-		"The target here means a concept no option stands for",
+		"The target here has a meaning no option stands for",
+		rules.distinct,
+	),
+	verify: paragraph(
+		"judge.question.verify",
+		"Look at the Emoji Description {emoji} for `lemma`. Does {emoji} specifically label a DIFFERENT well-known meaning of `lemma` than what <TARGET> means in `markedSentence` (for example: animal vs device, husband vs general person, clock vs time-of-day, scaring someone vs getting scared, mailing vs broadcasting, managing vs creating, or a different speech act)?",
+		rules.meaning,
+		rules.distinct,
+	),
+	verifyTrue: paragraph(
+		"judge.question.verify.true",
+		"Yes — {emoji} stands for a DIFFERENT meaning of `lemma` from what <TARGET> means here",
+		rules.distinct,
+	),
+	verifyFalse: paragraph(
+		"judge.question.verify.false",
+		"No — {emoji} stands for the SAME meaning <TARGET> has here (even if loosely or symbolically pictured)",
+		rules.meaning,
 		rules.distinct,
 	),
 	authored: paragraph(

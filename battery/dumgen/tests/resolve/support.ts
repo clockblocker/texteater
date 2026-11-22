@@ -29,14 +29,21 @@ export const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
+export const nouled = (noul: number): Answer => ({
+	type: "noul",
+	noul,
+	confidence: 1,
+});
+
 type Sent = JevRequest & { readonly stage: string };
 
 /**
- * A jev that answers each Choice from `answers` by question id, and any
- * other with its first option. `fail` makes a stage's request throw.
+ * A jev that answers each Choice from `answers` by question id (or its first
+ * option) and each Noul from `answers` (parsed as a number) or `0`. `fail`
+ * makes a stage's request throw.
  */
 export function fakeJev(
-	answers: Readonly<Record<string, string>> = {},
+	answers: Readonly<Record<string, string | number>> = {},
 	options: { readonly fail?: (stage: string) => boolean } = {},
 ) {
 	const sent: Sent[] = [];
@@ -49,15 +56,29 @@ export function fakeJev(
 			model: request.model,
 			answers: Object.fromEntries(
 				Object.entries(request.questions).map(
-					([id, question]: [string, Question]) => [
-						id,
-						picked(
-							answers[id] ??
-								(question.type === "choice"
-									? (Object.keys(question.criteria)[0] ?? "")
-									: ""),
-						),
-					],
+					([id, question]: [string, Question]) => {
+						const preset = answers[id];
+						if (question.type === "noul") {
+							const value =
+								typeof preset === "number"
+									? preset
+									: typeof preset === "string"
+										? Number(preset)
+										: 0;
+							return [id, nouled(value)];
+						}
+						return [
+							id,
+							picked(
+								typeof preset === "string"
+									? preset
+									: question.type === "choice"
+										? (Object.keys(question.criteria)[0] ??
+											"")
+										: "",
+							),
+						];
+					},
 				),
 			),
 			usage: { input_tokens: 100, output_tokens: 1 },

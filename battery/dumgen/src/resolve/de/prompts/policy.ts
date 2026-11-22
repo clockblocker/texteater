@@ -87,9 +87,15 @@ export const policy = {
 	),
 	referent: paragraph(
 		"policy.referent",
-		"Some pronoun forms spell several cells that only the referent tells apart. Take the cell the text settles through an antecedent, the verb's agreement, address or capitalization, in this sentence or in `neighbours`; a singular finite verb settles a singular cell, a plural one a plural cell. When nothing settles it, choose the option that leaves it open; never guess a cell.",
+		"Some pronoun forms spell several cells that only the referent tells apart. Take the cell the text settles through an antecedent, a partitive group noun, verb agreement (including a relative clause's verb), polite vocative/imperative address (even if lowercase) or capitalization, in this sentence or in `neighbours`: a 3rd-person singular finite verb settles singular (never plural or formal Sie), a plural verb settles plural, and a partitive group noun (von/unter den … or genitive der …) ALWAYS settles a singular pronoun's gender via that group noun's own nominative-singular article (der = masculine, die = feminine, das = neuter — verify neuter das vs masculine der!). Never pick Open syncretism when an antecedent noun or partitive group noun is named in the text; choose it only when genuinely nothing in the text settles the referent.",
 		rules.referent,
 		rules.pronOrDet,
+	),
+	closedCell: paragraph(
+		"policy.closedCell",
+		"A determiner takes the case, number and exact nominative-singular lexical gender (der = masculine, die = feminine, das = neuter) of its head noun's phrase. A pronoun takes the case of its own clause role (including bare genitive modifying a preceding noun, dative/genitive verbs, and nominative predicates after sein/werden/bleiben) and the gender and number of its antecedent (or of the singular of its partitive group noun in von/unter den … or genitive der …): relative/demonstrative dessen/deren agrees in gender and number with its antecedent, NOT with the following possessed noun. Test case by mentally substituting masculine singular der (Nom), den (Acc), dem (Dat), des (Gen). Always pick a matching cell (or Open syncretism for a truly unnamed referent); almost never pick Unresolved.",
+		rules.core,
+		rules.referent,
 	),
 	interjection: paragraph(
 		"policy.interjection",

@@ -67,7 +67,7 @@ export function baseHeadwords(
 
 /** The comparative question's instructions. */
 export const prefixCutInstructions = (key: string, prefix: string) =>
-	`How does a dictionary's word-formation analysis, the DWDS Wortzerlegung, else the Wiktionary etymology, take \`${key}\` apart: does it cut the prefix ${prefix} off a word it names, or not at all?`;
+	`Does modern German word formation (DWDS Wortzerlegung) split the prefix ${prefix} off \`${key}\` in its sense \`meaning\`, or is ${prefix} fused inside a simple stem?`;
 
 /** The option that cuts the prefix off `headword`. */
 export const prefixCutOption = (
@@ -75,11 +75,11 @@ export const prefixCutOption = (
 	prefix: string,
 	headword: string,
 ) =>
-	`${prefix} + ${headword}: \`${key}\` was made from ${headword}, a word a dictionary lists on its own, with the prefix ${prefix}`;
+	`${prefix} + ${headword}: DWDS Wortzerlegung cuts ${prefix} off ${headword}, a real modern German word \`${key}\` was formed from (even if its sense specialized, like Gebell from bellen or Gebirge from Berg)`;
 
 /** The option that keeps the prefix inside the word. */
 export const keptPrefixOption = (key: string, prefix: string) =>
-	`No cut: ${prefix} stays inside \`${key}\`, since the word it would leave died out, never stood on its own, or means nothing \`${key}\` was made from (Geselle)`;
+	`No cut: ${prefix} is fused inside \`${key}\` — none of the base words above is a word \`${key}\` was formed from, or its old base died out (like Geselle)`;
 
 /**
  * Whether jev weighs the cut of `prefix` off the word, leaving `base`,

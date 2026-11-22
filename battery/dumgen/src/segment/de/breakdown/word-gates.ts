@@ -164,18 +164,71 @@ export const withVerbBases = Effect.fnUntraced(function* (
 	});
 });
 
-/** Whether jev weighs `letters` no word and no word's stem, so a cranberry Root may be offered. */
+/** Candidate spellings of a compound's first part for the cranberry test: verbatim, lowercased, with interfixes stripped, and with final `-e` restored. */
+const cranberryInterfixes = ["ens", "en", "es", "er", "n", "s", "e"] as const;
+
+function cranberrySpellings(letters: string): readonly string[] {
+	const lower = letters.toLocaleLowerCase("de");
+	const stripped = cranberryInterfixes.flatMap((interfix) =>
+		letters.length - interfix.length >= 2 && lower.endsWith(interfix)
+			? [letters.slice(0, -interfix.length)]
+			: [],
+	);
+	return [
+		...new Set([
+			letters,
+			lower,
+			`${letters}e`,
+			...stripped,
+			...stripped.map((s) => s.toLocaleLowerCase("de")),
+		]),
+	];
+}
+
+/** Whether a compound's head is a real standalone German word listed in a dictionary. */
+export const headWordQuestion = (key: string, head: string) =>
+	`In \`${key}\`, is "${head}", spelled so, a real standalone German word that a dictionary lists as its own headword? Answer no when "${head}" is only a word ending, suffix, or meaningless letter sequence.`;
+
+/** Whether jev weighs a headed compound's second part a real standalone German word. */
+export const headIsRealWord = Effect.fnUntraced(function* (
+	letters: string,
+	kind: string,
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<boolean, AskFailure> {
+	const head =
+		kind === "NOUN" || kind === "PROPN"
+			? letters.charAt(0).toLocaleUpperCase("de") + letters.slice(1)
+			: letters.toLocaleLowerCase("de");
+	const answers = yield* ask({
+		stage: "breakdown-words",
+		state: whole.state,
+		questions: { h_0: noul(headWordQuestion(whole.key, head)) },
+	});
+	return noulOf(answers, "h_0") >= gateFloor;
+});
+
+/** Whether jev weighs `letters` (and its interfix-stripped/lowercased forms) no word and no word's stem, so a cranberry Root may be offered. */
 export const mayBeCranberry = Effect.fnUntraced(function* (
 	letters: string,
 	whole: Whole,
 	ask: Ask,
 ): Effect.fn.Return<boolean, AskFailure> {
+	const spellings = cranberrySpellings(letters);
+	const questions: Questions = Object.fromEntries(
+		spellings.map((spelling, index) => [
+			`w_${index}`,
+			noul(wordQuestion(whole.key, spelling)),
+		]),
+	);
 	const answers = yield* ask({
 		stage: "breakdown-words",
 		state: whole.state,
-		questions: { w_0: noul(wordQuestion(whole.key, letters)) },
+		questions,
 	});
-	return noulOf(answers, "w_0") < gateFloor;
+	return spellings.every(
+		(_, index) => noulOf(answers, `w_${index}`) < gateFloor,
+	);
 });
 
 /** The suffixes before which a base noun may show an umlaut and drop its -e (`gnäd` + -ig is Gnade). */
@@ -248,13 +301,18 @@ export const suffixBaseRoute = Effect.fnUntraced(function* (
 		};
 	}
 	if (verb) return { routes: ["Lexeme/VERB"] };
-	return { routes: ["Lexeme/NOUN"], ...nounForms };
+	// A capitalized base (or nominal derivation) may be a proper name (Edam, Hamburg, Rom), not only a common noun.
+	const mayBePropn = /^\p{Lu}/u.test(base);
+	return {
+		routes: mayBePropn ? ["Lexeme/NOUN", "Lexeme/PROPN"] : ["Lexeme/NOUN"],
+		...nounForms,
+	};
 });
 
 /**
  * Of a bottom word's would-be Roots, the ones jev weighs a word or a
  * verb's stem of its own, in one request: neither the verb test nor the
- * word test may pass for a Root a suffix is cut off.
+ * word test may pass for a Root (verbatim or with umlaut undone) a suffix is cut off.
  */
 export const wordRoots = Effect.fnUntraced(function* (
 	roots: readonly string[],
@@ -262,11 +320,22 @@ export const wordRoots = Effect.fnUntraced(function* (
 	ask: Ask,
 ): Effect.fn.Return<ReadonlySet<string>, AskFailure> {
 	const questions: Questions = {};
+	const plainOf = roots.map((root) => {
+		const plain = withoutUmlaut(root);
+		return plain !== root ? plain : undefined;
+	});
 	for (const [index, root] of roots.entries()) {
 		questions[`b_${index}`] = noul(
 			verbBaseQuestion("word", infinitiveOf(root)),
 		);
 		questions[`w_${index}`] = noul(wordQuestion("word", root));
+		const plain = plainOf[index];
+		if (plain !== undefined) {
+			questions[`bp_${index}`] = noul(
+				verbBaseQuestion("word", infinitiveOf(plain)),
+			);
+			questions[`wp_${index}`] = noul(wordQuestion("word", plain));
+		}
 	}
 	const answers = yield* askAny(ask, {
 		stage: "breakdown-words",
@@ -277,7 +346,10 @@ export const wordRoots = Effect.fnUntraced(function* (
 		roots.filter(
 			(_, index) =>
 				noulOf(answers, `b_${index}`) >= gateFloor ||
-				noulOf(answers, `w_${index}`) >= gateFloor,
+				noulOf(answers, `w_${index}`) >= gateFloor ||
+				(plainOf[index] !== undefined &&
+					(noulOf(answers, `bp_${index}`) >= gateFloor ||
+						noulOf(answers, `wp_${index}`) >= gateFloor)),
 		),
 	);
 });

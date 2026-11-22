@@ -119,6 +119,18 @@ export function goldTransports(wrong?: number) {
 			answers:
 				counter.jev === wrong && other
 					? {
+							...Object.fromEntries(
+								Object.entries(request.questions)
+									.filter(([, q]) => q.type === "noul")
+									.map(([id]) => [
+										id,
+										{
+											type: "noul" as const,
+											noul: 0,
+											confidence: 1,
+										},
+									]),
+							),
 							reading: {
 								type: "choice",
 								choice: other,

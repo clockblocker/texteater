@@ -76,6 +76,38 @@ function nounForms(word: string): string[] {
 	return [...bases, ...bases.map(withoutUmlaut)];
 }
 
+/**
+ * Candidate Canonical Forms for a compound's head noun: a German compound's
+ * head carries its full citation ending and never drops a final `-e`, so
+ * `${base}e` is omitted to avoid spurious dialectal forms.
+ */
+export function nounHeadForms(word: string): readonly string[] {
+	const base = capitalized(word);
+	return [
+		...new Set([
+			base,
+			...defined(nounEndings.map((ending) => stripped(base, ending))),
+		]),
+	];
+}
+
+/**
+ * Candidate verb Canonical Forms for a word-internal base or stem (before a
+ * suffix, after a prefix, or as a compound's first part): never strips finite
+ * 2sg/3sg endings (`-t`, `-st`) or applies finite Präsens ablaut (`i` → `e`),
+ * which only occur on conjugated verbs in phrasemes.
+ */
+export function wordVerbForms(word: string): readonly string[] {
+	const shown = lower(word);
+	const plain = withoutUmlaut(shown);
+	const forms = [
+		...(/(?:en|[elr]n)$|^tun$/u.test(shown) ? [shown] : []),
+		infinitive(shown),
+		...(plain !== shown ? [infinitive(plain)] : []),
+	];
+	return [...new Set(forms)];
+}
+
 /** Verb endings a finite or stem form shows before its stem (`liegt`, `kommst`). */
 const verbEndings = ["est", "et", "st", "t", "e"];
 
@@ -181,7 +213,11 @@ export const reflexiveFormGuide =
  * (#693).
  */
 export const nounPartFormGuide =
-	"A noun inside a compound or before a suffix often drops its final -e (Kirch in Kirchturm is Kirche). Pick the noun a dictionary lists as a headword, never letters no dictionary lists as a noun.";
+	"Never pick bare letters that no dictionary lists as a standalone singular noun (Kirch is not a noun — Kirche is; Gebirge comes from Berg). When the bare letters ARE already a standard German singular noun, keep them as they stand instead of adding -e or stripping letters.";
+
+/** Closes a word-internal verb part's headword question when umlaut variants compete. */
+export const verbPartFormGuide =
+	"Keep the umlaut when the umlauted verb exists and matches `meaning`; undo the umlaut only when the umlauted spelling is no German verb or does not match `meaning`.";
 
 /** Whether `forms` offer the reflexivity unit beside another form, so its guide closes the question. */
 export const offersReflexive = (forms: readonly string[]) =>
@@ -235,7 +271,7 @@ export function formCandidates(
 	kind: string,
 ): readonly string[] {
 	if (family !== "Lexeme") return [reads];
-	const word = reads.split(/\s+/u).at(-1) ?? reads;
+	const word = reads.split(/[\s-]+/u).at(-1) ?? reads;
 	const forms = (() => {
 		switch (kind) {
 			case "NOUN":

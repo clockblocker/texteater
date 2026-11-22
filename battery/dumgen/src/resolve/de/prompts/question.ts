@@ -358,13 +358,13 @@ export const question = {
 	),
 	cell: paragraph(
 		"question.cell",
-		"Which form of {lemma} is {m} in this sentence? A determiner bears the case, number and gender of its noun's phrase and a pronoun those of its own: read the case from the role that phrase plays in its clause, which each option names, never from the spelling, which fits several forms.",
+		"Which form of {lemma} is {m} in this sentence? 1) Case from clause role (substitute der/den/dem/des; watch bare genitive modifiers of a noun, dative/genitive verbs, and predicate nominatives after sein). 2) Number from verb agreement (incl. relative clauses), head noun, or antecedent (a singular finite verb rules out plural/formal Sie; a polite vocative + plural verb signals formal Sie even if lowercase). 3) Gender from the nominative-singular article (der/die/das) of the head noun, antecedent (for dessen/deren, the antecedent, never the possessed noun), subject (for predicative possessives), or partitive group noun's singular (von/unter den … ALWAYS settles gender via that noun's singular article!). Pick the settled cell whenever a noun, antecedent, partitive group, or verb settles it; pick Open syncretism ONLY when no referent is named; never pick Unresolved when a cell fits.",
 		rules.core,
 		rules.referent,
 	),
 	cellOpen: paragraph(
 		"question.cell.open",
-		"{cells}: nothing in the text settles which",
+		"Open syncretism ({cells}) — ONLY if no antecedent, partitive group noun, head noun, or verb settles which",
 		rules.referent,
 	),
 	unresolved: paragraph(

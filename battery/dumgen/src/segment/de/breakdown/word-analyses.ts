@@ -22,6 +22,7 @@ import {
 	germanSeparableParticles,
 	germanSuffixes,
 } from "dumcorpus/inventories";
+import { articleForms } from "../candidates.js";
 
 /**
  * One piece of an analysis: a word, whose route and Canonical Form jev
@@ -31,7 +32,12 @@ import {
  * a verb's citation ending, shown as filler; or a hyphen.
  */
 export type WordPiece =
-	| { readonly role: "Word"; readonly letters: string }
+	| {
+			readonly role: "Word";
+			readonly letters: string;
+			/** An article grouped with its following noun in a hyphenated compound (`die-Uhr`). */
+			readonly article?: true;
+	  }
 	| {
 			readonly role: "Prefix" | "Suffix";
 			readonly letters: string;
@@ -148,6 +154,9 @@ const shortVerbHeads: ReadonlySet<string> = new Set(["tun"]);
  * Every cut into a first part and a head, the head at least `minHead`
  * letters or one of `shortHeads`.
  */
+/** Every German word piece must contain at least one vowel (kills vowelless fragments like `st`, `rst`). */
+const hasVowel = (text: string) => /[aeiouäöüy]/iu.test(text);
+
 function binaryCuts(
 	word: string,
 	minHead: number,
@@ -157,6 +166,7 @@ function binaryCuts(
 	for (let cut = 2; cut <= word.length - 2; cut++) {
 		const head = lower(word.slice(cut));
 		if (word.length - cut < minHead && !shortHeads.has(head)) continue;
+		if (!hasVowel(head) || !hasVowel(word.slice(0, cut))) continue;
 		// A suffix is no head, unless it is also a word that heads
 		// compounds: `suffixCuts` offers that cut.
 		if (suffixSpellings.has(head)) continue;
@@ -227,7 +237,7 @@ function prefixedVerbStems(word: string): WordAnalysis[] {
  * prefix and the word (`E- + Book`). A word with more hyphens stays flat.
  */
 function hyphenated(word: string): WordAnalysis[] {
-	const pieces = word
+	const raw = word
 		.split(/(-)/u)
 		.filter((part) => part.length > 0)
 		.map(
@@ -236,6 +246,28 @@ function hyphenated(word: string): WordAnalysis[] {
 					? { role: "Hyphen", letters: part }
 					: { role: "Word", letters: part },
 		);
+	const pieces: WordPiece[] = [];
+	for (let index = 0; index < raw.length; index++) {
+		const current = raw[index];
+		const hyphen = raw[index + 1];
+		const next = raw[index + 2];
+		if (
+			current?.role === "Word" &&
+			articleForms.has(lower(current.letters)) &&
+			hyphen?.role === "Hyphen" &&
+			next?.role === "Word" &&
+			/^\p{Lu}/u.test(next.letters)
+		) {
+			pieces.push({
+				role: "Word",
+				letters: `${current.letters}-${next.letters}`,
+				article: true,
+			});
+			index += 2;
+			continue;
+		}
+		if (current !== undefined) pieces.push(current);
+	}
 	const [first, hyphen, rest, ...more] = pieces;
 	const prefix = hyphenPrefixes.get(lower(first?.letters ?? ""));
 	if (

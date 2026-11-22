@@ -12,7 +12,7 @@ import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
  * The jev version `segment.inUnits` requests unless told otherwise. The
  * lab's runs pin the same version, so its cached answers replay.
  */
-export const pinnedJevModel = "jev-1.13.0";
+export const pinnedJevModel = "jev-1.14.0";
 
 /**
  * The estimated input tokens one chunk of a jev request may reach; a larger

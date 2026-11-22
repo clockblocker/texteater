@@ -54,7 +54,12 @@ test("a ge- cut the affix test doesn't confirm leaves the options, and the heavi
 });
 
 test("a ge- cut the affix test confirms stays", async () => {
-	const judge = senseJudge({ "Ge- (prefix) + büsch": 0.9 }, {}, "Busch");
+	const judge = senseJudge(
+		{ "Ge- (prefix) + büsch": 0.9 },
+		{},
+		"Lexeme/NOUN",
+		"Busch",
+	);
 	expect(
 		await run(
 			input("Lexeme", "NOUN", "Gebüsch", "🌳"),
