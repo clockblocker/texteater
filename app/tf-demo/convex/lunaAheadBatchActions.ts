@@ -60,15 +60,28 @@ const KEY_CHECK_CHUNK = 200;
 const ANSWER_CHUNK = 50;
 /** Each OpenAI exchange's deadline. */
 const OPENAI_DEADLINE_MS = 120_000;
-/** The first poll, then each doubled up to the longest wait. */
-const FIRST_POLL_AFTER_MS = 60_000;
+/**
+ * Poll every 30 s for the first five minutes — while a small batch
+ * typically finishes and the reader reads the first stretch — then every
+ * minute up to ten minutes, before backing off to ten minutes.
+ */
+const STEADY_POLL_WAIT_MS = 30_000;
+const STEADY_POLLS = 10;
+const WARM_POLL_WAIT_MS = 60_000;
+const WARM_POLLS = 5;
 const LONGEST_POLL_WAIT_MS = 10 * 60_000;
 /** Past OpenAI's 24-hour window, a batch still running is given up. */
 const GIVE_UP_AFTER_MS = 25 * 60 * 60_000;
 
 /** The wait before the poll after `polls` looks. */
-export const pollWaitMs = (polls: number) =>
-	Math.min(FIRST_POLL_AFTER_MS * 2 ** polls, LONGEST_POLL_WAIT_MS);
+export const pollWaitMs = (polls: number) => {
+	if (polls < STEADY_POLLS) return STEADY_POLL_WAIT_MS;
+	if (polls < STEADY_POLLS + WARM_POLLS) return WARM_POLL_WAIT_MS;
+	return Math.min(
+		WARM_POLL_WAIT_MS * 2 ** (polls - STEADY_POLLS - WARM_POLLS + 1),
+		LONGEST_POLL_WAIT_MS,
+	);
+};
 
 const chunks = <T>(items: readonly T[], size: number): T[][] =>
 	Array.from({ length: Math.ceil(items.length / size) }, (_, index) =>

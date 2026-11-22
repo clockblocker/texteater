@@ -363,8 +363,9 @@ test("a deployment without an OpenAI key asks nothing ahead", async () => {
 	expect(deployment.luna.stages).toEqual([]);
 });
 
-test("polls back off from a minute to ten", () => {
-	expect([0, 1, 2, 3, 4, 10].map(pollWaitMs)).toEqual([
-		60_000, 120_000, 240_000, 480_000, 600_000, 600_000,
+test("polls every 30 s for five minutes, every minute to ten, then backs off to ten", () => {
+	expect([0, 1, 9, 10, 14, 15, 16, 17, 18, 25].map(pollWaitMs)).toEqual([
+		30_000, 30_000, 30_000, 60_000, 60_000, 120_000, 240_000, 480_000,
+		600_000, 600_000,
 	]);
 });
