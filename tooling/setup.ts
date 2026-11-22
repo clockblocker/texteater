@@ -2,9 +2,10 @@
  * `bun run setup`: interactive local setup for tf-demo.
  *
  * Prompts for `TYPESAFE_API_KEY` (Jev) and `OPENAI_API_KEY` (OpenAI), offering
- * to reuse existing values when found, saves them to the repository root's
- * `.env.local`, initializes the local Convex deployment, and pushes both keys
- * and local dev flags into Convex so `bun run demo` works immediately.
+ * to reuse existing values when found, saves them with
+ * `TF_KNOWLEDGE_PRODUCTION=1` to the repository root's `.env.local`,
+ * initializes the local Convex deployment, and pushes both keys and local dev
+ * flags into Convex so `bun run demo` works immediately.
  */
 import { runSetup, type SetupPrompter } from "./lib/setup-env";
 import { findRepositoryRoot } from "./lib/workspaces";

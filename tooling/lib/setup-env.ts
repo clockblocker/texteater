@@ -14,7 +14,11 @@ const SETUP_KEYS: readonly SetupKeySpec[] = [
 	{ envVar: "OPENAI_API_KEY", label: "OpenAI API key" },
 ];
 
-const LOCAL_CONVEX_FLAGS = ["TF_DEMO_ADMIN", "TF_INSPECTION"] as const;
+const LOCAL_CONVEX_FLAGS = [
+	"TF_DEMO_ADMIN",
+	"TF_INSPECTION",
+	"TF_KNOWLEDGE_PRODUCTION",
+] as const;
 
 type KeySourceKind = "shell" | "appEnvFile" | "rootEnvFile" | "zsh";
 
@@ -526,10 +530,11 @@ async function syncLocalConvexDeployment(options: {
 
 /**
  * Interactive setup workflow: resolves `TYPESAFE_API_KEY` and `OPENAI_API_KEY`
- * (reusing existing values when confirmed), writes them to the repository root
- * `.env.local`, clears stale overrides from `app/tf-demo/.env.local`, ensures
- * dependencies are installed, initializes the local Convex deployment, and
- * syncs both keys plus local dev flags into Convex.
+ * (reusing existing values when confirmed), writes them alongside
+ * `TF_KNOWLEDGE_PRODUCTION=1` to the repository root `.env.local`, clears
+ * stale overrides from `app/tf-demo/.env.local`, ensures dependencies are
+ * installed, initializes the local Convex deployment, and syncs both keys
+ * plus local dev flags into Convex.
  */
 export async function runSetup(
 	options: RunSetupOptions,
@@ -576,15 +581,15 @@ export async function runSetup(
 		}
 	}
 
-	const nextRootContent = upsertEnvFileContent(
-		rootEnvFile.content,
-		resolvedValues,
-	);
+	const nextRootContent = upsertEnvFileContent(rootEnvFile.content, {
+		...resolvedValues,
+		TF_KNOWLEDGE_PRODUCTION: "1",
+	});
 	await writeFile(rootEnvPath, nextRootContent, { encoding: "utf8" });
 	if (!rootEnvFile.exists) {
 		await chmod(rootEnvPath, 0o600);
 	}
-	prompter.info("Saved keys to .env.local.");
+	prompter.info("Saved keys and TF_KNOWLEDGE_PRODUCTION=1 to .env.local.");
 
 	// Clear any conflicting copies in app/tf-demo/.env.local so root .env.local
 	// is never shadowed during `bun run env:sync`.

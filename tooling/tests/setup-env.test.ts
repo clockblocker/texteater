@@ -244,6 +244,7 @@ test("runSetup prompts for both keys on a fresh checkout, saves .env.local, and 
 	expect(savedEnv).toEqual({
 		TYPESAFE_API_KEY: "ts-fresh-secret",
 		OPENAI_API_KEY: "sk-fresh-openai",
+		TF_KNOWLEDGE_PRODUCTION: "1",
 	});
 
 	// Verify Convex commands: init, set TYPESAFE_API_KEY, set OPENAI_API_KEY, set local flags.
@@ -253,6 +254,7 @@ test("runSetup prompts for both keys on a fresh checkout, saves .env.local, and 
 		["env", "set", "OPENAI_API_KEY"],
 		["env", "set", "TF_DEMO_ADMIN", "1"],
 		["env", "set", "TF_INSPECTION", "1"],
+		["env", "set", "TF_KNOWLEDGE_PRODUCTION", "1"],
 	]);
 	expect(commands[1]?.stdin).toBe("ts-fresh-secret");
 	expect(commands[2]?.stdin).toBe("sk-fresh-openai");
@@ -303,6 +305,7 @@ test("runSetup asks to reuse existing keys and keeps them when confirmed", async
 	expect(savedEnv).toEqual({
 		TYPESAFE_API_KEY: "ts-existing",
 		OPENAI_API_KEY: "sk-from-zsh",
+		TF_KNOWLEDGE_PRODUCTION: "1",
 	});
 	expect(commands[1]?.stdin).toBe("ts-existing");
 	expect(commands[2]?.stdin).toBe("sk-from-zsh");
@@ -347,6 +350,7 @@ test("runSetup replaces declined keys, clears stale app env overrides, and warns
 		EXISTING_OTHER: "1",
 		TYPESAFE_API_KEY: "ts-replacement",
 		OPENAI_API_KEY: "sk-replacement",
+		TF_KNOWLEDGE_PRODUCTION: "1",
 	});
 
 	const savedApp = parseEnvFile(
@@ -456,6 +460,7 @@ test("tooling/setup.ts CLI runs interactively over piped stdin and syncs to conv
 	expect(savedEnv).toEqual({
 		TYPESAFE_API_KEY: "ts-existing-cli",
 		OPENAI_API_KEY: "sk-cli-entered",
+		TF_KNOWLEDGE_PRODUCTION: "1",
 	});
 
 	const calls = (await readFile(logPath, "utf8")).trim().split("\n");
@@ -465,5 +470,6 @@ test("tooling/setup.ts CLI runs interactively over piped stdin and syncs to conv
 		"env set OPENAI_API_KEY|sk-cli-entered",
 		"env set TF_DEMO_ADMIN 1|",
 		"env set TF_INSPECTION 1|",
+		"env set TF_KNOWLEDGE_PRODUCTION 1|",
 	]);
 });
