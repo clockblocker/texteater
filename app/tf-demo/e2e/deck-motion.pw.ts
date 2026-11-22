@@ -251,7 +251,7 @@ test("a held card is drawn where it rests, whatever its resting scale", async ({
 		.toBeCloseTo(atRest.y, 0);
 });
 
-test("under reduced motion, collapsing or lifting a cover snaps box size and --note-morph to the card", async ({
+test("under reduced motion, card/cover transitions skip intermediate drag hops and snap cleanly", async ({
 	page,
 }) => {
 	await page.emulateMedia({ reducedMotion: "reduce" });
@@ -260,9 +260,19 @@ test("under reduced motion, collapsing or lifting a cover snaps box size and --n
 	const cardAtRest = await openCard.boundingBox();
 	if (!cardAtRest) throw new Error("Missing card geometry");
 
-	/* Expand to Cover, then collapse via ←: width, height, and --note-morph
-	   must snap back to Card values rather than freezing at Cover size. */
-	await openSheet(page, frame);
+	/* Dragging a Card up under reduced motion keeps it anchored in its Deck
+	   slot with no ghost-cover hop, then snaps straight to the Cover on release. */
+	await startDrag(page, openCard, 0, -120);
+	await expect(openCard).toHaveAttribute("data-held", "true");
+	await expect(openCard).toHaveAttribute("data-fate", "open");
+	await expect(frame.locator("[data-preview]")).toHaveCount(0);
+	const draggedBox = await openCard.boundingBox();
+	if (!draggedBox) throw new Error("Missing dragged card geometry");
+	expect(Math.abs(draggedBox.y - cardAtRest.y)).toBeLessThan(1);
+	await page.mouse.up();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+
+	/* Collapsing via ← snaps width, height, and --note-morph back to the Card. */
 	await frame.getByRole("button", { name: "Collapse back to card" }).click();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
 	await expect(openCard).toBeVisible();
@@ -282,20 +292,15 @@ test("under reduced motion, collapsing or lifting a cover snaps box size and --n
 	expect(afterBack.height).toBeCloseTo(cardAtRest.height, -1);
 	expect(afterBack.morph).toBe(0);
 
-	/* Expand again and lift via Cover Heading drag past slop: the held Note
-	   must snap to Card size immediately, and releasing returns it to the Deck. */
+	/* Dragging a Cover heading past slop in a single-pane reduced-motion layout
+	   collapses straight back to the Deck without hopping through a floating hand card. */
 	await openSheet(page, frame);
 	const sheet = frame.locator('[data-form="sheet"]');
-	const id = await sheet.getAttribute("data-card-id");
-	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
 	await startHeadingDrag(page, sheet, 20, 20);
-	await expect(note).toHaveAttribute("data-held", "true");
-	const heldBox = await note.boundingBox();
-	if (!heldBox) throw new Error("Missing held note geometry");
-	expect(heldBox.width).toBeLessThan(cardAtRest.width + 10);
-	expect(heldBox.height).toBeLessThan(cardAtRest.height + 10);
-	await page.mouse.up();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	await page.mouse.up();
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
 });
 

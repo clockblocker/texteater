@@ -261,6 +261,24 @@ export function useDrag<S>({
 			pendingHeading.current = null;
 			/* a link under the press is not followed once the drag arms */
 			if (fromHeading.fromLink) swallowClick.current = true;
+			/* Under reduced motion in a single-pane layout, dragging a Cover
+			   heading has nowhere else to drop: collapse directly to its Card
+			   instead of hopping through a floating hand-card state. */
+			if (
+				moves.reduce &&
+				!fromHeading.sheet.ground &&
+				fromHeading.sheet.presentation
+			) {
+				const drop = reading(fromHeading.sheet.presentation);
+				if (!drop.splits && drop.shown.length <= 1) {
+					press.current = null;
+					commands.coverBack(
+						fromHeading.sheet.paneId,
+						fromHeading.sheet.sheetId,
+					);
+					return;
+				}
+			}
 			liftSheet(
 				fromHeading.sheet,
 				{
@@ -290,8 +308,11 @@ export function useDrag<S>({
 		const dx = event.clientX - d.start.x;
 		const dy = event.clientY - d.start.y;
 		sample(d, event.clientX, event.clientY, event.timeStamp, tuning);
-		/* a swiped Card is placed by the swipe, on its rubber band */
-		if (d.phase !== "swiping") {
+		const stillCard = moves.reduce && !d.lifted && d.deckSheet !== null;
+		/* a swiped Card is placed by the swipe, on its rubber band; under
+		   reduced motion a Deck Card stays anchored in place so Card ↔ Cover
+		   and sweep transitions happen in one step without an intermediate hop */
+		if (d.phase !== "swiping" && !stillCard) {
 			h.x.set(dx + (d.gap?.x.get() ?? 0));
 			h.y.set(dy + (d.gap?.y.get() ?? 0));
 			/* a Card carried off its Deck leans the way it goes; the lean is
@@ -341,7 +362,9 @@ export function useDrag<S>({
 		   `destinationAt` at this moment, so it does what was shown */
 		const what = releaseOf(
 			d,
-			{ x: h.x.get(), y: h.y.get() },
+			moves.reduce && !d.lifted
+				? { x: d.last.x - d.start.x, y: d.last.y - d.start.y }
+				: { x: h.x.get(), y: h.y.get() },
 			event.timeStamp,
 			current().layout,
 			{ tuning, commit: COMMIT, clickSlop: CLICK_SLOP, sign },

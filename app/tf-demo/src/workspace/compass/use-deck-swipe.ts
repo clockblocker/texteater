@@ -61,6 +61,10 @@ export function useDeckSwipe<S>({
 	function tearLoose(d: Drag<S>, dx: number, dy: number) {
 		const { h } = d;
 		settleFollowers(d);
+		if (reduce) {
+			takeInHand(d);
+			return;
+		}
 		const gap = {
 			x: motionValue(h.x.get() - dx),
 			y: motionValue(h.y.get() - dy),
@@ -70,12 +74,10 @@ export function useDeckSwipe<S>({
 			h.y.set(d.last.y - d.start.y + gap.y.get());
 		};
 		const watching = [gap.x.on("change", place), gap.y.on("change", place)];
-		const running = reduce
-			? []
-			: [
-					animate(gap.x, 0, TEAR_CATCH_UP),
-					animate(gap.y, 0, TEAR_CATCH_UP),
-				];
+		const running = [
+			animate(gap.x, 0, TEAR_CATCH_UP),
+			animate(gap.y, 0, TEAR_CATCH_UP),
+		];
 		d.gap = {
 			...gap,
 			stop: () => {
@@ -83,11 +85,6 @@ export function useDeckSwipe<S>({
 				for (const run of running) run.stop();
 			},
 		};
-		if (reduce) {
-			gap.x.jump(0);
-			gap.y.jump(0);
-			place();
-		}
 		takeInHand(d);
 	}
 
@@ -115,18 +112,17 @@ export function useDeckSwipe<S>({
 				tearLoose(d, dx, dy);
 				return;
 			}
+			if (reduce) return;
 			const { h } = d;
 			const x = sign * (along < 0 ? along : rubberBand(along));
 			h.x.set(x);
 			h.y.set(rubberBand(dy));
 			/* the lean is decoration on a move the Deck already makes */
-			const lean = reduce ? 0 : leanFor(x);
+			const lean = leanFor(x);
 			h.rotate.set(lean);
 			for (const { h: other, distance } of followersOf(d)) {
 				const share = deckFollowFor(distance);
-				/* the lag is motion on its own; reduced, the Deck moves rigidly */
-				if (reduce) other.x.set(x * share);
-				else animate(other.x, x * share, DECK_FOLLOW_SPRING);
+				animate(other.x, x * share, DECK_FOLLOW_SPRING);
 				other.rotate.set(lean * share);
 			}
 		},

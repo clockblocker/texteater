@@ -150,9 +150,13 @@ function CompassRuntime<S>({
 	const press = useRef<PagePress | null>(null);
 	const gesture = useGestureState<S>();
 	const { drag, destination, returning, pastCommit } = gesture;
+	const moves = useNoteMoves();
 	const displayLayout = useMemo(
-		() => previewLayout(layout, drag ? drag.card : null, destination),
-		[layout, drag, destination],
+		() =>
+			moves.reduce && drag && !drag.lifted
+				? layout
+				: previewLayout(layout, drag ? drag.card : null, destination),
+		[layout, drag, destination, moves.reduce],
 	);
 	const { paneBoxes, restBoxes, rem, direction, narrow } = usePaneBoxes(
 		root,
@@ -161,7 +165,6 @@ function CompassRuntime<S>({
 		activePaneId,
 	);
 	const fold = useGroundFold();
-	const moves = useNoteMoves();
 	const splits = splitsAt(narrow);
 	const shown = shownPanes(layout, activePaneId, splits);
 	const open = useMemo(() => openIds(layout), [layout]);
