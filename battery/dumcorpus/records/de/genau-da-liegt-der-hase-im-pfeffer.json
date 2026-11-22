@@ -2,44 +2,112 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Genau da liegt der Hase im Pfeffer.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Genau" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "da" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "liegt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hase" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Pfeffer" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Genau"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "da"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "liegt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hase"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "i",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Pfeffer"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0039"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0039"
+		],
 		"rules": [
-			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
-			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
-			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
-			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
+			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "43184aac9186aceb"
 			},
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -61,8 +129,19 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4, 6, 8, 10, 11, 13],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				6,
+				8,
+				10,
+				11,
+				13
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🔑",
 				"knowledge": {
@@ -97,18 +176,36 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "da", "orthography": "Standard" },
-					{ "attested": "liegt", "orthography": "Standard" },
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Hase", "orthography": "Standard" },
+					{
+						"attested": "da",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "liegt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Hase",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "i",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 0
@@ -119,13 +216,22 @@
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Pfeffer", "orthography": "Standard" }
+					{
+						"attested": "Pfeffer",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -146,7 +252,9 @@
 					},
 					"language": "de",
 					"normalizedSurface": "da liegt der Hase im Pfeffer",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

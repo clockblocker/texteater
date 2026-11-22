@@ -2,328 +2,175 @@
 status: accepted
 ---
 
-# Store valency as E-VALBU frames on the Reading
+# Store valency as accumulated concrete patterns on the Reading
 
 A Reading records the governed complements of its word: what a learner must
 memorize to use this word in this sense. A complement the word requires is
 recorded even when its marker is free: `wohnen` needs a place, whether `in`,
-`bei` or `auf` marks it. The marker is free, but whether the complement is
-needed is governed: *Sie wohnt* is incomplete. Free adjuncts are not recorded
-(`Er wartet im Regen`). The Note's Source Contexts Block already shows how the
-word was used. Recording adjuncts as well was rejected because it heads into
-full syntactic analysis to produce a copy of Source Contexts.
+`bei` or `auf` marks it. Free adjuncts are not recorded (`Er wartet im Regen`).
+The Note's Source Contexts Block already shows how the word was used.
 
-**The Valency Frame.**
+**Accumulated Valency Patterns.**
 
-A Reading owns at most one Valency Frame, modelled on E-VALBU, the IDS
-Mannheim valency dictionary, where each Lesart has one Satzbauplan and
-optional complements are parenthesised. A frame is an ordered list of Slots.
-Each Slot is `{ status, complements }`: one status, `"Required" | "Optional"`,
-and a non-empty ordered list of complements, usually one. Several complements
-in one Slot are alternatives, E-VALBU's `/`: `reden` has a Required Nom, an
-Optional `mit` + Dat and an Optional `über` + Acc | `von` + Dat. A Preposition complement appears at
-most once in a frame. A Case, Adverbial, Predicative or Clause appears at
-most once in a Slot but may recur in another: `jemanden etwas lehren` has an
-Acc in two Slots
-([ADR 0057](./0057-name-a-valency-complement-by-its-case-never-its-referent.md)),
-and `Dass er kommt, bedeutet, dass sie geht` a Clause Dass in the Nom Slot
-and in the Acc Slot of `bedeuten`. A Slot that
-is either one complement or a list of alternatives was rejected as two shapes
-for one thing.
+A Reading's `valency` is an arrival-ordered set of concrete **Valency
+Patterns** (`ValencyPattern[]`), each pattern a non-empty flat list of concrete
+complements realized in an encountered sentence (`ValencyComplement[]`), with
+no optionality statuses and no inline `|` alternatives.
 
-The status describes the Reading's valency, not one occurrence. A sentence in
-this sense realizes one complement of each Required Slot and at most one of
-each Optional Slot, though an imperative, a passive, an ellipsis or a
-coordination may leave out a Required Slot.
+For example, clicking *nach Reiseführern fragten* contributes `[Nom, nach + Dat]`
+to `fragen` ❓. Later clicking *Du hast mich gefragt* contributes `[Nom, Acc]`.
+The Reading holds both concrete patterns rather than an upfront factored
+E-VALBU grid like `(jN | dass … | ob … | w- …) (nach jM)`. Optionality emerges
+from the set of encountered patterns rather than being guessed or spoiled ahead
+of time.
 
-Two complements are alternatives in one Slot when either can replace the other
-in the same position of the same sentence, the Reading stays the same (same
-Emoji Description), and both name the same participant. They need not answer
-the same question word (`mich | mir ekelt`). Complements that can appear
-together are separate Slots, each with its own status, so E-VALBU's `v` is not
-modelled: `wohnen` has a Required place and an Optional manner. A different
-sense is a different Reading.
+Within a single concrete pattern:
 
-A frame never creates a Lemma, and only the Emoji Description splits
-Readings ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
-A Required Reflexive Slot shows in it as a leading 🪞
-([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
-`warten` with and without `auf` is one Reading with an Optional `auf` slot.
-`gewöhnen` 🪞 'get used to' has a Required Reflexive Acc and a Required `an`
-slot (`sich gewöhnen an`). `bestehen auf` and `bestehen aus` are two Readings
-because their senses differ, and each has its own frame.
+- A German verb pattern opens with `Nom` at index 0 unless the verb is
+  subjectless (expletive `es` only, e.g. `es graut mir` → `[Dat]`). In a
+  passive sentence, the passive subject maps back to its active case (`Acc` or
+  `Dat`).
+- Each `Preposition` (by preposition + case), `Subject`, `DirectObject`,
+  `IndirectObject` and `Reflexive` appears at most once per pattern. A German
+  `Case` may appear twice for a double accusative (`jN jN fragen`, `jN jN
+  lehren`; [ADR 0057](./0057-name-a-valency-complement-by-its-case-never-its-referent.md)).
+- Every pattern in the frame is unique (set semantics). `Contribute` takes the
+  set union in arrival order; `Correct` replaces the set; `Retract` removes a
+  named pattern (or clears `valency` when omitted).
 
-Fixed parts are not slots. A separable prefix and a Locution's wording come
-from Lemma identity. A lexical reflexive is valency, a Reflexive Slot
-(ADR 0052).
+Valency never creates a Lemma, and only the Emoji Description splits Readings
+([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)). A
+Required lexical reflexive shows as a leading 🪞
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)),
+and every pattern stored on a 🪞 Reading carries its `Reflexive` complement.
+Fixed parts (a separable prefix, an expletive `es`, a Locution's fixed words)
+are never complements.
 
-The frame sits on the Reading because government varies by sense, and it is
-Knowledge, not a Semantic Relation. Its edges carry a case, cross Families
-(the Collocation `Bescheid wissen` governs the Lexeme `über`, which ADR 0020
-keeps out of relations) and have no algebra beyond one inverse. A separate
-Grammatical Relation store was rejected because it would duplicate the
-Contribute, Correct and Retract operations Knowledge already has. The
-preposition stores nothing: its governors are projected, following ADR 0012's
-rule that only direct claims are stored.
+Valency sits on the Reading because government varies by sense, and it is
+Knowledge, not a Semantic Relation. The preposition stores nothing: its
+governors are projected across all patterns in the Reading's `valency`,
+following ADR 0012's rule that only direct claims are stored.
 
-The frame skeleton is universal. Each language defines its complement
-vocabulary. German follows E-VALBU:
+The pattern skeleton is universal. Each language defines its complement
+vocabulary. German follows E-VALBU's complement kinds:
 
 ```ts
 { kind: "Case", governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
 { kind: "Preposition", preposition: /* ADP Lexeme Lemma */, governedCase: "Acc" | "Dat" | "Gen" }
 { kind: "Adverbial", standIn: "Irgendwo" | "Irgendwohin" | "Irgendwie" | "IrgendwieLange" | "IrgendwieViel" }
 { kind: "Predicative", marker: "None" | "Als" | "Für" }
-{ kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", correlate?: "Required" | "Optional" }
+{ kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", preposition?: /* ADP Lexeme Lemma */ }
 { kind: "Reflexive", governedCase: "Acc" | "Dat", preposition?: /* ADP Lexeme Lemma */ }
 ```
 
 No complement names its referent, whether a person or a thing fills it
 ([ADR 0057](./0057-name-a-valency-complement-by-its-case-never-its-referent.md)).
 
-- **Case** and **Preposition** mark a complement by the case the word
-  governs. The field is `governedCase`, not `case`, because Knowledge never
-  carries a Feature Pool feature or its name
-  ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)). A
-  governed preposition is always one ADP Lexeme with one member. A
-  circumposition or another Locution ADP heads an adjunct and is never
-  governed.
-- **Adverbial** is E-VALBU's Kadv, named by its stand-in, the adverb E-VALBU
-  substitutes for it: `wohnen` *irgendwo*; `legen`, `stellen`, `setzen` and
-  `hängen` *irgendwohin*; `sich benehmen` *irgendwie*; `dauern` *irgendwie
-  lange*; `kosten` *irgendwie viel*. Other stand-ins wait until a word
-  requires one. The preposition inside it is free
-  (see "An occurrence"). Its field is not named `meaning`, since meaning
-  belongs to the Reading and its Emoji Description.
-- **Predicative** is E-VALBU's Kprd: `aussehen` takes one with no marker,
-  and `jN für dumm halten` one marked `für`. It has no case, and
-  describes the frame's Acc object, else its subject. Its
-  marker `als` or `für` is a free word, and it never makes a Preposition
-  Slot. A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich
-  zeigen`) has a Required Nom and a Required Predicative, marked `als` for
-  `sich zeigen` and unmarked for the rest. Whether a complement is Manner or
-  Predicative follows E-VALBU per
-  Reading. Where E-VALBU lacks the verb, it is Predicative when "X is ADJ"
-  holds (`die Suppe sieht lecker aus`: `die Suppe ist lecker`) and Manner
-  otherwise (`er benimmt sich gut`).
-- **Clause** is a clausal complement, one per form. It is an alternative in
-  the Slot of a noun phrase that could stand in its place (`versuchen` Acc |
-  Clause ZuInfinitive; `wissen` Acc | Clause Dass | Clause Ob | Clause W), and
-  it has a Slot of its own where none can (`sich weigern`). Modals take a
-  Clause BareInfinitive, and `helfen` takes Clause BareInfinitive | Clause
-  ZuInfinitive besides its Dat. `correlate` says only whether the clause
-  needs or may take a word that anticipates it. The word comes from the
-  Slot: `da(r)-` with its one Preposition, else its Case's pronoun (`es`,
-  `dem`, `dessen`). `sich freuen auf` has the Slot `auf` + Acc |
-  Clause Dass with a Required correlate (*darauf*), and `sich freuen über`
-  the same with an Optional one. So a correlated Clause needs a Case or a
-  Preposition beside it, never two Prepositions. A correlate is a unit of its own,
-  never a member: `es` stays a PRON and `darauf` an ADV. Recording a clause
-  form as a field on the Acc or Preposition complement was rejected in favour
-  of Clause alternatives.
-- **Reflexive** is a lexical reflexive, one no other noun phrase can replace
-  in the sense, with the case it takes: `erinnern` 🪞🧠 Acc, `vorstellen`
-  'imagine' Dat. Inside a fixed phrase it names the preposition it is the
-  object of, with the case that preposition governs: `außer sein` (*außer
-  sich sein*) `außer` + Dat. It is the only complement of its Slot, at most
-  one per frame
-  ([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
+- **Case** and **Preposition** mark a complement by the case the word governs
+  (`governedCase`, never `case`). A governed preposition is always one ADP
+  Lexeme with one member.
+- **Adverbial** is E-VALBU's Kadv, named by its stand-in (`irgendwo`,
+  `irgendwohin`, `irgendwie`, `irgendwie lange`, `irgendwie viel`).
+- **Predicative** is E-VALBU's Kprd (`None`, `Als`, `Für`): describes the
+  pattern's `Acc` object when present, else the subject.
+- **Clause** is a clausal complement (`ZuInfinitive`, `BareInfinitive`, `Dass`,
+  `Ob`, `W`). When a `da(r)-` pronominal adverb anticipates the clause (*darauf
+  achten, dass …*), `Clause.preposition` names that ADP Lemma (`auf`) directly
+  so the pattern is self-contained without needing a sibling `Preposition`
+  complement.
+- **Reflexive** is a lexical reflexive (`Acc` or `Dat`), naming its preposition
+  inside a fixed phrase (`außer sich sein` → `außer` + `Dat`;
+  [ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
-Hebrew marks function and preposition, with no case: Subject, DirectObject
-and Preposition. English marks position and preposition, with no case:
-Subject, DirectObject, IndirectObject (`him` in `give him a book`),
-Preposition and a caseless Reflexive (`pride oneself on`). Neither adds an Adverbial, a Predicative or a Clause until
-reviewed examples establish one, and both share the Slot shape.
+Hebrew marks `Subject`, `DirectObject` and caseless `Preposition`. English
+marks `Subject`, `DirectObject`, `IndirectObject`, caseless `Preposition` and
+caseless `Reflexive`.
 
-Each language × Family × Kind route chooses which complements it allows, as
-[ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md) does for
-Core Features. German VERB routes, Lexeme and Locution, allow all six kinds.
-ADJ routes allow all but Predicative and Reflexive, and a measure (`drei Jahre alt`) is
-decided per Reading. NOUN routes allow Preposition and Clause, a Clause both
-beside a Preposition (`die Freude darauf, dass …`) and in a Slot of its own
-(`der Versuch, etw zu tun`). A route that allows none, such as Foreign
-([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)),
-takes no frame.
+Each language × Family × Kind route chooses which complement kinds it allows:
+German VERB routes (Lexeme and Locution) allow all six; ADJ routes allow all
+but Predicative and Reflexive; NOUN routes allow `Preposition` and `Clause`;
+other routes take no valency.
 
-The subject is a slot too. In German it is the Nom Slot, always the first,
-and it is not rendered. A subject clause is an alternative in it: the Nom Slot of `freuen`
-'please' is Nom | Clause Dass with an Optional correlate (`Es freut mich, dass
-du kommst`). A verb with no subject has no Nom slot, and its experiencer is a
-Dat or Acc slot: `mir graut vor` is Required Dat, Optional `vor` + Dat. An
-expletive `es` is never a slot ([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)).
-Locutions have frames on their Readings like Lexemes.
-A Required slot is how an expression states the valency it demands:
-`jemandem auf den Keks gehen` has a Required Dat slot, which is exactly what
-the learner error *Du gehst mich auf den Keks* gets wrong.
+**Click-by-click accumulation and per-Visitor projection.**
 
-**Where a frame comes from.**
+Valency accumulates gradually from encountered sentences, mirroring translation
+accumulation
+([ADR 0047](./0047-accumulate-a-readings-translations-click-by-click.md)):
 
-The Knowledge call proposes the whole frame, statuses and alternatives
-included, when it creates a Reading: the Satzbauplan of the one Lesart its
-sentence shows. A governed preposition that sentence realizes is added when
-the proposal omits it, since that sentence anchors the sense the frame is
-proposed for (*bedanken* gets its `bei`). So is a lexical reflexive it
-realizes (ADR 0052). Mistakes go through Knowledge's
-Correct. Only the proposal and Correct group complements as alternatives. A
-Contribute appends a Slot only when no stored complement covers any of its
-complements, and never adds a complement to a stored Slot: contributing `von`
-+ Dat to `reden` adds nothing. Correct replaces the frame. A Retract that
-names a complement removes it from its Slot, and the Slot once it is empty.
+1. On a **New** Reading, `knowledge.produce` extracts only the single concrete
+   pattern `<TARGET>` realizes in that creating sentence, anchored to
+   `attestation.valencyEvidence`, and records it on both the Reading's
+   `valency` and the creating Attestation's `realizedValencyPattern`.
+2. On a **reused** (or authored) Reading, post-click
+   `knowledge.accumulateValency` runs asynchronously after the click commits:
+   `jev` judges whether one of the Reading's stored patterns matches what this
+   sentence realizes; only after `NoMatch` (or when no patterns are stored yet)
+   does Luna extract the concrete pattern without seeing stored patterns. Any
+   genuinely new pattern is contributed to the Reading, and the matched or
+   extracted pattern is recorded on this Attestation's
+   `realizedValencyPattern`.
+3. When loading a Reading Note for a Visitor, `tf-demo` projects the distinct
+   `realizedValencyPattern`s across that Visitor's own encounters of the
+   Reading (falling back to the Reading's shared `valency` when none are
+   recorded on their Attestations yet). A Visitor never sees unencountered
+   patterns discovered by another Visitor.
 
-A governed preposition a later sentence realizes and the frame lacks fills no
-Slot and is never appended; it is recorded only in that Attestation's
-`valencyEvidence`, and a real gap is fixed through Correct. Such a preposition
-may be an alternative the proposal missed (`über` + Acc | `von` + Dat on
-*denken*), another sense the judge filed under this Reading (*Ich glaube dir*
-and *Sie glaubt an Gott* under one 🙏) or a Slot the proposal left out, and
-one sentence can't tell these apart. Appending would get the third right and
-write a false frame for the first two: `glauben (jM) (jN) (an jN)`.
-Free prepositions are never compared with the frame.
+**An occurrence on the click path.**
 
-Statuses taken only from attestations were rejected. An imperative, a passive
-or an object dropped by context looks the same as an Optional slot, and the
-first click on a word would show half its frame. Frames authored only by hand
-were rejected as well, since a new Reading would have no frame until someone
-wrote one.
+The click-path Attestation keeps `valencyEvidence: { member: index | null,
+complement, realizedCase }[]` lean — recording only member-backed governed
+`Preposition`s, `Reflexive`, and ADP `realizedCase`. Bare case objects,
+Adverbials, Predicatives and Clauses stay off the click path and are extracted
+asynchronously post-click.
 
-**An occurrence.**
-
-The Attestation replaces `governedPrepositionEvidence` with
-`valencyEvidence: { member: index | null, complement, realizedCase }[]`. The
-member index says which member realizes the slot. `Pass auf dich auf` has two
-members spelled `auf`, and only the index tells them apart. The evidence names
-the complement the sentence realized, even when the frame lacks it. Its
-complements are Case, Preposition and Reflexive only, a strict subset of the
-frame's vocabulary: nothing produces or reads an Adverbial, Predicative or
-Clause there. A Reflexive names the lexical reflexive member and the case it
-took (ADR 0052).
-
-Grammatical Resolution writes `valencyEvidence` as part of the grammar
-judgment a click already runs for its unit, and Knowledge reads it. Intake
-decides membership only: `segment.inUnits` judges whether a governed
-preposition joins its governor and records no complement or case
-([Dumgen ADR 0007](../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)).
-Analysing the complement at intake was rejected, since its case changes
-neither where a click routes nor what drill-down offers. So was keeping an
-intake analysis beside the grammar one, since the two can disagree on one
-occurrence.
-
-A governed preposition stays an Attestation member, so clicking it still
-routes to the governor: `aus Angst vor Hunden` gives `[Angst, vor]` NOUN.
-The Surface leaves out the governed prepositions and the lexical reflexive
-that `valencyEvidence` names: `wartet`, not `wartet auf`; `erinnert`, not
-`erinnert sich` ([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)). The
-preposition inside an Adverbial is not a member: in `legt das Buch auf den
-Tisch` and `wohnt in Bonn`, the verb requires a direction or a place, not
-`auf` or `in`. Neither is the `als` or `für` that marks a Predicative, nor a
-preposition heading a free adjunct: the `im` of `wartet im Keller` is no
-member of `warten`.
-
-A governor's evidence lists only the governed prepositions and the lexical
-reflexive its sentence realizes, for every governor Kind but INTJ, which records no
-`valencyEvidence`. Case slots (bare Nom, Acc, Dat or Gen noun
-phrases) come only from the Knowledge call's frame, and so do Adverbial,
-Predicative and Clause complements. The frame is already complete without
-them, and Source Contexts already show the sentence. A free dative would pass
-for a slot (`Ich backe dir einen Kuchen` → Dat on `backen`). Each bare noun
-phrase would also cost one more question.
-
-A governed preposition keeps its case under passive (`um Geduld` stays `um` +
-Acc), so recording it converts no passive. Recording bare Dat and Gen objects
-stays an option ([#609](https://github.com/clockblocker/texteater/issues/609)).
-Taking it up means converting a passive back to the active frame through the
-Surface's `passive`
-([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)): in
-`Sie wurde um Geduld gebeten`, the Nom `Sie` fills the Acc slot of `bitten`.
-
-Some words realize a governed preposition and its filler at once: German
-`darauf` and `dafür`, Hebrew `לו` and `עליו`. The filler wins. The word stays
-its own unit, and the governor's evidence names the preposition's Lemma as
-the complement with no member. German pronominal adverbs stay ADV Lexemes
-([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
-One realizing a Locution's fixed preposition is a member, and the evidence
-names it: `damit` in `hatte es damit zu tun` (ADR 0056).
-How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
-[#595](https://github.com/clockblocker/texteater/issues/595).
+A governed preposition stays an Attestation member so clicking it routes to its
+governor (`aus Angst vor Hunden` → `[Angst, vor]`), while `normalizedSurface`
+omits governed prepositions and lexical reflexives (`wartet`, `erinnert`;
+[ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)).
+Pronominal adverbs (`darauf`, `dafür`) stay standalone ADV units with
+`member: null` on the governor's evidence, unless realizing a Locution's fixed
+preposition (`damit` in `hatte es damit zu tun`).
 
 **Rendering.**
 
-A Reading Note's heading cites the Lemma with its frame after the emoji.
-Optional slots take parentheses; Slot alternatives use `|`, sharing parentheses
-when Optional (`(über jN | von jM) reden`) and square brackets when Required
-(`[jN | etw zu tun] versuchen`). Case tokens name case alone (`jN` Acc, `jM`
-Dat, `jS` Gen). Markerless complements use dictionary stand-ins: Adverbials
-(`irgendwo`, `irgendwohin`, `irgendwie`, `irgendwie lange`, `irgendwie viel`),
-Predicatives (`irgendwie`, `als …`, `für …`) and Clauses (`etw zu tun`,
-`etw tun`, `dass …`, `ob …`, `w- …`). A verb comes last after its slots
-(reflexive, bare case, preposition, markerless) and a Locution's Fixed words,
-with `hasSepPrefix` marked by `|` (`auf|passen`). Reflexive prints `sich`
-(never stored in Canonical Form, ADR 0052): `sich (an jN) erinnern`, `es sich
-gemütlich machen`. A slot whose preposition is a Locution's Fixed word follows
-it (`mit jM zu tun haben`). A Surface's slotted line (`jD (auf jN) wartet`)
-prints the same way and is never stored (ADR 0056). A Reading has no Valency
-Block.
+Reading Headings and Surface Card Tails stay clean and uncrowded: a Reading
+Heading prints only the emoji and Citation (`❓ fragen`, `🪞🧠 sich erinnern`,
+`👀 auf|passen`), and a Surface Heading prints only the base-order form with
+separable bar and `sich` for Required reflexives (`gefragt hast`, `an|fängt`,
+`sich erinnert`).
+
+Discovered Valency Patterns render as a bulleted list inside the Reading's
+dedicated **Valency Block** (folded behind `Show N more` after 4 patterns),
+showing only patterns that carry at least one governed complement or lexical
+reflexive:
 
 ```text
-(auf `jN`) auf|passen -> aufpassen
-(mit `jM`) an|fangen -> anfangen
-(auf `jN`) warten -> warten
-stolz (auf `jN`) -> stolz
-`jM` auf den Keks gehen -> jemandem auf den Keks gehen
-(`jM`) `jN` zur Verfügung stellen -> (jemandem) etwas zur Verfügung stellen
-`irgendwo` wohnen -> wohnen
-`jN` `irgendwohin` legen -> legen
-`irgendwie` aus|sehen -> aussehen
-(über `jN` | von `jM`) reden -> reden
-[`jN` | `etw zu tun`] versuchen -> versuchen
-(zu `jM` | `irgendwohin`) zurück|kehren -> zurückkehren
+• nach `jM` fragen
+• `jN` fragen
+• `jN` nach `jM` fragen
+• darauf, `dass …` achten
+• sich an `jN` erinnern
+• mit `jM` zu tun haben
+• stolz auf `jN`
+• Angst vor `jM`
 ```
+
+Bare intransitive `[Nom]` patterns render nothing, so intransitive verbs and
+complementless nouns/adjectives show no Valency Block until a governed
+complement is met.
 
 ## Consequences
 
 - [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)
-  keeps government out of Lemma identity; this ADR stores it on the Reading's
-  frame and in the Attestation's `valencyEvidence`.
-- Valency may come from sense alone. The Knowledge call creating a Reading
-  proposes the frame once; mistakes go through Correct. Re-guessing valency on
-  every sentence was rejected.
-- A preposition's `governedBy` view projects from every Preposition complement,
-  alternatives included (`von` lists `reden`).
-- Every governor Kind takes its governed preposition as an Attestation member:
-  VERB, ADJ, NOUN, Locutions and routine formulas (`Er ist stolz auf seinen
-  Sohn` → `stolz`, `Er weiß Bescheid über die Pläne` → `Bescheid wissen`), with
-  no Member Role
-  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
-  `valencyEvidence` names it and `normalizedSurface` omits it (`stolz auf` →
-  `stolz`). Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn
-  stolze Vater`) work like separable verbs. Restricting membership to verbs was
-  rejected (three behaviors for one relation), as was omitting it for all
-  governors (clicking a governed preposition would land on a bare preposition
-  Note).
-- A routine formula
-  ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)) governs
-  through its head word, so Lexeme INTJ is a governor (`Vielen Dank für Ihre
-  Hilfe` → `[Vielen, Dank, für]` `vielen Dank`; `danke für die Hilfe` →
-  `[danke, für]` `danke`, matching `danken`). Locative/adjunct prepositions
-  stay free (`in` in `willkommen in Leipzig`). INTJ records no
-  `valencyEvidence`, yet `normalizedSurface` still omits the governed
-  preposition (`danke für` → `danke`, ruled in
-  [#701](https://github.com/clockblocker/texteater/issues/701)).
-- A governed preposition belongs to the smallest unit whose government survives
-  in the same sense: ADJ `stolz` (`stolz auf`), NOUN `Angst` (`Angst vor`), but
-  Collocation `Bescheid wissen` (`Bescheid` means 'informed' only inside its
-  Collocations; `Bescheid über` alone is an official notice). Duden/grammis
-  attach these complements to the adjective/noun, UD HDT attaches the PP to
-  `stolz` in 6/9 cases and `Angst` in 31/33 (including all 5 `Angst haben …
-  vor`), and government survives without the verb (`aus Angst vor Hunden`, `der
-  auf seinen Sohn stolze Vater`). When the full Collocation is present, the
-  largest-unit rule resolves the click to it (`Sie hat Angst vor Hunden`, `Hast
-  du Angst?` → `Angst haben`; `aus Angst vor Hunden` → `Angst`), reaching the
-  governor's frame and verb via Breakdown
-  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
-  A Collocation stores its own frame (slots like the Dat of `jemandem auf den
-  Keks gehen` come from no member).
-- An adposition's own cases are no frame; dumcorpus's ADP Case Table lists
-  them, validates every Preposition complement against them and renders the
-  ADP's Valency Block
+  keeps government out of Lemma identity; this ADR accumulates concrete
+  realized patterns on the Reading, records each occurrence's pattern on its
+  Attestation post-click, and keeps click-path `valencyEvidence` lean.
+- A preposition's `governedBy` view projects from every `Preposition`
+  complement across all stored patterns.
+- Every governor Kind takes its governed preposition as an Attestation member
+  (VERB, ADJ, NOUN, Locutions, and routine formulas), while `normalizedSurface`
+  omits it.
+- An adposition's own cases are no pattern list; dumcorpus's ADP Case Table
+  lists them, validates every `Preposition` complement and `Clause.preposition`
+  against them, and renders the ADP's Valency Block
   ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).

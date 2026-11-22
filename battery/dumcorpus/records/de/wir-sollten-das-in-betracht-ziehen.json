@@ -2,23 +2,63 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Wir sollten das in Betracht ziehen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sollten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Betracht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ziehen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sollten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Betracht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ziehen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -55,30 +95,29 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 8, 10],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				8,
+				10
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🤔",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -121,9 +160,18 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "in", "orthography": "Standard" },
-					{ "attested": "Betracht", "orthography": "Standard" },
-					{ "attested": "ziehen", "orthography": "Standard" }
+					{
+						"attested": "in",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Betracht",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ziehen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -132,7 +180,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "in Betracht ziehen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

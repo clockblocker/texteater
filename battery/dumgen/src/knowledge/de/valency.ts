@@ -1,33 +1,25 @@
 /**
- * The Valency Frame of a Reading (Sys ADR 0034): Luna proposes the
- * Satzbauplan of the one Lesart the Emoji Description names, in the Slot
- * shape of #674, holding only the complement kinds the route allows
- * (`allowedComplementKinds`). Luna writes it in German dictionary
- * notation in case letters (`N (A|(es) dass)`, `valency-notation.ts`),
- * one string a strict schema's pattern holds, read back into those Slots:
- * the pattern holds only a preposition a governor selects, with a case it
- * governs. Dumrel checks them Slot by Slot: a Slot it refuses, such as a
- * Place on a German noun, a Nom past the first Slot or a correlate with no
- * Case or Preposition to take its word from, is dropped and named in a
- * `DroppedValencySlots` event, and its siblings stay (#675).
+ * The concrete Valency Pattern of an occurrence (Sys ADR 0034): Luna extracts
+ * the single concrete pattern `<TARGET>` realizes in `markedSentence` under
+ * the Lesart `emojiDescription` names, holding only complement kinds the
+ * route allows (`allowedComplementKinds`). Luna writes it in German
+ * dictionary notation in case letters (`N A nach D`, `N auf dass`,
+ * `valency-notation.ts`), one string a strict schema's pattern holds, read
+ * back into complements. Dumrel checks them onto the pattern: a disallowed
+ * complement is dropped and named in a `DroppedValencyComplements` event.
  *
- * The occurrence's `valencyEvidence` joins the frame only when the
- * occurrence created the Reading (`origin` New, #677): each governed
- * preposition no complement of any Slot covers, alternatives included,
- * comes in as an Optional Slot. A later occurrence's government changes
- * nothing; a preposition no governor selects stays an attributable
- * failure.
+ * The occurrence's `valencyEvidence` anchors governed prepositions (when
+ * `anchorEvidence` is true — on a `New` Reading and on post-click valency
+ * accumulation): any attested governed preposition not already covered by a
+ * `Preposition` complement or a correlated `Clause.preposition` joins the
+ * pattern. A preposition no governor selects stays an attributable failure.
  *
- * The Reading's 🪞 settles its Reflexive Slot (ADR 0052): a 🪞 Reading's
- * frame has a Required one, right after the subject, as the creating
- * occurrence's reflexive realized it where its evidence names the case,
- * which it does only where the form or the preposition shows it, else as
- * Luna proposed it: sich hides its case; a Reading
- * without 🪞 has no Required one, though an Optional one may stand: a
- * Required sich Luna proposes for it is the ordinary object it stands for
- * (`sich wenden` ↪: an Acc object). A
- * Reflexive inside a fixed phrase names its preposition (`außer sein`:
- * `außer` + Dat).
+ * The Reading's 🪞 settles its Reflexive complement (ADR 0052): a 🪞 Reading
+ * always includes its lexical `Reflexive` in every pattern (preferring the
+ * occurrence's attested case when `anchorEvidence` is true, else Luna's). A
+ * Reading without 🪞 keeps a `Reflexive` when attested in `valencyEvidence`,
+ * and converts an unattested reflexive proposal into the ordinary Case object
+ * (`Acc`/`Dat`) it stands for.
  */
 
 import {
@@ -53,16 +45,16 @@ import {
 } from "./context.js";
 import { shared, valency } from "./prompts.js";
 import {
-	germanFramePattern,
+	canonicalizeGermanPattern,
+	germanPatternRegex,
 	type ProposedComplement,
-	type ProposedSlot,
-	parseGermanFrame,
+	parseGermanPattern,
 } from "./valency-notation.js";
 import { examplesParagraph, notationParagraphs } from "./valency-prompts.js";
 
 /**
  * The German prepositions a governor can select (dumcorpus's ADP Case
- * Table); a proposal or an attestation of any other is no frame complement.
+ * Table); a proposal or an attestation of any other is no pattern complement.
  */
 const governable = new Set<string>(germanGovernablePrepositions);
 
@@ -73,8 +65,6 @@ export const valencyPrompt = [
 	valency.subject,
 	valency.reflexive,
 	valency.lesart,
-	valency.status,
-	valency.alternatives,
 	valency.freeMarker,
 	valency.preposition,
 	valency.route,
@@ -89,34 +79,28 @@ type ValencyEvidence = Extract<
 	{ readonly valencyEvidence: unknown }
 >["valencyEvidence"][number];
 
-/** A German Valency Slot: its status and its German complements. */
-type GermanSlot = {
-	readonly status: Dumrel.ValencySlotStatus;
-	readonly complements: readonly Dumrel.GermanValencyComplement[];
-};
+/**
+ * The answer Luna writes under, strict: the concrete pattern as one string
+ * the notation's pattern holds, so every answer reads back.
+ */
+const patternAnswer = { type: "string", pattern: germanPatternRegex } as const;
 
 /**
- * The answer Luna writes under, strict: the frame as one string the
- * notation's pattern holds, so every answer reads back.
+ * The complements Luna's notation reads as, each preposition its Canonical
+ * Form, or why it reads as none.
  */
-const frameAnswer = { type: "string", pattern: germanFramePattern } as const;
-
-/**
- * The Slots Luna's notation reads as, each preposition its Canonical Form,
- * or why it reads as none: the parser reads exactly what the pattern holds,
- * so only an answer outside the schema fails.
- */
-function frameOf(
+function patternOf(
+	stage: string,
 	output: unknown,
-): readonly ProposedSlot[] | InvalidModelOutput {
+): readonly ProposedComplement[] | InvalidModelOutput {
 	if (typeof output !== "string")
-		return unusable("valency", "Luna answered no frame");
-	const read = parseGermanFrame(output);
+		return unusable(stage, "Luna answered no valency pattern");
+	const read = parseGermanPattern(output);
 	return read.ok
-		? read.frame
+		? read.pattern
 		: unusable(
-				"valency",
-				`Luna's frame «${output.slice(0, 120)}» does not read: ${read.error}`,
+				stage,
+				`Luna's valency pattern «${output.slice(0, 120)}» does not read: ${read.error}`,
 			);
 }
 
@@ -148,17 +132,25 @@ function germanComplementOf(
 		};
 	if (complement.kind === "Reflexive")
 		return { kind: "Reflexive", governedCase: complement.governedCase };
+	if (complement.kind === "Clause" && complement.preposition !== undefined)
+		return {
+			kind: "Clause",
+			form: complement.form,
+			preposition: prepositionLemma(complement.preposition),
+		};
+	if (complement.kind === "Clause")
+		return { kind: "Clause", form: complement.form };
 	return complement;
 }
 
 /**
- * Whether Dumrel accepts `candidate` onto the Slots kept before it;
+ * Whether Dumrel accepts `candidate` onto the complements kept before it;
  * `refused` hears why it does not.
  */
-function acceptedSlot(
+function acceptedComplement(
 	reading: Dumling.Reading<"de">,
-	kept: readonly GermanSlot[],
-	candidate: GermanSlot,
+	kept: readonly Dumrel.GermanValencyComplement[],
+	candidate: Dumrel.GermanValencyComplement,
 	refused: (reason: string) => void,
 ): boolean {
 	const applied = applyKnowledgeChange({
@@ -167,7 +159,7 @@ function acceptedSlot(
 		change: {
 			kind: "Contribute",
 			aspect: "valency",
-			value: [...kept, candidate],
+			value: [[...kept, candidate]],
 		},
 	});
 	if (!applied.success) refused(applied.error.message.slice(0, 200));
@@ -175,29 +167,26 @@ function acceptedSlot(
 }
 
 /**
- * The Slots Dumrel accepts, checked one by one onto the ones kept before
- * them, and the ones it refused with why.
+ * The complements Dumrel accepts, checked one by one onto the ones kept
+ * before them, and the ones it refused with why.
  */
-function validFrame(
+function validPattern(
 	reading: Dumling.Reading<"de">,
-	slots: readonly ProposedSlot[],
+	proposed: readonly ProposedComplement[],
 ): {
-	readonly kept: GermanSlot[];
+	readonly kept: Dumrel.GermanValencyComplement[];
 	readonly dropped: {
-		readonly slot: ProposedSlot;
+		readonly complement: ProposedComplement;
 		readonly reason: string;
 	}[];
 } {
-	const kept: GermanSlot[] = [];
-	const dropped: { slot: ProposedSlot; reason: string }[] = [];
-	for (const slot of slots) {
-		const candidate: GermanSlot = {
-			status: slot.status,
-			complements: slot.complements.map(germanComplementOf),
-		};
+	const kept: Dumrel.GermanValencyComplement[] = [];
+	const dropped: { complement: ProposedComplement; reason: string }[] = [];
+	for (const complement of proposed) {
+		const candidate = germanComplementOf(complement);
 		if (
-			acceptedSlot(reading, kept, candidate, (reason) =>
-				dropped.push({ slot, reason }),
+			acceptedComplement(reading, kept, candidate, (reason) =>
+				dropped.push({ complement, reason }),
 			)
 		)
 			kept.push(candidate);
@@ -205,39 +194,41 @@ function validFrame(
 	return { kept, dropped };
 }
 
-/** Each Preposition complement of a frame, alternatives included, as `form/case`. */
-const coveredPrepositions = (frame: readonly GermanSlot[]) =>
-	new Set(
-		frame.flatMap((slot) =>
-			slot.complements.flatMap((complement) =>
-				complement.kind === "Preposition"
-					? [
-							`${complement.preposition.canonicalForm}/${complement.governedCase}`,
-						]
-					: [],
-			),
-		),
+/**
+ * Governed prepositions already represented in the pattern: either directly as
+ * a `Preposition` (`form/case`) or as a correlated `Clause.preposition` (`form`).
+ */
+function prepositionCovered(
+	pattern: readonly Dumrel.GermanValencyComplement[],
+	form: string,
+	governedCase: "Acc" | "Dat" | "Gen",
+): boolean {
+	return pattern.some(
+		(complement) =>
+			(complement.kind === "Preposition" &&
+				complement.preposition.canonicalForm === form &&
+				complement.governedCase === governedCase) ||
+			(complement.kind === "Clause" &&
+				complement.preposition?.canonicalForm === form),
 	);
+}
 
 /**
- * The Optional Slots the creating occurrence's government adds to a
- * proposed frame, and the evidence Knowledge cannot hold. Only a governed
- * preposition no complement covers comes in, Optional: a sentence does not
- * show whether the word needs it.
+ * Governed prepositions attested in this occurrence's `valencyEvidence` that
+ * Luna omitted, and any evidence Knowledge cannot hold.
  */
-function attestedSlots(
+function attestedPrepositions(
 	lemma: Dumling.Lemma<"de">,
-	proposed: readonly GermanSlot[],
+	proposed: readonly Dumrel.GermanValencyComplement[],
 	evidence: readonly ValencyEvidence[],
 ): {
-	readonly slots: GermanSlot[];
+	readonly added: Dumrel.GermanValencyComplement[];
 	readonly failures: KnowledgeFailure[];
 } {
-	const covered = coveredPrepositions(proposed);
 	const takesPrepositions = allowedComplementKinds(lemma).some(
 		(kind) => kind === "Preposition",
 	);
-	const slots: GermanSlot[] = [];
+	const added: Dumrel.GermanValencyComplement[] = [];
 	const failures: KnowledgeFailure[] = [];
 	for (const { complement } of evidence) {
 		if (complement.kind !== "Preposition") continue;
@@ -252,7 +243,7 @@ function attestedSlots(
 			});
 		if (!takesPrepositions) {
 			unusableEvidence(
-				`The occurrence attests ${form} + ${governedCase}, and a ${lemma.family} ${lemma.kind} frame takes no preposition`,
+				`The occurrence attests ${form} + ${governedCase}, and a ${lemma.family} ${lemma.kind} pattern takes no preposition`,
 			);
 			continue;
 		}
@@ -262,38 +253,21 @@ function attestedSlots(
 			);
 			continue;
 		}
-		const key = `${form}/${governedCase}`;
-		if (covered.has(key)) continue;
-		covered.add(key);
-		slots.push({
-			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: prepositionLemma(form),
-					governedCase,
-				},
-			],
+		if (prepositionCovered([...proposed, ...added], form, governedCase))
+			continue;
+		added.push({
+			kind: "Preposition",
+			preposition: prepositionLemma(form),
+			governedCase,
 		});
 	}
-	return { slots, failures };
+	return { added, failures };
 }
-
-/** Whether a Slot holds the frame's Reflexive. */
-const isReflexiveSlot = (slot: GermanSlot) =>
-	slot.complements.some(({ kind }) => kind === "Reflexive");
 
 type Reflexive = Extract<
 	Dumrel.GermanValencyComplement,
 	{ readonly kind: "Reflexive" }
 >;
-
-/** A Slot's Reflexive, if it has one. */
-const reflexiveOf = (complements: readonly { readonly kind: string }[]) =>
-	complements.find(
-		(complement): complement is Reflexive =>
-			complement.kind === "Reflexive",
-	);
 
 /**
  * The occurrence's Reflexive where its evidence names the case, which it
@@ -309,55 +283,23 @@ function attestedReflexive(
 	return undefined;
 }
 
-/**
- * The ordinary object a Required sich becomes on a Reading without 🪞: no
- * lexical reflexive, so the sich is an object another noun phrase could
- * replace, a Case complement in its case (`sich wenden` ↪: A). None for a
- * fixed phrase's reflexive, or where the frame already has an object in
- * that case.
- */
-function ordinaryObject(
-	proposed: GermanSlot,
-	rest: readonly GermanSlot[],
-): GermanSlot | undefined {
-	const reflexive = reflexiveOf(proposed.complements);
-	if (!reflexive || reflexive.preposition !== undefined) return undefined;
-	const { governedCase } = reflexive;
-	const taken = rest.some(({ complements }) =>
-		complements.some(
-			(complement) =>
-				complement.kind === "Case" &&
-				complement.governedCase === governedCase,
-		),
-	);
-	return taken
-		? undefined
-		: {
-				status: "Required",
-				complements: [{ kind: "Case", governedCase }],
-			};
-}
+const hasAnyReflexiveEvidence = (evidence: readonly ValencyEvidence[]) =>
+	evidence.some(({ complement }) => complement.kind === "Reflexive");
 
 /**
- * The frame with the Reflexive Slot the Reading's 🪞 settles (ADR 0052),
- * and the Slot it drops. A 🪞 Reading's Reflexive is Required and stands
- * right after the subject. The creating occurrence's goes first where its
- * evidence names the case (`attestedReflexive`), with any fixed phrase's
- * preposition, else Luna's, then the occurrence's. A Reading without 🪞
- * keeps no Required one: its sich becomes the ordinary object
- * (`ordinaryObject`). A 🪞 Reading neither names a Reflexive's case for
- * is a failure.
+ * Settles the Reflexive complement of one concrete pattern using the
+ * Reading's 🪞 marker and the occurrence's `valencyEvidence` (ADR 0052).
  */
 function settledReflexive(
 	reading: Dumling.Reading<"de">,
-	frame: readonly GermanSlot[],
+	pattern: readonly Dumrel.GermanValencyComplement[],
 	evidence: readonly ValencyEvidence[],
-	origin: KnowledgeOrigin,
+	anchorEvidence: boolean,
 ):
 	| {
-			readonly frame: GermanSlot[];
+			readonly pattern: Dumrel.GermanValencyComplement[];
 			readonly dropped?: {
-				readonly slot: unknown;
+				readonly complement: unknown;
 				readonly reason: string;
 			};
 	  }
@@ -365,61 +307,130 @@ function settledReflexive(
 	const marked =
 		"emojiDescription" in reading &&
 		reading.emojiDescription.startsWith(reflexiveMarker);
-	const proposed = frame.find(isReflexiveSlot);
-	const rest = frame.filter((slot) => slot !== proposed);
+	const proposed = pattern.find(
+		(complement): complement is Reflexive =>
+			complement.kind === "Reflexive",
+	);
+	const rest = pattern.filter((complement) => complement !== proposed);
 	if (!marked) {
-		if (proposed?.status !== "Required") return { frame: [...frame] };
-		const object = ordinaryObject(proposed, rest);
-		return object
-			? {
-					frame: frame.map((slot) =>
-						slot === proposed ? object : slot,
-					),
-				}
-			: {
-					frame: rest,
-					dropped: {
-						slot: proposed,
-						reason: `A Reading whose Emoji Description has no ${reflexiveMarker} has no Required Reflexive Slot`,
-					},
-				};
+		if (!proposed) return { pattern: [...pattern] };
+		// An attested reflexive on a non-🪞 Reading (optional reflexive like
+		// ausruhen) stays Reflexive; an unattested sich is the ordinary object.
+		if (hasAnyReflexiveEvidence(evidence)) return { pattern: [...pattern] };
+		if (proposed.preposition !== undefined)
+			return {
+				pattern: rest,
+				dropped: {
+					complement: proposed,
+					reason: `A Reading without ${reflexiveMarker} takes no fixed-phrase Reflexive unless attested`,
+				},
+			};
+		const taken = rest.some(
+			(complement) =>
+				complement.kind === "Case" &&
+				complement.governedCase === proposed.governedCase,
+		);
+		if (taken)
+			return {
+				pattern: rest,
+				dropped: {
+					complement: proposed,
+					reason: `A Reading without ${reflexiveMarker} has no unattested Reflexive beside an object in ${proposed.governedCase}`,
+				},
+			};
+		return {
+			pattern: [
+				...rest,
+				{ kind: "Case", governedCase: proposed.governedCase },
+			],
+		};
 	}
 	const attested = attestedReflexive(evidence);
-	const offered = proposed && reflexiveOf(proposed.complements);
-	const complement =
-		origin === "New" ? (attested ?? offered) : (offered ?? attested);
+	const complement = anchorEvidence
+		? (attested ?? proposed)
+		: (proposed ?? attested);
 	if (complement === undefined)
 		return {
 			failure: {
 				aspect: "valency",
 				leaf: "Reflexive",
 				code: "Unresolved",
-				message: `A ${reflexiveMarker} Reading takes a Required Reflexive Slot, and neither Luna nor the occurrence names its case`,
+				message: `A ${reflexiveMarker} Reading requires a Reflexive complement in every pattern, and neither Luna nor the occurrence names its case`,
 			},
 		};
-	const subject = rest.findIndex(({ complements }) =>
-		complements.some(
-			(complement) =>
-				complement.kind === "Case" && complement.governedCase === "Nom",
-		),
-	);
-	const slot: GermanSlot = {
-		status: "Required",
-		complements: [complement],
-	};
-	return {
-		frame: [
-			...rest.slice(0, subject + 1),
-			slot,
-			...rest.slice(subject + 1),
-		],
-	};
+	return { pattern: [...rest, complement] };
 }
 
 /**
- * The Reading's proposed frame as one Contribute change, the creating
- * occurrence's government appended and its Reflexive Slot settled by its
- * 🪞, or no change when it governs nothing.
+ * Extracts the single concrete Valency Pattern `<TARGET>` realizes in
+ * `context.markedSentence`, anchored to `attestation.valencyEvidence` when
+ * `anchorEvidence` is true, canonicalized, and checked by Dumrel.
+ */
+export const extractGermanValencyPattern = (
+	context: AspectContext,
+	options: {
+		readonly anchorEvidence: boolean;
+		readonly stage?: string;
+	},
+): Effect.Effect<
+	{
+		readonly pattern: Dumrel.ValencyPattern | null;
+		readonly failures: KnowledgeFailure[];
+	},
+	AspectError
+> =>
+	Effect.gen(function* () {
+		const stage = options.stage ?? "valency";
+		const proposed = yield* write(
+			context,
+			stage,
+			valencyPrompt,
+			{ complementKinds: [...allowedComplementKinds(context.lemma)] },
+			patternAnswer,
+			(output) => patternOf(stage, output),
+			{ strict: true },
+		);
+		const { kept, dropped } = validPattern(context.reading, proposed);
+		if (dropped.length > 0)
+			context.log.event({
+				name: "DroppedValencyComplements",
+				data: { dropped },
+			});
+		const evidence =
+			"valencyEvidence" in context.attestation
+				? context.attestation.valencyEvidence
+				: [];
+		const attested = options.anchorEvidence
+			? attestedPrepositions(context.lemma, kept, evidence)
+			: { added: [], failures: [] };
+		const settled = settledReflexive(
+			context.reading,
+			[...kept, ...attested.added],
+			evidence,
+			options.anchorEvidence,
+		);
+		if ("failure" in settled)
+			return {
+				pattern: null,
+				failures: [...attested.failures, settled.failure],
+			};
+		if (settled.dropped)
+			context.log.event({
+				name: "DroppedValencyComplements",
+				data: { dropped: [settled.dropped] },
+			});
+		if (settled.pattern.length === 0)
+			return { pattern: null, failures: attested.failures };
+		const canonical = canonicalizeGermanPattern(settled.pattern);
+		return {
+			pattern: canonical,
+			failures: attested.failures,
+		};
+	});
+
+/**
+ * The Reading's realized pattern from this occurrence as one Contribute
+ * change (`[pattern]`), or no change when no complement is realized.
  */
 export const produceValency = (
 	context: AspectContext,
@@ -432,51 +443,14 @@ export const produceValency = (
 	AspectError
 > =>
 	Effect.gen(function* () {
-		const proposed = yield* write(
+		const { pattern, failures } = yield* extractGermanValencyPattern(
 			context,
-			"valency",
-			valencyPrompt,
-			{ complementKinds: [...allowedComplementKinds(context.lemma)] },
-			frameAnswer,
-			frameOf,
-			{ strict: true },
+			{ anchorEvidence: origin === "New" },
 		);
-		const { kept, dropped } = validFrame(context.reading, proposed);
-		if (dropped.length > 0)
-			context.log.event({
-				name: "DroppedValencySlots",
-				data: { dropped },
-			});
-		const evidence =
-			"valencyEvidence" in context.attestation
-				? context.attestation.valencyEvidence
-				: [];
-		const attested =
-			origin === "New"
-				? attestedSlots(context.lemma, kept, evidence)
-				: { slots: [], failures: [] };
-		const settled = settledReflexive(
-			context.reading,
-			[...kept, ...attested.slots],
-			evidence,
-			origin,
-		);
-		if ("failure" in settled)
-			return {
-				changes: [],
-				failures: [...attested.failures, settled.failure],
-			};
-		if (settled.dropped)
-			context.log.event({
-				name: "DroppedValencySlots",
-				data: { dropped: [settled.dropped] },
-			});
-		const { frame } = settled;
-		if (frame.length === 0)
-			return { changes: [], failures: attested.failures };
+		if (pattern === null) return { changes: [], failures };
 		const changes = checkedChanges(context, "valency", [
-			{ kind: "Contribute", aspect: "valency", value: frame },
+			{ kind: "Contribute", aspect: "valency", value: [pattern] },
 		]);
 		if (!Array.isArray(changes)) return yield* changes;
-		return { changes, failures: attested.failures };
+		return { changes, failures };
 	});

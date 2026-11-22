@@ -2,21 +2,59 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Heult nicht länger mit den Wölfen!",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Heult" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "länger" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wölfen" },
-		{ "kind": "Punctuation", "text": "!" }
+		{
+			"kind": "ResolvableText",
+			"text": "Heult"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "länger"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wölfen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -40,21 +78,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 6, 8, 10],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				0,
+				6,
+				8,
+				10
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🐑👥",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -98,7 +141,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "heult mit den Wölfen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",
@@ -114,10 +159,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "Heult", "orthography": "Standard" },
-					{ "attested": "mit", "orthography": "Standard" },
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Wölfen", "orthography": "Standard" }
+					{
+						"attested": "Heult",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "mit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Wölfen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

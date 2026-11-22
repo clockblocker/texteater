@@ -15636,28 +15636,11 @@
 			"minLength": 1
 		},
 		"__schema562": {
-			"type": "object",
-			"properties": {
-				"status": {
-					"type": "string",
-					"enum": [
-						"Required",
-						"Optional"
-					]
-				},
-				"complements": {
-					"minItems": 1,
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/__schema563"
-					}
-				}
-			},
-			"required": [
-				"status",
-				"complements"
-			],
-			"additionalProperties": false
+			"minItems": 1,
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/__schema563"
+			}
 		},
 		"__schema563": {
 			"anyOf": [
@@ -15773,12 +15756,8 @@
 								"W"
 							]
 						},
-						"correlate": {
-							"type": "string",
-							"enum": [
-								"Required",
-								"Optional"
-							]
+						"preposition": {
+							"$ref": "#/$defs/__schema270"
 						}
 					},
 					"required": [

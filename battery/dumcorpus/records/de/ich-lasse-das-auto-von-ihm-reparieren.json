@@ -2,27 +2,77 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ich lasse das Auto von ihm reparieren.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "lasse" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Auto" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "von" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "reparieren" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "lasse"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Auto"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "von"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "reparieren"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026"
+		],
 		"rules": [
-			{ "rule": "de/causative-lassen", "hash": "af12a3e45b1d22a6" }
+			{
+				"rule": "de/causative-lassen",
+				"hash": "af12a3e45b1d22a6"
+			}
 		],
 		"references": [
 			{
@@ -44,48 +94,48 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🗣👉",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Clause",
-									"form": "BareInfinitive"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Clause",
+								"form": "BareInfinitive"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["ließ"],
-					"present1": ["lasse"],
-					"present2": ["lässt"],
-					"present3": ["lässt"],
-					"pastParticiple": ["gelassen"],
-					"subjunctivePast": ["ließe"]
+					"preterite": [
+						"ließ"
+					],
+					"present1": [
+						"lasse"
+					],
+					"present2": [
+						"lässt"
+					],
+					"present3": [
+						"lässt"
+					],
+					"pastParticiple": [
+						"gelassen"
+					],
+					"subjunctivePast": [
+						"ließe"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -111,7 +161,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "lasse", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "lasse",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -119,7 +174,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "lasse",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -147,16 +204,26 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔧" },
+			"memberSegmentIndices": [
+				12
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🔧"
+			},
 			"notes": {
 				"rationale": "The infinitive under VERB lassen is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "reparieren", "orthography": "Standard" }
+					{
+						"attested": "reparieren",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -165,7 +232,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "reparieren",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

@@ -2,30 +2,95 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Wenn der Vorschlag Hand und Fuß hätte, stimmte ich zu.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wenn" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Vorschlag" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hand" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fuß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hätte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stimmte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Wenn"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Vorschlag"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fuß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hätte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stimmte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -44,21 +109,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 8, 10, 12],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				8,
+				10,
+				12
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🧠✅",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -101,7 +171,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Hand und Fuß hätte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Sub",
@@ -117,10 +189,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "Hand", "orthography": "Standard" },
-					{ "attested": "und", "orthography": "Standard" },
-					{ "attested": "Fuß", "orthography": "Standard" },
-					{ "attested": "hätte", "orthography": "Standard" }
+					{
+						"attested": "Hand",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Fuß",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "hätte",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

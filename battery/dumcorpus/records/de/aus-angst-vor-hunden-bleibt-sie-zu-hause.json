@@ -2,27 +2,79 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Aus Angst vor Hunden bleibt sie zu Hause.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Aus" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Angst" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hunden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bleibt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hause" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Aus"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Angst"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hunden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bleibt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hause"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034"],
+		"adrs": [
+			"ADR-0034"
+		],
 		"rules": [],
 		"references": [
 			{
@@ -44,29 +96,32 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				2,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "😨",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "vor",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "vor",
+									"coreFeatures": {}
+								},
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -105,7 +160,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Ängste"] },
+				"paradigm": {
+					"plural": [
+						"Ängste"
+					]
+				},
 				"coverage": {
 					"valency": "Authored",
 					"semanticRelations": {
@@ -116,7 +175,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -138,7 +199,9 @@
 						}
 					},
 					"normalizedSurface": "Angst",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -147,8 +210,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "Angst", "orthography": "Standard" },
-					{ "attested": "vor", "orthography": "Standard" }
+					{
+						"attested": "Angst",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "vor",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,

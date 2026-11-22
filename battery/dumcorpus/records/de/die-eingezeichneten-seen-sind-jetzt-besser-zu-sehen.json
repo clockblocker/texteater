@@ -2,30 +2,86 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die eingezeichneten Seen sind jetzt besser zu sehen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eingezeichneten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Seen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sind" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "jetzt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "besser" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sehen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eingezeichneten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Seen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sind"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jetzt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "besser"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sehen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036"
+		],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
@@ -36,7 +92,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -57,8 +113,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🗺✏",
 				"knowledge": {
@@ -93,7 +154,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "eingezeichneten", "orthography": "Standard" }
+					{
+						"attested": "eingezeichneten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -102,7 +166,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "eingezeichneten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,

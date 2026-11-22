@@ -2,28 +2,66 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der reisende Händler wartete draußen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "reisende" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Händler" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wartete" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "draußen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "reisende"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Händler"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wartete"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "draußen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036"
+		],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "43184aac9186aceb"
 			},
-			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
@@ -34,7 +72,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -55,8 +93,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🧳",
 				"knowledge": {
@@ -91,7 +134,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "reisende", "orthography": "Standard" }
+					{
+						"attested": "reisende",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -100,7 +146,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "reisende",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,

@@ -177,7 +177,13 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0034", "ADR-0039", "ADR-0040", "ADR-0042"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0034",
+			"ADR-0039",
+			"ADR-0040",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -219,7 +225,10 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
+			},
 			{
 				"rule": "de/quantifier-by-use",
 				"hash": "f320e2bb7e4a76f5"
@@ -290,12 +299,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -338,7 +351,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 10],
+			"memberSegmentIndices": [
+				2,
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -347,24 +363,16 @@
 				"emojiDescription": "🔄",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -471,12 +479,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 8],
+			"memberSegmentIndices": [
+				4,
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👀" },
+			"reading": {
+				"emojiDescription": "👀"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -525,12 +538,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😄" },
+			"reading": {
+				"emojiDescription": "😄"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -573,12 +590,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "👨" },
+			"reading": {
+				"emojiDescription": "👨"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -620,7 +641,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -657,7 +680,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16, 18],
+			"memberSegmentIndices": [
+				16,
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -666,41 +692,16 @@
 				"emojiDescription": "▶",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "mit",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Clause",
+								"form": "ZuInfinitive"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -780,12 +781,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
 			},
-			"reading": { "emojiDescription": "🔐" },
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -834,7 +839,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -879,7 +886,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Glieder"] },
+				"paradigm": {
+					"plural": [
+						"Glieder"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -890,7 +901,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -934,12 +947,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25, 27],
+			"memberSegmentIndices": [
+				25,
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -986,12 +1004,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29, 31],
+			"memberSegmentIndices": [
+				29,
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😌" },
+			"reading": {
+				"emojiDescription": "😌"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1001,9 +1024,18 @@
 						"fusion": {
 							"spelling": "abzuspannen",
 							"components": [
-								{ "span": "ab", "surface": "ab" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "spannen", "surface": "spannen" }
+								{
+									"span": "ab",
+									"surface": "ab"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "spannen",
+									"surface": "spannen"
+								}
 							]
 						},
 						"component": 0
@@ -1014,9 +1046,18 @@
 						"fusion": {
 							"spelling": "abzuspannen",
 							"components": [
-								{ "span": "ab", "surface": "ab" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "spannen", "surface": "spannen" }
+								{
+									"span": "ab",
+									"surface": "ab"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "spannen",
+									"surface": "spannen"
+								}
 							]
 						},
 						"component": 2
@@ -1062,9 +1103,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"reading": { "emojiDescription": "🔗" },
+			"memberSegmentIndices": [
+				30
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
 			"notes": {
 				"rationale": "The zu inside abzuspannen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
 			},
@@ -1085,7 +1133,9 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -1095,9 +1145,18 @@
 						"fusion": {
 							"spelling": "abzuspannen",
 							"components": [
-								{ "span": "ab", "surface": "ab" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "spannen", "surface": "spannen" }
+								{
+									"span": "ab",
+									"surface": "ab"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "spannen",
+									"surface": "spannen"
+								}
 							]
 						},
 						"component": 1
@@ -1107,7 +1166,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1144,12 +1205,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [35, 37],
+			"memberSegmentIndices": [
+				35,
+				37
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🛋" },
+			"reading": {
+				"emojiDescription": "🛋"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1159,9 +1225,18 @@
 						"fusion": {
 							"spelling": "auszuruhen",
 							"components": [
-								{ "span": "aus", "surface": "aus" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "ruhen", "surface": "ruhen" }
+								{
+									"span": "aus",
+									"surface": "aus"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "ruhen",
+									"surface": "ruhen"
+								}
 							]
 						},
 						"component": 0
@@ -1172,9 +1247,18 @@
 						"fusion": {
 							"spelling": "auszuruhen",
 							"components": [
-								{ "span": "aus", "surface": "aus" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "ruhen", "surface": "ruhen" }
+								{
+									"span": "aus",
+									"surface": "aus"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "ruhen",
+									"surface": "ruhen"
+								}
 							]
 						},
 						"component": 2
@@ -1220,9 +1304,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"reading": { "emojiDescription": "🔗" },
+			"memberSegmentIndices": [
+				36
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
 			"notes": {
 				"rationale": "The zu inside auszuruhen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
 			},
@@ -1243,7 +1334,9 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -1253,9 +1346,18 @@
 						"fusion": {
 							"spelling": "auszuruhen",
 							"components": [
-								{ "span": "aus", "surface": "aus" },
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "ruhen", "surface": "ruhen" }
+								{
+									"span": "aus",
+									"surface": "aus"
+								},
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "ruhen",
+									"surface": "ruhen"
+								}
 							]
 						},
 						"component": 1

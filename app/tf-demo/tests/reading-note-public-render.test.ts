@@ -162,12 +162,7 @@ function readingNote(): ReadingNote {
 			transcription: "zɪç",
 			translations: { en: [[{ kind: "Text", text: "to be happy" }]] },
 			definition: "To experience happiness.",
-			valency: [
-				{
-					status: "Required",
-					complements: [{ kind: "Reflexive", governedCase: "Acc" }],
-				},
-			],
+			valency: [[{ kind: "Reflexive", governedCase: "Acc" }]],
 		},
 		knowledgeUpdatedAt: null,
 		definitionText: { state: "Plain" },

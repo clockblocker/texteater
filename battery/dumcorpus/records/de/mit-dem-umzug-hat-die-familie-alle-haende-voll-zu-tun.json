@@ -2,31 +2,99 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Mit dem Umzug hat die Familie alle Hände voll zu tun.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Umzug" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Familie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "alle" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hände" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "voll" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "tun" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Umzug"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Familie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "alle"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hände"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "voll"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tun"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [
@@ -59,21 +127,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12, 14, 16, 18, 20],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				12,
+				14,
+				16,
+				18,
+				20
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🤹",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -127,7 +202,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "alle Hände voll zu tun hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -143,12 +220,30 @@
 					}
 				},
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "alle", "orthography": "Standard" },
-					{ "attested": "Hände", "orthography": "Standard" },
-					{ "attested": "voll", "orthography": "Standard" },
-					{ "attested": "zu", "orthography": "Standard" },
-					{ "attested": "tun", "orthography": "Standard" }
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "alle",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Hände",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "voll",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "tun",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

@@ -103,7 +103,10 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0029", "ADR-0035"],
+		"adrs": [
+			"ADR-0029",
+			"ADR-0035"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -248,12 +251,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🍀" },
+			"reading": {
+				"emojiDescription": "🍀"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -289,12 +296,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 10],
+			"memberSegmentIndices": [
+				2,
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🗣🤷" },
+			"reading": {
+				"emojiDescription": "🗣🤷"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -347,7 +359,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -397,7 +411,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -447,12 +463,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔧" },
+			"reading": {
+				"emojiDescription": "🔧"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -488,7 +508,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13, 19],
+			"memberSegmentIndices": [
+				13,
+				19
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "SCONJ"
@@ -529,7 +552,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -590,7 +615,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
@@ -633,7 +660,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -642,42 +671,24 @@
 				"emojiDescription": "💭✅",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "an",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "an",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Required"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Required"
-								}
-							]
-						}
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -692,7 +703,11 @@
 						]
 					}
 				},
-				"paradigm": { "preterite": ["glaubte"] },
+				"paradigm": {
+					"preterite": [
+						"glaubte"
+					]
+				},
 				"coverage": {
 					"valency": "Authored",
 					"semanticRelations": {
@@ -702,7 +717,9 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
 					},
-					"paradigm": { "preterite": "Authored" }
+					"paradigm": {
+						"preterite": "Authored"
+					}
 				}
 			},
 			"attestation": {

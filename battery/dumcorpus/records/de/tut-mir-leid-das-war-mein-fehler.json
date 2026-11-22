@@ -2,29 +2,84 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Tut mir leid, das war mein Fehler.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Tut" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "leid" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fehler" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Tut"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "leid"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fehler"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0034", "ADR-0038", "ADR-0039"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0034",
+			"ADR-0038",
+			"ADR-0039"
+		],
 		"rules": [
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
@@ -35,7 +90,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -71,40 +126,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 4],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				0,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😔",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -122,12 +165,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["tat leid"],
-					"present1": ["tue leid"],
-					"present2": ["tust leid"],
-					"present3": ["tut leid"],
-					"pastParticiple": ["leidgetan"],
-					"subjunctivePast": ["täte leid"]
+					"preterite": [
+						"tat leid"
+					],
+					"present1": [
+						"tue leid"
+					],
+					"present2": [
+						"tust leid"
+					],
+					"present3": [
+						"tut leid"
+					],
+					"pastParticiple": [
+						"leidgetan"
+					],
+					"subjunctivePast": [
+						"täte leid"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -155,8 +210,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Tut", "orthography": "Standard" },
-					{ "attested": "leid", "orthography": "Standard" }
+					{
+						"attested": "Tut",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "leid",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -165,7 +226,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "leidtut",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -193,22 +256,34 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"reading": {
 				"emojiDescription": "👈",
 				"knowledge": {}
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "mir", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "mir",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "mir",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

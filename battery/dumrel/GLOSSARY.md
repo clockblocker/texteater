@@ -118,24 +118,28 @@ writes them; nothing pairs them with the German Valency Frame. See
 _Avoid_: valency mark, token, Breakdown piece
 
 **Governed Preposition**:
-A preposition a Reading lexically selects: a Preposition complement in a Slot
-of its Valency Frame (Dumling). See [ADR 0034].
+A preposition a Reading lexically selects: a Preposition complement in a
+Valency Pattern of its Reading Knowledge. See [ADR 0034].
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
-The Reading whose Valency Frame holds a Governed Preposition. The
+The Reading whose Valency Patterns hold a Governed Preposition. The
 preposition's side of the link is projected, never stored. See [ADR 0034].
 _Avoid_: governing verb
 
+**Valency Pattern**:
+One concrete list of governed complements realized by an occurrence of a
+Reading, with no optionality statuses and no inline alternatives. A Reading's
+`valency` accumulates distinct Valency Patterns click by click. See [ADR 0034].
+_Avoid_: Valency Slot, factored frame
+
 **Reflexive Slot**:
-A Slot of a Valency Frame (Dumling) holding a Reflexive complement: the
-lexical reflexive its Reading needs, which no other noun phrase can replace,
-with its case where the language has one (German Acc or Dat; English none).
-The Slot holds the case; an occurrence's `valencyEvidence` (Dumling) names it
-only where the occurrence shows it.
-When the reflexive is the object of a fixed phrase's preposition, the Slot
-names that preposition (`außer sich sein`). A Required one puts 🪞 first in
-the Reading's Emoji Description (Dumling). See [ADR 0034] and [ADR 0052].
+A Reflexive complement in a Reading's Valency Patterns: the lexical reflexive
+its Reading takes, which no other noun phrase can replace, with its case where
+the language has one (German Acc or Dat; English none). When the reflexive is
+the object of a fixed phrase's preposition, it names that preposition (`außer
+sich sein`). A 🪞 Reading requires it in every pattern; a non-🪞 Reading may
+hold it in some patterns (optional reflexive). See [ADR 0034] and [ADR 0052].
 _Avoid_: `lexicallyReflexive`, `isReflexive`, reflexive verb Lemma
 
 **Source**:

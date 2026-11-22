@@ -2,26 +2,86 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Es zog der wilde Jägersmann\nsein grasgrün neues Röcklein an;",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zog" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wilde" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Jägersmann" },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "sein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "grasgrün" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "neues" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Röcklein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
-		{ "kind": "Punctuation", "text": ";" }
+		{
+			"kind": "ResolvableText",
+			"text": "Es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zog"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wilde"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Jägersmann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "grasgrün"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "neues"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Röcklein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "an"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
@@ -32,7 +92,12 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0035", "ADR-0038"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -42,10 +107,13 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -86,8 +154,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"memberSegmentIndices": [
+				0
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"reading": {
 				"emojiDescription": "⚪",
 				"knowledge": {}
@@ -97,14 +170,21 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Es", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Es",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -127,39 +207,28 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 18],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				18
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "👕",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -211,12 +280,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["zog an"],
-					"present1": ["ziehe an"],
-					"present2": ["ziehst an"],
-					"present3": ["zieht an"],
-					"pastParticiple": ["angezogen"],
-					"subjunctivePast": ["zöge an"]
+					"preterite": [
+						"zog an"
+					],
+					"present1": [
+						"ziehe an"
+					],
+					"present2": [
+						"ziehst an"
+					],
+					"present3": [
+						"zieht an"
+					],
+					"pastParticiple": [
+						"angezogen"
+					],
+					"subjunctivePast": [
+						"zöge an"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -245,8 +326,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "zog", "orthography": "Standard" },
-					{ "attested": "an", "orthography": "Standard" }
+					{
+						"attested": "zog",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "an",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -255,7 +342,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "anzog",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -283,8 +372,14 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 8],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				4,
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "🏹",
 				"knowledge": {
@@ -313,7 +408,12 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Jägersleute", "Jägersmänner"] },
+				"paradigm": {
+					"plural": [
+						"Jägersleute",
+						"Jägersmänner"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "ReviewedEmpty",
@@ -325,7 +425,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"grundform": true,
@@ -335,17 +437,28 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Jägersmann", "orthography": "Standard" }
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Jägersmann",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Jägersmann",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

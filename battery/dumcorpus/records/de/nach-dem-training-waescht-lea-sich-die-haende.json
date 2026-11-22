@@ -2,27 +2,80 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Nach dem Training wäscht Lea sich die Hände.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Nach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Training" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wäscht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Lea" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hände" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Training"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wäscht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Lea"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hände"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0022"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -85,8 +138,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"memberSegmentIndices": [
+				0
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -101,7 +159,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "nach",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"valencyEvidence": [
@@ -114,13 +174,24 @@
 						"realizedCase": "Dat"
 					}
 				],
-				"members": [{ "attested": "Nach", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Nach",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				2,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "🏋",
 				"knowledge": {
@@ -139,7 +210,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Trainings"] },
+				"paradigm": {
+					"plural": [
+						"Trainings"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -150,7 +225,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -169,7 +246,9 @@
 						}
 					},
 					"normalizedSurface": "Training",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -183,8 +262,14 @@
 				},
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "dem", "orthography": "Standard" },
-					{ "attested": "Training", "orthography": "Standard" }
+					{
+						"attested": "dem",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Training",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			},
@@ -193,30 +278,27 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🧼",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -234,12 +316,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["wusch"],
-					"present1": ["wasche"],
-					"present2": ["wäschst"],
-					"present3": ["wäscht"],
-					"pastParticiple": ["gewaschen"],
-					"subjunctivePast": ["wüsche"]
+					"preterite": [
+						"wusch"
+					],
+					"present1": [
+						"wasche"
+					],
+					"present2": [
+						"wäschst"
+					],
+					"present3": [
+						"wäscht"
+					],
+					"pastParticiple": [
+						"gewaschen"
+					],
+					"subjunctivePast": [
+						"wüsche"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -279,7 +373,9 @@
 						}
 					},
 					"normalizedSurface": "wäscht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -297,15 +393,25 @@
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "wäscht", "orthography": "Standard" }
+					{
+						"attested": "wäscht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"reading": { "emojiDescription": "👩" },
+			"memberSegmentIndices": [
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
+			},
+			"reading": {
+				"emojiDescription": "👩"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -323,7 +429,9 @@
 						}
 					},
 					"normalizedSurface": "Lea",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -332,15 +440,29 @@
 					}
 				},
 				"articleEvidence": null,
-				"members": [{ "attested": "Lea", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Lea",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🪞" },
-			"notes": { "rationale": "Reflexive possessor. Dative form sich." },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🪞"
+			},
+			"notes": {
+				"rationale": "Reflexive possessor. Dative form sich."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -363,19 +485,34 @@
 						}
 					},
 					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
-			"memberSegmentIndices": [12, 14],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "✋" },
+			"memberSegmentIndices": [
+				12,
+				14
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "✋"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -392,7 +529,9 @@
 						}
 					},
 					"normalizedSurface": "Hände",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -406,8 +545,14 @@
 				},
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Hände", "orthography": "Standard" }
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Hände",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}

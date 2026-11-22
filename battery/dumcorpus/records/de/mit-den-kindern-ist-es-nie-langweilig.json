@@ -2,26 +2,75 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Mit den Kindern ist es nie langweilig.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kindern" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "langweilig" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kindern"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "langweilig"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0040"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038",
+			"ADR-0040"
+		],
 		"rules": [
 			{
 				"rule": "de/noun-owns-its-article",
@@ -29,7 +78,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -70,8 +119,14 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				2,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "🧒",
 				"knowledge": {
@@ -96,13 +151,22 @@
 								"kind": "NOUN",
 								"canonicalForm": "Balg",
 								"coreFeatures": {
-									"gender": { "mixed": ["Masc", "Neut"] }
+									"gender": {
+										"mixed": [
+											"Masc",
+											"Neut"
+										]
+									}
 								}
 							}
 						]
 					}
 				},
-				"paradigm": { "plural": ["Kinder"] },
+				"paradigm": {
+					"plural": [
+						"Kinder"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "ReviewedEmpty",
@@ -114,7 +178,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -123,17 +189,28 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Kindern", "orthography": "Standard" }
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kindern",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Kindern",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,

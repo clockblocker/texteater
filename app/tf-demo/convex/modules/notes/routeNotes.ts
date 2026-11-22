@@ -102,15 +102,16 @@ const surfaceRouteNoteValidator = v.object({
 		}),
 	),
 	/**
-	 * The Reading the Deck that dealt this Note leads to, with its Valency
-	 * Frame, so the analysis of its Lemma prints its slotted line (#1293).
-	 * Null when no Reading is in context.
+	 * The Reading the Deck that dealt this Note leads to, with its reflexive
+	 * marker and accumulated patterns. Null when no Reading is in context.
 	 */
 	activeReading: v.union(
 		v.null(),
 		v.object({
 			readingId: v.id("readings"),
 			lemmaId: v.id("lemmas"),
+			emojiDescription: v.optional(v.string()),
+			reflexive: reflexiveSlotValidator,
 			valency: readingFrameValidator,
 		}),
 	),
@@ -239,7 +240,10 @@ async function loadAttestationRouteNote(
 		},
 		reading: {
 			emojiDescription: occurrence.reading.emojiDescription,
-			reflexive: reflexiveSlotOf(valency ?? undefined),
+			reflexive: reflexiveSlotOf(
+				valency ?? undefined,
+				occurrence.reading.emojiDescription,
+			),
 			valency,
 			target: {
 				kind: "Reading" as const,
@@ -335,10 +339,18 @@ async function loadActiveReading(
 ) {
 	const reading = await ctx.db.get(readingId);
 	if (!reading || !lemmaIds.includes(reading.lemmaId)) return null;
+	const valency = await loadReadingFrame(ctx, reading.readingKey);
 	return {
 		readingId: reading._id,
 		lemmaId: reading.lemmaId,
-		valency: await loadReadingFrame(ctx, reading.readingKey),
+		...(reading.emojiDescription === undefined
+			? {}
+			: { emojiDescription: reading.emojiDescription }),
+		reflexive: reflexiveSlotOf(
+			valency ?? undefined,
+			reading.emojiDescription,
+		),
+		valency,
 	};
 }
 
@@ -455,7 +467,11 @@ async function loadLemmaRouteNote(
 				readings.map(async (reading) => ({
 					readingId: reading._id,
 					emojiDescription: reading.emojiDescription,
-					reflexive: await loadReflexiveSlot(ctx, reading.readingKey),
+					reflexive: await loadReflexiveSlot(
+						ctx,
+						reading.readingKey,
+						reading.emojiDescription,
+					),
 					target: {
 						kind: "Reading" as const,
 						readingId: reading._id,

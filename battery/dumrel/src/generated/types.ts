@@ -1438,7 +1438,7 @@ export type ReadingKnowledge = {
 		| undefined;
 	breakdown?: Breakdown | undefined;
 	semanticRelations?: SemanticRelations | undefined;
-	valency?: Array<ValencySlot> | undefined;
+	valency?: Array<ValencyPattern> | undefined;
 	source?: Source | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
@@ -1687,12 +1687,12 @@ export type KnowledgeChange =
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "valency";
-			value: Array<ValencySlot>;
+			value: Array<ValencyPattern>;
 	  }
 	| {
 			kind: "Retract";
 			aspect: "valency";
-			complement?: ValencyComplement | undefined;
+			pattern?: ValencyPattern | undefined;
 	  }
 	| { kind: "Contribute" | "Correct"; aspect: "source"; value: Source }
 	| { kind: "Retract"; aspect: "source" }
@@ -2041,7 +2041,6 @@ export type SemanticRelationProjection = {
 	provenance: "direct" | "inferred";
 };
 export type GovernedCase = "Acc" | "Dat" | "Gen";
-export type ValencySlotStatus = "Required" | "Optional";
 export type GermanValencyComplement =
 	| { kind: "Case"; governedCase: "Nom" | "Acc" | "Dat" | "Gen" }
 	| {
@@ -2062,7 +2061,7 @@ export type GermanValencyComplement =
 	| {
 			kind: "Clause";
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
-			correlate?: ("Required" | "Optional") | undefined;
+			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
 	  }
 	| {
 			kind: "Reflexive";
@@ -2105,7 +2104,7 @@ export type ValencyComplement =
 	| {
 			kind: "Clause";
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
-			correlate?: ("Required" | "Optional") | undefined;
+			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
 	  }
 	| {
 			kind: "Reflexive";
@@ -2123,10 +2122,7 @@ export type ValencyComplement =
 			kind: "Reflexive";
 			preposition?: Dumling.Lemma<"en", "Lexeme", "ADP"> | undefined;
 	  };
-export type ValencySlot = {
-	status: ValencySlotStatus;
-	complements: Array<ValencyComplement>;
-};
+export type ValencyPattern = Array<ValencyComplement>;
 type GovernmentRelation = "governs" | "governedBy";
 export type GovernmentProjection = {
 	source:

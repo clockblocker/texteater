@@ -2,33 +2,114 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Verbrannt ist alles ganz und gar,\ndas arme Kind mit Haut und Haar;",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Verbrannt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "alles" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ganz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gar" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "arme" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kind" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Haut" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Haar" },
-		{ "kind": "Punctuation", "text": ";" }
+		{
+			"kind": "ResolvableText",
+			"text": "Verbrannt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "alles"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ganz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gar"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "arme"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kind"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Haut"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Haar"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
@@ -39,10 +120,20 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0038", "ADR-0039"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0038",
+			"ADR-0039"
+		],
 		"rules": [
-			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/sein-perfect-or-copula",
+				"hash": "2f0a185d7f35c1e9"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
@@ -55,11 +146,17 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -100,21 +197,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				0,
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🔥",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -150,12 +250,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["verbrannte"],
-					"present1": ["verbrenne"],
-					"present2": ["verbrennst"],
-					"present3": ["verbrennt"],
-					"pastParticiple": ["verbrannt"],
-					"subjunctivePast": ["verbrennte"]
+					"preterite": [
+						"verbrannte"
+					],
+					"present1": [
+						"verbrenne"
+					],
+					"present2": [
+						"verbrennst"
+					],
+					"present3": [
+						"verbrennt"
+					],
+					"pastParticiple": [
+						"verbrannt"
+					],
+					"subjunctivePast": [
+						"verbrennte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -183,8 +295,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Verbrannt", "orthography": "Standard" },
-					{ "attested": "ist", "orthography": "Standard" }
+					{
+						"attested": "Verbrannt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ist",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -193,7 +311,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verbrannt ist",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -221,8 +341,15 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6, 8, 10],
-			"route": { "family": "Locution", "kind": "ADV" },
+			"memberSegmentIndices": [
+				6,
+				8,
+				10
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "ADV"
+			},
 			"reading": {
 				"emojiDescription": "💯",
 				"knowledge": {
@@ -290,9 +417,18 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "ganz", "orthography": "Standard" },
-					{ "attested": "und", "orthography": "Standard" },
-					{ "attested": "gar", "orthography": "Standard" }
+					{
+						"attested": "ganz",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gar",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"surface": {
@@ -300,22 +436,34 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "ganz und gar",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "ganz und gar",
 						"family": "Locution",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null }
+						"coreFeatures": {
+							"comparable": null
+						}
 					},
 					"surfaceFeatures": null
 				}
 			}
 		},
 		{
-			"memberSegmentIndices": [19, 21, 23, 25],
-			"route": { "family": "Locution", "kind": "ADV" },
+			"memberSegmentIndices": [
+				19,
+				21,
+				23,
+				25
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "ADV"
+			},
 			"reading": {
 				"emojiDescription": "💯",
 				"knowledge": {
@@ -371,10 +519,22 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "mit", "orthography": "Standard" },
-					{ "attested": "Haut", "orthography": "Standard" },
-					{ "attested": "und", "orthography": "Standard" },
-					{ "attested": "Haar", "orthography": "Standard" }
+					{
+						"attested": "mit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Haut",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Haar",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"surface": {
@@ -382,14 +542,18 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "mit Haut und Haar",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "mit Haut und Haar",
 						"family": "Locution",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null }
+						"coreFeatures": {
+							"comparable": null
+						}
 					},
 					"surfaceFeatures": null
 				}

@@ -1,64 +1,44 @@
 /**
- * The language-free skeleton of the dictionary notation Luna writes a
- * Valency Frame in: Slots separated by spaces in frame order, an Optional
- * Slot in `( … )`, the alternatives of one Slot joined by `|`, each
- * complement a head (`A`, `dass`, `irgendwo`) after at most one
- * prefix word (a preposition, a predicative's marker, a correlate), the
- * prefix itself Optional in `( … )` (`(es) dass`). A frame may open with an
- * opener word (German expletive `es`), and an empty frame is one word of
- * its own. A frame reads only in the spelling `printFrame` gives it: one
- * space between Slots and after a prefix, none inside `( … )` or around `|`.
+ * The language-free skeleton of the dictionary notation Luna writes one
+ * concrete Valency Pattern in: complements separated by single spaces, each
+ * complement a head (`A`, `dass`, `irgendwo`) after at most one prefix word
+ * (a preposition or a predicative's marker). A pattern may open with an
+ * opener word (German expletive `es`), and an empty pattern is one word of
+ * its own (`-`). A pattern reads only in the spelling `printPattern` gives
+ * it: one space between complements and after a prefix.
  *
  * What the words mean is a language's word table (`de/valency-notation.ts`;
- * English's and Hebrew's later): which words are
- * prefixes, heads and openers. The skeleton only finds the structure, and
- * prints it back.
+ * English's and Hebrew's later): which words are prefixes, heads and openers.
+ * The skeleton only finds the structure, and prints it back.
  */
 
 /** One complement as written: its head and the prefix before it, if any. */
 export type RawComplement = {
 	readonly head: string;
 	readonly prefix?: string;
-	/** The prefix in `( … )`: present or not, the complement is the same Slot's. */
-	readonly optionalPrefix?: boolean;
 };
 
-type RawSlot = {
-	readonly optional: boolean;
-	readonly alternatives: readonly RawComplement[];
-};
-
-export type RawFrame = {
+export type RawPattern = {
 	readonly opener?: string;
-	readonly slots: readonly RawSlot[];
+	readonly complements: readonly RawComplement[];
 };
 
 /** A language's words, as the skeleton needs to tell them apart. */
-export type FrameWords = {
+export type PatternWords = {
 	readonly isPrefix: (word: string) => boolean;
 	/** How many words, from `index` on, make one head; 0 when none starts there. */
 	readonly headLength: (words: readonly string[], index: number) => number;
 	readonly isOpener: (word: string) => boolean;
-	/**
-	 * Whether a prefix stands before this head, `alone` when nothing else
-	 * shares its Slot: German es stands before a clause that has a sibling,
-	 * never before D, and a lone clause's leading es is the opener.
-	 */
-	readonly combines: (
-		prefix: string,
-		head: string,
-		alone: boolean,
-	) => boolean;
-	/** What an empty frame is written as. */
+	/** What an empty pattern is written as. */
 	readonly empty: string;
 };
 
 type ParseResult =
-	| { readonly ok: true; readonly frame: RawFrame }
+	| { readonly ok: true; readonly pattern: RawPattern }
 	| { readonly ok: false; readonly error: string };
 
-/** A word, with any case marker written onto it (`sich(A)`), or one of `(`, `)`, `|`. */
-const tokenPattern = /\(|\)|\||[^\s()|]+(?:\([^\s()|]*\))?/gu;
+/** A word, with any case marker written onto it (`sich(A)`). */
+const tokenPattern = /[^\s()|]+(?:\([^\s()|]*\))?/gu;
 
 /** The tokens of `text`, or the stray text between them. */
 function tokensOf(
@@ -79,13 +59,13 @@ function tokensOf(
 }
 
 /**
- * Reads a frame's structure, its opener, its Slots and their alternatives,
- * from text in the spelling `printFrame` gives it.
+ * Reads a concrete pattern's structure — its opener and its complements —
+ * from text in the spelling `printPattern` gives it.
  */
-export function parseFrame(text: string, words: FrameWords): ParseResult {
+export function parsePattern(text: string, words: PatternWords): ParseResult {
 	const read = structureOf(text, words);
 	if (!read.ok) return read;
-	return printFrame(read.frame, words) === text
+	return printPattern(read.pattern, words) === text
 		? read
 		: {
 				ok: false,
@@ -93,129 +73,63 @@ export function parseFrame(text: string, words: FrameWords): ParseResult {
 			};
 }
 
-function structureOf(text: string, words: FrameWords): ParseResult {
+function structureOf(text: string, words: PatternWords): ParseResult {
 	const lexed = tokensOf(text);
 	if ("error" in lexed) return { ok: false, error: lexed.error };
 	const { tokens } = lexed;
 	if (tokens.length === 1 && tokens[0] === words.empty)
-		return { ok: true, frame: { slots: [] } };
+		return { ok: true, pattern: { complements: [] } };
 	let index = 0;
 	const fail = (error: string): ParseResult => ({ ok: false, error });
-	const isWord = (token: string | undefined) =>
-		token !== undefined && token !== "(" && token !== ")" && token !== "|";
-	/** One complement at `index`, or why none stands there. */
-	const complement = (): RawComplement | string => {
+	let opener: string | undefined;
+	const [first] = tokens;
+	if (first !== undefined && words.isOpener(first)) {
+		opener = first;
+		index = 1;
+		if (index === tokens.length)
+			return fail(`«${first}» opens no complement`);
+	}
+	const complements: RawComplement[] = [];
+	while (index < tokens.length) {
 		let prefix: string | undefined;
-		let optionalPrefix = false;
-		const [open, inner, close] = tokens.slice(index, index + 3);
+		const token = tokens[index];
 		if (
-			open === "(" &&
-			inner !== undefined &&
-			words.isPrefix(inner) &&
-			close === ")"
-		) {
-			prefix = inner;
-			optionalPrefix = true;
-			index += 3;
-		} else if (
-			isWord(open) &&
-			open !== undefined &&
-			words.isPrefix(open) &&
+			token !== undefined &&
+			words.isPrefix(token) &&
 			words.headLength(tokens, index) === 0
 		) {
-			prefix = open;
+			prefix = token;
 			index += 1;
 		}
 		const length = words.headLength(tokens, index);
 		if (length === 0)
-			return `Expected a complement at «${tokens.slice(index).join(" ") || "the end"}»`;
+			return fail(
+				`Expected a complement at «${tokens.slice(index).join(" ") || "the end"}»`,
+			);
 		const head = tokens.slice(index, index + length).join(" ");
 		index += length;
-		return {
+		complements.push({
 			head,
 			...(prefix === undefined ? {} : { prefix }),
-			...(optionalPrefix ? { optionalPrefix } : {}),
-		};
-	};
-	/** A Slot's alternatives, up to the token that ends them. */
-	const alternatives = (): RawComplement[] | string => {
-		const found: RawComplement[] = [];
-		for (;;) {
-			const read = complement();
-			if (typeof read === "string") return read;
-			found.push(read);
-			if (tokens[index] !== "|") return found;
-			index += 1;
-		}
-	};
-	let opener: string | undefined;
-	const [first] = tokens;
-	const following = words.headLength(tokens, 1);
-	if (
-		first !== undefined &&
-		words.isOpener(first) &&
-		// An opener that is also a prefix opens unless the head after it takes it.
-		!(
-			words.isPrefix(first) &&
-			following > 0 &&
-			words.combines(
-				first,
-				tokens.slice(1, 1 + following).join(" "),
-				tokens[1 + following] !== "|",
-			)
-		)
-	) {
-		opener = first;
-		index = 1;
-		if (index === tokens.length) return fail(`«${first}» opens no Slot`);
-	}
-	const slots: RawSlot[] = [];
-	while (index < tokens.length) {
-		const [open, inner, close] = tokens.slice(index, index + 3);
-		const prefixGroup =
-			open === "(" &&
-			inner !== undefined &&
-			words.isPrefix(inner) &&
-			close === ")";
-		if (open === "(" && !prefixGroup) {
-			index += 1;
-			const read = alternatives();
-			if (typeof read === "string") return fail(read);
-			if (tokens[index] !== ")")
-				return fail(
-					`Expected «)» at «${tokens.slice(index).join(" ") || "the end"}»`,
-				);
-			index += 1;
-			slots.push({ optional: true, alternatives: read });
-			continue;
-		}
-		const read = alternatives();
-		if (typeof read === "string") return fail(read);
-		slots.push({ optional: false, alternatives: read });
+		});
 	}
 	return {
 		ok: true,
-		frame: { ...(opener === undefined ? {} : { opener }), slots },
+		pattern: { ...(opener === undefined ? {} : { opener }), complements },
 	};
 }
 
-const printedComplement = ({ head, prefix, optionalPrefix }: RawComplement) =>
-	prefix === undefined
-		? head
-		: `${optionalPrefix ? `(${prefix})` : prefix} ${head}`;
+const printedComplement = ({ head, prefix }: RawComplement) =>
+	prefix === undefined ? head : `${prefix} ${head}`;
 
-/** A frame's structure as text. */
-export function printFrame(
-	frame: RawFrame,
-	words: Pick<FrameWords, "empty">,
+/** A pattern's structure as text. */
+export function printPattern(
+	pattern: RawPattern,
+	words: Pick<PatternWords, "empty">,
 ): string {
-	const slots = frame.slots.map(({ optional, alternatives }) => {
-		const joined = alternatives.map(printedComplement).join("|");
-		return optional ? `(${joined})` : joined;
-	});
 	const parts = [
-		...(frame.opener === undefined ? [] : [frame.opener]),
-		...slots,
+		...(pattern.opener === undefined ? [] : [pattern.opener]),
+		...pattern.complements.map(printedComplement),
 	];
 	return parts.length === 0 ? words.empty : parts.join(" ");
 }

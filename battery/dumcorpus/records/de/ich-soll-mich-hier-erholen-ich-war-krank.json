@@ -79,7 +79,10 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0042"],
+		"adrs": [
+			"ADR-0026",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -132,7 +135,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -182,12 +187,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📋" },
+			"reading": {
+				"emojiDescription": "📋"
+			},
 			"notes": {
 				"rationale": "soll is the modal sollen; the infinitive is its own target (de/modal-is-a-verb)."
 			},
@@ -236,7 +245,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 8],
+			"memberSegmentIndices": [
+				4,
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -245,51 +257,16 @@
 				"emojiDescription": "🪞😌🔋",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "von",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Required"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Required"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -317,12 +294,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["erholte"],
-					"present1": ["erhole"],
-					"present2": ["erholst"],
-					"present3": ["erholt"],
-					"pastParticiple": ["erholt"],
-					"subjunctivePast": ["erholte"]
+					"preterite": [
+						"erholte"
+					],
+					"present1": [
+						"erhole"
+					],
+					"present2": [
+						"erholst"
+					],
+					"present3": [
+						"erholt"
+					],
+					"pastParticiple": [
+						"erholt"
+					],
+					"subjunctivePast": [
+						"erholte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -404,12 +393,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "📍" },
+			"reading": {
+				"emojiDescription": "📍"
+			},
 			"notes": {
 				"rationale": "hier is a non-comparable ADV (de/comparability-is-lexical)."
 			},
@@ -445,7 +438,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -495,12 +490,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰"
+			},
 			"notes": {
 				"rationale": "war is the copula and stays apart from krank (de/copula-stays-apart)."
 			},
@@ -549,12 +548,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤒" },
+			"reading": {
+				"emojiDescription": "🤒"
+			},
 			"notes": {
 				"rationale": "krank is a predicative ADJ; kränker, am kränksten make it comparable, so it marks Pos (de/comparability-is-lexical)."
 			},

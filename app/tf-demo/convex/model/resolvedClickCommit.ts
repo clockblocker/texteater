@@ -23,6 +23,7 @@ import {
 	staleNewReading,
 } from "./resolvedClickDictionary";
 import { scheduleTranslationAccumulation } from "./translationAccumulation";
+import { scheduleValencyAccumulation } from "./valencyAccumulation";
 import {
 	occurrenceAttestationInputValidator,
 	readingDecisionValidator,
@@ -326,10 +327,14 @@ export async function commitResolvedClick(
 		session,
 		attestationId,
 	);
-	// The new occurrence may need a translation its Reading lacks (ADR 0047).
-	await scheduleTranslationAccumulation(ctx, {
-		visitorId: session.visitorId,
-		attestationId,
-	});
+	// The new occurrence may add translations (ADR 0047) or a concrete
+	// Valency Pattern (ADR 0034) its Reading lacks.
+	await Promise.all([
+		scheduleTranslationAccumulation(ctx, {
+			visitorId: session.visitorId,
+			attestationId,
+		}),
+		scheduleValencyAccumulation(ctx, { attestationId }),
+	]);
 	return { status: "Committed" as const, ...completed, deduplicated: false };
 }

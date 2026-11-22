@@ -57,7 +57,10 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -73,7 +76,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -99,71 +102,41 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4, 6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🪞🧠💭",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Gen"
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Acc"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "an",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "an",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						}
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -203,12 +176,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["erinnerte"],
-					"present1": ["erinnere"],
-					"present2": ["erinnerst"],
-					"present3": ["erinnert"],
-					"pastParticiple": ["erinnert"],
-					"subjunctivePast": ["erinnerte"]
+					"preterite": [
+						"erinnerte"
+					],
+					"present1": [
+						"erinnere"
+					],
+					"present2": [
+						"erinnerst"
+					],
+					"present3": [
+						"erinnert"
+					],
+					"pastParticiple": [
+						"erinnert"
+					],
+					"subjunctivePast": [
+						"erinnerte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -249,7 +234,9 @@
 						}
 					},
 					"normalizedSurface": "erinnert",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

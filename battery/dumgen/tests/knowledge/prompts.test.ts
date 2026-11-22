@@ -33,6 +33,7 @@ import {
 	translationPromptTexts,
 } from "../../src/knowledge/de/translation-prompts.js";
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
+import { valencyAccumulationPromptTexts } from "../../src/knowledge/de/valency-accumulation-prompts.js";
 import {
 	valencyExampleLemmas,
 	valencyNotationExamples,
@@ -46,6 +47,7 @@ test("every Knowledge prompt paragraph cites the Rules it states at their curren
 		...structurePromptTexts(),
 		...licencePromptTexts(),
 		...valencyPromptTexts(),
+		...valencyAccumulationPromptTexts(),
 	];
 	expect(prompts.length).toBeGreaterThan(70);
 	expect(checkPromptCitations(prompts, rules)).toEqual([]);
@@ -62,9 +64,7 @@ test("every prompt anchors on the Emoji Description, and the Sentence is evidenc
 		expect(prompt).toContain("`emojiDescription`, one to four emoji");
 	for (const prompt of [definitionPrompt, translationPrompt, valencyPrompt])
 		expect(prompt).toContain("The sentence is evidence");
-	expect(valencyPrompt).toContain(
-		"The frame is the Satzbauplan of the one Lesart",
-	);
+	expect(valencyPrompt).toContain("The pattern belongs to the one Lesart");
 });
 
 test("there is one translation prompt, with the citation-form clause; the candidate prompt has one wording and no 'preserve its meaning' (#697, #518)", () => {

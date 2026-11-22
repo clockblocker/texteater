@@ -1,4 +1,4 @@
-export { ValencyLineStyleContext } from "./de/block-renderers/reading/valency/valency-heading";
+export { ValencyLineStyleContext } from "./de/block-renderers/reading/valency/valency-block";
 export {
 	DEFAULT_VALENCY_LINE_STYLE,
 	type ValencyLineStyle,

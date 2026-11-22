@@ -16,8 +16,8 @@ import type {
 } from "./types.js";
 import {
 	checkValencyFrameInvariants,
-	parseValencyComplement,
 	parseValencyFrame,
+	parseValencyPattern,
 } from "./valency-context.js";
 import { directSemanticRelationValues } from "./vocabulary.js";
 
@@ -369,14 +369,12 @@ function contextualizeValencyChange<R extends Dumling.Reading>(
 			? frame
 			: { ...change, value: frame };
 	}
-	if (!change.complement) return change;
-	const complement = parseValencyComplement(source, change.complement, [
+	if (!change.pattern) return change;
+	const pattern = parseValencyPattern(source, change.pattern, [
 		"change",
-		"complement",
+		"pattern",
 	]);
-	return complement instanceof ParsingError
-		? complement
-		: { ...change, complement };
+	return pattern instanceof ParsingError ? pattern : { ...change, pattern };
 }
 
 function contextualizeRelationChange<R extends Dumling.Reading>(

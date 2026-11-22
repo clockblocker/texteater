@@ -2,26 +2,58 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Das wäre schön gewesen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wäre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schön" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gewesen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wäre"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schön"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gewesen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
@@ -32,7 +64,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -53,59 +85,49 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🟰",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Predicative",
-									"marker": "None"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Predicative",
+								"marker": "None"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["war"],
-					"present1": ["bin"],
-					"present2": ["bist"],
-					"present3": ["ist"],
-					"pastParticiple": ["gewesen"],
-					"subjunctivePast": ["wäre"]
+					"preterite": [
+						"war"
+					],
+					"present1": [
+						"bin"
+					],
+					"present2": [
+						"bist"
+					],
+					"present3": [
+						"ist"
+					],
+					"pastParticiple": [
+						"gewesen"
+					],
+					"subjunctivePast": [
+						"wäre"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -133,8 +155,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "wäre", "orthography": "Standard" },
-					{ "attested": "gewesen", "orthography": "Standard" }
+					{
+						"attested": "wäre",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gewesen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -143,7 +171,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "gewesen wäre",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Sub",
 						"number": "Sing",

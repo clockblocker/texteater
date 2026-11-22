@@ -2,27 +2,85 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er versucht, nicht wieder ins Fettnäpfchen zu treten.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "versucht" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wieder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fettnäpfchen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "treten" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "versucht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wieder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "s",
+			"surface": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fettnäpfchen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "treten"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -46,38 +104,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9, 10, 12, 16],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				9,
+				10,
+				12,
+				16
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😬",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "bei",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -146,7 +192,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "ins Fettnäpfchen treten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -168,8 +216,14 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 0
@@ -180,14 +234,26 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Fettnäpfchen", "orthography": "Standard" },
-					{ "attested": "treten", "orthography": "Standard" }
+					{
+						"attested": "Fettnäpfchen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "treten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

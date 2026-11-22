@@ -2,39 +2,127 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Während der Wärter das historische Bett hütete, hütete die kranke Kuratorin das Bett.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Während" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wärter" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "historische" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bett" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hütete" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hütete" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kranke" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kuratorin" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bett" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Während"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wärter"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "historische"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bett"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hütete"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hütete"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kranke"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kuratorin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bett"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
-		"rules": [{ "rule": "de/idiom", "hash": "d25679f2a06809b9" }],
+		"rules": [
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			}
+		],
 		"references": [
 			{
 				"title": "DWDS: das Bett hüten",
@@ -60,21 +148,25 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [15, 23, 25],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				15,
+				23,
+				25
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🤒🛏",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -130,7 +222,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "das Bett hütete",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -146,9 +240,18 @@
 					}
 				},
 				"members": [
-					{ "attested": "hütete", "orthography": "Standard" },
-					{ "attested": "das", "orthography": "Standard" },
-					{ "attested": "Bett", "orthography": "Standard" }
+					{
+						"attested": "hütete",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Bett",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -161,7 +264,11 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
 			"caseId": "draft-translation-idiom-stays-verbal",
-			"memberSegmentIndices": [15, 23, 25],
+			"memberSegmentIndices": [
+				15,
+				23,
+				25
+			],
 			"case": {
 				"input": {
 					"markedContext": "Während der Wärter das historische Bett hütete, <TARGET>hütete</TARGET> die kranke Kuratorin <TARGET>das</TARGET> <TARGET>Bett</TARGET>.",
@@ -194,10 +301,17 @@
 							"be laid up",
 							"be confined to bed"
 						],
-						"ru": ["лежать в постели"]
+						"ru": [
+							"лежать в постели"
+						]
 					},
 					"rejected": {
-						"en": ["bed", "bedridden", "tend", "tend the bed"],
+						"en": [
+							"bed",
+							"bedridden",
+							"tend",
+							"tend the bed"
+						],
 						"ru": [
 							"постель",
 							"больничный режим",

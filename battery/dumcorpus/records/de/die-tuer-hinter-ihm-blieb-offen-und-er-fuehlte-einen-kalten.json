@@ -133,7 +133,13 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0040", "ADR-0042", "ADR-0044"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0040",
+			"ADR-0042",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -159,7 +165,10 @@
 				"rule": "de/noun-owns-its-article",
 				"hash": "c2b1f74a61545177"
 			},
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -221,12 +230,17 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
+			"memberSegmentIndices": [
+				0,
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🚪" },
+			"reading": {
+				"emojiDescription": "🚪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -272,7 +286,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -319,7 +335,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -369,12 +387,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "⏳" },
+			"reading": {
+				"emojiDescription": "⏳"
+			},
 			"notes": {
 				"rationale": "Copular bleiben never joins its predicate (de/copula-stays-apart). The door literally stays open, so this is not Duden's figurative offenbleiben (unresolved). Copular bleiben 'remain in a state' (Duden bleiben 1b); the Reading also covers staying somewhere (1a), merged under ADR 0031 since both say that nothing changes."
 			},
@@ -423,12 +445,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔓" },
+			"reading": {
+				"emojiDescription": "🔓"
+			},
 			"notes": {
 				"rationale": "Predicative offen after copular bleiben; offen compares (offener), so it marks Pos (de/comparability-is-lexical)."
 			},
@@ -471,7 +497,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -505,7 +533,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -552,7 +582,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -561,43 +593,16 @@
 				"emojiDescription": "🖐",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "BareInfinitive"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -695,7 +700,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19, 23],
+			"memberSegmentIndices": [
+				19,
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -703,7 +711,11 @@
 			"reading": {
 				"emojiDescription": "🌬",
 				"knowledge": {},
-				"paradigm": { "plural": ["Hauche"] },
+				"paradigm": {
+					"plural": [
+						"Hauche"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -714,7 +726,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -765,7 +779,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -875,7 +891,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
+			"memberSegmentIndices": [
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -936,12 +954,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [26, 28],
+			"memberSegmentIndices": [
+				26,
+				28
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🧣" },
+			"reading": {
+				"emojiDescription": "🧣"
+			},
 			"notes": {
 				"rationale": "m is the owned Fused article of Nacken, dem Dat.Masc.Sg. jemandem im Nacken sitzen is not attested: nobody sits here."
 			},

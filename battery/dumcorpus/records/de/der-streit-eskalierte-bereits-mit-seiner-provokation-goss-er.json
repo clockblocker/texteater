@@ -2,37 +2,125 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der Streit eskalierte bereits. Mit seiner Provokation goss er zusätzliches Öl ins Feuer.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Streit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eskalierte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bereits" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seiner" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Provokation" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "goss" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zusätzliches" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Öl" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Feuer" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Streit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eskalierte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bereits"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seiner"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Provokation"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "goss"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zusätzliches"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Öl"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "s",
+			"surface": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Feuer"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -56,21 +144,27 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [15, 21, 23, 24, 26],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				15,
+				21,
+				23,
+				24,
+				26
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🔥📈",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -135,16 +229,28 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "goss", "orthography": "Standard" },
-					{ "attested": "Öl", "orthography": "Standard" },
+					{
+						"attested": "goss",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Öl",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "in",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 0
@@ -155,13 +261,22 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Feuer", "orthography": "Standard" }
+					{
+						"attested": "Feuer",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -170,7 +285,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Öl ins Feuer goss",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -201,45 +318,133 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-diagnostic-idiom-oel-near-zusaetzliches",
-			"memberSegmentIndices": [19],
+			"memberSegmentIndices": [
+				19
+			],
 			"case": {
 				"input": {
 					"clickedSegmentIndex": 19,
 					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Streit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "eskalierte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bereits" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "seiner" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Provokation" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "goss" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zusätzliches" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Öl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "in" },
-						{ "kind": "ResolvableText", "text": "s" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Feuer" },
-						{ "kind": "Punctuation", "text": "." }
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Streit"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "eskalierte"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "bereits"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Mit"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "seiner"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Provokation"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "goss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "zusätzliches"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Öl"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "in"
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "s"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Feuer"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
 					]
 				},
 				"idealOutput": {
 					"family": "Lexeme",
 					"kind": "ADJ",
-					"memberSegmentIndices": [19]
+					"memberSegmentIndices": [
+						19
+					]
 				},
 				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 				"contaminationKeys": [

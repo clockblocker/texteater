@@ -2,39 +2,138 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die schoß das Häschen ganz entzwei;\nda rief die Frau: »O wei! O wei!«",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schoß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Häschen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ganz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "entzwei" },
-		{ "kind": "Punctuation", "text": ";" },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "da" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "rief" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Frau" },
-		{ "kind": "Punctuation", "text": ":" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "»" },
-		{ "kind": "ResolvableText", "text": "O" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wei" },
-		{ "kind": "Punctuation", "text": "!" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "O" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wei" },
-		{ "kind": "Punctuation", "text": "!" },
-		{ "kind": "Punctuation", "text": "«" }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schoß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Häschen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ganz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "entzwei"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "da"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "rief"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Frau"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ":"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "Punctuation",
+			"text": "»"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "O"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wei"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "O"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wei"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "«"
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
@@ -45,7 +144,11 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0039", "ADR-0042"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0039",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -57,7 +160,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -88,8 +191,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "✂",
 				"knowledge": {
@@ -145,7 +253,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "entzwei", "orthography": "Standard" }
+					{
+						"attested": "entzwei",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -155,7 +266,9 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "entzwei",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -171,8 +284,14 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23, 25],
-			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"memberSegmentIndices": [
+				23,
+				25
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "INTJ"
+			},
 			"reading": {
 				"emojiDescription": "😩",
 				"knowledge": {},
@@ -192,30 +311,46 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "O", "orthography": "Standard" },
-					{ "attested": "wei", "orthography": "Standard" }
+					{
+						"attested": "O",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wei",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o wei",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "o wei",
 						"family": "Lexeme",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"coreFeatures": {
+							"partType": null
+						}
 					},
 					"surfaceFeatures": null
 				}
 			}
 		},
 		{
-			"memberSegmentIndices": [28, 30],
-			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"memberSegmentIndices": [
+				28,
+				30
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "INTJ"
+			},
 			"reading": {
 				"emojiDescription": "😩",
 				"knowledge": {},
@@ -235,22 +370,32 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "O", "orthography": "Standard" },
-					{ "attested": "wei", "orthography": "Standard" }
+					{
+						"attested": "O",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wei",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o wei",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "o wei",
 						"family": "Lexeme",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"coreFeatures": {
+							"partType": null
+						}
 					},
 					"surfaceFeatures": null
 				}

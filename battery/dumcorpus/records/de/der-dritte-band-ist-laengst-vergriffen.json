@@ -2,24 +2,66 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der dritte Band ist längst vergriffen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dritte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Band" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "längst" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vergriffen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dritte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Band"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "längst"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vergriffen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
@@ -31,7 +73,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -53,8 +95,14 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				0,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "📚",
 				"knowledge": {
@@ -85,7 +133,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Bände"] },
+				"paradigm": {
+					"plural": [
+						"Bände"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "Authored",
@@ -97,7 +149,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -106,11 +160,20 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Der", "orthography": "Standard" },
-					{ "attested": "Band", "orthography": "Standard" }
+					{
+						"attested": "Der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Band",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
@@ -121,7 +184,9 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Band",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

@@ -2,17 +2,43 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der Rat erteilt Zustimmung.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Rat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erteilt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zustimmung" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Rat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erteilt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zustimmung"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -46,47 +72,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				6
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "👍",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "zu",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Collocation"
 				},
@@ -115,7 +118,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Zustimmung erteilt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -131,8 +136,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "erteilt", "orthography": "Standard" },
-					{ "attested": "Zustimmung", "orthography": "Standard" }
+					{
+						"attested": "erteilt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Zustimmung",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

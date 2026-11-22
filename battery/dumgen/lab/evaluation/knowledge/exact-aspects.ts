@@ -27,18 +27,15 @@ export function complementKey(complement: Values): string {
 	});
 }
 
-export type Slot = Dumrel.ValencyFrame[number];
+export type Pattern = Dumrel.ValencyPattern;
 
-const slotKey = (slot: Slot) =>
-	canonicalJson({
-		status: slot.status,
-		complements: slot.complements.map(complementKey).sort(),
-	});
+const patternKey = (pattern: Pattern) =>
+	canonicalJson(pattern.map(complementKey).sort());
 
-/** Whether two frames hold the same Slots, in any order. */
-const sameFrame = (left: readonly Slot[], right: readonly Slot[]) =>
-	canonicalJson(left.map(slotKey).sort()) ===
-	canonicalJson(right.map(slotKey).sort());
+/** Whether two frames hold the same concrete Valency Patterns, in any order. */
+const sameFrame = (left: readonly Pattern[], right: readonly Pattern[]) =>
+	canonicalJson(left.map(patternKey).sort()) ===
+	canonicalJson(right.map(patternKey).sort());
 
 /** A dimension's forms or marker, in any order and letter case. */
 const formsKey = (value: readonly string[] | undefined) =>

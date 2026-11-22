@@ -2,25 +2,68 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er saß schweigend am Fenster.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "saß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schweigend" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fenster" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "saß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schweigend"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "a",
+			"surface": "an"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fenster"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036"
+		],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
@@ -31,7 +74,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -52,8 +95,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🤐",
 				"knowledge": {
@@ -88,7 +136,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "schweigend", "orthography": "Standard" }
+					{
+						"attested": "schweigend",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -97,7 +148,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "schweigend",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

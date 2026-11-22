@@ -49,7 +49,10 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -63,14 +66,17 @@
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -101,57 +107,41 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4, 8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🙏",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "um",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "um",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						}
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -191,12 +181,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["bat"],
-					"present1": ["bitte"],
-					"present2": ["bittest"],
-					"present3": ["bittet"],
-					"pastParticiple": ["gebeten"],
-					"subjunctivePast": ["bäte"]
+					"preterite": [
+						"bat"
+					],
+					"present1": [
+						"bitte"
+					],
+					"present2": [
+						"bittest"
+					],
+					"present3": [
+						"bittet"
+					],
+					"pastParticiple": [
+						"gebeten"
+					],
+					"subjunctivePast": [
+						"bäte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -237,7 +239,9 @@
 						}
 					},
 					"normalizedSurface": "gebeten wurde",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

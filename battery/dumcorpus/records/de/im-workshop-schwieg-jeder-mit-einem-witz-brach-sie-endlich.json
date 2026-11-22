@@ -2,35 +2,117 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Im Workshop schwieg jeder. Mit einem Witz brach sie endlich das Eis.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "I", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Workshop" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schwieg" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "jeder" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Witz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "brach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "endlich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Eis" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "I",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Workshop"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schwieg"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jeder"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Witz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "brach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "endlich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Eis"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -54,38 +136,25 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [16, 22, 24],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				16,
+				22,
+				24
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😶➡😊",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "zwischen",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -123,9 +192,18 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "brach", "orthography": "Standard" },
-					{ "attested": "das", "orthography": "Standard" },
-					{ "attested": "Eis", "orthography": "Standard" }
+					{
+						"attested": "brach",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Eis",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -134,7 +212,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "das Eis brach",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -163,8 +243,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"memberSegmentIndices": [
+				20
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
 				"rationale": "endlich 'at last' modifies the clause and is no fixed word of das Eis brechen, so it is an ADV of its own, as in der-tyrann-biss-endlich-ins-gras."
 			},
@@ -179,15 +264,22 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"canonicalForm": "endlich",
-						"coreFeatures": { "comparable": null }
+						"coreFeatures": {
+							"comparable": null
+						}
 					},
 					"normalizedSurface": "endlich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "endlich", "orthography": "Standard" }
+					{
+						"attested": "endlich",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}

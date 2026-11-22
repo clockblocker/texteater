@@ -2,30 +2,102 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die Peitsche hat er mitgebracht\nund nimmt sie sorglich sehr in acht.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Peitsche" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mitgebracht" },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nimmt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sorglich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sehr" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "acht" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Peitsche"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mitgebracht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nimmt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sorglich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sehr"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "acht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"reviewDepth": "Knowledge",
@@ -36,14 +108,26 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0039", "ADR-0042"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038",
+			"ADR-0039",
+			"ADR-0042"
+		],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
@@ -60,14 +144,17 @@
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"
 			},
-			{ "rule": "de/adjective-stays-adj", "hash": "32d6fdacb9b0763e" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "32d6fdacb9b0763e"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -153,8 +240,14 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				0,
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "➰",
 				"knowledge": {
@@ -195,7 +288,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Peitschen"] },
+				"paradigm": {
+					"plural": [
+						"Peitschen"
+					]
+				},
 				"coverage": {
 					"source": "ReviewedEmpty",
 					"valency": "ReviewedEmpty",
@@ -207,17 +304,28 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Die", "orthography": "Standard" },
-					{ "attested": "Peitsche", "orthography": "Standard" }
+					{
+						"attested": "Die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Peitsche",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
@@ -228,7 +336,9 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Peitsche",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -247,39 +357,28 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🎒",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -307,12 +406,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["brachte mit"],
-					"present1": ["bringe mit"],
-					"present2": ["bringst mit"],
-					"present3": ["bringt mit"],
-					"pastParticiple": ["mitgebracht"],
-					"subjunctivePast": ["brächte mit"]
+					"preterite": [
+						"brachte mit"
+					],
+					"present1": [
+						"bringe mit"
+					],
+					"present2": [
+						"bringst mit"
+					],
+					"present3": [
+						"bringt mit"
+					],
+					"pastParticiple": [
+						"mitgebracht"
+					],
+					"subjunctivePast": [
+						"brächte mit"
+					]
 				},
 				"coverage": {
 					"source": "ReviewedEmpty",
@@ -340,8 +451,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "mitgebracht", "orthography": "Standard" }
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "mitgebracht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -350,7 +467,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "mitgebracht hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -378,22 +497,34 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"memberSegmentIndices": [
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"reading": {
 				"emojiDescription": "👈",
 				"knowledge": {}
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -416,8 +547,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
 			"reading": {
 				"emojiDescription": "➕",
 				"knowledge": {
@@ -462,13 +598,20 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -485,30 +628,29 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12, 20, 22],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				12,
+				20,
+				22
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🛡",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation"
 				},
@@ -529,9 +671,18 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "nimmt", "orthography": "Standard" },
-					{ "attested": "in", "orthography": "Standard" },
-					{ "attested": "acht", "orthography": "Standard" }
+					{
+						"attested": "nimmt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "in",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "acht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -554,7 +705,9 @@
 					"normalizedSurface": "in acht nimmt",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -569,8 +722,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"memberSegmentIndices": [
+				14
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"reading": {
 				"emojiDescription": "👈",
 				"knowledge": {}
@@ -580,14 +738,21 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "sie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "sie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -610,8 +775,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				16
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🤲",
 				"knowledge": {
@@ -667,7 +837,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "sorglich", "orthography": "Standard" }
+					{
+						"attested": "sorglich",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -682,7 +855,9 @@
 					},
 					"language": "de",
 					"normalizedSurface": "sorglich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -698,8 +873,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"memberSegmentIndices": [
+				18
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"reading": {
 				"emojiDescription": "📈",
 				"knowledge": {
@@ -752,14 +932,23 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "sehr", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sehr",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": { "degree": "Pos" },
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					},
 					"language": "de",
 					"normalizedSurface": "sehr",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

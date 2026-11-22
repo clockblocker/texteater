@@ -132,38 +132,34 @@ export function knowledgeChangeUsesLanguage(
 	if (change.aspect === "valency")
 		return "value" in change
 			? valencyUsesLanguage(change.value, language)
-			: !change.complement ||
-					valencyUsesLanguage(
-						retractedSlot(change.complement),
-						language,
-					);
+			: !change.pattern ||
+					valencyUsesLanguage([change.pattern], language);
 	if (change.aspect === "source" && "value" in change)
 		return linkUsesLanguage(change.value.target, language);
 	return true;
-}
-
-/** A Retract's one complement, as the frame its checks read. */
-function retractedSlot(
-	complement: Dumrel.ValencyComplement,
-): Dumrel.ValencyFrame {
-	return [{ status: "Optional", complements: [complement] }];
 }
 
 function valencyUsesLanguage(
 	frame: Dumrel.ValencyFrame,
 	language: Dumling.Language,
 ): boolean {
-	return frame.every(({ complements }) =>
-		complements.every(
-			(complement) =>
-				complement.kind !== "Preposition" ||
-				lemmaUsesLanguage(complement.preposition, language),
-		),
+	return frame.every((pattern) =>
+		pattern.every((complement) => {
+			if (complement.kind === "Preposition")
+				return lemmaUsesLanguage(complement.preposition, language);
+			if (
+				complement.kind === "Clause" &&
+				"preposition" in complement &&
+				complement.preposition !== undefined
+			)
+				return lemmaUsesLanguage(complement.preposition, language);
+			return true;
+		}),
 	);
 }
 
 /**
- * Each German Preposition complement, alternatives included, names a
+ * Each German Preposition complement and Clause correlate preposition names a
  * preposition the ADP Case Table lists and a case it allows. The table and
  * its frame check are dumcorpus's (ADR 0034). A Hebrew or English complement
  * names no case, so it has nothing to check.
@@ -180,9 +176,8 @@ function knowledgeChangePrepositionCasesAllowed(
 	if (change.aspect !== "valency") return true;
 	return "value" in change
 		? frameAdpositionCaseIssues(change.value).length === 0
-		: !change.complement ||
-				frameAdpositionCaseIssues(retractedSlot(change.complement))
-					.length === 0;
+		: !change.pattern ||
+				frameAdpositionCaseIssues([change.pattern]).length === 0;
 }
 
 type ReadingEntryLike = {

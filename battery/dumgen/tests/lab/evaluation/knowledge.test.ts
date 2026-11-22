@@ -154,7 +154,7 @@ test("structural aspects are scored exactly, a reviewed-empty aspect is right on
 	expect(verdict("valency")).toMatchObject({
 		gold: "Authored",
 		correct: true,
-		complements: { gold: 6, produced: 6, matched: 6 },
+		complements: { gold: 2, produced: 2, matched: 2 },
 	});
 	expect(verdict("preterite")).toMatchObject({
 		gold: "Authored",
@@ -189,12 +189,7 @@ test("structural aspects are scored exactly, a reviewed-empty aspect is right on
 			gold?.coverage.valency === "ReviewedEmpty",
 	);
 	if (!mutter) throw Error("No Mutter");
-	const frame = [
-		{
-			status: "Optional",
-			complements: [{ kind: "Clause", form: "Dass" }],
-		},
-	];
+	const frame = [[{ kind: "Clause", form: "Dass" }]];
 	const extra = evaluateKnowledge(
 		mutter,
 		requestOf(mutter, "structural"),

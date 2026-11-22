@@ -18,7 +18,7 @@ type AdpositionLemma = Parameters<typeof germanAdpositionEntry>[0];
 type Complement =
 	| { readonly kind: "Case"; readonly governedCase: string }
 	| {
-			readonly kind: "Preposition" | "Reflexive";
+			readonly kind: "Preposition" | "Reflexive" | "Clause";
 			readonly preposition?: AdpositionLemma;
 			readonly governedCase?: string;
 	  }
@@ -90,6 +90,15 @@ function prepositionIssue(
 			case: `${path}.governedCase`,
 		});
 	if (
+		complement.kind === "Clause" &&
+		"preposition" in complement &&
+		complement.preposition !== undefined
+	)
+		return caseIssue(complement.preposition, undefined, {
+			lemma: `${path}.preposition`,
+			case: "",
+		});
+	if (
 		complement.kind !== "Reflexive" ||
 		!("preposition" in complement) ||
 		complement.preposition === undefined
@@ -157,18 +166,19 @@ export function attestationAdpositionCaseIssues(
 }
 
 /**
- * Where a German Reading's Valency Frame relies on what the ADP Case Table
- * lacks, checking every Preposition complement, alternatives included, and
- * every Reflexive's preposition: `warten` `auf` + Acc, `bestehen` `auf` + Dat
- * and `außer sich sein` `außer` + Dat pass, `für` + Dat fails, and so does a
- * preposition the table doesn't list. Dumrel checks only the frame's shape.
+ * Where a German Reading's accumulated Valency Patterns rely on what the ADP
+ * Case Table lacks, checking every Preposition complement, every Reflexive's
+ * preposition, and every Clause's `da(r)-` correlate preposition: `warten`
+ * `auf` + Acc, `bestehen` `auf` + Dat, `außer sich sein` `außer` + Dat and
+ * `achten` `darauf, dass …` pass; `für` + Dat fails, and so does a
+ * preposition the table doesn't list. Dumrel checks only the pattern shape.
  */
 export function frameAdpositionCaseIssues(
 	frame: Dumrel.ValencyFrame,
 ): AdpositionCaseIssue[] {
-	return frame.flatMap((slot, index) =>
-		slot.complements.flatMap((complement, alternative) =>
-			prepositionIssue(complement, `${index}.complements.${alternative}`),
+	return frame.flatMap((pattern, patternIndex) =>
+		pattern.flatMap((complement, complementIndex) =>
+			prepositionIssue(complement, `${patternIndex}.${complementIndex}`),
 		),
 	);
 }

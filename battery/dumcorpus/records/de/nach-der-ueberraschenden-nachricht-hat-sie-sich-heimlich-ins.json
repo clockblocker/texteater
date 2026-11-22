@@ -2,34 +2,112 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Nach der überraschenden Nachricht hat sie sich heimlich ins Fäustchen gelacht.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Nach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "überraschenden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Nachricht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heimlich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fäustchen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gelacht" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "überraschenden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Nachricht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "heimlich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "s",
+			"surface": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fäustchen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gelacht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0035", "ADR-0039"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0022",
+			"ADR-0035",
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -113,8 +191,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"memberSegmentIndices": [
+				0
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
 				"rationale": "Temporal nach heads a free adjunct; it is no part of the idiom."
 			},
@@ -132,7 +215,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "nach",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"valencyEvidence": [
@@ -145,14 +230,27 @@
 						"realizedCase": "Dat"
 					}
 				],
-				"members": [{ "attested": "Nach", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Nach",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 6],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "📨" },
+			"memberSegmentIndices": [
+				2,
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "📨"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -169,7 +267,9 @@
 						}
 					},
 					"normalizedSurface": "Nachricht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -183,15 +283,26 @@
 				},
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Nachricht", "orthography": "Standard" }
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Nachricht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "😲",
 				"knowledge": {
@@ -260,7 +371,9 @@
 						}
 					},
 					"normalizedSurface": "überraschenden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -272,36 +385,41 @@
 				"articleEvidence": null,
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "überraschenden", "orthography": "Standard" }
+					{
+						"attested": "überraschenden",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [8, 12, 16, 17, 19, 21],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				8,
+				12,
+				16,
+				17,
+				19,
+				21
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🪞🤭",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -342,7 +460,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "ins Fäustchen gelacht hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -358,16 +478,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" },
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "in",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 0
@@ -378,14 +510,26 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Fäustchen", "orthography": "Standard" },
-					{ "attested": "gelacht", "orthography": "Standard" }
+					{
+						"attested": "Fäustchen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gelacht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -405,9 +549,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -430,19 +581,33 @@
 						}
 					},
 					"normalizedSurface": "sie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"articleEvidence": null,
-				"members": [{ "attested": "sie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤫" },
+			"memberSegmentIndices": [
+				14
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
+			"reading": {
+				"emojiDescription": "🤫"
+			},
 			"notes": {
 				"rationale": "heimlich modifies the idiom from inside its span and stays out (de/fixed-members-only)."
 			},
@@ -462,7 +627,9 @@
 						}
 					},
 					"normalizedSurface": "heimlich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -474,7 +641,10 @@
 				"articleEvidence": null,
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "heimlich", "orthography": "Standard" }
+					{
+						"attested": "heimlich",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}

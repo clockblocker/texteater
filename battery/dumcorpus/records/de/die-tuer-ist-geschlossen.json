@@ -41,9 +41,16 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036",
+			"ADR-0038"
+		],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
@@ -54,7 +61,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -94,59 +101,48 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🟰",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Predicative",
-									"marker": "None"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Predicative",
+								"marker": "None"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["war"],
-					"present1": ["bin"],
-					"present2": ["bist"],
-					"present3": ["ist"],
-					"pastParticiple": ["gewesen"],
-					"subjunctivePast": ["wäre"]
+					"preterite": [
+						"war"
+					],
+					"present1": [
+						"bin"
+					],
+					"present2": [
+						"bist"
+					],
+					"present3": [
+						"ist"
+					],
+					"pastParticiple": [
+						"gewesen"
+					],
+					"subjunctivePast": [
+						"wäre"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -187,7 +183,9 @@
 						}
 					},
 					"normalizedSurface": "ist",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -214,8 +212,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🔒",
 				"knowledge": {
@@ -287,7 +290,9 @@
 						}
 					},
 					"normalizedSurface": "geschlossen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,

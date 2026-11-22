@@ -2,18 +2,46 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Mir geht's gut.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geht", "surface": "geht" },
-		{ "kind": "ResolvableText", "text": "'s", "surface": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gut" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Mir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geht",
+			"surface": "geht"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "'s",
+			"surface": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gut"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0035"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0035"
+		],
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -45,30 +73,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 3],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				3
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🌡",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Adverbial",
-									"standIn": "Irgendwie"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Dat"
+							},
+							{
+								"kind": "Adverbial",
+								"standIn": "Irgendwie"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -86,12 +112,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["ging"],
-					"present1": ["gehe"],
-					"present2": ["gehst"],
-					"present3": ["geht"],
-					"pastParticiple": ["gegangen"],
-					"subjunctivePast": ["ginge"]
+					"preterite": [
+						"ging"
+					],
+					"present1": [
+						"gehe"
+					],
+					"present2": [
+						"gehst"
+					],
+					"present3": [
+						"geht"
+					],
+					"pastParticiple": [
+						"gegangen"
+					],
+					"subjunctivePast": [
+						"ginge"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -134,7 +172,9 @@
 						}
 					},
 					"normalizedSurface": "es geht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -156,8 +196,14 @@
 						"fusion": {
 							"spelling": "geht's",
 							"components": [
-								{ "span": "geht", "surface": "geht" },
-								{ "span": "'s", "surface": "es" }
+								{
+									"span": "geht",
+									"surface": "geht"
+								},
+								{
+									"span": "'s",
+									"surface": "es"
+								}
 							]
 						},
 						"component": 0
@@ -168,8 +214,14 @@
 						"fusion": {
 							"spelling": "geht's",
 							"components": [
-								{ "span": "geht", "surface": "geht" },
-								{ "span": "'s", "surface": "es" }
+								{
+									"span": "geht",
+									"surface": "geht"
+								},
+								{
+									"span": "'s",
+									"surface": "es"
+								}
 							]
 						},
 						"component": 1
@@ -182,8 +234,14 @@
 					"fusion": {
 						"spelling": "geht's",
 						"components": [
-							{ "span": "geht", "surface": "geht" },
-							{ "span": "'s", "surface": "es" }
+							{
+								"span": "geht",
+								"surface": "geht"
+							},
+							{
+								"span": "'s",
+								"surface": "es"
+							}
 						]
 					},
 					"component": 1

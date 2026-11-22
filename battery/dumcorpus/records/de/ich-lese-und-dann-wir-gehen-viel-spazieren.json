@@ -87,7 +87,11 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0042"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0039",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -153,7 +157,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [1],
+			"memberSegmentIndices": [
+				1
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -200,12 +206,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [3],
+			"memberSegmentIndices": [
+				3
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📖" },
+			"reading": {
+				"emojiDescription": "📖"
+			},
 			"notes": {
 				"rationale": "lese is intransitive lesen."
 			},
@@ -254,7 +264,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -291,12 +303,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🕰" },
+			"reading": {
+				"emojiDescription": "🕰"
+			},
 			"notes": {
 				"rationale": "dann is the temporal ADV 'then'. dann names what comes next in a sequence of activities (DWDS dann 1, 'darauf, danach')."
 			},
@@ -332,7 +348,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -379,12 +397,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚶" },
+			"reading": {
+				"emojiDescription": "🚶"
+			},
 			"notes": {
 				"rationale": "gehen is the finite VERB and spazieren its infinitive, a VERB of its own; viel between them is free. spazieren gehen has a Duden headword but means what its words say, 'go walking', like einkaufen gehen, so it fails de/idiom, and a verb + verb unit needs both (#723). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7. spazieren gehen is gehen 4a with an infinitive of purpose (schwimmen, tanzen gehen), the Reading 🚶."
 			},
@@ -433,12 +455,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔢" },
+			"reading": {
+				"emojiDescription": "🔢"
+			},
 			"notes": {
 				"rationale": "viel here is used adverbially, modifying the verb ('often, a lot', DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern), so it is the comparable ADV viel, whose Cmp and Sup are mehr and am meisten (de/quantifier-by-use). Ruled on #743 (SZ-B6, SZ-A4, A3). viel spazieren is DWDS viel II.1 'häufig, oft', merged with es regnete viel 'a lot' into one Reading under ADR 0031."
 			},
@@ -476,7 +502,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -485,15 +513,12 @@
 				"emojiDescription": "🚶😌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [

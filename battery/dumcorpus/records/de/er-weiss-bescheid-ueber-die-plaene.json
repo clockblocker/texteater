@@ -2,23 +2,63 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er weiß Bescheid über die Pläne.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "weiß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bescheid" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "über" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Pläne" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "weiß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bescheid"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "über"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Pläne"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034"],
+		"adrs": [
+			"ADR-0034"
+		],
 		"rules": [],
 		"references": [
 			{
@@ -45,38 +85,37 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4, 6],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				6
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🧠ℹ",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "über",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "über",
+									"coreFeatures": {}
+								},
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -122,7 +161,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Bescheid weiß",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -138,9 +179,18 @@
 					}
 				},
 				"members": [
-					{ "attested": "weiß", "orthography": "Standard" },
-					{ "attested": "Bescheid", "orthography": "Standard" },
-					{ "attested": "über", "orthography": "Standard" }
+					{
+						"attested": "weiß",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Bescheid",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "über",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

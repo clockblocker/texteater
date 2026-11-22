@@ -31,24 +31,22 @@ const acc = {
 	kind: "Case",
 	governedCase: "Acc",
 } as const;
-const frame = (
-	status: Dumrel.ValencySlotStatus,
+const reflexiveOnly = (
 	governedCase: "Acc" | "Dat" = "Acc",
 ): Dumrel.ReadingKnowledge => ({
-	valency: [
-		{ status: "Required", complements: [nom] },
-		{ status, complements: [{ kind: "Reflexive", governedCase }] },
-	],
+	valency: [[nom, { kind: "Reflexive", governedCase }]],
+});
+const optionalReflexive = (
+	governedCase: "Acc" | "Dat" = "Acc",
+): Dumrel.ReadingKnowledge => ({
+	valency: [[nom], [nom, { kind: "Reflexive", governedCase }]],
 });
 const plain: Dumrel.ReadingKnowledge = {
-	valency: [
-		{ status: "Required", complements: [nom] },
-		{ status: "Required", complements: [acc] },
-	],
+	valency: [[nom, acc]],
 };
 
 describe("the 🪞 marker (ADR 0052)", () => {
-	test("comes first exactly when the frame has a Required Reflexive Slot", () => {
+	test("requires a Reflexive complement in every pattern of a 🪞 Reading", () => {
 		const messages = (
 			value: Dumling.Reading,
 			knowledge: Dumrel.ReadingKnowledge,
@@ -56,23 +54,23 @@ describe("the 🪞 marker (ADR 0052)", () => {
 			reflexiveMarkerIssues(value, knowledge, undefined).map(
 				({ message }) => message,
 			);
-		expect(
-			messages(reading("erinnern", "🪞🧠"), frame("Required")),
-		).toEqual([]);
-		expect(messages(reading("erinnern", "💭"), plain)).toEqual([]);
-		expect(messages(reading("ausruhen", "😴"), frame("Optional"))).toEqual(
+		expect(messages(reading("erinnern", "🪞🧠"), reflexiveOnly())).toEqual(
 			[],
 		);
-		expect(messages(reading("erinnern", "🧠"), frame("Required"))).toEqual([
-			"A Reading with a Required Reflexive Slot starts its Emoji Description with 🪞",
-		]);
-		for (const knowledge of [plain, frame("Optional")])
+		expect(messages(reading("erinnern", "💭"), plain)).toEqual([]);
+		expect(
+			messages(reading("ausruhen", "😴"), optionalReflexive()),
+		).toEqual([]);
+		expect(messages(reading("ausruhen", "😴"), reflexiveOnly())).toEqual(
+			[],
+		);
+		for (const knowledge of [plain, optionalReflexive()])
 			expect(messages(reading("fürchten", "🪞😨"), knowledge)).toEqual([
-				"Only a Reading with a Required Reflexive Slot starts its Emoji Description with 🪞",
+				"Every Valency Pattern of a 🪞 Reading holds a Reflexive complement",
 			]);
 	});
 
-	test("waits for a frame, or for valency reviewed empty", () => {
+	test("waits for patterns, or for valency reviewed empty", () => {
 		const marked = reading("fürchten", "🪞😨");
 		expect(reflexiveMarkerIssues(marked, {}, undefined)).toEqual([]);
 		expect(
@@ -98,16 +96,16 @@ describe("the 🪞 marker (ADR 0052)", () => {
 		).toEqual([]);
 	});
 
-	test("no Optional Reflexive Reading shares its emoji with a 🪞 Reading of its Lemma", () => {
+	test("no non-🪞 Reading with a reflexive pattern shares its emoji with a 🪞 Reading of its Lemma", () => {
 		const target = (
 			value: Dumling.Reading,
 			knowledge: Dumrel.ReadingKnowledge,
 		) => ({ reading: value, knowledge }) as unknown as SpecTarget;
 		const record = (id: string, ...targets: SpecTarget[]) =>
 			({ id: `de/${id}`, targets }) as const;
-		const marked = target(reading("ausruhen", "🪞😴"), frame("Required"));
-		const twin = target(reading("ausruhen", "😴"), frame("Optional"));
-		const other = target(reading("ausruhen", "🛋️"), frame("Optional"));
+		const marked = target(reading("ausruhen", "🪞😴"), reflexiveOnly());
+		const twin = target(reading("ausruhen", "😴"), optionalReflexive());
+		const other = target(reading("ausruhen", "🛋️"), optionalReflexive());
 		expect(reflexiveTwinIssues([record("a", marked, other)])).toEqual([]);
 		expect(
 			reflexiveTwinIssues([
@@ -121,7 +119,7 @@ describe("the 🪞 marker (ADR 0052)", () => {
 				layer: "Knowledge",
 				path: "targets.1.reading.emojiDescription",
 				message:
-					"This Reading's Optional Reflexive Slot shares its emoji 😴 with a 🪞 Reading of its Lemma; they are one Reading",
+					"This Reading's reflexive pattern shares its emoji 😴 with a 🪞 Reading of its Lemma; they are one Reading",
 			},
 		]);
 	});

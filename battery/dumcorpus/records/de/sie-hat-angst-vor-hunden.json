@@ -2,21 +2,55 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie hat Angst vor Hunden.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Angst" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hunden" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Angst"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Hunden"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034"],
+		"adrs": [
+			"ADR-0034"
+		],
 		"rules": [],
 		"references": [
 			{
@@ -38,43 +72,37 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4, 6],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				6
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😨",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "vor",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "vor",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								}
-							]
-						}
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -131,9 +159,18 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "Angst", "orthography": "Standard" },
-					{ "attested": "vor", "orthography": "Standard" }
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Angst",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "vor",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -159,7 +196,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Angst hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

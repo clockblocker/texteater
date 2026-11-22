@@ -2,15 +2,35 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Wörterbucheintrag: Abschied nehmen",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wörterbucheintrag" },
-		{ "kind": "Punctuation", "text": ":" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Abschied" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nehmen" }
+		{
+			"kind": "ResolvableText",
+			"text": "Wörterbucheintrag"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ":"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Abschied"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nehmen"
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -34,38 +54,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [3, 5],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				3,
+				5
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "👋🚶",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "von",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -111,13 +117,21 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Abschied nehmen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Abschied", "orthography": "Standard" },
-					{ "attested": "nehmen", "orthography": "Standard" }
+					{
+						"attested": "Abschied",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "nehmen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

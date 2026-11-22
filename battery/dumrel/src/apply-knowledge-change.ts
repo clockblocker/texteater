@@ -15,7 +15,7 @@ import type {
 	ReadingKnowledge,
 	SemanticRelations,
 	Translation,
-	ValencySlot,
+	ValencyPattern,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
 
@@ -163,45 +163,25 @@ function applyTranslation(
 }
 
 /**
- * Only the proposal that creates the Reading and Correct group complements as
- * alternatives (#673): Contribute appends a whole Slot or nothing, so
- * contributing `von` + Dat to `reden` Optional `über` + Acc | `von` + Dat
- * changes nothing.
+ * Valency patterns accumulate as a set in arrival order (ADR 0034):
+ * Contribute adds any concrete pattern not already stored (by structural key),
+ * Correct replaces the list, and Retract removes one pattern or the whole
+ * aspect.
  */
 function applyValency(
 	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "valency" }>,
 ): void {
-	const frame = knowledge.valency ?? [];
+	const patterns = knowledge.valency ?? [];
 	const key = structuralKeys();
-	let next: ValencySlot[];
+	let next: ValencyPattern[];
 	if (change.kind === "Retract") {
-		const retracted = change.complement && key(change.complement);
+		const retracted = change.pattern && key(change.pattern);
 		next = retracted
-			? frame.flatMap((slot) => {
-					const complements = slot.complements.filter(
-						(complement) => key(complement) !== retracted,
-					);
-					return complements.length === 0
-						? []
-						: [{ ...slot, complements }];
-				})
+			? patterns.filter((pattern) => key(pattern) !== retracted)
 			: [];
-	} else if (change.kind === "Correct") next = [...change.value];
-	else {
-		next = [...frame];
-		for (const slot of change.value) {
-			const contributed = new Set(slot.complements.map(key));
-			if (
-				!next.some((stored) =>
-					stored.complements.some((complement) =>
-						contributed.has(key(complement)),
-					),
-				)
-			)
-				next.push(slot);
-		}
-	}
+	} else if (change.kind === "Correct") next = unique(change.value);
+	else next = unique([...patterns, ...change.value]);
 	if (next.length === 0) delete knowledge.valency;
 	else knowledge.valency = next;
 }

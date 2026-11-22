@@ -88,7 +88,12 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0044"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0034",
+			"ADR-0039",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -150,7 +155,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -194,7 +201,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -229,7 +238,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Wochen"] },
+				"paradigm": {
+					"plural": [
+						"Wochen"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -240,7 +253,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -281,7 +296,12 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 6, 12, 14],
+			"memberSegmentIndices": [
+				4,
+				6,
+				12,
+				14
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "VERB"
@@ -290,41 +310,28 @@
 				"emojiDescription": "🪞😟",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Dat"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "um",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Dat"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "um",
+									"coreFeatures": {}
+								},
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -456,7 +463,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -509,12 +518,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👩‍👧" },
+			"reading": {
+				"emojiDescription": "👩‍👧"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -553,7 +566,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -609,12 +624,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18],
+			"memberSegmentIndices": [
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🍏💪" },
+			"reading": {
+				"emojiDescription": "🍏💪"
+			},
 			"notes": {
 				"rationale": "Gesundheit is DWDS 'Zustand des Gesundseins, körperliches und geistiges Wohlbefinden'; no emoji shows health, so the apple and the flexed arm stand in for it, against krank 🤒."
 			},

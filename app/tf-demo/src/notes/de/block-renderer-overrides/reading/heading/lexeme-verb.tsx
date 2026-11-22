@@ -2,31 +2,32 @@ import { Fragment } from "react";
 import {
 	type CitationPart,
 	citationPartText,
+	citedNoteReading,
 } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import {
-	AttachedPrefix,
-	ValencyHeading,
-} from "../../../block-renderers/reading/valency/valency-heading";
+import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
+import { AttachedPrefix } from "../../../block-renderers/reading/valency/valency-block";
 
 /**
- * A verb's heading is its Valency Line, `sich (an jN) erinnern`, or its
- * Citation (`sich erinnern`) while the frame shows nothing. Either way a
- * separable prefix is split off its base: `sich (Dat) jN vor|stellen`.
+ * A German verb Reading's heading: its clean Citation (`fragen`, `auf|passen`,
+ * `sich vor|stellen`), with any separable prefix split off by a muted bar.
+ * Discovered Valency Patterns live in the dedicated Valency Block (ADR 0034).
  */
 export const renderHeadingDeLexemeVerb = ((context) => {
-	const { hasSepPrefix } = context.noteData.reading.lemma.coreFeatures;
+	const { noteData, PresentationCapabilities, Citation } = context;
+	const { hasSepPrefix } = noteData.reading.lemma.coreFeatures;
+	const citation = Citation(citedNoteReading(noteData));
 	return (
-		<ValencyHeading
-			context={context}
-			fallback={(citation) =>
-				citation.map((part, index) => (
-					<Fragment key={`${index}:${part.kind}`}>
-						{index > 0 ? " " : null}
-						{citedPart(part, hasSepPrefix)}
-					</Fragment>
-				))
-			}
+		<ReadingHeading
+			note={noteData}
+			capabilities={PresentationCapabilities}
+			citation={citation}
+			title={citation.map((part, index) => (
+				<Fragment key={`${index}:${part.kind}`}>
+					{index > 0 ? " " : null}
+					{citedPart(part, hasSepPrefix)}
+				</Fragment>
+			))}
 		/>
 	);
 }) satisfies NoteBlockRenderer<"de", "Reading", "Lexeme", "VERB">;

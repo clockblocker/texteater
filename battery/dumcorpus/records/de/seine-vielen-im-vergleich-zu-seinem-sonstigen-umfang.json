@@ -214,7 +214,10 @@
 				"rule": "de/complex-preposition",
 				"hash": "395d3503fe67bb7b"
 			},
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -276,7 +279,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -314,7 +319,10 @@
 						"case": "Nom",
 						"degree": null,
 						"gender": null,
-						"gender[psor]": ["Masc", "Neut"],
+						"gender[psor]": [
+							"Masc",
+							"Neut"
+						],
 						"number": "Plur",
 						"number[psor]": "Sing"
 					}
@@ -329,12 +337,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔢" },
+			"reading": {
+				"emojiDescription": "🔢"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -377,7 +389,12 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5, 6, 8, 10],
+			"memberSegmentIndices": [
+				5,
+				6,
+				8,
+				10
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "ADP"
@@ -464,7 +481,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -502,7 +521,10 @@
 						"case": "Dat",
 						"degree": null,
 						"gender": "Masc",
-						"gender[psor]": ["Masc", "Neut"],
+						"gender[psor]": [
+							"Masc",
+							"Neut"
+						],
 						"number": "Sing",
 						"number[psor]": "Sing"
 					}
@@ -517,12 +539,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "➕" },
+			"reading": {
+				"emojiDescription": "➕"
+			},
 			"notes": {
 				"rationale": "seinem sonstigen Umfang is Duden sonstig 'sonst noch vorhanden, in Betracht zu ziehen; anderweitig': the girth of the rest of him."
 			},
@@ -565,12 +591,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "📏" },
+			"reading": {
+				"emojiDescription": "📏"
+			},
 			"notes": {
 				"rationale": "sein sonstiger Umfang is Duden's Umfang '[räumliche] Ausdehnung, Ausmaß, Größe' (ein Bauch von beträchtlichem Umfang), the body's bulk, not the geometric circumference."
 			},
@@ -612,12 +642,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18],
+			"memberSegmentIndices": [
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🥺" },
+			"reading": {
+				"emojiDescription": "🥺"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -660,12 +694,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [20],
+			"memberSegmentIndices": [
+				20
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🦴" },
+			"reading": {
+				"emojiDescription": "🦴"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -705,12 +743,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [22],
+			"memberSegmentIndices": [
+				22
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🦵" },
+			"reading": {
+				"emojiDescription": "🦵"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -749,7 +791,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [24],
+			"memberSegmentIndices": [
+				24
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -758,15 +802,12 @@
 				"emojiDescription": "✨〰",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -842,7 +883,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [26],
+			"memberSegmentIndices": [
+				26
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -870,7 +913,9 @@
 							"pronType": "Prs",
 							"gender": null
 						},
-						"syncretic": ["gender"],
+						"syncretic": [
+							"gender"
+						],
 						"syncretized": [
 							{
 								"unitKind": "Lemma",
@@ -927,7 +972,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [28],
+			"memberSegmentIndices": [
+				28
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1020,7 +1067,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [30],
+			"memberSegmentIndices": [
+				30
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1064,7 +1113,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [32, 34],
+			"memberSegmentIndices": [
+				32,
+				34
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -1119,7 +1171,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Augen"] },
+				"paradigm": {
+					"plural": [
+						"Augen"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -1130,7 +1186,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {

@@ -2,23 +2,66 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie meint es gut mit dir.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "meint" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gut" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dir" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "meint"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gut"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dir"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0029", "ADR-0034", "ADR-0039"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0029",
+			"ADR-0034",
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -79,9 +122,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"memberSegmentIndices": [
+				0
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -104,48 +154,55 @@
 						}
 					},
 					"normalizedSurface": "sie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"articleEvidence": null,
-				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Sie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 4, 6, 8],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				4,
+				6,
+				8
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😇",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "mit",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "mit",
+									"coreFeatures": {}
+								},
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"locutionType": "Idiom"
 				},
@@ -177,7 +234,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "es gut meint",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -212,18 +271,37 @@
 					}
 				],
 				"members": [
-					{ "attested": "meint", "orthography": "Standard" },
-					{ "attested": "es", "orthography": "Standard" },
-					{ "attested": "gut", "orthography": "Standard" },
-					{ "attested": "mit", "orthography": "Standard" }
+					{
+						"attested": "meint",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gut",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "mit",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -246,12 +324,19 @@
 						}
 					},
 					"normalizedSurface": "dir",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"articleEvidence": null,
-				"members": [{ "attested": "dir", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "dir",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		}
@@ -261,7 +346,9 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-object-es-4",
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"case": {
 				"input": {
 					"clickedSegmentIndex": 4,
@@ -319,10 +406,14 @@
 				"idealOutput": {
 					"family": "Lexeme",
 					"kind": "PRON",
-					"memberSegmentIndices": [4]
+					"memberSegmentIndices": [
+						4
+					]
 				},
 				"explanation": "This es is outside lexically selected subject-expletive composition.",
-				"contaminationKeys": ["subject-es:object-es"]
+				"contaminationKeys": [
+					"subject-es:object-es"
+				]
 			}
 		}
 	]

@@ -41,7 +41,12 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0050"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038",
+			"ADR-0050"
+		],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
@@ -53,7 +58,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -84,7 +89,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
+			"memberSegmentIndices": [
+				0,
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -120,7 +128,9 @@
 					}
 				},
 				"paradigm": {
-					"plural": ["Aufgaben"]
+					"plural": [
+						"Aufgaben"
+					]
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",

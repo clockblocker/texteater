@@ -1,4 +1,4 @@
-import type { Prettify } from "common-utils";
+import { canonicalJson, type Prettify } from "common-utils";
 import { type Infer, v } from "convex/values";
 import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -55,6 +55,7 @@ import type { UnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
 const MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE = 200;
+const MAX_VISITOR_ENCOUNTERS_FOR_VALENCY = 100;
 const SOURCE_CONTEXT_PAGE_SIZE = 6;
 
 const readingNoteLemmaValidator = v.object({
@@ -204,6 +205,7 @@ export async function loadUnitReadingNote(
 		attempts,
 		personalAnnotation,
 		definitionTextRow,
+		visitorValency,
 	] = await Promise.all([
 		ctx.db
 			.query("accumulatedKnowledge")
@@ -230,6 +232,7 @@ export async function loadUnitReadingNote(
 			.take(20),
 		loadPersonalAnnotation(ctx, visitorId, reading._id),
 		findDefinitionText(ctx, reading.readingKey),
+		loadVisitorRealizedValency(ctx, reading._id, visitorId),
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
@@ -238,10 +241,20 @@ export async function loadUnitReadingNote(
 	}
 
 	const readingValue = projectReadingValue(reading, lemma);
-	const knowledge = projectReadingKnowledge(
+	const storedKnowledge = projectReadingKnowledge(
 		readingValue,
 		readingKnowledge?.knowledge,
 	);
+	// Project only the Valency Patterns this Visitor has encountered when
+	// recorded on their Attestations, falling back to the Reading's stored
+	// patterns otherwise (ADR 0034).
+	const knowledge =
+		visitorValency.length > 0
+			? projectReadingKnowledge(readingValue, {
+					...storedKnowledge,
+					valency: visitorValency,
+				})
+			: storedKnowledge;
 	const [sourceLinks, breakdown, definitionText] = await Promise.all([
 		loadSourceLinks(
 			ctx,
@@ -304,6 +317,46 @@ export async function loadUnitReadingNote(
 		structuralReferences: structuralReferencesResult.projected,
 		sourceContexts,
 	};
+}
+
+/**
+ * Distinct concrete Valency Patterns realized across this Visitor's own
+ * Encounters of the Reading, in encounter arrival order (ADR 0034).
+ */
+async function loadVisitorRealizedValency(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+	visitorId: string,
+): Promise<unknown[]> {
+	const encounters = await ctx.db
+		.query("visitorEncounters")
+		.withIndex("by_visitor_id_and_reading_id", (q) =>
+			q.eq("visitorId", visitorId).eq("readingId", readingId),
+		)
+		.order("asc")
+		.take(MAX_VISITOR_ENCOUNTERS_FOR_VALENCY);
+	const attestationIds = [
+		...new Set(
+			encounters.flatMap(({ attestationId }) =>
+				attestationId ? [attestationId] : [],
+			),
+		),
+	];
+	if (attestationIds.length === 0) return [];
+	const attestations = await Promise.all(
+		attestationIds.map((attestationId) => ctx.db.get(attestationId)),
+	);
+	const patterns: unknown[] = [];
+	const seen = new Set<string>();
+	for (const attestation of attestations) {
+		const pattern = attestation?.realizedValencyPattern;
+		if (!Array.isArray(pattern) || pattern.length === 0) continue;
+		const key = canonicalJson(pattern);
+		if (seen.has(key)) continue;
+		seen.add(key);
+		patterns.push(pattern);
+	}
+	return patterns;
 }
 
 /**

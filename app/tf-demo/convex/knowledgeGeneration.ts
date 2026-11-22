@@ -510,6 +510,32 @@ export const publish = internalMutation({
 			attempt.ownerReadingKey,
 		);
 		if (refreshed) await recordCoverageEvidence(ctx, refreshed, answered);
+		// Record the concrete realized Valency Pattern on the creating
+		// Attestation so the Visitor's Reading Note shows what they met
+		// (ADR 0034).
+		const valencyContribution = changes.find(
+			(change) =>
+				change.aspect === "valency" &&
+				"value" in change &&
+				Array.isArray(change.value) &&
+				change.value.length > 0,
+		);
+		if (
+			valencyContribution &&
+			"value" in valencyContribution &&
+			Array.isArray(valencyContribution.value) &&
+			valencyContribution.value[0] !== undefined
+		) {
+			const attestation = await ctx.db.get(attempt.attestationId);
+			if (
+				attestation &&
+				attestation.realizedValencyPattern === undefined
+			) {
+				await ctx.db.patch(attempt.attestationId, {
+					realizedValencyPattern: valencyContribution.value[0],
+				});
+			}
+		}
 		await Promise.all(
 			changes.map((change, index) =>
 				ctx.db.insert("knowledgeChanges", {

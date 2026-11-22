@@ -41,7 +41,12 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0050"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038",
+			"ADR-0050"
+		],
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
@@ -57,7 +62,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -102,7 +107,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -111,24 +118,16 @@
 				"emojiDescription": "🧂",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"source": {
 						"target": {
@@ -144,12 +143,25 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["salzte"],
-					"present1": ["salze"],
-					"present2": ["salzt"],
-					"present3": ["salzt"],
-					"pastParticiple": ["gesalzen", "gesalzt"],
-					"subjunctivePast": ["salzte"]
+					"preterite": [
+						"salzte"
+					],
+					"present1": [
+						"salze"
+					],
+					"present2": [
+						"salzt"
+					],
+					"present3": [
+						"salzt"
+					],
+					"pastParticiple": [
+						"gesalzen",
+						"gesalzt"
+					],
+					"subjunctivePast": [
+						"salzte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -219,7 +231,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [
+				4,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -228,7 +243,9 @@
 				"emojiDescription": "🍞",
 				"knowledge": {},
 				"paradigm": {
-					"plural": ["Teige"]
+					"plural": [
+						"Teige"
+					]
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",

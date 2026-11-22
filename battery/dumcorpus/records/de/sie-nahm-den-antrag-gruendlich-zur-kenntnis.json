@@ -2,26 +2,77 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie nahm den Antrag gründlich zur Kenntnis.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nahm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Antrag" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gründlich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
-		{ "kind": "ResolvableText", "text": "r", "surface": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kenntnis" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nahm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Antrag"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gründlich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "r",
+			"surface": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kenntnis"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [],
 		"references": [
 			{
@@ -43,30 +94,30 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 10, 11, 13],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				10,
+				11,
+				13
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "👀📝",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -118,15 +169,24 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "nahm", "orthography": "Standard" },
+					{
+						"attested": "nahm",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "zu",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "zur",
 							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "r", "surface": "der" }
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "r",
+									"surface": "der"
+								}
 							]
 						},
 						"component": 0
@@ -137,13 +197,22 @@
 						"fusion": {
 							"spelling": "zur",
 							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "r", "surface": "der" }
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "r",
+									"surface": "der"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Kenntnis", "orthography": "Standard" }
+					{
+						"attested": "Kenntnis",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -152,7 +221,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "zur Kenntnis nahm",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

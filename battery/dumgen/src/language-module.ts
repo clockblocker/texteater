@@ -12,9 +12,11 @@ import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
 import type { Jev } from "./jev-call.js";
 import type {
 	AccumulateTranslationsInput,
+	AccumulateValencyInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 	TranslationAccumulation,
+	ValencyAccumulation,
 } from "./knowledge/types.js";
 import type { StagedLunaDraft } from "./luna.js";
 import type { Luna } from "./luna-call.js";
@@ -105,6 +107,10 @@ export type LanguageModule = {
 	readonly accumulateTranslations: (
 		input: AccumulateTranslationsInput,
 	) => Effect.Effect<TranslationAccumulation, never, Needs>;
+	/** The body of `knowledge.accumulateValency` for a Reading of the language. */
+	readonly accumulateValency: (
+		input: AccumulateValencyInput,
+	) => Effect.Effect<ValencyAccumulation, never, Needs>;
 };
 
 /** Each registered language's module. */

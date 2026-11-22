@@ -2,31 +2,98 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Trotz des Zeitdrucks nahm Lea stets Rücksicht auf ihre Kollegen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Trotz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "des" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zeitdrucks" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nahm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Lea" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stets" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Rücksicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kollegen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Trotz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "des"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zeitdrucks"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nahm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Lea"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stets"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Rücksicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihre"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kollegen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0044"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0034",
+			"ADR-0039",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -73,9 +140,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": { "rationale": "trotz heads a free concessive adjunct." },
+			"memberSegmentIndices": [
+				0
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
+			"notes": {
+				"rationale": "trotz heads a free concessive adjunct."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -90,7 +164,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "trotz",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"valencyEvidence": [
@@ -103,14 +179,27 @@
 						"realizedCase": "Gen"
 					}
 				],
-				"members": [{ "attested": "Trotz", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Trotz",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "⏱😰" },
+			"memberSegmentIndices": [
+				2,
+				4
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "⏱😰"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -127,7 +216,9 @@
 						}
 					},
 					"normalizedSurface": "Zeitdrucks",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",
@@ -141,45 +232,50 @@
 				},
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "des", "orthography": "Standard" },
-					{ "attested": "Zeitdrucks", "orthography": "Standard" }
+					{
+						"attested": "des",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Zeitdrucks",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [6, 12, 14],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				12,
+				14
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🫶",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "auf",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "auf",
+									"coreFeatures": {}
+								},
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation"
 				},
@@ -211,7 +307,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Rücksicht nahm",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -227,9 +325,18 @@
 					}
 				},
 				"members": [
-					{ "attested": "nahm", "orthography": "Standard" },
-					{ "attested": "Rücksicht", "orthography": "Standard" },
-					{ "attested": "auf", "orthography": "Standard" }
+					{
+						"attested": "nahm",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Rücksicht",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "auf",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -254,9 +361,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"reading": { "emojiDescription": "👩" },
+			"memberSegmentIndices": [
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
+			},
+			"reading": {
+				"emojiDescription": "👩"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -274,7 +388,9 @@
 						}
 					},
 					"normalizedSurface": "Lea",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -283,14 +399,26 @@
 					}
 				},
 				"articleEvidence": null,
-				"members": [{ "attested": "Lea", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Lea",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "♾" },
+			"memberSegmentIndices": [
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"reading": {
+				"emojiDescription": "♾"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -307,18 +435,32 @@
 						}
 					},
 					"normalizedSurface": "stets",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "stets", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "stets",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"reading": { "emojiDescription": "🔐" },
+			"memberSegmentIndices": [
+				16
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"notes": {
 				"rationale": "ihre is the possessive DET ihr before Kollegen, Acc.Plur. ihr- serves a feminine singular possessor and a plural one alike, so its Surface marks neither possessor gender nor possessor number (ADR 0044): Lea is the possessor here, but the form does not show it."
 			},
@@ -344,7 +486,9 @@
 						}
 					},
 					"normalizedSurface": "ihre",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -355,14 +499,26 @@
 						"number[psor]": null
 					}
 				},
-				"members": [{ "attested": "ihre", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ihre",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "💼🧑‍🤝‍🧑" },
+			"memberSegmentIndices": [
+				18
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "💼🧑‍🤝‍🧑"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -379,7 +535,9 @@
 						}
 					},
 					"normalizedSurface": "Kollegen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -390,7 +548,10 @@
 				"articleEvidence": null,
 				"valencyEvidence": [],
 				"members": [
-					{ "attested": "Kollegen", "orthography": "Standard" }
+					{
+						"attested": "Kollegen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}

@@ -2,33 +2,78 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der Kiefer schmerzte nach der Operation.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kiefer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schmerzte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Operation" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kiefer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schmerzte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Operation"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -50,8 +95,14 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				0,
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "🦷",
 				"knowledge": {
@@ -82,7 +133,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Kiefer"] },
+				"paradigm": {
+					"plural": [
+						"Kiefer"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "ReviewedEmpty",
@@ -94,7 +149,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -103,11 +160,20 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Der", "orthography": "Standard" },
-					{ "attested": "Kiefer", "orthography": "Standard" }
+					{
+						"attested": "Der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kiefer",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
@@ -118,7 +184,9 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Kiefer",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

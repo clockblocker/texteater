@@ -2,31 +2,72 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die Angestellten streikten gestern.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Angestellten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "streikten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gestern" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Angestellten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "streikten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gestern"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0035", "ADR-0036", "ADR-0038", "ADR-0040"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0036",
+			"ADR-0038",
+			"ADR-0040"
+		],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "43184aac9186aceb"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
-			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
-			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
+			{
+				"rule": "de/adjectival-noun-lemma",
+				"hash": "bcdaf66f8862eb29"
+			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -52,8 +93,14 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				0,
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "💼",
 				"knowledge": {
@@ -104,7 +151,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Angestellten"] },
+				"paradigm": {
+					"plural": [
+						"Angestellten"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "Authored",
@@ -116,7 +167,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -125,17 +178,28 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Die", "orthography": "Standard" },
-					{ "attested": "Angestellten", "orthography": "Standard" }
+					{
+						"attested": "Die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Angestellten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Angestellten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

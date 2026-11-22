@@ -208,16 +208,14 @@ test("a stored Valency Frame reaches the Reading Note and renders in its heading
 		},
 	} as const;
 	const valency: Dumrel.ValencyFrame = [
-		{
-			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: germanAdposition("auf"),
-					governedCase: "Acc",
-				},
-			],
-		},
+		[
+			{ kind: "Case", governedCase: "Nom" },
+			{
+				kind: "Preposition",
+				preposition: germanAdposition("auf"),
+				governedCase: "Acc",
+			},
+		],
 	];
 	const reading = await insertReading(t, {
 		unitKind: "Reading",
@@ -241,7 +239,7 @@ test("a stored Valency Frame reaches the Reading Note and renders in its heading
 	if (!note) throw new Error("Expected a Reading Note.");
 	expect(note.knowledge.valency).toEqual(valency);
 	const markup = renderToStaticMarkup(renderNote({ noteData: note }));
-	expect(markup).not.toContain('aria-label="Valency"');
+	expect(markup).toContain(">Valency</h2>");
 	expect(markup).toContain(
 		'<span data-slot="valency-token" class="font-mono text-[0.82em] font-[450] text-ink-soft">jN</span>',
 	);
@@ -290,7 +288,7 @@ test("the Reading Note carries the per-Reading aspects Knowledge production writ
 	}
 });
 
-test("the Reading Note carries Slot alternatives and every German complement kind", async () => {
+test("the Reading Note carries concrete Valency Patterns and renders them in the Valency Block", async () => {
 	const t = createTestConvex();
 	const verb = (canonicalForm: string, hasSepPrefix: string | null = null) =>
 		({
@@ -301,105 +299,90 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 			canonicalForm,
 			coreFeatures: { hasSepPrefix },
 		}) as const;
-	const subject: Dumrel.ValencySlot = {
-		status: "Required",
-		complements: [{ kind: "Case", governedCase: "Nom" }],
+	const subject: Dumrel.GermanValencyComplement = {
+		kind: "Case",
+		governedCase: "Nom",
 	};
 	const frames: readonly {
 		readonly lemma: ReturnType<typeof verb>;
 		readonly valency: Dumrel.ValencyFrame;
 		readonly expectedHeading: string;
+		readonly expectedPatterns: readonly string[];
 	}[] = [
 		{
 			lemma: verb("reden"),
 			valency: [
-				subject,
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: germanAdposition("über"),
-							governedCase: "Acc",
-						},
-						{
-							kind: "Preposition",
-							preposition: germanAdposition("von"),
-							governedCase: "Dat",
-						},
-					],
-				},
+				[
+					subject,
+					{
+						kind: "Preposition",
+						preposition: germanAdposition("über"),
+						governedCase: "Acc",
+					},
+				],
+				[
+					subject,
+					{
+						kind: "Preposition",
+						preposition: germanAdposition("von"),
+						governedCase: "Dat",
+					},
+				],
 			],
-			expectedHeading: "(über jN | von jM) reden",
+			expectedHeading: "reden",
+			expectedPatterns: ["über jN reden", "von jM reden"],
 		},
 		{
 			lemma: verb("wohnen"),
-			valency: [
-				subject,
-				{
-					status: "Required",
-					complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
-				},
-			],
-			expectedHeading: "irgendwo wohnen",
+			valency: [[subject, { kind: "Adverbial", standIn: "Irgendwo" }]],
+			expectedHeading: "wohnen",
+			expectedPatterns: ["irgendwo wohnen"],
 		},
 		{
 			lemma: verb("aussehen", "aus"),
-			valency: [
-				subject,
-				{
-					status: "Required",
-					complements: [{ kind: "Predicative", marker: "None" }],
-				},
-			],
-			expectedHeading: "irgendwie aus|sehen",
+			valency: [[subject, { kind: "Predicative", marker: "None" }]],
+			expectedHeading: "aus|sehen",
+			expectedPatterns: ["irgendwie aus|sehen"],
 		},
 		{
 			lemma: verb("warten"),
 			valency: [
-				subject,
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: germanAdposition("auf"),
-							governedCase: "Acc",
-						},
-						{ kind: "Clause", form: "Dass", correlate: "Required" },
-					],
-				},
+				[
+					subject,
+					{
+						kind: "Preposition",
+						preposition: germanAdposition("auf"),
+						governedCase: "Acc",
+					},
+				],
+				[
+					subject,
+					{
+						kind: "Clause",
+						form: "Dass",
+						preposition: germanAdposition("auf"),
+					},
+				],
 			],
-			expectedHeading: "(auf jN | dass …) warten",
+			expectedHeading: "warten",
+			expectedPatterns: ["auf jN warten", "darauf, dass … warten"],
 		},
 		{
 			lemma: verb("bedeuten"),
 			valency: [
-				{
-					status: "Required",
-					complements: [
-						{
-							kind: "Case",
-							governedCase: "Nom",
-						},
-						{ kind: "Clause", form: "Dass" },
-					],
-				},
-				{
-					status: "Required",
-					complements: [
-						{
-							kind: "Case",
-							governedCase: "Acc",
-						},
-						{ kind: "Clause", form: "Dass" },
-					],
-				},
+				[subject, { kind: "Case", governedCase: "Acc" }],
+				[subject, { kind: "Clause", form: "Dass" }],
 			],
-			expectedHeading: "[jN | dass …] bedeuten",
+			expectedHeading: "bedeuten",
+			expectedPatterns: ["jN bedeuten", "dass … bedeuten"],
 		},
 	];
-	for (const { lemma, valency, expectedHeading } of frames) {
+	for (const {
+		lemma,
+		valency,
+		expectedHeading,
+		expectedPatterns,
+	} of frames) {
 		const reading = await insertReading(t, {
 			unitKind: "Reading",
 			lemma,
@@ -426,6 +409,10 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 			.match(/data-reading-title=""[^>]*>(.*?)<\/h\d>/)?.[1]
 			?.replace(/<[^>]+>/g, "");
 		expect(title).toBe(`🧩${expectedHeading}`);
+		const bullets = [
+			...markup.matchAll(/data-slot="valency-pattern"[^>]*>(.*?)<\/li>/g),
+		].map((match) => (match[1] ?? "").replace(/<[^>]+>/g, ""));
+		expect(bullets).toEqual([...expectedPatterns]);
 	}
 });
 

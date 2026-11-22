@@ -21,11 +21,13 @@ type Occurrence = {
 
 /**
  * The shared-Reading guard (#884). A Reading that appears in several records,
- * matched by Dumling's `readingIdentityKey`, carries one Knowledge value, one
- * Licence per Variation Dimension and one coverage, so its gold is scored
- * once. Returns an issue at every
- * occurrence of a Reading whose occurrences disagree. A target that holds no
- * Knowledge yet takes no part.
+ * matched by Dumling's `readingIdentityKey`, carries one Reading-wide Knowledge
+ * value, one Licence per Variation Dimension and one coverage, so its gold is
+ * scored once. Valency (ADR 0034) is occurrence-grounded — each record holds
+ * the concrete Valency Pattern realized in its own sentence — so `valency`
+ * and `coverage.valency` are left out of the cross-record equality check.
+ * Returns an issue at every occurrence of a Reading whose occurrences disagree.
+ * A target that holds no Knowledge yet takes no part.
  */
 export function sharedReadingIssues(
 	records: readonly RecordWithTargets[],
@@ -36,15 +38,18 @@ export function sharedReadingIssues(
 			if (target.reading === undefined || target.knowledge === undefined)
 				continue;
 			const key = readingIdentityKey(target.reading);
+			const { valency: _valency, ...sharedKnowledge } = target.knowledge;
+			const { valency: _valencyCoverage, ...sharedCoverage } =
+				target.coverage ?? {};
 			byReading.set(key, [
 				...(byReading.get(key) ?? []),
 				{
 					record: record.id,
 					target: index,
 					value: {
-						knowledge: target.knowledge,
+						knowledge: sharedKnowledge,
 						paradigm: target.paradigm ?? null,
-						coverage: target.coverage ?? null,
+						coverage: target.coverage ? sharedCoverage : null,
 					},
 				},
 			]);

@@ -42,14 +42,7 @@ async function seeded() {
 		ctx.db.insert("accumulatedKnowledge", {
 			ownerReadingKey: readingIdentityKey(REMEMBER),
 			knowledge: {
-				valency: [
-					{
-						status: "Required",
-						complements: [
-							{ kind: "Reflexive", governedCase: "Acc" },
-						],
-					},
-				],
+				valency: [[{ kind: "Reflexive", governedCase: "Acc" }]],
 			},
 			status: "Partial",
 			updatedAt: 1,
@@ -131,30 +124,23 @@ test("a click finds the Readings whose stored frame has an Optional Reflexive Sl
 	};
 	const lemmaId = await insertDictionaryLemma(t, ausruhen);
 	const frames = {
-		"😴": "Optional",
-		"🪞🧘": "Required",
-		"💤": undefined,
+		"😴": true,
+		"🪞🧘": true,
+		"💤": false,
 	} as const;
-	for (const [emojiDescription, status] of Object.entries(frames)) {
+	for (const [emojiDescription, hasReflexive] of Object.entries(frames)) {
 		const stored = parseGermanReading({
 			unitKind: "Reading",
 			lemma: ausruhen,
 			emojiDescription,
 		});
 		await insertReading(t, lemmaId, stored);
-		if (status === undefined) continue;
+		if (!hasReflexive) continue;
 		await t.run((ctx) =>
 			ctx.db.insert("accumulatedKnowledge", {
 				ownerReadingKey: readingIdentityKey(stored),
 				knowledge: {
-					valency: [
-						{
-							status,
-							complements: [
-								{ kind: "Reflexive", governedCase: "Acc" },
-							],
-						},
-					],
+					valency: [[{ kind: "Reflexive", governedCase: "Acc" }]],
 				},
 				status: "Partial",
 				updatedAt: 1,

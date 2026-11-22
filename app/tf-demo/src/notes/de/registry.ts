@@ -19,12 +19,12 @@ import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surfac
 import { renderHeadingDeAttestation } from "./block-renderer-overrides/attestation/heading";
 import { renderHeadingDeLexemeNoun } from "./block-renderer-overrides/reading/heading/lexeme-noun";
 import { renderHeadingDeLexemeVerb } from "./block-renderer-overrides/reading/heading/lexeme-verb";
-import { renderHeadingDeValent } from "./block-renderer-overrides/reading/heading/valency";
 import { renderHeadingDeSurface } from "./block-renderer-overrides/surface/heading";
 import {
 	renderDeAdpositionSourceContexts,
 	renderDeAdpositionValency,
 } from "./block-renderers/reading/valency/adposition";
+import { renderDeReadingValency } from "./block-renderers/reading/valency/valency-block";
 
 const READING_BASE = {
 	Heading: DefaultReadingHeadingRenderer,
@@ -39,12 +39,13 @@ const READING_RELATIONAL = {
 	Relations: renderDefaultReadingRelations,
 };
 /**
- * The routes whose Readings may hold a Valency Frame (Dumrel's valency
- * policy). Their heading shows it as the German Valency Line.
+ * The routes whose Readings may accumulate Valency Patterns (Dumrel's
+ * valency policy, ADR 0034). Their Reading Note lists discovered patterns
+ * as bullets in the dedicated Valency Block.
  */
 const READING_VALENT = {
 	...READING_RELATIONAL,
-	Heading: renderHeadingDeValent,
+	Valency: renderDeReadingValency,
 };
 
 /** An ADP renders its cases from dumcorpus's ADP Case Table instead of a frame. */

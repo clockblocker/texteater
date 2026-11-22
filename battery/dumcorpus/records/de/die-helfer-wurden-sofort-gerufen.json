@@ -2,28 +2,70 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die Helfer wurden sofort gerufen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Helfer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wurden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sofort" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gerufen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Helfer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wurden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sofort"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gerufen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026",
+			"ADR-0036"
+		],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			}
 		],
 		"references": [
 			{
@@ -50,30 +92,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🗣🏃",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -91,12 +131,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["rief"],
-					"present1": ["rufe"],
-					"present2": ["rufst"],
-					"present3": ["ruft"],
-					"pastParticiple": ["gerufen"],
-					"subjunctivePast": ["riefe"]
+					"preterite": [
+						"rief"
+					],
+					"present1": [
+						"rufe"
+					],
+					"present2": [
+						"rufst"
+					],
+					"present3": [
+						"ruft"
+					],
+					"pastParticiple": [
+						"gerufen"
+					],
+					"subjunctivePast": [
+						"riefe"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -123,8 +175,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "wurden", "orthography": "Standard" },
-					{ "attested": "gerufen", "orthography": "Standard" }
+					{
+						"attested": "wurden",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gerufen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -133,7 +191,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "gerufen wurden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Plur",

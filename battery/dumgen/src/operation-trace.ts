@@ -107,7 +107,8 @@ export type OperationTrace = {
 		| "translate.sentence"
 		| "explain.pronoun"
 		| "knowledge.produce"
-		| "knowledge.accumulateTranslations";
+		| "knowledge.accumulateTranslations"
+		| "knowledge.accumulateValency";
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;
 	readonly durationMs: number;

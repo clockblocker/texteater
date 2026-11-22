@@ -3,8 +3,9 @@ import {
 	coreGenders,
 	type GrammaticalGender,
 } from "../../../../../../shared/grammatical-gender";
+import { citedNoteReading } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { ValencyHeading } from "../../../block-renderers/reading/valency/valency-heading";
+import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
 
 const definiteArticle: Readonly<Record<GrammaticalGender, string>> = {
 	Masc: "der",
@@ -12,20 +13,29 @@ const definiteArticle: Readonly<Record<GrammaticalGender, string>> = {
 	Neut: "das",
 };
 
-/** A noun's heading: its articles, then its Valency Line or its Canonical Form. */
+/**
+ * A German noun Reading's heading: its mixed-gender articles (if any) and
+ * its Canonical Form. Discovered Valency Patterns live in the dedicated
+ * Valency Block (ADR 0034).
+ */
 export const renderHeadingDeLexemeNoun = ((context) => {
-	const { lemma } = context.noteData.reading;
+	const { noteData, PresentationCapabilities, Citation } = context;
+	const { lemma } = noteData.reading;
 	const lead = articles(lemma);
+	const citation = Citation(citedNoteReading(noteData));
 	return (
-		<ValencyHeading
-			context={context}
-			lead={lead}
-			fallback={() => (
-				<>
-					{lead}
-					{lemma.canonicalForm}
-				</>
-			)}
+		<ReadingHeading
+			note={noteData}
+			capabilities={PresentationCapabilities}
+			citation={citation}
+			title={
+				lead ? (
+					<>
+						{lead}
+						{lemma.canonicalForm}
+					</>
+				) : undefined
+			}
 		/>
 	);
 }) satisfies NoteBlockRenderer<"de", "Reading", "Lexeme", "NOUN">;

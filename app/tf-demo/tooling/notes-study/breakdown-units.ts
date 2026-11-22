@@ -112,47 +112,33 @@ type BreakdownFixture = {
 	readonly constituents?: readonly Piece[];
 	readonly morphemes?: readonly Piece[];
 	readonly source?: Dumrel.LinkTarget;
-	readonly valency?: readonly Dumrel.ValencySlot[];
+	readonly valency?: readonly Dumrel.ValencyPattern[];
 };
 
-const subject: Dumrel.ValencySlot = {
-	status: "Required",
-	complements: [{ kind: "Case", governedCase: "Nom" }],
+const subject: Dumrel.GermanValencyComplement = {
+	kind: "Case",
+	governedCase: "Nom",
 };
 
-/** A lexical reflexive's Slot, after its fixed phrase's preposition if any (ADR 0052). */
+/** A lexical reflexive complement, after its fixed phrase's preposition if any (ADR 0052). */
 const reflexive = (
 	governedCase: "Acc" | "Dat",
 	options: {
-		readonly status?: Dumrel.ValencySlotStatus;
 		readonly after?: string;
 	} = {},
-): Dumrel.ValencySlot => ({
-	status: options.status ?? "Required",
-	complements: [
-		{
-			kind: "Reflexive",
-			governedCase,
-			...(options.after
-				? { preposition: adposition(options.after) }
-				: {}),
-		},
-	],
+): Dumrel.GermanValencyComplement => ({
+	kind: "Reflexive",
+	governedCase,
+	...(options.after ? { preposition: adposition(options.after) } : {}),
 });
 
 const governed = (
 	preposition: string,
 	governedCase: "Acc" | "Dat",
-	status: Dumrel.ValencySlotStatus = "Optional",
-): Dumrel.ValencySlot => ({
-	status,
-	complements: [
-		{
-			kind: "Preposition",
-			preposition: adposition(preposition),
-			governedCase,
-		},
-	],
+): Dumrel.GermanValencyComplement => ({
+	kind: "Preposition",
+	preposition: adposition(preposition),
+	governedCase,
 });
 
 const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
@@ -453,7 +439,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			space,
 			link("fühlen", pendingWord("VERB", "fühlen")),
 		],
-		valency: [subject, reflexive("Acc")],
+		valency: [[subject, reflexive("Acc")]],
 	},
 	{
 		lemma: ERINNERN,
@@ -464,12 +450,11 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "напоминать" }],
 		],
 		valency: [
-			subject,
-			{
-				status: "Required",
-				complements: [{ kind: "Case", governedCase: "Acc" }],
-			},
-			governed("an", "Acc", "Required"),
+			[
+				subject,
+				{ kind: "Case", governedCase: "Acc" },
+				governed("an", "Acc"),
+			],
 		],
 	},
 	{
@@ -480,7 +465,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to remember" }],
 			[{ kind: "Text", text: "вспоминать" }],
 		],
-		valency: [subject, reflexive("Acc"), governed("an", "Acc")],
+		valency: [[subject, reflexive("Acc"), governed("an", "Acc")]],
 	},
 	{
 		lemma: verb("schämen"),
@@ -490,7 +475,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to be ashamed" }],
 			[{ kind: "Text", text: "стыдиться" }],
 		],
-		valency: [subject, reflexive("Acc"), governed("für", "Acc")],
+		valency: [[subject, reflexive("Acc"), governed("für", "Acc")]],
 	},
 	{
 		lemma: lemma("Lexeme", "VERB", "ausruhen", { hasSepPrefix: "aus" }),
@@ -500,7 +485,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to rest" }],
 			[{ kind: "Text", text: "отдыхать" }],
 		],
-		valency: [subject, reflexive("Acc", { status: "Optional" })],
+		valency: [[subject, reflexive("Acc")]],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "Sorgen machen"),
@@ -510,7 +495,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to worry" }],
 			[{ kind: "Text", text: "беспокоиться" }],
 		],
-		valency: [subject, reflexive("Dat"), governed("um", "Acc")],
+		valency: [[subject, reflexive("Dat"), governed("um", "Acc")]],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "es gemütlich machen"),
@@ -520,7 +505,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to make oneself comfortable" }],
 			[{ kind: "Text", text: "устроиться поудобнее" }],
 		],
-		valency: [subject, reflexive("Dat")],
+		valency: [[subject, reflexive("Dat")]],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "außer sein"),
@@ -530,7 +515,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			[{ kind: "Text", text: "to be beside oneself" }],
 			[{ kind: "Text", text: "быть вне себя" }],
 		],
-		valency: [subject, reflexive("Dat", { after: "außer" })],
+		valency: [[subject, reflexive("Dat", { after: "außer" })]],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "den Faden verlieren"),

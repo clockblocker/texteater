@@ -12,6 +12,7 @@ import type { Question, Questions } from "@typesafe-ai/sdk";
 import { isRecord } from "common-utils";
 import { foldCase } from "dumling";
 import type * as Dumrel from "dumrel/types";
+import { printStoredGermanPattern } from "../../../src/knowledge/de/valency-notation.js";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
 import type { GoldOracle } from "../resolve-grammar/models.js";
 import type { KnowledgeCase, KnowledgeScope } from "./cases.js";
@@ -164,21 +165,14 @@ export function goldKnowledgeWritten(
 				],
 			};
 		}
-		case "valency":
-			return {
-				valency: (gold.valency ?? []).map((slot) => ({
-					status: slot.status,
-					complements: slot.complements.map((complement) =>
-						complement.kind === "Preposition"
-							? {
-									...complement,
-									preposition:
-										complement.preposition.canonicalForm,
-								}
-							: complement,
-					),
-				})),
-			};
+		case "valency": {
+			const [first] = gold.valency ?? [];
+			return first === undefined
+				? "-"
+				: printStoredGermanPattern(first, {
+						verb: goldCase.reading.lemma.kind === "VERB",
+					});
+		}
 		case "participleSource": {
 			const source = gold.source;
 			if (!source) return { verb: null };

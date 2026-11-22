@@ -233,7 +233,13 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0036", "ADR-0039", "ADR-0040", "ADR-0042"],
+		"adrs": [
+			"ADR-0035",
+			"ADR-0036",
+			"ADR-0039",
+			"ADR-0040",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -432,7 +438,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 15],
+			"memberSegmentIndices": [
+				0,
+				15
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "SCONJ"
@@ -456,7 +465,9 @@
 					"normalizedSurface": "so daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null
 				},
@@ -474,7 +485,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -521,7 +534,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -577,7 +592,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -622,7 +639,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Zweifel"] },
+				"paradigm": {
+					"plural": [
+						"Zweifel"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -633,7 +654,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -677,12 +700,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰"
+			},
 			"notes": {
 				"rationale": "entscheiden forms its perfect with haben, and war entschieden reports a settled state, not entschied: state passive, so war is the copula VERB sein (de/sein-perfect-or-copula, de/copula-stays-apart)."
 			},
@@ -731,7 +758,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -781,7 +810,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -887,7 +918,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -934,12 +967,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19],
+			"memberSegmentIndices": [
+				19
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🐢" },
+			"reading": {
+				"emojiDescription": "🐢"
+			},
 			"notes": {
 				"rationale": "Adverbial gemächlich stays ADJ (de/adjective-stays-adj) and compares, so it marks Pos."
 			},
@@ -982,7 +1019,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1052,7 +1091,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1096,12 +1137,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25, 29],
+			"memberSegmentIndices": [
+				25,
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌸☀" },
+			"reading": {
+				"emojiDescription": "🌸☀"
+			},
 			"notes": {
 				"rationale": "Frühlingstag owns den across the participle (de/noun-owns-its-article)."
 			},
@@ -1150,7 +1196,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1225,7 +1273,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31, 33],
+			"memberSegmentIndices": [
+				31,
+				33
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "ADV"
@@ -1309,7 +1360,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [35],
+			"memberSegmentIndices": [
+				35
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1318,15 +1371,12 @@
 				"emojiDescription": "🚶😌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1421,7 +1471,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [38],
+			"memberSegmentIndices": [
+				38
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1458,7 +1510,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [40],
+			"memberSegmentIndices": [
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1519,12 +1573,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [41, 45],
+			"memberSegmentIndices": [
+				41,
+				45
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "😴" },
+			"reading": {
+				"emojiDescription": "😴"
+			},
 			"notes": {
 				"rationale": "m (dem) is the owned Fused article of Schlummer, across ersehnten (de/fused-word-pieces)."
 			},
@@ -1587,7 +1646,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [43],
+			"memberSegmentIndices": [
+				43
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1662,7 +1723,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [47],
+			"memberSegmentIndices": [
+				47
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1709,7 +1772,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [49, 53],
+			"memberSegmentIndices": [
+				49,
+				53
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -1744,7 +1810,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Nächte"] },
+				"paradigm": {
+					"plural": [
+						"Nächte"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -1755,7 +1825,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -1803,12 +1875,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [51],
+			"memberSegmentIndices": [
+				51
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🌪" },
+			"reading": {
+				"emojiDescription": "🌪"
+			},
 			"notes": {
 				"rationale": "Attributive wüsten ('wild, dissolute') is ADJ wüst, which compares (wüster), so it marks Pos."
 			},

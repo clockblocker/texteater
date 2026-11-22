@@ -2,38 +2,129 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Nach der anstrengenden Sitzung erholt sich die Ministerin im stillen Garten hinter dem Kanzleramt.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Nach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "anstrengenden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Sitzung" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erholt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Ministerin" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stillen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Garten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hinter" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kanzleramt" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "anstrengenden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sitzung"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erholt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ministerin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "i",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stillen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Garten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hinter"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kanzleramt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [
@@ -67,57 +158,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 10],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				8,
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🪞😌🔋",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "von",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Required"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Required"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -145,12 +207,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["erholte"],
-					"present1": ["erhole"],
-					"present2": ["erholst"],
-					"present3": ["erholt"],
-					"pastParticiple": ["erholt"],
-					"subjunctivePast": ["erholte"]
+					"preterite": [
+						"erholte"
+					],
+					"present1": [
+						"erhole"
+					],
+					"present2": [
+						"erholst"
+					],
+					"present3": [
+						"erholt"
+					],
+					"pastParticiple": [
+						"erholt"
+					],
+					"subjunctivePast": [
+						"erholte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -187,7 +261,9 @@
 						}
 					},
 					"normalizedSurface": "erholt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -203,8 +279,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "erholt", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" }
+					{
+						"attested": "erholt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -229,7 +311,10 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
 			"caseId": "draft-translation-verb-lexically-reflexive",
-			"memberSegmentIndices": [8, 10],
+			"memberSegmentIndices": [
+				8,
+				10
+			],
 			"case": {
 				"input": {
 					"markedContext": "Nach der anstrengenden Sitzung <TARGET>erholt</TARGET> <TARGET>sich</TARGET> die Ministerin im stillen Garten hinter dem Kanzleramt.",
@@ -260,7 +345,10 @@
 				"explanation": "A lexically reflexive verb translates as an infinitive; the sentence's person is not carried over.",
 				"reviewedAlternatives": {
 					"accepted": {
-						"en": ["rest", "relax"],
+						"en": [
+							"rest",
+							"relax"
+						],
 						"ru": [
 							"восстанавливаться",
 							"восстановиться",
@@ -268,8 +356,14 @@
 						]
 					},
 					"rejected": {
-						"en": ["recovers", "rests"],
-						"ru": ["отдыхает", "восстанавливается"]
+						"en": [
+							"recovers",
+							"rests"
+						],
+						"ru": [
+							"отдыхает",
+							"восстанавливается"
+						]
 					}
 				}
 			}

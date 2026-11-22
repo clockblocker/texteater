@@ -99,7 +99,13 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0040", "ADR-0044", "ADR-0046"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0039",
+			"ADR-0040",
+			"ADR-0044",
+			"ADR-0046"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -141,8 +147,14 @@
 				"rule": "de/pron-or-det-by-use",
 				"hash": "b7ac2bf4eaaf25be"
 			},
-			{ "rule": "de/quantifier-by-use", "hash": "f320e2bb7e4a76f5" },
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f320e2bb7e4a76f5"
+			},
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -209,12 +221,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -235,7 +251,9 @@
 							"pronType": "Prs",
 							"gender": null
 						},
-						"syncretic": ["polite"],
+						"syncretic": [
+							"polite"
+						],
 						"syncretized": [
 							{
 								"unitKind": "Lemma",
@@ -292,12 +310,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💪" },
+			"reading": {
+				"emojiDescription": "💪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -346,7 +368,11 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 8, 10],
+			"memberSegmentIndices": [
+				4,
+				8,
+				10
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "VERB"
@@ -355,24 +381,16 @@
 				"emojiDescription": "👌😊",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"locutionType": "Idiom"
 				},
@@ -441,12 +459,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🚫" },
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -495,7 +517,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -529,12 +553,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14, 16],
+			"memberSegmentIndices": [
+				14,
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "➖" },
+			"reading": {
+				"emojiDescription": "➖"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -555,7 +584,9 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "degree": "Sup" }
+					"inflectionalFeatures": {
+						"degree": "Sup"
+					}
 				},
 				"members": [
 					{
@@ -574,12 +605,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18, 20],
+			"memberSegmentIndices": [
+				18,
+				20
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🧒" },
+			"reading": {
+				"emojiDescription": "🧒"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

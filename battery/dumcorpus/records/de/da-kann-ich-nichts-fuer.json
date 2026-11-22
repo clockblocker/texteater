@@ -2,26 +2,70 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Da kann ich nichts für.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Da" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kann" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nichts" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "für" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Da"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nichts"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "für"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
-			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
-			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
@@ -42,21 +86,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2, 6, 8],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				0,
+				2,
+				6,
+				8
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🫵😬",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom"
 				},
@@ -88,7 +137,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "nichts dafür kann",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -104,10 +155,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "Da", "orthography": "Standard" },
-					{ "attested": "kann", "orthography": "Standard" },
-					{ "attested": "nichts", "orthography": "Standard" },
-					{ "attested": "für", "orthography": "Standard" }
+					{
+						"attested": "Da",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "kann",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "nichts",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "für",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

@@ -2,33 +2,116 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er wog vielleicht ein halbes Lot –\nund war am fünften Tage tot.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wog" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vielleicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "halbes" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Lot" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "–" },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fünften" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Tage" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "tot" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wog"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vielleicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "halbes"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Lot"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "Punctuation",
+			"text": "–"
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "a",
+			"surface": "an"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fünften"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tage"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tot"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
@@ -39,21 +122,33 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0034", "ADR-0035", "ADR-0038", "ADR-0042"],
+		"adrs": [
+			"ADR-0026",
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0038",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/meaning-conditioned-paradigm-doublets",
 				"hash": "0881d666fc1f106a"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
-			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "8982593963a4d507"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -113,30 +208,27 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "⚖",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Adverbial",
-									"standIn": "IrgendwieViel"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Adverbial",
+								"standIn": "IrgendwieViel"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -152,12 +244,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["wog"],
-					"present1": ["wiege"],
-					"present2": ["wiegst"],
-					"present3": ["wiegt"],
-					"pastParticiple": ["gewogen"],
-					"subjunctivePast": ["wöge"]
+					"preterite": [
+						"wog"
+					],
+					"present1": [
+						"wiege"
+					],
+					"present2": [
+						"wiegst"
+					],
+					"present3": [
+						"wiegt"
+					],
+					"pastParticiple": [
+						"gewogen"
+					],
+					"subjunctivePast": [
+						"wöge"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -184,7 +288,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "wog", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wog",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -192,7 +301,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wog",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -220,12 +331,22 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6, 10],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [
+				6,
+				10
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"reading": {
 				"emojiDescription": "⚖",
 				"knowledge": {},
-				"paradigm": { "plural": ["Lote"] },
+				"paradigm": {
+					"plural": [
+						"Lote"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"source": "ReviewedEmpty",
@@ -237,7 +358,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -246,17 +369,28 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Lot", "orthography": "Standard" }
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Lot",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Lot",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,
@@ -277,59 +411,48 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				16
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🟰",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Predicative",
-									"marker": "None"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Predicative",
+								"marker": "None"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["war"],
-					"present1": ["bin"],
-					"present2": ["bist"],
-					"present3": ["ist"],
-					"pastParticiple": ["gewesen"],
-					"subjunctivePast": ["wäre"]
+					"preterite": [
+						"war"
+					],
+					"present1": [
+						"bin"
+					],
+					"present2": [
+						"bist"
+					],
+					"present3": [
+						"ist"
+					],
+					"pastParticiple": [
+						"gewesen"
+					],
+					"subjunctivePast": [
+						"wäre"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -356,7 +479,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "war", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -364,7 +492,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "war",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -392,8 +522,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				21
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "5⃣",
 				"knowledge": {},
@@ -414,7 +549,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "fünften", "orthography": "Standard" }
+					{
+						"attested": "fünften",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -423,7 +561,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "fünften",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"degree": null,
@@ -445,8 +585,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				25
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "💀",
 				"knowledge": {
@@ -525,7 +670,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "tot", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "tot",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": [],
@@ -534,7 +684,9 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "tot",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

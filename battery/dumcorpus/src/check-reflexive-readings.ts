@@ -1,9 +1,10 @@
 /**
  * The 🪞 marker checks (ADR 0052). Readings of one Lemma are told apart by
- * their Emoji Description alone, so a Reading whose Valency Frame has a
- * Required Reflexive Slot starts with 🪞, the emoji of the reflexivity unit
- * `sich`: `fürchten` 😨 and 🪞😨. An Optional Reflexive Slot (`(sich)
- * ausruhen`) takes no marker.
+ * their Emoji Description alone, so a Reading whose lexical reflexive is
+ * required starts with 🪞, the emoji of the reflexivity unit `sich`:
+ * `fürchten` 😨 and 🪞😨. Every accumulated Valency Pattern of a 🪞 Reading
+ * holds its Reflexive complement; a non-🪞 Reading may hold a Reflexive in
+ * some or all encountered patterns (`(sich) ausruhen`) without carrying 🪞.
  */
 import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -19,23 +20,17 @@ import type { SpecIssue } from "./issues.js";
 
 type Located = { readonly path: string; readonly message: string };
 
-/** The status of the frame's Reflexive Slot, if it has one. */
-function reflexiveStatus(
-	valency: readonly Dumrel.ValencySlot[] | undefined,
-): Dumrel.ValencySlotStatus | undefined {
-	return valency?.find(({ complements }) =>
-		complements.some(({ kind }) => kind === "Reflexive"),
-	)?.status;
-}
+const patternHasReflexive = (pattern: Dumrel.ValencyPattern) =>
+	pattern.some(({ kind }) => kind === "Reflexive");
 
 const emojiOf = (reading: Dumling.Reading) =>
 	"emojiDescription" in reading ? reading.emojiDescription : undefined;
 
 /**
- * Where a Reading's 🪞 disagrees with its frame: 🪞 comes first exactly when
- * the frame has a Required Reflexive Slot. Only a route that takes a
- * Reflexive is read, so PRON `sich` 🪞 is no concern. A Reading whose
- * Knowledge holds no frame is read only once its valency is reviewed empty.
+ * Where a Reading's 🪞 disagrees with its accumulated patterns: a 🪞 Reading
+ * holds a Reflexive complement in every stored pattern, and cannot be
+ * reviewed empty. Only a route that takes a Reflexive is checked, so PRON
+ * `sich` 🪞 is no concern.
  */
 export function reflexiveMarkerIssues(
 	reading: Dumling.Reading,
@@ -44,26 +39,23 @@ export function reflexiveMarkerIssues(
 ): Located[] {
 	if (!allowedComplementKinds(reading.lemma).includes("Reflexive")) return [];
 	const emoji = emojiOf(reading);
-	if (emoji === undefined) return [];
-	const required = reflexiveStatus(knowledge.valency) === "Required";
-	const marked = emoji.startsWith(marker);
-	if (required && !marked)
+	if (emoji === undefined || !emoji.startsWith(marker)) return [];
+	const patterns = knowledge.valency;
+	if (patterns === undefined) {
+		return coverage?.valency === "ReviewedEmpty"
+			? [
+					{
+						path: "reading.emojiDescription",
+						message: `Only a Reading with a Required Reflexive holds ${marker}`,
+					},
+				]
+			: [];
+	}
+	if (!patterns.every(patternHasReflexive))
 		return [
 			{
 				path: "reading.emojiDescription",
-				message: `A Reading with a Required Reflexive Slot starts its Emoji Description with ${marker}`,
-			},
-		];
-	if (
-		marked &&
-		!required &&
-		(knowledge.valency !== undefined ||
-			coverage?.valency === "ReviewedEmpty")
-	)
-		return [
-			{
-				path: "reading.emojiDescription",
-				message: `Only a Reading with a Required Reflexive Slot starts its Emoji Description with ${marker}`,
+				message: `Every Valency Pattern of a ${marker} Reading holds a Reflexive complement`,
 			},
 		];
 	return [];
@@ -76,9 +68,9 @@ type RecordWithTargets = {
 };
 
 /**
- * Where a Lemma has a Reading with an Optional Reflexive Slot beside a 🪞
- * Reading whose other emoji are the same: the two would be one Reading
- * (ADR 0052). Returns an issue at each such Optional Reading's target.
+ * Where a Lemma has a non-🪞 Reading whose patterns include a Reflexive beside
+ * a 🪞 Reading whose other emoji are the same: the two would be one Reading
+ * (ADR 0052). Returns an issue at each such non-🪞 Reading's target.
  */
 export function reflexiveTwinIssues(
 	records: readonly RecordWithTargets[],
@@ -98,15 +90,22 @@ export function reflexiveTwinIssues(
 			const emoji = reading && emojiOf(reading);
 			if (!reading || emoji === undefined || !knowledge) continue;
 			const lemma = lemmaIdentityKey(reading.lemma);
-			const status = reflexiveStatus(knowledge.valency);
-			if (status === "Required" && emoji.startsWith(marker))
+			const patterns = knowledge.valency ?? [];
+			if (
+				emoji.startsWith(marker) &&
+				patterns.length > 0 &&
+				patterns.every(patternHasReflexive)
+			)
 				marked.set(
 					lemma,
 					(marked.get(lemma) ?? new Set()).add(
 						emoji.slice(marker.length),
 					),
 				);
-			else if (status === "Optional")
+			else if (
+				!emoji.startsWith(marker) &&
+				patterns.some(patternHasReflexive)
+			)
 				optional.push({ lemma, emoji, record: record.id, target });
 		}
 	return optional
@@ -116,6 +115,6 @@ export function reflexiveTwinIssues(
 			check: "ReflexiveMarker",
 			layer: "Knowledge",
 			path: `targets.${target}.reading.emojiDescription`,
-			message: `This Reading's Optional Reflexive Slot shares its emoji ${emoji} with a ${marker} Reading of its Lemma; they are one Reading`,
+			message: `This Reading's reflexive pattern shares its emoji ${emoji} with a ${marker} Reading of its Lemma; they are one Reading`,
 		}));
 }

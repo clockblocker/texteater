@@ -159,7 +159,13 @@
 		"year": 1906
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036", "ADR-0039", "ADR-0041", "ADR-0042"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036",
+			"ADR-0039",
+			"ADR-0041",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -285,7 +291,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -335,12 +343,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💪" },
+			"reading": {
+				"emojiDescription": "💪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -389,7 +401,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -445,7 +459,11 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6, 8, 12],
+			"memberSegmentIndices": [
+				6,
+				8,
+				12
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "VERB"
@@ -454,49 +472,24 @@
 				"emojiDescription": "💬",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "mit",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "über",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "mit",
+									"coreFeatures": {}
+								},
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"locutionType": "Collocation"
 				},
@@ -582,12 +575,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🧑‍🤝‍🧑" },
+			"reading": {
+				"emojiDescription": "🧑‍🤝‍🧑"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -629,7 +626,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15, 19],
+			"memberSegmentIndices": [
+				15,
+				19
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "SCONJ"
@@ -670,12 +670,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤷" },
+			"reading": {
+				"emojiDescription": "🤷"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -713,7 +717,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -722,15 +728,12 @@
 				"emojiDescription": "🔇",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -806,7 +809,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -843,7 +848,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
+			"memberSegmentIndices": [
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -964,12 +971,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔢🔁" },
+			"reading": {
+				"emojiDescription": "🔢🔁"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1005,12 +1016,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29, 31],
+			"memberSegmentIndices": [
+				29,
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "💬📌" },
+			"reading": {
+				"emojiDescription": "💬📌"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1059,7 +1075,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [
+				33
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "SCONJ"
@@ -1096,7 +1114,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [35],
+			"memberSegmentIndices": [
+				35
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1105,24 +1125,16 @@
 				"emojiDescription": "🔄",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [

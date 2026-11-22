@@ -94,23 +94,20 @@ tun hatte` → `mit zu tun haben`, `gesprochen hat` → `sprechen`, `es regnet`
 Surface, never words of the Lemma. dumcorpus checks this on gold, except
 where Variation changed the wording.
 
-**The slotted line is a projection.** A learner sees the Surface with its
-slots, `jD mit jM zu tun hatte`. That line is derived when it is shown, from
-the Lemma and the Reading's Valency Frame, the way the Citation is derived,
-and it is never stored. It shows the frame's whole shape: every slot, the
-Optional ones in parentheses, as the Citation header does (`jD (auf jN)
-wartet`). `jD`, the Nom slot, appears only on a finite, non-imperative
-Surface whose frame has a Nom slot. An ADJ or NOUN Reading with a frame shows
-its slots after its head: `stolz (auf jN)`, `Angst (vor jM)`. A noun without
-a frame shows its form alone: `Kindern`.
+**The Surface heading stays clean.** A learner sees the Surface in base order
+with any separable prefix split by a bar (`an|fängt`, `gefragt hast`, `mit zu
+tun hatte`), and with `sich` placed according to the active Reading when that
+Reading has a Required lexical reflexive (`sich erinnert`, `außer sich war`,
+`es sich gemütlich machte`). Subject `jD` placeholders and open valency slots
+are not projected onto the Surface tail or Attestation caption; discovered
+Valency Patterns live in the Reading's dedicated Valency Block
+([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)).
 
-The slots depend on the Reading, and one Surface serves several: `wartet`
-belongs to every Reading of `warten`. Grammatical Resolution writes the
-Surface on the click path, before Knowledge proposes any frame, and the click
-path stays free of the frame. The line shows the frame rather than what the
-sentence filled, because bare-case fillers aren't recorded
-([#609](https://github.com/clockblocker/texteater/issues/609)), so a line
-built from them would lose slots.
+Because the lexical reflexive depends on the Reading and one Surface serves
+several (`erinnert` belongs to both `erinnern` 💭 and `sich erinnern` 🪞🧠),
+`sich` is projected at render time from the active Reading and never stored in
+`normalizedSurface`. Grammatical Resolution writes the Surface on the click
+path before Knowledge runs.
 
 **Ids follow the form.** dumdict ids hash the whole Surface, so an id
 changes with its form. The data is rewritten once, with no compatibility.

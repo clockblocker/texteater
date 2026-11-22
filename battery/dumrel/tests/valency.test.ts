@@ -21,12 +21,9 @@ const aufAcc = {
 	governedCase: "Acc",
 } as const;
 const aufDat = { ...aufAcc, governedCase: "Dat" } as const;
-/** A Slot of these complements, alternatives when there are several. */
-const optional = <const C extends unknown[]>(...complements: C) =>
-	({ status: "Optional", complements }) as const;
-const required = <const C extends unknown[]>(...complements: C) =>
-	({ status: "Required", complements }) as const;
 const nom = { kind: "Case", governedCase: "Nom" } as const;
+const acc = { kind: "Case", governedCase: "Acc" } as const;
+const dat = { kind: "Case", governedCase: "Dat" } as const;
 
 const stolzReading = {
 	unitKind: "Reading",
@@ -51,24 +48,24 @@ const aufReading = {
 test("a two-way preposition takes the construction's case", () => {
 	const parsed = parseReadingKnowledge({
 		source: wartenReading,
-		knowledge: { valency: [required(nom), optional(aufAcc)] },
+		knowledge: { valency: [[nom, aufAcc]] },
 	});
 	expect(parsed).toEqual({
 		success: true,
-		value: { valency: [required(nom), optional(aufAcc)] },
+		value: { valency: [[nom, aufAcc]] },
 	});
 	// `bestehen auf` + Dat: a governed preposition names any oblique case.
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional(aufDat)] },
+			knowledge: { valency: [[aufDat]] },
 		}).success,
 	).toBe(true);
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
 			knowledge: {
-				valency: [optional({ ...aufAcc, governedCase: "Nom" })],
+				valency: [[{ ...aufAcc, governedCase: "Nom" }]],
 			},
 		}).success,
 	).toBe(false);
@@ -78,30 +75,28 @@ test("a two-way preposition takes the construction's case", () => {
 			source: wartenReading,
 			knowledge: {
 				valency: [
-					optional({
-						kind: "Preposition",
-						preposition: aufLemma,
-						case: "Acc",
-					}),
+					[
+						{
+							kind: "Preposition",
+							preposition: aufLemma,
+							case: "Acc",
+						},
+					],
 				],
 			},
 		}).success,
 	).toBe(false);
 });
 
-test("a subjectless verb's frame has no Nom slot", () => {
-	// `mir graut vor dem Winter`: the experiencer is a Dat slot, not a subject.
+test("a subjectless verb's pattern has no Nom", () => {
+	// `mir graut vor dem Winter`: the experiencer is Dat, not a subject.
 	const grauenReading = {
 		...wartenReading,
 		lemma: { ...wartenReading.lemma, canonicalForm: "grauen" },
 		emojiDescription: "😨",
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-	const dat = {
-		kind: "Case",
-		governedCase: "Dat",
-	} as const;
 	const vorDat = { ...aufDat, preposition: vorLemma } as const;
-	const valency = [required(dat), optional(vorDat)];
+	const valency = [[dat, vorDat]];
 	expect(
 		parseReadingKnowledge({
 			source: grauenReading,
@@ -111,18 +106,20 @@ test("a subjectless verb's frame has no Nom slot", () => {
 });
 
 // Which cases a preposition takes is a fact about German: dumcorpus checks
-// frames against its ADP Case Table (ADR 0041).
+// patterns against its ADP Case Table (ADR 0041).
 test("Dumrel leaves a preposition's case to dumcorpus's ADP Case Table", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
 			knowledge: {
 				valency: [
-					optional({
-						...aufAcc,
-						preposition: fuerLemma,
-						governedCase: "Dat",
-					}),
+					[
+						{
+							...aufAcc,
+							preposition: fuerLemma,
+							governedCase: "Dat",
+						},
+					],
 				],
 			},
 		}).success,
@@ -131,7 +128,7 @@ test("Dumrel leaves a preposition's case to dumcorpus's ADP Case Table", () => {
 		parseReadingKnowledge({
 			source: wartenReading,
 			knowledge: {
-				valency: [optional({ ...aufAcc, preposition: fuerLemma })],
+				valency: [[{ ...aufAcc, preposition: fuerLemma }]],
 			},
 		}).success,
 	).toBe(true);
@@ -145,23 +142,23 @@ test("only an ADP Lemma of the source Language can be governed", () => {
 		expect(
 			parseReadingKnowledge({
 				source: wartenReading,
-				knowledge: { valency: [optional({ ...aufAcc, preposition })] },
+				knowledge: { valency: [[{ ...aufAcc, preposition }]] },
 			}).success,
 		).toBe(false);
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
 			knowledge: {
-				valency: [optional({ ...aufAcc, governedCase: "Nom" })],
+				valency: [[{ ...aufAcc, governedCase: "Nom" }]],
 			},
 		}).success,
 	).toBe(false);
 });
 
-test("each route allows its own complements, and lists each once", () => {
+test("each route allows its own complements, and lists each pattern and preposition once", () => {
 	const noun = parseReadingKnowledge({
 		source: houseReading,
-		knowledge: { valency: [optional(nom)] },
+		knowledge: { valency: [[nom]] },
 	});
 	expect(noun.success).toBe(false);
 	if (!noun.success)
@@ -169,29 +166,29 @@ test("each route allows its own complements, and lists each once", () => {
 			"knowledge",
 			"valency",
 			0,
-			"complements",
 			0,
 			"kind",
 		]);
 	expect(
 		parseReadingKnowledge({
 			source: houseReading,
-			knowledge: { valency: [optional(aufAcc)] },
+			knowledge: { valency: [[aufAcc]] },
 		}).success,
 	).toBe(true);
 	expect(
 		parseReadingKnowledge({
 			source: aufReading,
-			knowledge: { valency: [optional(aufAcc)] },
+			knowledge: { valency: [[aufAcc]] },
 		}).success,
 	).toBe(false);
+	// Duplicate preposition within one pattern is rejected.
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional(aufAcc), required(aufAcc)] },
+			knowledge: { valency: [[aufAcc, aufAcc]] },
 		}).success,
 	).toBe(false);
-	// A preposition counts without case, as Lemma identity does (system ADR 0002).
+	// Duplicate pattern within the Reading's valency is rejected (case-insensitively).
 	const shouted = {
 		...aufAcc,
 		preposition: { ...aufAcc.preposition, canonicalForm: "AUF" },
@@ -199,64 +196,74 @@ test("each route allows its own complements, and lists each once", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional(aufAcc), required(shouted)] },
+			knowledge: { valency: [[aufAcc], [shouted]] },
 		}).success,
 	).toBe(false);
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { valency: [optional(aufAcc)] },
-			change: { kind: "Retract", aspect: "valency", complement: shouted },
+			knowledge: { valency: [[aufAcc]] },
+			change: { kind: "Retract", aspect: "valency", pattern: [shouted] },
 		}),
 	).toEqual({ success: true, value: {} });
 });
 
-test("Contribute adds missing Slots, Correct replaces the frame, Retract removes a Slot or the frame", () => {
+test("Contribute unions patterns in arrival order, Correct replaces them, Retract removes one or all", () => {
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { valency: [required(nom), optional(aufAcc)] },
+			knowledge: { valency: [[nom, aufAcc]] },
 			change: {
 				kind: "Contribute",
 				aspect: "valency",
-				value: [optional(aufAcc), optional(aufDat)],
+				value: [
+					[nom, aufAcc],
+					[nom, aufDat],
+				],
 			},
 		}),
 	).toEqual({
 		success: true,
 		value: {
-			valency: [required(nom), optional(aufAcc), optional(aufDat)],
+			valency: [
+				[nom, aufAcc],
+				[nom, aufDat],
+			],
 		},
 	});
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { valency: [optional(aufAcc)] },
+			knowledge: { valency: [[aufAcc]] },
 			change: {
 				kind: "Correct",
 				aspect: "valency",
-				value: [required(aufAcc)],
+				value: [[nom, aufAcc]],
 			},
 		}),
-	).toEqual({ success: true, value: { valency: [required(aufAcc)] } });
+	).toEqual({ success: true, value: { valency: [[nom, aufAcc]] } });
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { valency: [required(nom), optional(aufAcc)] },
-			change: { kind: "Retract", aspect: "valency", complement: aufAcc },
+			knowledge: { valency: [[nom], [nom, aufAcc]] },
+			change: {
+				kind: "Retract",
+				aspect: "valency",
+				pattern: [nom, aufAcc],
+			},
 		}),
-	).toEqual({ success: true, value: { valency: [required(nom)] } });
+	).toEqual({ success: true, value: { valency: [[nom]] } });
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { definition: "x", valency: [optional(aufAcc)] },
-			change: { kind: "Retract", aspect: "valency", complement: aufAcc },
+			knowledge: { definition: "x", valency: [[aufAcc]] },
+			change: { kind: "Retract", aspect: "valency", pattern: [aufAcc] },
 		}),
 	).toEqual({ success: true, value: { definition: "x" } });
 	expect(
 		applyKnowledgeChange({
 			source: wartenReading,
-			knowledge: { definition: "x", valency: [optional(aufDat)] },
+			knowledge: { definition: "x", valency: [[aufDat]] },
 			change: { kind: "Retract", aspect: "valency" },
 		}),
 	).toEqual({ success: true, value: { definition: "x" } });
@@ -267,25 +274,27 @@ test("Contribute adds missing Slots, Correct replaces the frame, Retract removes
 			kind: "Contribute",
 			aspect: "valency",
 			value: [
-				optional({
-					...aufAcc,
-					preposition: fuerLemma,
-					governedCase: "Nom",
-				}),
+				[
+					{
+						...aufAcc,
+						preposition: fuerLemma,
+						governedCase: "Nom",
+					},
+				],
 			],
 		},
 	});
 	expect(invalid.success).toBe(false);
 });
 
-test("projection reads Preposition Slots and infers the preposition side", () => {
+test("projection reads Preposition complements across patterns and infers the preposition side", () => {
 	const result = projectPrepositionalGovernment([
 		{ reading: aufReading, knowledge: {} },
 		{
 			reading: wartenReading,
-			knowledge: { valency: [required(nom), optional(aufAcc)] },
+			knowledge: { valency: [[nom, aufAcc]] },
 		},
-		{ reading: stolzReading, knowledge: { valency: [optional(aufAcc)] } },
+		{ reading: stolzReading, knowledge: { valency: [[aufAcc]] } },
 		{ reading: houseReading, knowledge: {} },
 	]);
 	expect(result.success).toBe(true);
@@ -307,7 +316,7 @@ test("projection reads Preposition Slots and infers the preposition side", () =>
 	const withoutPreposition = projectPrepositionalGovernment([
 		{
 			reading: wartenReading,
-			knowledge: { valency: [optional(aufAcc)] },
+			knowledge: { valency: [[aufAcc]] },
 		},
 	]);
 	expect(withoutPreposition.success && withoutPreposition.value).toEqual([
@@ -347,12 +356,18 @@ const irgendwo = { kind: "Adverbial", standIn: "Irgendwo" } as const;
 const irgendwie = { kind: "Adverbial", standIn: "Irgendwie" } as const;
 const dassClause = { kind: "Clause", form: "Dass" } as const;
 const obClause = { kind: "Clause", form: "Ob" } as const;
-/** `reden`: Optional `über` + Acc | `von` + Dat, with `mit` + Dat beside it. */
-const reden = [required(nom), optional(mitDat), optional(ueberAcc, vonDat)];
+/** `reden` accumulated across encounters: `mit jM über jN` and `von jM`. */
+const reden = [
+	[nom, mitDat, ueberAcc],
+	[nom, vonDat],
+];
 
-test("a complement the word requires is a Slot whatever marks it", () => {
-	// Sie wohnt bei ihrer Tante: the place is required, its preposition free.
-	const wohnen = [required(nom), required(irgendwo), optional(irgendwie)];
+test("a complement the word takes is a concrete pattern whatever marks it", () => {
+	// Sie wohnt bei ihrer Tante / Sie wohnt schön: concrete realized patterns.
+	const wohnen = [
+		[nom, irgendwo],
+		[nom, irgendwo, irgendwie],
+	];
 	expect(
 		parseReadingKnowledge({
 			source: wohnenReading,
@@ -365,17 +380,17 @@ test("a complement the word requires is a Slot whatever marks it", () => {
 		{ kind: "Predicative", marker: "Wie" },
 		{ kind: "Predicative" },
 		{ kind: "Clause", form: "Wenn" },
-		{ ...dassClause, correlate: "Never" },
+		{ ...dassClause, correlate: "Required" },
 	])
 		expect(
 			parseReadingKnowledge({
 				source: wohnenReading,
-				knowledge: { valency: [required(invalid)] },
+				knowledge: { valency: [[invalid]] },
 			}).success,
 		).toBe(false);
 });
 
-test("a Slot holds alternatives, and a Preposition sits in one Slot at most, a Case in one per Slot", () => {
+test("distinct patterns accumulate cleanly, and double Acc is valid in one pattern", () => {
 	expect(
 		parseReadingKnowledge({
 			source: redenReading,
@@ -385,125 +400,79 @@ test("a Slot holds alternatives, and a Preposition sits in one Slot at most, a C
 	expect(
 		parseReadingKnowledge({
 			source: redenReading,
-			knowledge: { valency: [optional()] },
+			knowledge: { valency: [[]] },
 		}).success,
 	).toBe(false);
+	// Same Preposition in two different patterns is valid (`mit jM`, `mit jM über jN`).
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: {
+				valency: [
+					[nom, mitDat],
+					[nom, mitDat, ueberAcc],
+				],
+			},
+		}).success,
+	).toBe(true);
+	// Same Preposition twice inside one pattern is rejected.
 	const twice = parseReadingKnowledge({
 		source: redenReading,
-		knowledge: { valency: [...reden, optional(ueberAcc)] },
+		knowledge: { valency: [[nom, ueberAcc, ueberAcc]] },
 	});
 	expect(twice.success).toBe(false);
 	if (!twice.success)
 		expect(twice.error.issues[0]?.path).toEqual([
 			"knowledge",
 			"valency",
-			3,
-			"complements",
 			0,
+			2,
 		]);
-	expect(
-		parseReadingKnowledge({
-			source: redenReading,
-			knowledge: { valency: [optional(ueberAcc, vonDat, ueberAcc)] },
-		}).success,
-	).toBe(false);
-	// A Case complement may fill two Slots, as the double accusative of
-	// jemanden etwas fragen does (ADR 0057); a Preposition may not.
-	const acc = { ...nom, governedCase: "Acc" } as const;
-	const fragen = [required(nom), optional(acc), optional(acc, obClause)];
+	// Double accusative (`jemanden etwas fragen`) holds two Acc complements in one pattern.
+	const fragen = [
+		[nom, acc],
+		[nom, acc, acc],
+		[nom, acc, obClause],
+	];
 	expect(
 		parseReadingKnowledge({
 			source: germanVerbReading("fragen", "❓"),
 			knowledge: { valency: fragen },
 		}),
 	).toEqual({ success: true, value: { valency: fragen } });
-	expect(
-		parseReadingKnowledge({
-			source: redenReading,
-			knowledge: {
-				valency: [required(nom), optional(acc, acc)],
-			},
-		}).success,
-	).toBe(false);
-	expect(
-		parseReadingKnowledge({
-			source: redenReading,
-			knowledge: {
-				valency: [
-					required(nom),
-					optional(ueberAcc),
-					optional(ueberAcc),
-				],
-			},
-		}).success,
-	).toBe(false);
 });
 
-test("an Adverbial, Predicative or Clause may recur in another Slot, never in its own", () => {
-	// Dass er kommt, bedeutet, dass sie geht: a dass-clause in both the Nom and
-	// the Acc Slot of bedeuten.
-	const bedeuten = [
-		required(nom, dassClause),
-		required({ ...nom, governedCase: "Acc" }, dassClause),
-	];
+test("an Adverbial, Predicative or Clause may recur in one pattern", () => {
+	// Dass er kommt, bedeutet, dass sie geht: two dass-clauses in one pattern.
+	const bedeuten = [[dassClause, dassClause]];
 	expect(
 		parseReadingKnowledge({
 			source: germanVerbReading("bedeuten", "📖"),
 			knowledge: { valency: bedeuten },
 		}),
 	).toEqual({ success: true, value: { valency: bedeuten } });
-	const twoPlaces = [required(nom), required(irgendwo), optional(irgendwo)];
-	expect(
-		parseReadingKnowledge({
-			source: wohnenReading,
-			knowledge: { valency: twoPlaces },
-		}),
-	).toEqual({ success: true, value: { valency: twoPlaces } });
-	const predicative = { kind: "Predicative", marker: "None" } as const;
-	for (const complement of [dassClause, irgendwo, predicative]) {
-		const repeated = parseReadingKnowledge({
-			source: wohnenReading,
-			knowledge: {
-				valency: [required(nom), required(complement, complement)],
-			},
-		});
-		expect(repeated.success).toBe(false);
-		if (!repeated.success)
-			expect(repeated.error.issues[0]?.path).toEqual([
-				"knowledge",
-				"valency",
-				1,
-				"complements",
-				1,
-			]);
-	}
 });
 
 test("each German route allows its own complement kinds", () => {
 	const allows = (source: Dumling.Reading, complement: unknown) =>
 		parseReadingKnowledge({
 			source,
-			knowledge: { valency: [optional(complement)] },
+			knowledge: { valency: [[complement]] },
 		}).success;
 	const predicative = { kind: "Predicative", marker: "None" } as const;
 	const zuInfinitive = { kind: "Clause", form: "ZuInfinitive" } as const;
-	// Verbs take every German kind: a copula's Predicative of its subject.
 	for (const complement of [irgendwo, predicative, zuInfinitive])
 		expect(allows(wartenReading, complement)).toBe(true);
-	// Adjectives take all but Predicative.
 	expect(allows(stolzReading, irgendwo)).toBe(true);
 	expect(allows(stolzReading, dassClause)).toBe(true);
 	expect(allows(stolzReading, predicative)).toBe(false);
-	// Nouns take a Clause, alone (der Versuch, etw zu tun) or beside a
-	// Preposition (die Freude darauf, dass …), and no other markerless kind.
+	// Nouns take a Clause alone (`der Versuch, etw zu tun`) or with a da(r)- correlate (`die Freude darauf, dass …`).
 	expect(allows(houseReading, zuInfinitive)).toBe(true);
 	expect(
 		parseReadingKnowledge({
 			source: houseReading,
 			knowledge: {
-				valency: [
-					optional(aufAcc, { ...dassClause, correlate: "Required" }),
-				],
+				valency: [[{ ...dassClause, preposition: aufLemma }]],
 			},
 		}).success,
 	).toBe(true);
@@ -512,108 +481,56 @@ test("each German route allows its own complement kinds", () => {
 	expect(allows(houseReading, nom)).toBe(false);
 });
 
-test("a Clause with a correlate takes its da(r)- from the Slot's one Preposition", () => {
-	// sich freuen auf: auf + Acc | dass-clause with a Required darauf.
-	const freuenAuf = [
-		required(nom),
-		required(aufAcc, { ...dassClause, correlate: "Required" }),
-	];
+test("a Clause may name its da(r)- correlate preposition as an ADP Lemma", () => {
+	const achtenDass = [[nom, { ...dassClause, preposition: aufLemma }]];
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: freuenAuf },
+			knowledge: { valency: achtenDass },
 		}).success,
 	).toBe(true);
-	// freuen 'please': a subject clause in the Nom Slot, its es Optional.
+	// Non-ADP or wrong-language preposition on a Clause is rejected.
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: {
+				valency: [[{ ...dassClause, preposition: houseLemma }]],
+			},
+		}).success,
+	).toBe(false);
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
 			knowledge: {
 				valency: [
-					required(nom, { ...dassClause, correlate: "Optional" }),
-					required({ ...nom, governedCase: "Acc" }),
+					[
+						{
+							...dassClause,
+							preposition: { ...aufLemma, language: "en" },
+						},
+					],
 				],
 			},
 		}).success,
-	).toBe(true);
-	const ambiguous = parseReadingKnowledge({
-		source: redenReading,
-		knowledge: {
-			valency: [
-				required(nom),
-				optional(ueberAcc, vonDat, {
-					...dassClause,
-					correlate: "Required",
-				}),
-			],
-		},
-	});
-	expect(ambiguous.success).toBe(false);
-	if (!ambiguous.success)
-		expect(ambiguous.error.issues[0]?.path).toEqual([
-			"knowledge",
-			"valency",
-			1,
-			"complements",
-			2,
-			"correlate",
-		]);
-	// Without a correlate, the clause names no preposition.
-	expect(
-		parseReadingKnowledge({
-			source: redenReading,
-			knowledge: {
-				valency: [
-					required(nom),
-					optional(ueberAcc, vonDat, dassClause),
-				],
-			},
-		}).success,
-	).toBe(true);
+	).toBe(false);
 });
 
-test("Contribute never groups alternatives, and Retract empties a Slot one complement at a time", () => {
+test("Contribute adds unseen concrete patterns without losing earlier ones", () => {
 	const contribute = (value: unknown) =>
 		applyKnowledgeChange({
 			source: redenReading,
 			knowledge: { valency: [...reden] },
 			change: { kind: "Contribute", aspect: "valency", value },
 		});
-	expect(contribute([optional(vonDat)])).toEqual({
+	// Duplicate pattern is a no-op.
+	expect(contribute([[nom, vonDat]])).toEqual({
 		success: true,
 		value: { valency: reden },
 	});
-	// A contributed Slot is added whole or not at all.
-	expect(contribute([optional(ueberAcc, { ...aufAcc })])).toEqual({
+	// A new combination (`mit jM von jM`) is added as its own concrete pattern.
+	expect(contribute([[nom, mitDat, vonDat]])).toEqual({
 		success: true,
-		value: { valency: reden },
-	});
-	expect(contribute([optional(aufAcc)])).toEqual({
-		success: true,
-		value: { valency: [...reden, optional(aufAcc)] },
-	});
-	expect(contribute([optional(irgendwo)])).toEqual({
-		success: true,
-		value: { valency: [...reden, optional(irgendwo)] },
-	});
-	const retract = (knowledge: unknown, complement: unknown) =>
-		applyKnowledgeChange({
-			source: redenReading,
-			knowledge: knowledge as never,
-			change: { kind: "Retract", aspect: "valency", complement },
-		});
-	const withoutUeber = [required(nom), optional(mitDat), optional(vonDat)];
-	expect(retract({ valency: reden }, ueberAcc)).toEqual({
-		success: true,
-		value: { valency: withoutUeber },
-	});
-	expect(retract({ valency: withoutUeber }, vonDat)).toEqual({
-		success: true,
-		value: { valency: [required(nom), optional(mitDat)] },
-	});
-	expect(retract({ valency: [optional(vonDat)] }, vonDat)).toEqual({
-		success: true,
-		value: {},
+		value: { valency: [...reden, [nom, mitDat, vonDat]] },
 	});
 	expect(
 		applyKnowledgeChange({
@@ -622,16 +539,16 @@ test("Contribute never groups alternatives, and Retract empties a Slot one compl
 			change: {
 				kind: "Correct",
 				aspect: "valency",
-				value: [required(nom), optional(ueberAcc)],
+				value: [[nom, ueberAcc]],
 			},
 		}),
 	).toEqual({
 		success: true,
-		value: { valency: [required(nom), optional(ueberAcc)] },
+		value: { valency: [[nom, ueberAcc]] },
 	});
 });
 
-test("every Preposition alternative governs", () => {
+test("every Preposition across accumulated patterns governs", () => {
 	const vonReading = {
 		unitKind: "Reading",
 		lemma: vonLemma,
@@ -642,7 +559,7 @@ test("every Preposition alternative governs", () => {
 		{ reading: redenReading, knowledge: { valency: [...reden] } },
 		{
 			reading: sprechenReading,
-			knowledge: { valency: [required(nom), optional(irgendwie)] },
+			knowledge: { valency: [[nom, irgendwie]] },
 		},
 	]);
 	expect(result.success).toBe(true);

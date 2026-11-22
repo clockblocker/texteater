@@ -127,7 +127,7 @@ describe("public storage-facing schemas", () => {
 			attestedTranslations: [],
 			attestationLinks: [],
 			notes: "",
-			knowledge: { valency: [{ status: "Optional", complements }] },
+			knowledge: { valency: [complements] },
 		});
 		expect(schema.safeParse(entry(preposition("auf", "Acc"))).success).toBe(
 			true,
@@ -165,34 +165,39 @@ describe("public storage-facing schemas", () => {
 			notes: "",
 			knowledge: {
 				valency: [
-					{
-						status: "Required",
-						complements: [
-							{
-								kind: "Case",
-								governedCase: "Nom",
-							},
-						],
-					},
-					{ status: "Required", complements },
+					[{ kind: "Case", governedCase: "Nom" }, ...complements],
 				],
 			},
 		});
+		const auf = {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "ADP",
+			canonicalForm: "auf",
+			coreFeatures: {},
+		};
 		for (const complements of [
 			[{ kind: "Adverbial", standIn: "Irgendwohin" }],
 			[{ kind: "Predicative", marker: "Als" }],
 			[
 				{ kind: "Case", governedCase: "Acc" },
-				{ kind: "Clause", form: "Dass", correlate: "Optional" },
+				{ kind: "Clause", form: "Dass", preposition: auf },
 			],
 		])
 			expect(schema.safeParse(entry(...complements)).success).toBe(true);
-		for (const complements of [
-			[],
-			[{ kind: "Case", case: "Acc" }],
-			[{ kind: "Case", governedCase: "Acc", referent: "Something" }],
+		for (const bad of [
+			{
+				reading: germanGehenReading,
+				attestedTranslations: [],
+				attestationLinks: [],
+				notes: "",
+				knowledge: { valency: [[]] },
+			},
+			entry({ kind: "Case", case: "Acc" }),
+			entry({ kind: "Case", governedCase: "Acc", referent: "Something" }),
 		])
-			expect(schema.safeParse(entry(...complements)).success).toBe(false);
+			expect(schema.safeParse(bad).success).toBe(false);
 	});
 
 	test("Hebrew Reading Knowledge holds caseless Hebrew complements", () => {
@@ -211,7 +216,7 @@ describe("public storage-facing schemas", () => {
 			attestationLinks: [],
 			notes: "",
 			knowledge: {
-				valency: [{ status: "Required", complements: [complement] }],
+				valency: [[complement]],
 			},
 		});
 		expect(schema.safeParse(entry({ kind: "Subject" })).success).toBe(true);
@@ -250,7 +255,7 @@ describe("public storage-facing schemas", () => {
 			attestationLinks: [],
 			notes: "",
 			knowledge: {
-				valency: [{ status: "Required", complements: [complement] }],
+				valency: [[complement]],
 			},
 		});
 		for (const complement of [

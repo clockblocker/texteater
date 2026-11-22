@@ -2,35 +2,96 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der alte Aufzug bleibt nie zwischen den Etagen stehen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "alte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Aufzug" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bleibt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zwischen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Etagen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stehen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "alte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Aufzug"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bleibt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zwischen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Etagen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stehen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/bleiben-with-an-infinitive",
 				"hash": "71648d2fd6a2802d"
 			},
-			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" }
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			}
 		],
 		"references": [
 			{
@@ -52,21 +113,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 16],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				16
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🛑",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom"
 				},
@@ -87,8 +151,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "bleibt", "orthography": "Standard" },
-					{ "attested": "stehen", "orthography": "Standard" }
+					{
+						"attested": "bleibt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "stehen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -97,7 +167,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "stehen bleibt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -123,9 +195,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🚫🕰" },
+			"memberSegmentIndices": [
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"reading": {
+				"emojiDescription": "🚫🕰"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -142,11 +221,18 @@
 						}
 					},
 					"normalizedSurface": "nie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "nie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "nie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		}

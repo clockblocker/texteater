@@ -296,12 +296,7 @@ describe("the German pack through projectLemmaTables", () => {
 		const [entry] = slice.readingEntries;
 		if (!entry) throw Error("Expected a Reading Entry");
 		entry.knowledge = {
-			valency: [
-				{
-					status: "Required",
-					complements: [{ kind: "Reflexive", governedCase: "Acc" }],
-				},
-			],
+			valency: [[{ kind: "Reflexive", governedCase: "Acc" }]],
 		};
 		expect(er(projectLemmaTables(pack, slice))).toEqual([
 			["er erinnert", 1],

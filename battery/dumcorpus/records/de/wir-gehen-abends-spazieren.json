@@ -2,19 +2,47 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Wir gehen abends spazieren.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gehen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "abends" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "spazieren" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gehen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "abends"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "spazieren"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/fixed-member-test",
@@ -54,12 +82,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚶" },
+			"reading": {
+				"emojiDescription": "🚶"
+			},
 			"notes": {
 				"rationale": "gehen is the finite VERB and spazieren its infinitive, a VERB of its own; abends between them is free. spazieren gehen has a Duden headword but means what its words say, 'go walking', like einkaufen gehen, so it fails de/idiom, and a verb + verb unit needs both (#723). This replaces the Imported Case's one VERB over [gehen, spazieren] (#82's policy). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7. spazieren gehen is gehen 4a with an infinitive of purpose (schwimmen, tanzen gehen), the Reading 🚶."
 			},
@@ -108,7 +140,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -117,15 +151,12 @@
 				"emojiDescription": "🚶😌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [

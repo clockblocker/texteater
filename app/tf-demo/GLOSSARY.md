@@ -99,9 +99,11 @@ _Avoid_: aside, subtitle
 The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 
 **Valency Block**:
-An ADP Reading's Block listing the cases dumcorpus's ADP Case Table allows.
-Any other Reading shows its Valency Frame in its heading instead
-(`mit jM zu tun haben`). See [ADR 0053] and [ADR 0034].
+A Reading's dedicated Block for grammatical government: for an ADP Reading, the
+cases dumcorpus's ADP Case Table allows; for any other valent Reading (VERB,
+ADJ, NOUN), a bulleted list of the concrete Valency Patterns this Visitor has
+encountered (`• nach jM fragen`, `• jN fragen`). See [ADR 0053] and
+[ADR 0034].
 
 **Citation**:
 How a Note prints a Reading: its Canonical Form (Dumling) with the lexical

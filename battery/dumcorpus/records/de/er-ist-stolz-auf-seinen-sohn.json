@@ -57,20 +57,28 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036", "ADR-0038", "ADR-0042"],
+		"adrs": [
+			"ADR-0034",
+			"ADR-0036",
+			"ADR-0038",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "19c59bf41ed26810"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "8982593963a4d507"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
@@ -106,34 +114,32 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"memberSegmentIndices": [
+				4,
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"reading": {
 				"emojiDescription": "🦚",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "auf",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
+						[
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "auf",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								}
-							]
-						}
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -180,7 +186,9 @@
 						}
 					},
 					"normalizedSurface": "stolz",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -222,59 +230,48 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🟰",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "W",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Predicative",
-									"marker": "None"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Predicative",
+								"marker": "None"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["war"],
-					"present1": ["bin"],
-					"present2": ["bist"],
-					"present3": ["ist"],
-					"pastParticiple": ["gewesen"],
-					"subjunctivePast": ["wäre"]
+					"preterite": [
+						"war"
+					],
+					"present1": [
+						"bin"
+					],
+					"present2": [
+						"bist"
+					],
+					"present3": [
+						"ist"
+					],
+					"pastParticiple": [
+						"gewesen"
+					],
+					"subjunctivePast": [
+						"wäre"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -315,7 +312,9 @@
 						}
 					},
 					"normalizedSurface": "ist",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

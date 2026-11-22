@@ -1,10 +1,11 @@
 /**
- * The German word table of the valency notation (`../valency-notation.ts`),
- * in case letters: a Valency Frame as Luna proposes it, each preposition its
- * Canonical Form, written as `N (A|(es) dass|(es) ob|(es) w)`, and read
- * back. `germanFramePattern` is the same language as one regular
- * expression, which Luna's answer is held to (a strict schema's `pattern`),
- * and `parseGermanFrame` reads exactly the frames it holds.
+ * The German word table of the concrete valency pattern notation
+ * (`../valency-notation.ts`), in case letters: one realized Valency Pattern
+ * as Luna proposes it, each preposition its Canonical Form, written as
+ * `N A nach D` or `N auf dass`, and read back. `germanPatternRegex` is the
+ * same language as one regular expression, which Luna's answer is held to (a
+ * strict schema's `pattern`), and `parseGermanPattern` reads exactly the
+ * patterns it holds.
  *
  * - A Case complement is the letter of its case: N (Nom), A (Acc), D (Dat),
  *   G (Gen).
@@ -13,28 +14,27 @@
  *   complement: `auf A`, `auf D`, `mit D`, never `mit A`.
  * - A Reflexive is `sich(A)` or `sich(D)`, in a fixed phrase after its
  *   preposition (`außer sich(D)`).
- * - A Clause is `dass`, `ob`, `w`, `zu+Inf` or `Inf`, after `es` when it
- *   needs a correlate and `(es)` when it may take one. The correlate's word
- *   comes from its Slot (Dumrel's `clauseCorrelateValues`), so `es` marks
- *   it whatever the word.
- * - An Adverbial is its stand-in: irgendwo, irgendwohin, irgendwie,
+ * - A Clause is `dass`, `ob`, `w`, `zu+Inf` or `Inf`, preceded by the
+ *   correlate preposition when a `da(r)-` pronominal adverb anticipates it
+ *   (`auf dass`, `an zu+Inf`, `über ob`).
+ * - An Adverbial is its stand-in: `irgendwo`, `irgendwohin`, `irgendwie`,
  *   `irgendwie lange`, `irgendwie viel`.
  * - A Predicative is `ADJ`, `als ADJ` or `für ADJ`.
- * - A verb frame with no Nom, so no subject (an expletive es subject),
- *   opens with `es` (`es D irgendwie`); an empty frame is `-`. A leading
- *   `es` before a clause alone in its Slot is that opener (`es dass`: *es
- *   heißt, dass …*), since a clause alone takes no correlate.
+ * - A verb pattern with no Nom (an expletive es subject) opens with `es`
+ *   (`es D irgendwie`, `es auf A`, `es dass`); an empty pattern is `-`.
  */
+import { canonicalJson } from "common-utils";
 import {
 	germanAdpositionEntry,
 	germanGovernablePrepositions,
 } from "dumcorpus/inventories";
+import type * as Dumrel from "dumrel/types";
 import {
-	type FrameWords,
-	parseFrame,
-	printFrame,
+	type PatternWords,
+	parsePattern,
+	printPattern,
 	type RawComplement,
-	type RawFrame,
+	type RawPattern,
 } from "../valency-notation.js";
 
 type CaseName = "Nom" | "Acc" | "Dat" | "Gen";
@@ -69,7 +69,7 @@ export type ProposedComplement =
 				| "Dass"
 				| "Ob"
 				| "W";
-			readonly correlate?: "Required" | "Optional";
+			readonly preposition?: string;
 	  }
 	| {
 			readonly kind: "Reflexive";
@@ -77,19 +77,16 @@ export type ProposedComplement =
 			readonly preposition?: string;
 	  };
 
-export type ProposedSlot = {
-	readonly status: "Required" | "Optional";
-	readonly complements: readonly ProposedComplement[];
-};
+export type ProposedPattern = readonly ProposedComplement[];
 
 /**
- * What decides how a frame is written: whether its Lemma is a verb, whose
- * frame opens with `es` when it has no subject.
+ * What decides how a pattern is written: whether its Lemma is a verb, whose
+ * subjectless pattern opens with `es`.
  */
-export type FrameContext = { readonly verb: boolean };
+export type PatternContext = { readonly verb: boolean };
 
 type GermanParse =
-	| { readonly ok: true; readonly frame: ProposedSlot[] }
+	| { readonly ok: true; readonly pattern: ProposedComplement[] }
 	| { readonly ok: false; readonly error: string };
 
 const caseLetter: Readonly<Record<CaseName, string>> = {
@@ -144,7 +141,7 @@ const markerOfPrefix: Readonly<Record<string, "Als" | "Für">> = {
 /**
  * Each preposition a governor selects, with the cases the ADP Case Table
  * lets it govern before its complement, in letter order: the only
- * Preposition complements the notation writes.
+ * Preposition complements and Clause correlates the notation writes.
  */
 const governedCases: ReadonlyMap<string, readonly PrepositionCase[]> = new Map(
 	germanGovernablePrepositions.map((preposition) => {
@@ -167,9 +164,7 @@ const governedCases: ReadonlyMap<string, readonly PrepositionCase[]> = new Map(
 
 /**
  * The prepositions a fixed phrase's Reflexive may follow (`außer sich`):
- * the governable ones and the few only a fixed phrase takes. A grammar
- * letting any word stand there had Luna fill it with runaway letters
- * (`ankommenaluunniit… sich(dat)`, the bench's first round).
+ * the governable ones and the few only a fixed phrase takes.
  */
 const fixedPhrasePrepositions: readonly string[] = [
 	...germanGovernablePrepositions,
@@ -186,9 +181,8 @@ const isHead = (word: string) =>
 	clauseOfWord.has(word) ||
 	word === predicative;
 
-const germanWords: FrameWords = {
+const germanWords: PatternWords = {
 	isPrefix: (word) =>
-		word === "es" ||
 		word === "als" ||
 		word === "für" ||
 		fixedPhrasePrepositions.includes(word),
@@ -201,12 +195,6 @@ const germanWords: FrameWords = {
 		return isHead(word) ? 1 : 0;
 	},
 	isOpener: (word) => word === "es",
-	combines: (prefix, head, alone) =>
-		prefix === "es"
-			? clauseOfWord.has(head) && !alone
-			: prefix === "als"
-				? head === predicative
-				: !clauseOfWord.has(head) && !adverbialOfWords.has(head),
 	empty: "-",
 };
 
@@ -214,16 +202,13 @@ const germanWords: FrameWords = {
 type Read = ProposedComplement | string;
 
 function clauseOf(
-	{ head, prefix, optionalPrefix }: RawComplement,
+	{ head, prefix }: RawComplement,
 	form: keyof typeof clauseWord,
 ): Read {
 	if (prefix === undefined) return { kind: "Clause", form };
-	if (prefix !== "es") return `«${prefix} ${head}» is no clause`;
-	return {
-		kind: "Clause",
-		form,
-		correlate: optionalPrefix ? "Optional" : "Required",
-	};
+	return governedCases.has(prefix)
+		? { kind: "Clause", form, preposition: prefix }
+		: `«${prefix} ${head}»: ${prefix} is no preposition a governor selects`;
 }
 
 function predicativeOf({ head, prefix }: RawComplement): Read {
@@ -263,11 +248,9 @@ function caseComplementOf(
 
 /** One complement as written, or why it is none. */
 function complementOf(raw: RawComplement): Read {
-	const { head, prefix, optionalPrefix } = raw;
+	const { head, prefix } = raw;
 	const clause = clauseOfWord.get(head);
 	if (clause !== undefined) return clauseOf(raw, clause);
-	if (optionalPrefix)
-		return `Only a correlate is optional: «(${prefix}) ${head}»`;
 	const standIn = adverbialOfWords.get(head);
 	if (standIn !== undefined)
 		return prefix === undefined
@@ -284,27 +267,21 @@ function complementOf(raw: RawComplement): Read {
 }
 
 /**
- * Reads a German frame in the notation: exactly the frames
- * `germanFramePattern` holds, as the Slots they write. A leading `es` says
- * only that the frame has no subject, which its Slots already show.
+ * Reads a German concrete pattern in the notation: exactly the patterns
+ * `germanPatternRegex` holds, as the complements they write. A leading `es`
+ * says only that the pattern has no subject, which its complements already
+ * show.
  */
-export function parseGermanFrame(text: string): GermanParse {
-	const parsed = parseFrame(text, germanWords);
+export function parseGermanPattern(text: string): GermanParse {
+	const parsed = parsePattern(text, germanWords);
 	if (!parsed.ok) return parsed;
-	const frame: ProposedSlot[] = [];
-	for (const slot of parsed.frame.slots) {
-		const complements: ProposedComplement[] = [];
-		for (const raw of slot.alternatives) {
-			const read = complementOf(raw);
-			if (typeof read === "string") return { ok: false, error: read };
-			complements.push(read);
-		}
-		frame.push({
-			status: slot.optional ? "Optional" : "Required",
-			complements,
-		});
+	const pattern: ProposedComplement[] = [];
+	for (const raw of parsed.pattern.complements) {
+		const read = complementOf(raw);
+		if (typeof read === "string") return { ok: false, error: read };
+		pattern.push(read);
 	}
-	return { ok: true, frame };
+	return { ok: true, pattern };
 }
 
 function rawComplementOf(complement: ProposedComplement): RawComplement {
@@ -326,14 +303,9 @@ function rawComplementOf(complement: ProposedComplement): RawComplement {
 		case "Clause":
 			return {
 				head: clauseWord[complement.form],
-				...(complement.correlate === undefined
+				...(complement.preposition === undefined
 					? {}
-					: {
-							prefix: "es",
-							...(complement.correlate === "Optional"
-								? { optionalPrefix: true }
-								: {}),
-						}),
+					: { prefix: complement.preposition }),
 			};
 		case "Adverbial":
 			return { head: adverbialWords[complement.standIn] };
@@ -345,51 +317,133 @@ function rawComplementOf(complement: ProposedComplement): RawComplement {
 }
 
 /**
- * A frame's structure in the notation's German words: a verb's frame with
- * no Nom in any Slot has no subject, and opens with `es`.
+ * A pattern's structure in the notation's German words: a verb's pattern
+ * with no Nom has no subject, and opens with `es`.
  */
-function rawFrameOf(
-	frame: readonly ProposedSlot[],
-	context: FrameContext,
-): RawFrame {
+function rawPatternOf(
+	pattern: ProposedPattern,
+	context: PatternContext,
+): RawPattern {
 	const subjectless =
 		context.verb &&
-		frame.length > 0 &&
-		!frame.some(({ complements }) =>
-			complements.some(
-				(complement) =>
-					complement.kind === "Case" &&
-					complement.governedCase === "Nom",
-			),
+		pattern.length > 0 &&
+		!pattern.some(
+			(complement) =>
+				complement.kind === "Case" && complement.governedCase === "Nom",
 		);
 	return {
 		...(subjectless ? { opener: "es" } : {}),
-		slots: frame.map((slot) => ({
-			optional: slot.status === "Optional",
-			alternatives: slot.complements.map(rawComplementOf),
-		})),
+		complements: pattern.map(rawComplementOf),
 	};
 }
 
-/** Writes a German frame in the notation. */
-export function printGermanFrame(
-	frame: readonly ProposedSlot[],
-	context: FrameContext,
+/** Writes a German concrete pattern in the notation. */
+export function printGermanPattern(
+	pattern: ProposedPattern,
+	context: PatternContext,
 ): string {
-	return printFrame(rawFrameOf(frame, context), germanWords);
+	return printPattern(rawPatternOf(pattern, context), germanWords);
+}
+
+/** Converts a Dumrel German ValencyComplement into the notation's ProposedComplement. */
+export function proposedComplementOf(
+	complement: Dumrel.GermanValencyComplement,
+): ProposedComplement {
+	if (complement.kind === "Preposition")
+		return {
+			kind: "Preposition",
+			preposition: complement.preposition.canonicalForm,
+			governedCase: complement.governedCase,
+		};
+	if (complement.kind === "Reflexive")
+		return complement.preposition === undefined
+			? { kind: "Reflexive", governedCase: complement.governedCase }
+			: {
+					kind: "Reflexive",
+					governedCase: complement.governedCase,
+					preposition: complement.preposition.canonicalForm,
+				};
+	if (complement.kind === "Clause")
+		return complement.preposition === undefined
+			? { kind: "Clause", form: complement.form }
+			: {
+					kind: "Clause",
+					form: complement.form,
+					preposition: complement.preposition.canonicalForm,
+				};
+	return complement;
+}
+
+/** Writes a Dumrel German ValencyPattern in the notation. */
+export function printStoredGermanPattern(
+	pattern: Dumrel.ValencyPattern,
+	context: PatternContext,
+): string {
+	return printGermanPattern(
+		pattern.map((complement) =>
+			proposedComplementOf(complement as Dumrel.GermanValencyComplement),
+		),
+		context,
+	);
+}
+
+/** Sort rank of a German complement within a canonicalized concrete pattern. */
+function complementOrderKey(
+	complement: Dumrel.GermanValencyComplement,
+): string {
+	switch (complement.kind) {
+		case "Case": {
+			const rank =
+				complement.governedCase === "Nom"
+					? "0"
+					: complement.governedCase === "Dat"
+						? "2"
+						: complement.governedCase === "Acc"
+							? "3"
+							: "4";
+			return `${rank}:${complement.governedCase}`;
+		}
+		case "Reflexive":
+			return `1:${complement.preposition?.canonicalForm ?? ""}:${complement.governedCase}`;
+		case "Preposition":
+			return `5:${complement.preposition.canonicalForm}:${complement.governedCase}`;
+		case "Adverbial":
+			return `6:${complement.standIn}`;
+		case "Predicative":
+			return `7:${complement.marker}`;
+		case "Clause":
+			return `8:${complement.preposition?.canonicalForm ?? ""}:${complement.form}`;
+	}
+}
+
+/**
+ * Orders a concrete German pattern canonically (`Nom`, `Reflexive`, `Dat`,
+ * `Acc`, `Gen`, `Preposition`s, `Adverbial`, `Predicative`, `Clause`) so two
+ * occurrences realizing the same complement set deduplicate cleanly.
+ */
+export function canonicalizeGermanPattern(
+	pattern: readonly Dumrel.GermanValencyComplement[],
+): Dumrel.GermanValencyComplement[] {
+	return [...pattern].sort((left, right) =>
+		complementOrderKey(left).localeCompare(complementOrderKey(right)),
+	);
+}
+
+/** Canonical identity key for comparing two German ValencyPatterns regardless of order. */
+export function germanPatternKey(pattern: Dumrel.ValencyPattern): string {
+	const canonical = canonicalizeGermanPattern(
+		pattern as readonly Dumrel.GermanValencyComplement[],
+	);
+	return canonicalJson(canonical.map(proposedComplementOf));
 }
 
 /**
  * The notation as one regular expression, for a strict JSON schema's
- * `pattern`: the frames `parseGermanFrame` reads. Each preposition a
- * governor selects stands only before the letters of the cases it governs
- * there, the prepositions grouped by those cases (`(?:an|auf|…) (?:A|D)`,
- * `(?:aus|bei|…) D`). Otherwise it is the valency notation bench's
- * `letters@r4` pattern (`lab/evaluation/valency-notation/`, its git
- * history), under which Luna matched gold on 74.7% of 193 dev Readings,
- * referents ignored, and never answered unreadable.
+ * `pattern`: exactly the concrete patterns `parseGermanPattern` reads. Each
+ * preposition a governor selects stands only before the letters of the cases
+ * it governs there (or before a Clause head as its `da(r)-` correlate).
  */
-export const germanFramePattern = (() => {
+export const germanPatternRegex = (() => {
 	const any = (options: readonly string[]) => `(?:${options.join("|")})`;
 	const byCases = new Map<string, string[]>();
 	for (const [preposition, cases] of governedCases) {
@@ -407,14 +461,11 @@ export const germanFramePattern = (() => {
 		refl,
 		`${any(fixedPhrasePrepositions)} ${refl}`,
 		clause,
-		`es ${clause}`,
-		`\\(es\\) ${clause}`,
+		`${any([...governedCases.keys()])} ${clause}`,
 		"irgendwo",
 		"irgendwohin",
 		"irgendwie(?: lange| viel)?",
 		"(?:(?:als|für) )?ADJ",
 	].join("|");
-	const alts = `(?:${comp})(?:\\|(?:${comp}))*`;
-	const slot = `(?:\\(${alts}\\)|${alts})`;
-	return `^(?:-|(?:es )?${slot}(?: ${slot})*)$`;
+	return `^(?:-|(?:es )?(?:${comp})(?: (?:${comp}))*)$`;
 })();

@@ -106,16 +106,13 @@ test("intake attests no government, so a Full Reading with its translations dema
 				ru: [[{ kind: "Text", text: "страх" }]],
 			},
 			valency: [
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: { canonicalForm: "vor" },
-							governedCase: "Dat",
-						},
-					],
-				},
+				[
+					{
+						kind: "Preposition",
+						preposition: { canonicalForm: "vor" },
+						governedCase: "Dat",
+					},
+				],
 			],
 		},
 		status: "Full",

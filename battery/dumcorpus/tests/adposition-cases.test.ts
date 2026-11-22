@@ -142,15 +142,10 @@ const prepositionComplement = (
 });
 const frame = (canonicalForm: string, grammaticalCase: string) =>
 	[
-		{
-			status: "Optional",
-			complements: [
-				prepositionComplement(canonicalForm, grammaticalCase),
-			],
-		},
+		[prepositionComplement(canonicalForm, grammaticalCase)],
 	] as unknown as Dumrel.ValencyFrame;
 
-test("a Valency Frame's preposition is listed and takes the slot's case", () => {
+test("a Valency Pattern's preposition is listed and takes the pattern's case", () => {
 	const warten = {
 		unitKind: "Reading",
 		emojiDescription: "⏳",
@@ -165,7 +160,7 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 			},
 		},
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-	// Dumrel checks the frame's shape only, so für + Dat and à parse there.
+	// Dumrel checks the pattern's shape only, so für + Dat and à parse there.
 	for (const valency of [
 		frame("auf", "Acc"),
 		frame("für", "Dat"),
@@ -179,31 +174,31 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 	expect(frameAdpositionCaseIssues(frame("auf", "Dat"))).toEqual([]);
 	expect(frameAdpositionCaseIssues(frame("für", "Dat"))).toEqual([
 		{
-			path: "0.complements.0.governedCase",
+			path: "0.0.governedCase",
 			message: "für does not take Dat",
 		},
 	]);
 	expect(frameAdpositionCaseIssues(frame("à", "Dat"))).toEqual([
 		{
-			path: "0.complements.0.preposition",
+			path: "0.0.preposition",
 			message: "The ADP Case Table does not list à",
 		},
 	]);
-	// Every Preposition alternative is checked, not just the first.
-	const alternatives = [
-		{
-			status: "Optional",
-			complements: [
-				prepositionComplement("über", "Acc"),
-				{ kind: "Clause", form: "Dass" },
-				prepositionComplement("von", "Acc"),
-			],
-		},
+	// Every Preposition and Clause correlate across patterns is checked.
+	const multiple = [
+		[prepositionComplement("über", "Acc")],
+		[{ kind: "Clause", form: "Dass", preposition: adposition("auf") }],
+		[prepositionComplement("von", "Acc")],
+		[{ kind: "Clause", form: "Dass", preposition: adposition("à") }],
 	] as unknown as Dumrel.ValencyFrame;
-	expect(frameAdpositionCaseIssues(alternatives)).toEqual([
+	expect(frameAdpositionCaseIssues(multiple)).toEqual([
 		{
-			path: "0.complements.2.governedCase",
+			path: "2.0.governedCase",
 			message: "von does not take Acc",
+		},
+		{
+			path: "3.0.preposition",
+			message: "The ADP Case Table does not list à",
 		},
 	]);
 });
@@ -211,16 +206,13 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 test("a Reflexive's preposition takes the Reflexive's case (ADR 0052)", () => {
 	const reflexive = (canonicalForm: string, governedCase: string) =>
 		[
-			{
-				status: "Required",
-				complements: [
-					{
-						kind: "Reflexive",
-						governedCase,
-						preposition: adposition(canonicalForm),
-					},
-				],
-			},
+			[
+				{
+					kind: "Reflexive",
+					governedCase,
+					preposition: adposition(canonicalForm),
+				},
+			],
 		] as unknown as Dumrel.ValencyFrame;
 	// außer sich sein, zu sich kommen, es in sich haben.
 	for (const [canonicalForm, governedCase] of [
@@ -233,16 +225,13 @@ test("a Reflexive's preposition takes the Reflexive's case (ADR 0052)", () => {
 		).toEqual([]);
 	expect(frameAdpositionCaseIssues(reflexive("zu", "Acc"))).toEqual([
 		{
-			path: "0.complements.0.governedCase",
+			path: "0.0.governedCase",
 			message: "zu does not take Acc",
 		},
 	]);
 	expect(
 		frameAdpositionCaseIssues([
-			{
-				status: "Required",
-				complements: [{ kind: "Reflexive", governedCase: "Acc" }],
-			},
+			[{ kind: "Reflexive", governedCase: "Acc" }],
 		]),
 	).toEqual([]);
 });

@@ -46,7 +46,9 @@ export type {
 export { Jev, JevTransport } from "./jev-call.js";
 export type {
 	AccumulateTranslationsInput,
+	AccumulateValencyInput,
 	TranslationAccumulation,
+	ValencyAccumulation,
 } from "./knowledge/types.js";
 export type {
 	DetectedLanguage,

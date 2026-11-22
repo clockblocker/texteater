@@ -29,9 +29,6 @@ export const translationPieceKindValues = [
 /** Cases a lexically governed preposition can assign to its complement. */
 export const governedCaseValues = ["Acc", "Dat", "Gen"] as const;
 
-/** Whether a Valency Frame Slot must be filled or may be left out. */
-export const valencySlotStatusValues = ["Required", "Optional"] as const;
-
 /**
  * Whether a Participial Adjective's Reading means a sense of its source verb
  * (`gekocht`: `kochen`) or has drifted from all of them (`gelassen` 😌:
@@ -82,16 +79,6 @@ export const clauseFormValues = [
 	"Ob",
 	"W",
 ] as const;
-
-/**
- * Whether a Clause complement needs the word that anticipates it, or may
- * take it. The word itself derives from the Clause's Slot: `da(r)-` with the
- * Slot's one Preposition when it has one (`sich freuen auf`: Required
- * `darauf`), else the pronoun of the Slot's Case: `es` for Nom or Acc, `dem`
- * for Dat, `dessen` for Gen. A Slot with neither gives no word, so a Clause
- * alone in its Slot takes no correlate (ADR 0034).
- */
-export const clauseCorrelateValues = ["Required", "Optional"] as const;
 
 /**
  * How a German noun forms its plural from its singular: no ending

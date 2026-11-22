@@ -183,7 +183,12 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040", "ADR-0044", "ADR-0046"],
+		"adrs": [
+			"ADR-0035",
+			"ADR-0040",
+			"ADR-0044",
+			"ADR-0046"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -221,7 +226,10 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -263,7 +271,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -294,7 +304,9 @@
 							"pronType": "Prs",
 							"gender": null
 						},
-						"syncretic": ["polite"],
+						"syncretic": [
+							"polite"
+						],
 						"syncretized": [
 							{
 								"unitKind": "Lemma",
@@ -348,12 +360,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 10],
+			"memberSegmentIndices": [
+				2,
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🛤🚶" },
+			"reading": {
+				"emojiDescription": "🛤🚶"
+			},
 			"notes": {
 				"rationale": "entlang in the right bracket is the particle of the dictionary verb entlanggehen (Duden: eine Allee entlanggehen), like liefen … entlang (de/bracket-particle-or-circumposition); die Vorderreihe is its accusative object."
 			},
@@ -406,12 +423,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 7],
+			"memberSegmentIndices": [
+				4,
+				7
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "🛣" },
+			"reading": {
+				"emojiDescription": "🛣"
+			},
 			"notes": {
 				"rationale": "The guillemets mark »Vorderreihe« as a local name, Travemünde's promenade street, so it is a street name cited with its article: PROPN, Core article Definite, owning die; the guillemets are Punctuation (de/proper-noun-article). Ruled on #743 (MB-B4)."
 			},
@@ -460,7 +482,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -494,7 +518,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -503,15 +529,12 @@
 				"emojiDescription": "🚶😌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -606,7 +629,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -650,7 +675,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18, 20],
+			"memberSegmentIndices": [
+				18,
+				20
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -658,7 +686,11 @@
 			"reading": {
 				"emojiDescription": "♨🌳",
 				"knowledge": {},
-				"paradigm": { "plural": ["Kurgärten"] },
+				"paradigm": {
+					"plural": [
+						"Kurgärten"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -669,7 +701,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -717,7 +751,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -767,12 +803,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
+			"memberSegmentIndices": [
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔇" },
+			"reading": {
+				"emojiDescription": "🔇"
+			},
 			"notes": {
 				"rationale": "stumm describes the garden as it lies there: a depictive ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical). stumm describes the garden as Duden stumm 2a 'sich nicht durch Laute äußernd' (das Radio blieb stumm), not 1 'unfähig, Laute hervorzubringen'."
 			},
@@ -810,7 +850,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -844,12 +886,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🚫⛱" },
+			"reading": {
+				"emojiDescription": "🚫⛱"
+			},
 			"notes": {
 				"rationale": "schattenlos 'shadeless' is a -los adjective with no comparison forms given, so it marks no Degree (de/comparability-is-lexical)."
 			},
@@ -887,7 +933,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -931,7 +979,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -972,7 +1022,10 @@
 						"case": "Dat",
 						"degree": null,
 						"gender": null,
-						"gender[psor]": ["Masc", "Neut"],
+						"gender[psor]": [
+							"Masc",
+							"Neut"
+						],
 						"number": "Plur",
 						"number[psor]": "Sing"
 					}
@@ -987,12 +1040,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [35],
+			"memberSegmentIndices": [
+				35
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🪨🛤" },
+			"reading": {
+				"emojiDescription": "🪨🛤"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1031,7 +1088,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [37],
+			"memberSegmentIndices": [
+				37
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1065,12 +1124,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [39],
+			"memberSegmentIndices": [
+				39
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌹🌳" },
+			"reading": {
+				"emojiDescription": "🌹🌳"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1109,12 +1172,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [41],
+			"memberSegmentIndices": [
+				41
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📍" },
+			"reading": {
+				"emojiDescription": "📍"
+			},
 			"notes": {
 				"rationale": "The particle verb daliegen, written whole in the verb-final relative clause (de/verb-core-features)."
 			},

@@ -47,7 +47,10 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0029"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0029"
+		],
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -105,7 +108,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
@@ -148,7 +153,11 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 4, 6],
+			"memberSegmentIndices": [
+				2,
+				4,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -157,63 +166,41 @@
 				"emojiDescription": "🔑",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
+						[
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "auf",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "für",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "auf",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Required"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Required"
-								}
-							]
-						}
+								"governedCase": "Acc"
+							}
+						]
 					]
 				},
 				"paradigm": {
-					"preterite": ["kam an"],
-					"present1": ["komme an"],
-					"present2": ["kommst an"],
-					"present3": ["kommt an"],
-					"pastParticiple": ["angekommen"],
-					"subjunctivePast": ["käme an"]
+					"preterite": [
+						"kam an"
+					],
+					"present1": [
+						"komme an"
+					],
+					"present2": [
+						"kommst an"
+					],
+					"present3": [
+						"kommt an"
+					],
+					"pastParticiple": [
+						"angekommen"
+					],
+					"subjunctivePast": [
+						"käme an"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",

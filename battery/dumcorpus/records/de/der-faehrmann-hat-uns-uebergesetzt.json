@@ -2,28 +2,68 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der Fährmann hat uns übergesetzt.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fährmann" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "uns" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "übergesetzt" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Fährmann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "uns"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "übergesetzt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0034", "ADR-0038"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026",
+			"ADR-0034",
+			"ADR-0038"
+		],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
+			{
+				"rule": "de/verb-core-features",
+				"hash": "53f39c352354bcbe"
+			},
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
@@ -32,14 +72,17 @@
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -70,30 +113,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				8
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "⛴",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -111,12 +152,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["setzte über"],
-					"present1": ["setze über"],
-					"present2": ["setzt über"],
-					"present3": ["setzt über"],
-					"pastParticiple": ["übergesetzt"],
-					"subjunctivePast": ["setzte über"]
+					"preterite": [
+						"setzte über"
+					],
+					"present1": [
+						"setze über"
+					],
+					"present2": [
+						"setzt über"
+					],
+					"present3": [
+						"setzt über"
+					],
+					"pastParticiple": [
+						"übergesetzt"
+					],
+					"subjunctivePast": [
+						"setzte über"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -144,8 +197,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "übergesetzt", "orthography": "Standard" }
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "übergesetzt",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -154,7 +213,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "übergesetzt hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

@@ -2,32 +2,105 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Nach dem Rückstand warf die Trainerin die Flinte endgültig ins Korn.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Nach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Rückstand" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "warf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Trainerin" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Flinte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "endgültig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Korn" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Rückstand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "warf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Trainerin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Flinte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "endgültig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "s",
+			"surface": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Korn"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -46,21 +119,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12, 14, 18, 19, 21],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				12,
+				14,
+				18,
+				19,
+				21
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😞🏳",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -121,7 +201,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "die Flinte ins Korn warf",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -137,17 +219,32 @@
 					}
 				},
 				"members": [
-					{ "attested": "warf", "orthography": "Standard" },
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Flinte", "orthography": "Standard" },
+					{
+						"attested": "warf",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Flinte",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "in",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 0
@@ -158,13 +255,22 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Korn", "orthography": "Standard" }
+					{
+						"attested": "Korn",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

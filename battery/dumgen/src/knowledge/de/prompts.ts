@@ -31,7 +31,7 @@ const rules = {
 	idiom: ["de/idiom", "d25679f2a06809b9"],
 	headword: ["de/canonical-form-is-the-headword", "43184aac9186aceb"],
 	copula: ["de/copula-stays-apart", "8982593963a4d507"],
-	valency: ["de/valency-frame-follows-e-valbu", "b0e43da9d292b84d"],
+	valency: ["de/valency-frame-follows-e-valbu", "bb0916c5f324dcf2"],
 	governed: [
 		"de/governed-preposition-joins-its-governor",
 		"19c59bf41ed26810",
@@ -107,23 +107,23 @@ export const definition = {
 	),
 } as const;
 
-// Valency: Luna proposes the frame (ADR 0034, #675, #677), written in the
-// dictionary notation `valency-prompts.ts` states.
+// Valency: Luna extracts the concrete pattern realized in this sentence
+// (ADR 0034), written in the dictionary notation `valency-prompts.ts` states.
 
 export const valency = {
 	task: paragraph(
 		"valency.task",
-		"Propose the Reading's Valency Frame: the Satzbauplan E-VALBU gives for this meaning, else Duden's. It lists the complements a learner must know to use the word in this meaning as Slots, in E-VALBU order with the subject first; a Slot holds one complement, or the alternatives that fill the same role.",
+		"Extract the concrete Valency Pattern that <TARGET> actually realizes in `markedSentence` under this Reading's meaning. List only the governed complements present in this sentence — never add optional complements this sentence omits and never list unencountered alternatives.",
 		rules.valency,
 	),
 	subject: paragraph(
 		"valency.subject",
-		"A verb's frame, a verbal Locution's included, opens with its subject: a Required Slot holding a Nom Case complement, whatever this sentence does with it (an imperative, an infinitive or a passive still has a subject in the frame). Only an expletive «es» subject takes no Slot.",
+		"A verb's pattern, a verbal Locution's included, opens with its subject N, whatever this sentence does with it (an imperative, an infinitive or a passive still has an active subject N). In a passive sentence, map the passive subject back to its active case (A or D). Only a verb whose subject is purely an expletive «es» takes no N.",
 		rules.valency,
 	),
 	reflexive: paragraph(
 		"valency.reflexive",
-		"A lexical reflexive, a sich no other noun phrase could replace in this meaning, takes a Slot of its own right after the subject, holding one Reflexive complement in the case the meaning fixes. Test it in the first person: with ich as the subject, in this meaning, the reflexive reads mich for Acc and mir for Dat («beeilen»: ich beeile mich, Nom, Reflexive Acc; «merken»: ich merke mir etwas, Nom, Reflexive Dat, Acc). Inside a fixed phrase it is the object of the phrase's preposition, which the Reflexive names, in the case that preposition governs there («an sich halten»: Reflexive «an» + Dat). It is Required exactly when the Emoji Description starts with 🪞. Without 🪞 it is Optional where the word keeps this meaning with and without it («ausruhen»), and absent otherwise. A sich another object could replace in this meaning is an ordinary Acc or Dat Case complement.",
+		"A lexical reflexive, a sich no other noun phrase could replace in this meaning, stands right after the subject as a Reflexive complement in the case the meaning fixes. Test it in the first person: with ich as the subject, in this meaning, the reflexive reads mich for Acc and mir for Dat («beeilen»: ich beeile mich, Nom, Reflexive Acc; «merken»: ich merke mir etwas, Nom, Reflexive Dat, Acc). Inside a fixed phrase it is the object of the phrase's preposition, which the Reflexive names, in the case that preposition governs there («an sich halten»: Reflexive «an» + Dat). A 🪞 Reading always includes its lexical Reflexive in every pattern. Without 🪞, a sich another object could replace in this meaning is an ordinary Acc or Dat Case complement.",
 		rules.verbCore,
 		rules.ownsMembers,
 		rules.distinct,
@@ -131,42 +131,32 @@ export const valency = {
 	),
 	lesart: paragraph(
 		"valency.lesart",
-		"The frame is the Satzbauplan of the one Lesart the Emoji Description names. A complement this sentence leaves out still belongs in it; a complement only another meaning of the word takes does not, even when this sentence shows one.",
+		"The pattern belongs to the one Lesart the Emoji Description names, grounded in this sentence's actual realization. Never invent complements absent from `markedSentence`, and never include free adjuncts.",
 		rules.valency,
 		rules.meaning,
 	),
-	status: paragraph(
-		"valency.status",
-		"A Slot is Optional when the word keeps this meaning without it, and Required when dropping it is ungrammatical or changes the meaning. When either of two complements completes the frame, both Slots are Optional.",
-		rules.valency,
-	),
-	alternatives: paragraph(
-		"valency.alternatives",
-		"Alternatives share one Slot: each clause form the dictionary lists for a complement, and prepositions that alternate in the same role and meaning («plaudern» takes one Optional Slot of «über» + Acc and «von» + Dat). A clause is an alternative in the Slot of the noun phrase or prepositional phrase that could stand in its place, never a Slot of its own beside it: a clause a pronominal adverb anticipates (da- with a preposition) joins the Slot of that preposition, with its correlate («achten» takes one Slot of «auf» + Acc and Clause Dass with an Optional correlate). Only a clause no phrase can replace has a Slot of its own.",
-		rules.valency,
-	),
 	freeMarker: paragraph(
 		"valency.freeMarker",
-		"Include a complement the word requires even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a zu-infinitive («erdreisten»). The test is that dropping it is ungrammatical or changes the meaning. Leave out free adjuncts of time, place, manner or cause, a place or time complement the dictionary marks optional, and a free dative. Add an Adverbial, a Predicative or a Clause only when the dictionary's pattern for this meaning names it.",
+		"Include a governed complement realized in `markedSentence` even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a clause/infinitive («erdreisten» zu+Inf). Leave out free adjuncts of time, place, manner or cause, and leave out free datives.",
 		rules.valency,
 		rules.governed,
 	),
 	preposition: paragraph(
 		"valency.preposition",
-		"A Preposition complement names the preposition the word selects and the case it governs in this construction («fahnden nach» + Dat, «pochen auf» + Acc). A participial adjective takes its verb's preposition unless the dictionary gives the adjective one of its own.",
+		"A Preposition complement names the governed preposition realized in `markedSentence` and the case it governs there («fahnden nach» + Dat, «pochen auf» + Acc). When a da(r)- pronominal adverb anticipates a subordinate clause or infinitive («darauf achten, dass …»), record the Clause with that preposition («auf dass») instead of a separate Preposition complement.",
 		rules.governed,
 		rules.valency,
 	),
 	route: paragraph(
 		"valency.route",
-		"An adjective's frame has no Nom Slot, since the copula owns the subject («neidisch»: «auf» + Acc). A noun's frame holds only the prepositions and clauses it governs («Sehnsucht»: «nach» + Dat), never a bare case. A Collocation's frame is its whole predicate's and takes its noun's government («Kritik üben»: «an» + Dat), and a copula expression its reflexive makes a verbal Locution has a verb's subject and Reflexive Slot.",
+		"An adjective's pattern has no Nom, since the copula owns the subject («neidisch auf jemanden»: «auf» + Acc; bare «neidisch» with no complement in the sentence: empty). A noun's pattern holds only the prepositions and clauses it governs in this sentence («Sehnsucht nach dem Meer»: «nach» + Dat; bare «Sehnsucht»: empty), never a bare case. A Collocation's pattern is its whole predicate's and includes any governed complement realized for its noun («Kritik an dem Plan üben»: Nom, «an» + Dat; bare «Kritik üben»: Nom alone).",
 		rules.valency,
 		rules.copula,
 		rules.collocation,
 	),
 	fixed: paragraph(
 		"valency.fixed",
-		"Fixed parts are never Slots: a separable prefix, an expletive es, and a Locution's own words. A Locution's fixed noun is never its object, nor its fixed prepositional phrase a Preposition complement: a Locution VERB's frame holds its subject, its lexical reflexive and only what it governs beyond its own words («Däumchen drehen»: the Nom Slot alone; «einen Rat geben»: Nom, then a Dat Slot for whom; «ins Zeug legen» with sich: Nom, then a Reflexive Dat).",
+		"Fixed parts are never complements: a separable prefix, an expletive es, and a Locution's own words. A Locution's fixed noun is never its object, nor its fixed prepositional phrase a Preposition complement: a Locution VERB's pattern holds its subject, its lexical reflexive if any, and only what it governs beyond its own words in `markedSentence` («Däumchen drehen»: N alone; «ihm einen Rat geben»: N D; «sich ins Zeug legen»: N sich(A)).",
 		rules.verbCore,
 		rules.idiom,
 		rules.ownsMembers,

@@ -183,3 +183,30 @@ export type TranslationAccumulation = {
 	readonly changes: readonly GermanKnowledgeChange[];
 	readonly failures: readonly KnowledgeFailure[];
 };
+
+/**
+ * What `knowledge.accumulateValency` takes (ADR 0034): a click's occurrence
+ * of a Reading and the concrete Valency Patterns already stored on it.
+ */
+export type AccumulateValencyInput = {
+	readonly language: "de";
+	/** The Reading the click resolved to, stored or authored. */
+	readonly reading: Dumling.Reading<"de">;
+	/** The occurrence's Attestation, of the Reading's Lemma. */
+	readonly attestation: Dumling.Attestation<"de">;
+	readonly sentence: KnowledgeSentence;
+	/** The Reading's stored concrete Valency Patterns, possibly empty. */
+	readonly valency: readonly Dumrel.ValencyPattern[];
+};
+
+/**
+ * What one valency accumulation brought: a Contribute holding `[pattern]`
+ * when this occurrence realized a pattern not yet stored, the concrete
+ * `realizedPattern` matched or extracted for this Attestation (or null when
+ * no governed complement was realized), and any failure.
+ */
+export type ValencyAccumulation = {
+	readonly changes: readonly GermanKnowledgeChange[];
+	readonly realizedPattern: Dumrel.ValencyPattern | null;
+	readonly failures: readonly KnowledgeFailure[];
+};

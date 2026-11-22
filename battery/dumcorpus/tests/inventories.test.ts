@@ -395,12 +395,7 @@ describe("the German authored inventory", () => {
 				emojiDescription,
 			}) as const;
 		const frame = (governedCase: "Acc" | "Dat") => ({
-			valency: [
-				{
-					status: "Required" as const,
-					complements: [{ kind: "Reflexive" as const, governedCase }],
-				},
-			],
+			valency: [[{ kind: "Reflexive" as const, governedCase }]],
 		});
 		// er schämt sich takes the Acc, er bildet sich etwas ein the Dat.
 		for (const [reflexive, knowledge] of [

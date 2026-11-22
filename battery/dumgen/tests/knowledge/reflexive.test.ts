@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import {
-	type ProposedSlot,
-	printGermanFrame,
+	type ProposedPattern,
+	printGermanPattern,
 } from "../../src/knowledge/de/valency-notation.js";
 import type { GermanKnowledgeChange } from "../../src/knowledge/types.js";
 import {
@@ -11,7 +11,7 @@ import {
 	produceOnce,
 } from "./support.js";
 
-// The Reading's 🪞 settles its Reflexive Slot (ADR 0052).
+// The Reading's 🪞 settles its Reflexive complement (ADR 0052).
 
 const verb = (canonicalForm: string) => ({
 	family: "Lexeme",
@@ -25,17 +25,9 @@ const besideOneself = {
 	canonicalForm: "außer sein",
 	coreFeatures: {},
 };
-const subject = {
-	status: "Required",
-	complements: [{ kind: "Case", governedCase: "Nom" }],
-} as const;
-const reflexive = (
-	governedCase: "Acc" | "Dat",
-	status: "Required" | "Optional" = "Required",
-) => ({
-	status,
-	complements: [{ kind: "Reflexive", governedCase } as const],
-});
+const subject = { kind: "Case", governedCase: "Nom" } as const;
+const reflexive = (governedCase: "Acc" | "Dat") =>
+	({ kind: "Reflexive", governedCase }) as const;
 const attestedReflexive = (governedCase: "Acc" | "Dat") => ({
 	member: 1,
 	complement: { kind: "Reflexive", governedCase },
@@ -46,10 +38,10 @@ const frameOf = (changes: readonly GermanKnowledgeChange[]): unknown => {
 	return change && "value" in change ? change.value : undefined;
 };
 
-/** A valency-only run on `emoji`, Luna proposing `valency`, written in the notation. */
+/** A valency-only run on `emoji`, Luna proposing `pattern`, written in the notation. */
 async function frame(
 	emoji: string,
-	valency: readonly ProposedSlot[],
+	pattern: ProposedPattern,
 	valencyEvidence: readonly unknown[] = [],
 	origin: "New" | "TopUp" = "New",
 	occurrence: {
@@ -63,7 +55,7 @@ async function frame(
 	},
 ) {
 	const luna = knowledgeLuna({
-		valency: printGermanFrame(valency, { verb: true }),
+		valency: printGermanPattern(pattern, { verb: true }),
 	});
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
@@ -78,10 +70,10 @@ async function frame(
 	return { result, trace, luna };
 }
 
-test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Required, in the case the creating occurrence's form shows", async () => {
+test("Luna is offered Reflexive, and a 🪞 Reading's Reflexive uses the creating occurrence's attested case", async () => {
 	const { result, luna } = await frame(
 		"🪞😳",
-		[subject, reflexive("Dat", "Optional")],
+		[subject, reflexive("Dat")],
 		[attestedReflexive("Acc")],
 		"New",
 		{
@@ -94,12 +86,11 @@ test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Requ
 		"complementKinds",
 		expect.arrayContaining(["Reflexive"]),
 	);
-	expect(frameOf(result.changes)).toEqual([subject, reflexive("Acc")]);
+	expect(frameOf(result.changes)).toEqual([[subject, reflexive("Acc")]]);
 	expect(luna.sent[0]?.systemPrompt).toContain("Test it in the first person");
 });
 
-test("a sich names no case, so Luna's case for the meaning stands, and with neither the frame fails", async () => {
-	// macht sich Sorgen: the occurrence hides the case, Luna proposes Dat.
+test("a sich names no case, so Luna's case for the meaning stands, and with neither the pattern fails", async () => {
 	const hidden = { member: 1, complement: { kind: "Reflexive" } };
 	const { result } = await frame(
 		"🪞😟",
@@ -112,8 +103,7 @@ test("a sich names no case, so Luna's case for the meaning stands, and with neit
 			target: ["macht", "sich", "Sorgen"],
 		},
 	);
-	expect(frameOf(result.changes)).toEqual([subject, reflexive("Dat")]);
-	// Luna proposing none, nothing names the case.
+	expect(frameOf(result.changes)).toEqual([[subject, reflexive("Dat")]]);
 	const none = await frame("🪞😳", [subject], [hidden]);
 	expect(frameOf(none.result.changes)).toBeUndefined();
 	expect(none.result.failures).toEqual([
@@ -121,19 +111,23 @@ test("a sich names no case, so Luna's case for the meaning stands, and with neit
 	]);
 });
 
-test("a 🪞 Reading gets the occurrence's Reflexive right after the subject when Luna proposes none, and Luna's case on a later occurrence", async () => {
+test("a 🪞 Reading gets the occurrence's Reflexive when Luna proposes none, and Luna's case on TopUp", async () => {
 	const added = await frame("🪞😳", [subject], [attestedReflexive("Acc")]);
-	expect(frameOf(added.result.changes)).toEqual([subject, reflexive("Acc")]);
+	expect(frameOf(added.result.changes)).toEqual([
+		[subject, reflexive("Acc")],
+	]);
 	const later = await frame(
 		"🪞😳",
 		[subject, reflexive("Dat")],
 		[attestedReflexive("Acc")],
 		"TopUp",
 	);
-	expect(frameOf(later.result.changes)).toEqual([subject, reflexive("Dat")]);
+	expect(frameOf(later.result.changes)).toEqual([
+		[subject, reflexive("Dat")],
+	]);
 });
 
-test("a 🪞 Reading whose Reflexive case nothing names fails its frame", async () => {
+test("a 🪞 Reading whose Reflexive case nothing names fails its pattern", async () => {
 	const { result } = await frame("🪞😳", [subject]);
 	expect(frameOf(result.changes)).toBeUndefined();
 	expect(result.failures).toEqual([
@@ -145,28 +139,24 @@ test("a 🪞 Reading whose Reflexive case nothing names fails its frame", async 
 	]);
 });
 
-test("a Reading without 🪞 makes a Required sich its ordinary object, drops it beside one, and keeps an Optional one", async () => {
-	const required = await frame("↪", [subject, reflexive("Acc")]);
-	expect(frameOf(required.result.changes)).toEqual([
-		subject,
-		{
-			status: "Required",
-			complements: [{ kind: "Case", governedCase: "Acc" }],
-		},
+test("a Reading without 🪞 converts an unattested sich into its ordinary Case object, drops it beside one, and keeps an attested optional reflexive", async () => {
+	const ordinary = await frame("↪", [subject, reflexive("Acc")]);
+	expect(frameOf(ordinary.result.changes)).toEqual([
+		[subject, { kind: "Case", governedCase: "Acc" }],
 	]);
-	const object = {
-		status: "Required",
-		complements: [{ kind: "Case", governedCase: "Acc" }],
-	} as const;
+	const object = { kind: "Case", governedCase: "Acc" } as const;
 	const beside = await frame("😳", [subject, reflexive("Acc"), object]);
-	expect(frameOf(beside.result.changes)).toEqual([subject, object]);
+	expect(frameOf(beside.result.changes)).toEqual([[subject, object]]);
 	expect(beside.trace?.events).toContainEqual(
-		expect.objectContaining({ name: "DroppedValencySlots" }),
+		expect.objectContaining({ name: "DroppedValencyComplements" }),
 	);
-	const optional = await frame("😳", [subject, reflexive("Acc", "Optional")]);
+	const optional = await frame(
+		"😳",
+		[subject, reflexive("Acc")],
+		[{ member: 1, complement: { kind: "Reflexive" } }],
+	);
 	expect(frameOf(optional.result.changes)).toEqual([
-		subject,
-		reflexive("Acc", "Optional"),
+		[subject, reflexive("Acc")],
 	]);
 });
 
@@ -194,12 +184,9 @@ test("a fixed phrase's Reflexive keeps the preposition the occurrence realized i
 		target: ["war", "außer", "sich"],
 	});
 	expect(frameOf(result.changes)).toEqual([
-		subject,
-		{
-			status: "Required",
-			complements: [
-				{ kind: "Reflexive", governedCase: "Dat", preposition: ausser },
-			],
-		},
+		[
+			subject,
+			{ kind: "Reflexive", governedCase: "Dat", preposition: ausser },
+		],
 	]);
 });

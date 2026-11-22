@@ -9,8 +9,8 @@ import { findAccumulatedKnowledge } from "../../model/knowledgeCoverage";
 
 /**
  * The Reflexive Slot of a Reading a Note names (ADR 0052), so the Note can
- * print that Reading's Citation. Null when its frame has none, or while no
- * Knowledge has given it a frame.
+ * print that Reading's Citation. Null when its patterns have none, or while
+ * no Knowledge has given it patterns yet.
  */
 export const reflexiveSlotValidator = v.union(
 	v.null(),
@@ -24,18 +24,22 @@ export const reflexiveSlotValidator = v.union(
 
 /**
  * The Reflexive Slot in stored Knowledge. The stored value was checked by
- * Dumrel when it was written, so its frame is read as it stands.
+ * Dumrel when it was written, so its patterns are read as they stand.
  */
-export function storedReflexiveSlot(knowledge: unknown): ReflexiveSlot | null {
+export function storedReflexiveSlot(
+	knowledge: unknown,
+	emojiDescription?: string,
+): ReflexiveSlot | null {
 	if (!isRecord(knowledge) || !Array.isArray(knowledge.valency)) return null;
-	return reflexiveSlotOf(knowledge.valency);
+	return reflexiveSlotOf(knowledge.valency, emojiDescription);
 }
 
 /** The Reflexive Slot of a stored Reading, from its accumulated Knowledge. */
 export async function loadReflexiveSlot(
 	ctx: QueryCtx,
 	readingKey: string,
+	emojiDescription?: string,
 ): Promise<ReflexiveSlot | null> {
 	const row = await findAccumulatedKnowledge(ctx, readingKey);
-	return storedReflexiveSlot(row?.knowledge);
+	return storedReflexiveSlot(row?.knowledge, emojiDescription);
 }

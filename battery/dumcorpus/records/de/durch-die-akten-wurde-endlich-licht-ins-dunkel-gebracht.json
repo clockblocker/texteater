@@ -2,28 +2,89 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Durch die Akten wurde endlich Licht ins Dunkel gebracht.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Durch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Akten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wurde" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "endlich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Licht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Dunkel" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gebracht" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Durch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Akten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wurde"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "endlich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Licht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "s",
+			"surface": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Dunkel"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gebracht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -47,21 +108,28 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 10, 12, 13, 15, 17],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				10,
+				12,
+				13,
+				15,
+				17
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🔦",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -114,7 +182,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Licht ins Dunkel gebracht wurde",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -130,16 +200,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "wurde", "orthography": "Standard" },
-					{ "attested": "Licht", "orthography": "Standard" },
+					{
+						"attested": "wurde",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Licht",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "in",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 0
@@ -150,14 +232,26 @@
 						"fusion": {
 							"spelling": "ins",
 							"components": [
-								{ "span": "in", "surface": "in" },
-								{ "span": "s", "surface": "das" }
+								{
+									"span": "in",
+									"surface": "in"
+								},
+								{
+									"span": "s",
+									"surface": "das"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Dunkel", "orthography": "Standard" },
-					{ "attested": "gebracht", "orthography": "Standard" }
+					{
+						"attested": "Dunkel",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gebracht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

@@ -359,7 +359,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -415,7 +417,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [3],
+			"memberSegmentIndices": [
+				3
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -471,12 +475,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [
+				5
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💀" },
+			"reading": {
+				"emojiDescription": "💀"
+			},
 			"notes": {
 				"rationale": "stirbt is sterben."
 			},
@@ -525,12 +533,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8, 25],
+			"memberSegmentIndices": [
+				8,
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🤲" },
+			"reading": {
+				"emojiDescription": "🤲"
+			},
 			"notes": {
 				"rationale": "hat … gehabt is the perfect of possessive haben: the auxiliary hat joins the participle across the object (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle), and the Surface is the whole perfect (de/verbal-surface-is-whole). haben with an abstract object (eine Art Ziel, eine Art Tätigkeit, Duden haben 1c) shares the 'have' Reading of Wir hätten gern mehr Zeit under ADR 0031."
 			},
@@ -583,12 +596,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "⏮" },
+			"reading": {
+				"emojiDescription": "⏮"
+			},
 			"notes": {
 				"rationale": "vorher is a temporal ADV with no comparison forms (de/comparability-is-lexical)."
 			},
@@ -624,12 +641,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12, 14],
+			"memberSegmentIndices": [
+				12,
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🗂" },
+			"reading": {
+				"emojiDescription": "🗂"
+			},
 			"notes": {
 				"rationale": "eine Art before a bare noun is the hedge 'something like' (Duden: Wendung eine Art [von]; DWDS: Art 4c). Art is the Head that inflects with its article (mit einer Art Ziel), so it is NOUN Art owning eine (de/noun-owns-its-article), with Ziel a NOUN of its own in narrow apposition. Ruled on #743 (SZ-B2)."
 			},
@@ -678,12 +700,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🎯" },
+			"reading": {
+				"emojiDescription": "🎯"
+			},
 			"notes": {
 				"rationale": "Ziel is the noun apposed to eine Art, in its case, with no article of its own. Ziel here is Duden's 'etwas, worauf jemandes Handeln, Tun o. Ä. ganz bewusst gerichtet ist', the aim, not a destination or a finish line."
 			},
@@ -725,12 +751,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19, 21],
+			"memberSegmentIndices": [
+				19,
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🗂" },
+			"reading": {
+				"emojiDescription": "🗂"
+			},
 			"notes": {
 				"rationale": "Second eine Art of the pair, as the first. Ruled on #743 (SZ-B2)."
 			},
@@ -779,12 +810,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🛠" },
+			"reading": {
+				"emojiDescription": "🛠"
+			},
 			"notes": {
 				"rationale": "Tätigkeit is the noun apposed to the second eine Art."
 			},
@@ -826,7 +861,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -863,7 +900,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
@@ -906,12 +945,18 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31, 35, 37],
+			"memberSegmentIndices": [
+				31,
+				35,
+				37
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🪞🪫" },
+			"reading": {
+				"emojiDescription": "🪞🪫"
+			},
 			"notes": {
 				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). Ruled on #743 (SZ-B3, A4)."
 			},
@@ -977,7 +1022,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1024,7 +1071,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [40],
+			"memberSegmentIndices": [
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1074,7 +1123,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42, 50],
+			"memberSegmentIndices": [
+				42,
+				50
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1083,32 +1135,12 @@
 				"emojiDescription": "🧩✅",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "auf",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					]
 				},
 				"coverage": {
@@ -1174,7 +1206,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [44],
+			"memberSegmentIndices": [
+				44
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1221,12 +1255,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [46],
+			"memberSegmentIndices": [
+				46
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "🧵⭐" },
+			"reading": {
+				"emojiDescription": "🧵⭐"
+			},
 			"notes": {
 				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). A coined name has no Core gender, and this sentence shows none, so its Surface marks none; the er the text calls Odradek is its referent (de/proper-noun-article). Ruled on #743 (SZ-A3, A1). Odradek has one known referent, the creature of Kafka's Die Sorge des Hausvaters, a flat star-shaped spool of thread, so the spool and the star pin it; the pin is the name's identity, not a sense the sentence chooses."
 			},
@@ -1268,7 +1306,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [48],
+			"memberSegmentIndices": [
+				48
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"

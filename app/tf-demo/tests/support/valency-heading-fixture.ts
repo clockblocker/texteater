@@ -9,6 +9,8 @@ export type ReadingNote = Extract<
 	{ readonly kind: "Reading" }
 >;
 export type ValencyFrame = NonNullable<ReadingNote["knowledge"]["valency"]>;
+type ValencyPattern = ValencyFrame[number];
+export type ValencyComplement = ValencyPattern[number];
 export type Lemma = {
 	readonly family: "Lexeme" | "Locution";
 	readonly kind: string;
@@ -27,10 +29,7 @@ export const verb = (
 });
 
 type GermanPreposition = Extract<
-	Extract<
-		ValencyFrame[number]["complements"][number],
-		{ readonly kind: "Preposition" }
-	>["preposition"],
+	Extract<ValencyComplement, { readonly kind: "Preposition" }>["preposition"],
 	{ readonly language: "de" }
 >;
 
@@ -50,22 +49,14 @@ export const locution = (canonicalForm: string): Lemma => ({
 	coreFeatures: {},
 });
 
-/** A Reflexive Slot, with the preposition a fixed phrase puts it after. */
+/** A Reflexive complement, with the preposition a fixed phrase puts it after. */
 export const reflexive = (
-	status: "Required" | "Optional",
 	governedCase: "Acc" | "Dat",
 	preposition?: string,
-): ValencyFrame[number] => ({
-	status,
-	complements: [
-		{
-			kind: "Reflexive",
-			governedCase,
-			...(preposition === undefined
-				? {}
-				: { preposition: adp(preposition) }),
-		},
-	],
+): ValencyComplement => ({
+	kind: "Reflexive",
+	governedCase,
+	...(preposition === undefined ? {} : { preposition: adp(preposition) }),
 });
 
 /** The Reading's title, emoji included, with slot tokens written back as backticked text. */
@@ -75,6 +66,13 @@ export function headingLine(markup: string): string {
 	return plainText(
 		title.replace(/(<span aria-hidden="true"[^>]*>.*?<\/span>)/, "$1 "),
 	);
+}
+
+/** The bulleted lines rendered in the Reading's Valency Block, with slot tokens backticked. */
+export function valencyLines(markup: string): string[] {
+	return [
+		...markup.matchAll(/data-slot="valency-pattern"[^>]*>(.*?)<\/li>/g),
+	].map((match) => plainText(match[1] ?? ""));
 }
 
 function plainText(html: string): string {
@@ -88,9 +86,17 @@ function plainText(html: string): string {
 export function renderReading(
 	lemma: Lemma,
 	valency: ValencyFrame | undefined,
-	translations?: ReadingNote["knowledge"]["translations"],
+	options?: {
+		readonly translations?: ReadingNote["knowledge"]["translations"];
+		readonly emojiDescription?: string;
+	},
 ): string {
-	const note = readingNote(lemma, valency, translations);
+	const note = readingNote(
+		lemma,
+		valency,
+		options?.translations,
+		options?.emojiDescription,
+	);
 	return renderToStaticMarkup(
 		renderNote({
 			noteData: note,
@@ -120,6 +126,7 @@ function readingNote(
 	translations: ReadingNote["knowledge"]["translations"] = {
 		en: [[{ kind: "Text", text: "a translation" }]],
 	},
+	emojiDescription = "🧩",
 ): ReadingNote {
 	return {
 		kind: "Reading",
@@ -129,7 +136,7 @@ function readingNote(
 			ownerKind: "Reading",
 			ownerKey: "reading-key-1",
 			readingId: "reading-1",
-			emojiDescription: "🧩",
+			emojiDescription,
 			lemma: {
 				unitKind: "Lemma",
 				ownerKind: "Lemma",

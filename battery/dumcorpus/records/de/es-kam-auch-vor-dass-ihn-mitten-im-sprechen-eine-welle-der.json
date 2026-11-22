@@ -404,7 +404,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -454,12 +456,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 6],
+			"memberSegmentIndices": [
+				2,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "⚡" },
+			"reading": {
+				"emojiDescription": "⚡"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -512,12 +519,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "➕" },
+			"reading": {
+				"emojiDescription": "➕"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -553,7 +564,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
+			"memberSegmentIndices": [
+				9
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -573,7 +586,9 @@
 					"normalizedSurface": "daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -591,7 +606,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -641,12 +658,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🎯" },
+			"reading": {
+				"emojiDescription": "🎯"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -682,7 +703,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -743,7 +766,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16, 18],
+			"memberSegmentIndices": [
+				16,
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -751,7 +777,11 @@
 			"reading": {
 				"emojiDescription": "🗣",
 				"knowledge": {},
-				"paradigm": { "plural": ["NoPlural"] },
+				"paradigm": {
+					"plural": [
+						"NoPlural"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -762,7 +792,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -827,12 +859,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [20, 22],
+			"memberSegmentIndices": [
+				20,
+				22
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌊" },
+			"reading": {
+				"emojiDescription": "🌊"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -881,7 +918,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [24, 26],
+			"memberSegmentIndices": [
+				24,
+				26
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -928,7 +968,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["NoPlural"] },
+				"paradigm": {
+					"plural": [
+						"NoPlural"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -939,7 +983,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -990,12 +1036,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [28],
+			"memberSegmentIndices": [
+				28
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🌊" },
+			"reading": {
+				"emojiDescription": "🌊"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1044,7 +1094,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31, 33],
+			"memberSegmentIndices": [
+				31,
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -1068,7 +1121,9 @@
 					"normalizedSurface": "so daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -1086,7 +1141,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [35],
+			"memberSegmentIndices": [
+				35
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1136,12 +1193,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [37],
+			"memberSegmentIndices": [
+				37
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔴" },
+			"reading": {
+				"emojiDescription": "🔴"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1184,12 +1245,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [39],
+			"memberSegmentIndices": [
+				39
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔄" },
+			"reading": {
+				"emojiDescription": "🔄"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1238,7 +1303,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42],
+			"memberSegmentIndices": [
+				42
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -1281,7 +1348,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [44],
+			"memberSegmentIndices": [
+				44
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1290,15 +1359,12 @@
 				"emojiDescription": "🗣🔁",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1398,7 +1464,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [46],
+			"memberSegmentIndices": [
+				46
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1407,41 +1475,16 @@
 				"emojiDescription": "▶",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "mit",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Clause",
+								"form": "ZuInfinitive"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1539,7 +1582,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [49],
+			"memberSegmentIndices": [
+				49
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1589,7 +1634,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [51],
+			"memberSegmentIndices": [
+				51
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1598,41 +1645,16 @@
 				"emojiDescription": "🧍↩",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "von",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1718,12 +1740,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [53],
+			"memberSegmentIndices": [
+				53
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "❗" },
+			"reading": {
+				"emojiDescription": "❗"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1741,7 +1767,9 @@
 					"normalizedSurface": "mußte",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"inflectionalFeatures": {
 						"mood": "Ind",

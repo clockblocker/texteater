@@ -29,8 +29,7 @@ export type {
 	TranslationPieceKind,
 	UnitShadow,
 	ValencyComplement,
-	ValencySlot,
-	ValencySlotStatus,
+	ValencyPattern,
 } from "./generated/types.js";
 export type {
 	LookupMorphemeSources,

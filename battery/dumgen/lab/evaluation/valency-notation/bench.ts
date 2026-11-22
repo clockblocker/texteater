@@ -17,7 +17,7 @@ import { basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { countTokens } from "gpt-tokenizer/encoding/o200k_base";
-import { printGermanFrame } from "../../../src/knowledge/de/valency-notation.js";
+import { printGermanPattern } from "../../../src/knowledge/de/valency-notation.js";
 import { lunaResponsesBody } from "../../../src/openai-luna.js";
 import { lunaUsd } from "../resolve-grammar/pricing.js";
 import { type ValencyCase, valencyCases } from "./gold.js";
@@ -80,8 +80,8 @@ const stats = (values: readonly number[]) => {
 async function tokens() {
 	const cases = await benchCases("all");
 	const authored = cases.filter(({ coverage }) => coverage === "Authored");
-	const written = ({ frame, context }: Entry) =>
-		JSON.stringify({ value: printGermanFrame(frame, context) });
+	const written = ({ pattern, context }: Entry) =>
+		JSON.stringify({ value: printGermanPattern(pattern, context) });
 	const report = {
 		cases: cases.length,
 		authored: authored.length,
@@ -121,7 +121,10 @@ function estimate(entries: readonly Entry[], reps: number, latency: number) {
 					outputTokens: Math.round(
 						1.3 *
 							(countTokens(
-								printGermanFrame(entry.frame, entry.context),
+								printGermanPattern(
+									entry.pattern,
+									entry.context,
+								),
 							) +
 								10),
 					),
@@ -231,7 +234,7 @@ else if (command === "estimate") {
 			console.log(
 				[
 					`${reading.lemma.canonicalForm} ${"emojiDescription" in reading ? reading.emojiDescription : ""}`,
-					`gold: ${printGermanFrame(entry.frame, entry.context)}`,
+					`gold: ${printGermanPattern(entry.pattern, entry.context)}`,
 					`said: ${JSON.stringify(record.output ?? record.failure ?? null).slice(0, 300)}`,
 					...(failed ? [`failed: ${failed.slice(0, 200)}`] : []),
 				].join("\n  "),

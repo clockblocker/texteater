@@ -354,7 +354,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -404,12 +406,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -458,7 +464,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -546,7 +554,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [7],
+			"memberSegmentIndices": [
+				7
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -566,7 +576,9 @@
 					"normalizedSurface": "daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -584,7 +596,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
+			"memberSegmentIndices": [
+				9
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -592,7 +606,11 @@
 			"reading": {
 				"emojiDescription": "🎓",
 				"knowledge": {},
-				"paradigm": { "plural": ["Doktoren"] },
+				"paradigm": {
+					"plural": [
+						"Doktoren"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -603,7 +621,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -647,12 +667,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "🧑" },
+			"reading": {
+				"emojiDescription": "🧑"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -694,12 +718,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "👇📅" },
+			"reading": {
+				"emojiDescription": "👇📅"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -735,7 +763,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -782,7 +812,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -838,12 +870,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19],
+			"memberSegmentIndices": [
+				19
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🗂" },
+			"reading": {
+				"emojiDescription": "🗂"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -885,7 +921,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -894,41 +932,12 @@
 				"emojiDescription": "❓",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Clause",
-									"form": "Ob"
-								},
-								{
-									"kind": "Clause",
-									"form": "W"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1024,7 +1033,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1061,12 +1072,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25, 33],
+			"memberSegmentIndices": [
+				25,
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🪞👀" },
+			"reading": {
+				"emojiDescription": "🪞👀"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1144,12 +1160,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "📈" },
+			"reading": {
+				"emojiDescription": "📈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1185,7 +1205,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -1228,7 +1250,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
@@ -1271,7 +1295,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
+			"memberSegmentIndices": [
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1327,12 +1353,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [38, 40],
+			"memberSegmentIndices": [
+				38,
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "⏳" },
+			"reading": {
+				"emojiDescription": "⏳"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1374,7 +1405,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42],
+			"memberSegmentIndices": [
+				42
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -1417,12 +1450,18 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [44, 46, 48],
+			"memberSegmentIndices": [
+				44,
+				46,
+				48
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📝" },
+			"reading": {
+				"emojiDescription": "📝"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

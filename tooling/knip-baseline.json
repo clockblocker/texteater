@@ -115,7 +115,8 @@
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeSelection",
 		"battery/dumrel/src/types.ts: types ParadigmProvenance",
-		"battery/dumrel/src/types.ts: types PluralPattern"
+		"battery/dumrel/src/types.ts: types PluralPattern",
+		"battery/dumrel/src/types.ts: types ValencyComplement"
 	],
 	"battery/dumtext": [
 		"battery/dumtext/src/index.ts: exports splitMarkdown",

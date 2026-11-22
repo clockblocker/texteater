@@ -171,7 +171,13 @@
 		"year": 1925
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0031", "ADR-0039", "ADR-0044"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026",
+			"ADR-0031",
+			"ADR-0039",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -221,7 +227,10 @@
 				"rule": "de/neuter-adjectival-noun",
 				"hash": "a4bd8e12a664fd8e"
 			},
-			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			}
 		],
 		"references": [
 			{
@@ -263,12 +272,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "👤" },
+			"reading": {
+				"emojiDescription": "👤"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -317,12 +330,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "❗" },
+			"reading": {
+				"emojiDescription": "❗"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -341,7 +358,9 @@
 					"normalizedSurface": "mußte",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -372,12 +391,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [
+				4,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "👨⚖" },
+			"reading": {
+				"emojiDescription": "👨⚖"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -423,12 +447,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8, 10],
+			"memberSegmentIndices": [
+				8,
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🗣🤥" },
+			"reading": {
+				"emojiDescription": "🗣🤥"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -481,7 +510,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -515,7 +546,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15, 17],
+			"memberSegmentIndices": [
+				15,
+				17
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "SCONJ"
@@ -536,7 +570,9 @@
 					"normalizedSurface": "ohne daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null
 				},
@@ -557,12 +593,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19],
+			"memberSegmentIndices": [
+				19
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -602,12 +642,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "📦" },
+			"reading": {
+				"emojiDescription": "📦"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -650,12 +694,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "😈" },
+			"reading": {
+				"emojiDescription": "😈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -697,7 +745,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25, 27],
+			"memberSegmentIndices": [
+				25,
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -706,24 +757,16 @@
 				"emojiDescription": "🛠",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -803,7 +846,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [30, 38],
+			"memberSegmentIndices": [
+				30,
+				38
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -812,24 +858,16 @@
 				"emojiDescription": "👮⛓",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -939,12 +977,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [32],
+			"memberSegmentIndices": [
+				32
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -984,12 +1026,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [34, 36],
+			"memberSegmentIndices": [
+				34,
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌅" },
+			"reading": {
+				"emojiDescription": "🌅"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

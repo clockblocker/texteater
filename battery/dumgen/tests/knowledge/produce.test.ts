@@ -3,7 +3,7 @@ import * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { germanFramePattern } from "../../src/knowledge/de/valency-notation.js";
+import { germanPatternRegex } from "../../src/knowledge/de/valency-notation.js";
 import type { GermanKnowledgeChange } from "../../src/knowledge/types.js";
 import { operations } from "../../src/operations.js";
 import { liveOver } from "../live-over.js";
@@ -334,7 +334,7 @@ test("onContribution's error is the run's only error, and it interrupts the aspe
 test("the creating occurrence contributes the governed preposition the proposal omitted (#677, #616)", async () => {
 	const jev = knowledgeJev();
 	const luna = knowledgeLuna({
-		valency: "N (für A)",
+		valency: "N für A",
 	});
 	const input = knowledgeInput(
 		verb("bedanken"),
@@ -351,40 +351,28 @@ test("the creating occurrence contributes the governed preposition the proposal 
 		input,
 	);
 	expect(result.failures).toEqual([]);
-	const change = { value: frameOf(result.changes) };
-	expect(change?.value).toEqual([
-		{
-			status: "Required",
-			complements: [{ kind: "Case", governedCase: "Nom" }],
-		},
-		{
-			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: adp("für"),
-					governedCase: "Acc",
-				},
-			],
-		},
-		{
-			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: adp("bei"),
-					governedCase: "Dat",
-				},
-			],
-		},
+	expect(frameOf(result.changes)).toEqual([
+		[
+			{ kind: "Case", governedCase: "Nom" },
+			{
+				kind: "Preposition",
+				preposition: adp("bei"),
+				governedCase: "Dat",
+			},
+			{
+				kind: "Preposition",
+				preposition: adp("für"),
+				governedCase: "Acc",
+			},
+		],
 	]);
 
-	// A reused Reading's occurrence never appends its government.
+	// A reused Reading's occurrence never appends its government on TopUp.
 	const topUp = await produceOnce(
 		{ jev: jev.ask, luna: luna.ask },
 		{ ...input, origin: "TopUp" },
 	);
-	expect(frameOf(topUp.result.changes)).toHaveLength(2);
+	expect(frameOf(topUp.result.changes)?.[0]).toHaveLength(2);
 });
 
 test("on TopUp a later sentence's government yields no valency change and no model call (#677)", async () => {
@@ -438,9 +426,9 @@ test("an attested preposition no governor selects stays an attributable failure 
 	expect(result.changes).toHaveLength(1);
 });
 
-test("a Slot holds alternatives, and the covered set counts every one of them (#675)", async () => {
+test("a concrete pattern holds its realized preposition, and Luna is held to germanPatternRegex in strict mode", async () => {
 	const luna = knowledgeLuna({
-		valency: "N (über A|von D)",
+		valency: "N von D",
 	});
 	const { result } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
@@ -455,15 +443,22 @@ test("a Slot holds alternatives, and the covered set counts every one of them (#
 			},
 		),
 	);
-	const change = { value: frameOf(result.changes) };
-	expect(change?.value).toHaveLength(2);
-	expect(change.value?.[1]?.complements).toHaveLength(2);
-	// Luna writes the frame in the notation, held to its pattern in strict mode.
+	expect(frameOf(result.changes)).toEqual([
+		[
+			{ kind: "Case", governedCase: "Nom" },
+			{
+				kind: "Preposition",
+				preposition: adp("von"),
+				governedCase: "Dat",
+			},
+		],
+	]);
+	// Luna writes the concrete pattern in the notation, held to its regex in strict mode.
 	expect(luna.sent[0]).toMatchObject({
 		strict: true,
-		outputSchema: { type: "string", pattern: germanFramePattern },
+		outputSchema: { type: "string", pattern: germanPatternRegex },
 	});
-	// The frame request names the route's complement kinds, a verb's all six.
+	// The request names the route's complement kinds, a verb's all six.
 	expect(luna.sent[0]?.input).toHaveProperty("complementKinds", [
 		"Case",
 		"Preposition",
@@ -474,7 +469,7 @@ test("a Slot holds alternatives, and the covered set counts every one of them (#
 	]);
 });
 
-test("free-marker complements land, and a Place on a German noun is dropped with a DroppedValencySlots event (#675)", async () => {
+test("free-marker complements land, and a Place on a German noun is dropped with a DroppedValencyComplements event (#675)", async () => {
 	const verbLuna = knowledgeLuna({ valency: "N irgendwo" });
 	const hausen = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: verbLuna.ask },
@@ -492,7 +487,7 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 	expect(hausen.trace?.events).toBeUndefined();
 
 	const nounLuna = knowledgeLuna({
-		valency: "irgendwo (nach D)",
+		valency: "irgendwo nach D",
 	});
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: nounLuna.ask },
@@ -509,32 +504,28 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 			{ request: { valency: null } },
 		),
 	);
-	const change = { value: frameOf(result.changes) };
-	expect(change?.value).toEqual([
-		{
-			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: adp("nach"),
-					governedCase: "Dat",
-				},
-			],
-		},
+	expect(frameOf(result.changes)).toEqual([
+		[
+			{
+				kind: "Preposition",
+				preposition: adp("nach"),
+				governedCase: "Dat",
+			},
+		],
 	]);
 	expect(trace?.events?.map(({ name }) => name)).toEqual([
-		"DroppedValencySlots",
+		"DroppedValencyComplements",
 	]);
-	// The frame request offers a noun only its kinds.
+	// The request offers a noun only its kinds.
 	expect(nounLuna.sent[0]?.input).toHaveProperty("complementKinds", [
 		"Preposition",
 		"Clause",
 	]);
 });
 
-test("a preposition in a case it never governs is outside the pattern, and reads as no frame", async () => {
-	expect(new RegExp(germanFramePattern, "u").test("N (an G)")).toBe(false);
-	const luna = knowledgeLuna({ valency: "N (an G)" });
+test("a preposition in a case it never governs is outside the pattern, and reads as no pattern", async () => {
+	expect(new RegExp(germanPatternRegex, "u").test("N an G")).toBe(false);
+	const luna = knowledgeLuna({ valency: "N an G" });
 	const { result } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(
@@ -553,26 +544,18 @@ test("a preposition in a case it never governs is outside the pattern, and reads
 	).toEqual([{ aspect: "valency", code: "InvalidModelOutput" }]);
 });
 
-test("a lone correlated clause and a Nom past the first Slot read as written, and Dumrel drops their Slots", async () => {
-	for (const [valency, kept] of [
-		["N (es) dass", 1],
-		["N A N", 2],
-	] as const) {
-		const luna = knowledgeLuna({ valency });
-		const { result, trace } = await produceOnce(
-			{ jev: knowledgeJev().ask, luna: luna.ask },
-			knowledgeInput(verb("wissen"), "🧠", "Sie wusste es.", ["wusste"], {
-				request: { valency: null },
-			}),
-		);
-		expect({ valency, kept: frameOf(result.changes)?.length }).toEqual({
-			valency,
-			kept,
-		});
-		expect(trace?.events?.map(({ name }) => name)).toEqual([
-			"DroppedValencySlots",
-		]);
-	}
+test("a Nom past the first complement reads as written, and Dumrel drops it", async () => {
+	const luna = knowledgeLuna({ valency: "N A N" });
+	const { result, trace } = await produceOnce(
+		{ jev: knowledgeJev().ask, luna: luna.ask },
+		knowledgeInput(verb("wissen"), "🧠", "Sie wusste es.", ["wusste"], {
+			request: { valency: null },
+		}),
+	);
+	expect(frameOf(result.changes)?.[0]).toHaveLength(2);
+	expect(trace?.events?.map(({ name }) => name)).toEqual([
+		"DroppedValencyComplements",
+	]);
 });
 
 test("a Closed Route or an authored Reading answers every requested aspect with a CatalogMiss and no call (#883 point 8)", async () => {

@@ -64,7 +64,11 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0041"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0022",
+			"ADR-0041"
+		],
 		"rules": [
 			{
 				"rule": "de/partial-coverage",
@@ -120,7 +124,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -167,7 +173,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 4],
+			"memberSegmentIndices": [
+				2,
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -176,15 +185,12 @@
 				"emojiDescription": "🚌➡",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -226,12 +232,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["stieg aus"],
-					"present1": ["steige aus"],
-					"present2": ["steigst aus"],
-					"present3": ["steigt aus"],
-					"pastParticiple": ["ausgestiegen"],
-					"subjunctivePast": ["stiege aus"]
+					"preterite": [
+						"stieg aus"
+					],
+					"present1": [
+						"steige aus"
+					],
+					"present2": [
+						"steigst aus"
+					],
+					"present3": [
+						"steigt aus"
+					],
+					"pastParticiple": [
+						"ausgestiegen"
+					],
+					"subjunctivePast": [
+						"stiege aus"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -304,7 +322,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -341,12 +361,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "⚡" },
+			"reading": {
+				"emojiDescription": "⚡"
+			},
 			"notes": {
 				"rationale": "ADV 'right away', no comparison forms."
 			},
@@ -382,12 +406,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔄" },
+			"reading": {
+				"emojiDescription": "🔄"
+			},
 			"notes": {
 				"rationale": "ADV 'again, back', no comparison forms."
 			},
@@ -423,7 +451,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -432,15 +462,12 @@
 				"emojiDescription": "➡🚌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -500,12 +527,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["stieg ein"],
-					"present1": ["steige ein"],
-					"present2": ["steigst ein"],
-					"present3": ["steigt ein"],
-					"pastParticiple": ["eingestiegen"],
-					"subjunctivePast": ["stiege ein"]
+					"preterite": [
+						"stieg ein"
+					],
+					"present1": [
+						"steige ein"
+					],
+					"present2": [
+						"steigst ein"
+					],
+					"present3": [
+						"steigt ein"
+					],
+					"pastParticiple": [
+						"eingestiegen"
+					],
+					"subjunctivePast": [
+						"stiege ein"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",

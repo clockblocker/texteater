@@ -2,29 +2,91 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Mitten in der Erklärung hat er völlig den Faden verloren.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mitten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Erklärung" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "völlig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Faden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verloren" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Mitten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Erklärung"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "völlig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Faden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "verloren"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -48,21 +110,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 14, 16, 18],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				8,
+				14,
+				16,
+				18
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "💭💨",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -125,7 +192,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "den Faden verloren hat",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -141,10 +210,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Faden", "orthography": "Standard" },
-					{ "attested": "verloren", "orthography": "Standard" }
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Faden",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "verloren",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -157,7 +238,12 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
 			"caseId": "draft-translation-idiom-past",
-			"memberSegmentIndices": [8, 14, 16, 18],
+			"memberSegmentIndices": [
+				8,
+				14,
+				16,
+				18
+			],
 			"case": {
 				"input": {
 					"markedContext": "Mitten in der Erklärung <TARGET>hat</TARGET> er völlig <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
@@ -185,7 +271,10 @@
 				"explanation": "A perfect-tense idiom translates as an infinitive phrase.",
 				"reviewedAlternatives": {
 					"accepted": {
-						"en": ["lose one's train of thought", "lose track"],
+						"en": [
+							"lose one's train of thought",
+							"lose track"
+						],
 						"ru": [
 							"потерять нить рассуждения",
 							"потерять нить разговора",
@@ -193,8 +282,14 @@
 						]
 					},
 					"rejected": {
-						"en": ["lost the thread", "has lost the thread"],
-						"ru": ["потерял нить", "потерял нить разговора"]
+						"en": [
+							"lost the thread",
+							"has lost the thread"
+						],
+						"ru": [
+							"потерял нить",
+							"потерял нить разговора"
+						]
 					}
 				}
 			}

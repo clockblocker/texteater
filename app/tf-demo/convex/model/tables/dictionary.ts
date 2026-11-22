@@ -102,6 +102,8 @@ export const dictionaryTables = {
 		),
 		expletiveEvidence: v.optional(v.any()),
 		valencyEvidence: v.optional(v.any()),
+		/** The concrete Valency Pattern realized by this occurrence (ADR 0034). */
+		realizedValencyPattern: v.optional(v.any()),
 		surfaceId: v.id("surfaces"),
 		readingId: v.id("readings"),
 		realizationCoverage: realizationCoverageValidator,

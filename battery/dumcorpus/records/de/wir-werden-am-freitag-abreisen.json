@@ -2,22 +2,62 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Wir werden am Freitag abreisen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "werden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Freitag" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "abreisen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "werden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "a",
+			"surface": "an"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Freitag"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "abreisen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026"
+		],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -27,7 +67,10 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" }
+			{
+				"rule": "de/verb-core-features",
+				"hash": "53f39c352354bcbe"
+			}
 		],
 		"references": [
 			{
@@ -59,21 +102,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 9],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2,
+				9
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🧳👋",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -125,12 +171,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["reiste ab"],
-					"present1": ["reise ab"],
-					"present2": ["reist ab"],
-					"present3": ["reist ab"],
-					"pastParticiple": ["abgereist"],
-					"subjunctivePast": ["reiste ab"]
+					"preterite": [
+						"reiste ab"
+					],
+					"present1": [
+						"reise ab"
+					],
+					"present2": [
+						"reist ab"
+					],
+					"present3": [
+						"reist ab"
+					],
+					"pastParticiple": [
+						"abgereist"
+					],
+					"subjunctivePast": [
+						"reiste ab"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -157,8 +215,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "werden", "orthography": "Standard" },
-					{ "attested": "abreisen", "orthography": "Standard" }
+					{
+						"attested": "werden",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "abreisen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -167,7 +231,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "abreisen werden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Plur",

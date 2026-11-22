@@ -33,7 +33,7 @@ import {
 	coverageOf,
 	type ExactAspect,
 	exactAspects,
-	type Slot,
+	type Pattern,
 	sameAspect,
 } from "./exact-aspects.js";
 import { producedKnowledge, producedParadigm } from "./produced.js";
@@ -301,11 +301,11 @@ export function evaluateKnowledge(
 
 /** How many complements gold's frame and the run's hold, and share. */
 function complementCounts(
-	gold: readonly Slot[] | undefined,
-	produced: readonly Slot[] | undefined,
+	gold: readonly Pattern[] | undefined,
+	produced: readonly Pattern[] | undefined,
 ) {
-	const keys = (frame: readonly Slot[] | undefined) =>
-		(frame ?? []).flatMap((slot) => slot.complements.map(complementKey));
+	const keys = (frame: readonly Pattern[] | undefined) =>
+		(frame ?? []).flatMap((pattern) => pattern.map(complementKey));
 	const goldKeys = keys(gold);
 	const producedKeys = keys(produced);
 	const remaining = [...producedKeys];

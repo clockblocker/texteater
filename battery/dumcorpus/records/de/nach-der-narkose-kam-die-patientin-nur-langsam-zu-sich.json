@@ -88,7 +88,12 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0052"],
+		"adrs": [
+			"ADR-0003",
+			"ADR-0034",
+			"ADR-0039",
+			"ADR-0052"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -136,7 +141,11 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 16, 18],
+			"memberSegmentIndices": [
+				6,
+				16,
+				18
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "VERB"
@@ -145,32 +154,24 @@
 				"emojiDescription": "🪞😵➡👀",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Dat",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "zu",
+									"coreFeatures": {}
 								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Dat",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "zu",
-										"coreFeatures": {}
-									}
-								}
-							]
-						}
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {

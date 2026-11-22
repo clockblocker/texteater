@@ -6,8 +6,9 @@ import type { Id } from "../convex/_generated/dataModel";
 import { renderNote } from "../src/notes";
 
 /**
- * A German Surface's slotted line (#1293) where a Reading is in context:
- * the Surface Note's heading and the Attestation's caption.
+ * A German Surface's display line (ADR 0056, ADR 0034): clean base-order
+ * form (with `sich` for Required lexical reflexives), never crowded with
+ * `jD` or open valency slots.
  */
 
 type NoteData = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;
@@ -39,51 +40,56 @@ const surface = {
 	},
 };
 const valency = [
-	{
-		status: "Required",
-		complements: [{ kind: "Case", governedCase: "Nom" }],
-	},
-	{
-		status: "Required",
-		complements: [
-			{
-				kind: "Preposition",
-				preposition: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "ADP",
-					canonicalForm: "mit",
-					coreFeatures: {},
-				},
-				governedCase: "Dat",
+	[
+		{ kind: "Case", governedCase: "Nom" },
+		{
+			kind: "Preposition",
+			preposition: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "ADP",
+				canonicalForm: "mit",
+				coreFeatures: {},
 			},
-		],
-	},
+			governedCase: "Dat",
+		},
+	],
 ];
 
 function surfaceNote(
-	activeReading: { readonly lemmaId: string } | null,
+	activeReading: {
+		readonly lemmaId: string;
+		readonly emojiDescription?: string;
+		readonly reflexive?: {
+			readonly status: "Required" | "Optional";
+			readonly governedCase: "Acc" | "Dat" | null;
+			readonly preposition: string | null;
+		} | null;
+	} | null,
+	overrideSurface = surface,
 ): NoteDataFor<"Surface"> {
 	return {
 		kind: "Surface",
 		target: {
 			kind: "Surface",
 			language: "de",
-			normalizedSurface: "mit zu tun hatte",
+			normalizedSurface: overrideSurface.normalizedSurface,
 		},
 		analyses: [
 			{
 				analysisKey: "surface-1",
 				surfaceId: "surface-1",
 				lemmaId: "lemma-1",
-				presented: surface,
+				presented: overrideSurface,
 				lemmaTarget: { kind: "Lemma", lemmaId: "lemma-1" },
 			},
 		],
 		activeReading: activeReading && {
 			readingId: "reading-1",
 			lemmaId: activeReading.lemmaId,
+			emojiDescription: activeReading.emojiDescription,
+			reflexive: activeReading.reflexive ?? null,
 			valency,
 		},
 		continueCursor: "",
@@ -108,22 +114,53 @@ function surfaceTitle(note: NoteDataFor<"Surface">): string {
 
 const text = (markup: string) => markup.replaceAll(/<[^>]+>/g, "");
 
-test("a Surface Note heads its active analysis with the slotted line of the Reading in context", () => {
+test("a Surface Note heads its active analysis cleanly without jD or open valency slots", () => {
 	const title = surfaceTitle(surfaceNote({ lemmaId: "lemma-1" }));
-	expect(text(title)).toBe("jD mit jM zu tun hatte");
-	// The slots and the preposition take the Reading heading's styles.
-	expect(title).toContain('data-slot="valency-token"');
-	expect(title).toMatch(/data-slot="valency-preposition"[^>]*>mit</);
+	expect(text(title)).toBe("mit zu tun hatte");
+	expect(title).not.toContain('data-slot="valency-token"');
 });
 
-test("without a Reading of the analysis's Lemma, the heading is the stored form", () => {
-	expect(text(surfaceTitle(surfaceNote(null)))).toBe("mit zu tun hatte");
-	expect(text(surfaceTitle(surfaceNote({ lemmaId: "lemma-2" })))).toBe(
-		"mit zu tun hatte",
+test("a Surface Note shows sich when the active Reading is lexically reflexive", () => {
+	const erinnertSurface = {
+		...surface,
+		normalizedSurface: "erinnert",
+		lemma: {
+			language: "de",
+			canonicalForm: "erinnern",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: { hasSepPrefix: null },
+		},
+	};
+	expect(
+		text(
+			surfaceTitle(
+				surfaceNote(
+					{
+						lemmaId: "lemma-1",
+						emojiDescription: "🪞🧠",
+						reflexive: {
+							status: "Required",
+							governedCase: "Acc",
+							preposition: null,
+						},
+					},
+					erinnertSurface,
+				),
+			),
+		),
+	).toBe("sich erinnert");
+	expect(text(surfaceTitle(surfaceNote(null, erinnertSurface)))).toBe(
+		"erinnert",
 	);
+	expect(
+		text(
+			surfaceTitle(surfaceNote({ lemmaId: "lemma-2" }, erinnertSurface)),
+		),
+	).toBe("erinnert");
 });
 
-test("an Attestation's caption names its Surface by the slotted line", () => {
+test("an Attestation's caption names its Surface cleanly without jD or open valency slots", () => {
 	const words = ["Vielleicht", "hatte", "es", "damit", "zu", "tun"];
 	const attestation = {
 		kind: "Attestation",
@@ -136,7 +173,6 @@ test("an Attestation's caption names its Surface by the slotted line", () => {
 				...(index > 0 ? [{ kind: "Whitespace", text: " " }] : []),
 				{ kind: "ResolvableText", text: word },
 			]),
-			// hatte, damit, zu, tun; the referential es is a free unit.
 			memberSegmentIndices: [2, 6, 8, 10],
 			origin: { kind: "Scroll" },
 			target: { kind: "Scroll", scrollId: "text-1" },
@@ -178,5 +214,6 @@ test("an Attestation's caption names its Surface by the slotted line", () => {
 			},
 		}),
 	);
-	expect(text(markup)).toContain("split form of jD mit jM zu tun hatte");
+	expect(text(markup)).toContain("split form of mit zu tun hatte");
+	expect(text(markup)).not.toContain("jD");
 });

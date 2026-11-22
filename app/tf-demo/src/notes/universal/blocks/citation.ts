@@ -59,6 +59,9 @@ export function citedNoteReading(note: {
 	return {
 		lemma: note.reading.lemma,
 		emojiDescription: note.reading.emojiDescription,
-		reflexive: reflexiveSlotOf(note.knowledge.valency),
+		reflexive: reflexiveSlotOf(
+			note.knowledge.valency,
+			note.reading.emojiDescription,
+		),
 	};
 }

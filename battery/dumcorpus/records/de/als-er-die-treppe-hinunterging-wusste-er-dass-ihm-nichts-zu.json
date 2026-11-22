@@ -175,7 +175,13 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0031", "ADR-0039", "ADR-0041", "ADR-0044"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0031",
+			"ADR-0039",
+			"ADR-0041",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/bare-infinitive-zu",
@@ -221,7 +227,10 @@
 				"rule": "de/comparison-als",
 				"hash": "308ab8fee3b2ddb0"
 			},
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -283,7 +292,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -320,7 +331,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -367,12 +380,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [
+				4,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🏠🪜" },
+			"reading": {
+				"emojiDescription": "🏠🪜"
+			},
 			"notes": {
 				"rationale": "die Treppe is the accusative path object of hinuntergehen and owns its article."
 			},
@@ -421,12 +439,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚶⬇" },
+			"reading": {
+				"emojiDescription": "🚶⬇"
+			},
 			"notes": {
 				"rationale": "In the verb-final clause the particle verb hinuntergehen is written whole; hasSepPrefix names hinunter (de/verb-core-features)."
 			},
@@ -475,12 +497,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🧠" },
+			"reading": {
+				"emojiDescription": "🧠"
+			},
 			"notes": {
 				"rationale": "wußte is wusste in the spelling before 1996: the form is current, only the ß is old, so the Surface is a Historical Variant with no historical status (de/variant-and-historical-status)."
 			},
@@ -502,7 +528,9 @@
 					"normalizedSurface": "wußte",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -530,7 +558,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -577,7 +607,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -601,7 +633,9 @@
 					"normalizedSurface": "daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null
 				},
@@ -615,7 +649,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [18],
+			"memberSegmentIndices": [
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -665,7 +701,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [20],
+			"memberSegmentIndices": [
+				20
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -715,7 +753,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [22],
+			"memberSegmentIndices": [
+				22
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -758,7 +798,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [24],
+			"memberSegmentIndices": [
+				24
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -767,24 +809,16 @@
 				"emojiDescription": "🛠",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -860,7 +894,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [26, 28],
+			"memberSegmentIndices": [
+				26,
+				28
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -869,24 +906,16 @@
 				"emojiDescription": "🚫🔀",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Dat"
+							}
+						]
 					]
 				},
 				"coverage": {
@@ -952,7 +981,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -989,7 +1020,11 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33, 35, 39],
+			"memberSegmentIndices": [
+				33,
+				35,
+				39
+			],
 			"route": {
 				"family": "Locution",
 				"kind": "VERB"
@@ -998,24 +1033,12 @@
 				"emojiDescription": "🔚",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -1098,7 +1121,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [37],
+			"memberSegmentIndices": [
+				37
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"

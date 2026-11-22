@@ -2,36 +2,100 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die Abk. blieb stehen, obwohl der Satz überarbeitet wurde.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Abk." },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "blieb" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stehen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "obwohl" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Satz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "überarbeitet" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wurde" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Abk."
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "blieb"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stehen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "obwohl"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Satz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "überarbeitet"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wurde"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [
 			{
 				"rule": "de/bleiben-with-an-infinitive",
 				"hash": "71648d2fd6a2802d"
 			},
-			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
 			{
 				"rule": "de/abbreviation-is-one-segment",
 				"hash": "8b5d215a31ab7264"
@@ -57,21 +121,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				6
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "📌",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom"
 				},
@@ -92,8 +159,14 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "blieb", "orthography": "Standard" },
-					{ "attested": "stehen", "orthography": "Standard" }
+					{
+						"attested": "blieb",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "stehen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -102,7 +175,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "stehen blieb",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -128,8 +203,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"memberSegmentIndices": [
+				9
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			},
 			"notes": {
 				"rationale": "obwohl opens the verb-final clause obwohl der Satz überarbeitet wurde, so it is the SCONJ obwohl. The abbreviation Abk. is a unit of its own. Rule-decided Segment fix, 2026-10-02 (#851): Abk. was Abk and a Punctuation period and is now one Segment with its period (de/abbreviation-is-one-segment). Groupings unchanged."
 			},
@@ -147,11 +227,16 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "obwohl",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
-					{ "attested": "obwohl", "orthography": "Standard" }
+					{
+						"attested": "obwohl",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}

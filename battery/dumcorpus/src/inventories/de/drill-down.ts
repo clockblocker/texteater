@@ -38,8 +38,8 @@ export function reflexiveDrillDown(
 	reading: Pick<Dumling.Reading, "lemma">,
 	knowledge: Pick<Dumrel.ReadingKnowledge, "valency"> | undefined,
 ): AuthoredMember | undefined {
-	const reflexive = (knowledge?.valency ?? []).some(({ complements }) =>
-		complements.some(({ kind }) => kind === "Reflexive"),
+	const reflexive = (knowledge?.valency ?? []).some((pattern) =>
+		pattern.some(({ kind }) => kind === "Reflexive"),
 	);
 	return reading.lemma.language === "de" && reflexive
 		? reflexivityUnit

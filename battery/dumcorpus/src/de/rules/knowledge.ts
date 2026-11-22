@@ -6,7 +6,7 @@ export const knowledge: Rule[] = [
 	{
 		id: "de/valency-frame-follows-e-valbu",
 		statement:
-			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts: warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns it: stolz (auf + Acc). A Collocation's frame takes its noun's government: eine Entscheidung treffen (über + Acc). Each clause form listed is an alternative in its Slot. When either of two complements completes the frame, both are Optional: bitten (Acc) (um + Acc).",
+			"A Reading's valency accumulates concrete Valency Patterns realized in encountered sentences, with no optionality statuses and no inline alternatives: each pattern lists only the governed complements realized in that occurrence (converting a passive subject back to its active case, and leaving out free adjuncts). A verb pattern opens with Nom unless the verb is subjectless; an adjective pattern has no Nom; a noun pattern holds only governed prepositions and clauses; a Clause with a da(r)- correlate names that preposition. A lexical reflexive stays in every pattern of a 🪞 Reading.",
 		adrs: ["ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),

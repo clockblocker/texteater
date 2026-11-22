@@ -113,8 +113,8 @@ export const findOptionallyReflexiveReadings = internalQuery({
 			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 			.take(MAX_READING_CANDIDATES);
 		const slots = await Promise.all(
-			readings.map(({ readingKey }) =>
-				loadReflexiveSlot(ctx, readingKey),
+			readings.map(({ readingKey, emojiDescription }) =>
+				loadReflexiveSlot(ctx, readingKey, emojiDescription),
 			),
 		);
 		return readings.flatMap(({ emojiDescription }, index) =>

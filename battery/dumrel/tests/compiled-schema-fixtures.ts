@@ -29,33 +29,25 @@ export const samples: Record<string, unknown[]> = {
 		{ formulaRole: "Sympathy" },
 		{
 			valency: [
-				{
-					status: "Required",
-					complements: [
-						{
-							kind: "Case",
-							governedCase: "Nom",
-						},
-					],
-				},
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: aufLemma,
-							governedCase: "Acc",
-						},
-						{ kind: "Clause", form: "Dass", correlate: "Required" },
-					],
-				},
-				{
-					status: "Required",
-					complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
-				},
+				[
+					{ kind: "Case", governedCase: "Nom" },
+					{
+						kind: "Preposition",
+						preposition: aufLemma,
+						governedCase: "Acc",
+					},
+				],
+				[
+					{ kind: "Case", governedCase: "Nom" },
+					{ kind: "Clause", form: "Dass", preposition: aufLemma },
+				],
+				[
+					{ kind: "Case", governedCase: "Nom" },
+					{ kind: "Adverbial", standIn: "Irgendwo" },
+				],
 			],
 		},
-		{ valency: [{ status: "Required", complements: [] }] },
+		{ valency: [[]] },
 		{
 			semanticRelations: {
 				targetKind: "reading",
@@ -86,31 +78,25 @@ export const samples: Record<string, unknown[]> = {
 			kind: "Contribute",
 			aspect: "valency",
 			value: [
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: aufLemma,
-							governedCase: "Acc",
-						},
-					],
-				},
+				[
+					{
+						kind: "Preposition",
+						preposition: aufLemma,
+						governedCase: "Acc",
+					},
+				],
 			],
 		},
 		{ kind: "Retract", aspect: "valency" },
 		{
 			kind: "Retract",
 			aspect: "valency",
-			complement: {
-				kind: "Case",
-				governedCase: "Dat",
-			},
+			pattern: [{ kind: "Case", governedCase: "Dat" }],
 		},
 		{
 			kind: "Retract",
 			aspect: "valency",
-			complement: { kind: "Predicative", marker: "Für" },
+			pattern: [{ kind: "Predicative", marker: "Für" }],
 		},
 		{
 			kind: "Contribute",
@@ -240,7 +226,6 @@ export const samples: Record<string, unknown[]> = {
 		},
 	],
 	governedCase: ["Acc", "Gen"],
-	valencySlotStatus: ["Required", "Optional"],
 	valencyComplement: [
 		{ kind: "Case", governedCase: "Gen" },
 		// A complement names no referent.
@@ -257,7 +242,7 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Predicative", marker: "Als" },
 		{ kind: "Predicative", marker: "Als", case: "Nom" },
 		{ kind: "Clause", form: "ZuInfinitive" },
-		{ kind: "Clause", form: "Ob", correlate: "Optional" },
+		{ kind: "Clause", form: "Ob", preposition: aufLemma },
 		{ kind: "Clause", form: "Wenn" },
 		{ kind: "Subject" },
 		{ kind: "Preposition", preposition: alLemma },
@@ -297,22 +282,19 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Case", governedCase: "Dat" },
 		{ kind: "Clause", form: "Dass" },
 	],
-	valencySlot: [
+	valencyPattern: [
+		[
+			{
+				kind: "Preposition",
+				preposition: aufLemma,
+				governedCase: "Acc",
+			},
+			{ kind: "Clause", form: "ZuInfinitive" },
+		],
+		[],
 		{
 			status: "Optional",
-			complements: [
-				{
-					kind: "Preposition",
-					preposition: aufLemma,
-					governedCase: "Acc",
-				},
-				{ kind: "Clause", form: "ZuInfinitive" },
-			],
-		},
-		{ status: "Optional", complements: [] },
-		{
-			status: "Optional",
-			complement: { kind: "Adverbial", standIn: "Irgendwohin" },
+			complements: [{ kind: "Adverbial", standIn: "Irgendwohin" }],
 		},
 	],
 	governmentRelation: ["governs", "governedBy"],

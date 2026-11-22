@@ -16,7 +16,6 @@ import {
 } from "./generated/dumling-schemas.js";
 import {
 	adverbialStandInValues,
-	clauseCorrelateValues,
 	clauseFormValues,
 	conjugationClassValues,
 	dimensionIdValues,
@@ -33,7 +32,6 @@ import {
 	sayingTypeValues,
 	translationLanguageValues,
 	translationPieceKindValues,
-	valencySlotStatusValues,
 } from "./vocabulary.js";
 
 const normalizedTextSchema = z.string().overwrite(normalizeForm).min(1);
@@ -58,20 +56,18 @@ const translationListSchema = z.array(translationSchema).min(1);
 export { unitShadowSchema };
 
 export const governedCaseSchema = z.enum(governedCaseValues);
-export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
 
 /**
- * German complements, after E-VALBU (ADR 0034): a bare case (`jemandem`, Dat),
- * the subject's Nom only in the frame's first Slot; a governed preposition
- * with the ADP Lemma it selects and the case it governs in this construction
- * (`warten auf` + Acc, `bestehen auf` + Dat); an Adverbial named by its
- * stand-in (`wohnen` irgendwo); a Predicative with its free marker (`jN für
- * dumm halten`); or a Clause of one form, with whether it needs or may take a
- * correlate, whose word its Slot's Preposition or Case gives (`freuen` 🪞
- * `auf`: Dass, Required `darauf`); or a lexical Reflexive with its case, and
- * with the ADP Lemma it follows when it is the object of a fixed phrase's
- * preposition (`außer sich sein`: `außer` + Dat), the case that preposition
- * governs (ADR 0052).
+ * German complements in a realized Valency Pattern (ADR 0034): a bare case
+ * (`jemanden`, Acc), the subject's Nom only first in a pattern; a governed
+ * preposition with the ADP Lemma it selects and the case it governs in this
+ * construction (`warten auf` + Acc, `bestehen auf` + Dat); an Adverbial named
+ * by its stand-in (`wohnen` irgendwo); a Predicative with its free marker
+ * (`jN für dumm halten`); a Clause of one form, with the ADP Lemma of its
+ * `da(r)-` correlate when the sentence uses one (`achten` `darauf, dass …`);
+ * or a lexical Reflexive with its case, and with the ADP Lemma it follows when
+ * it is the object of a fixed phrase's preposition (`außer sich sein`: `außer`
+ * + Dat), the case that preposition governs (ADR 0052).
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
@@ -94,7 +90,7 @@ export const germanValencyComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Clause"),
 		form: z.enum(clauseFormValues),
-		correlate: z.enum(clauseCorrelateValues).optional(),
+		preposition: adpositionLemmaSchemas.de.optional(),
 	}),
 	z.strictObject({
 		kind: z.literal("Reflexive"),
@@ -150,28 +146,23 @@ export const valencyComplementSchema = z.union([
 	...englishValencyComplementSchema.options,
 ]);
 /**
- * One position of a Valency Frame: one status for the Reading's valency, and
- * its complements in order, usually one. Several complements are
- * alternatives, E-VALBU's `/` (`reden` Optional `über` + Acc | `von` + Dat);
- * complements that can appear together take separate Slots (ADR 0034).
+ * One concrete syntactic pattern realized by a Reading in encountered context:
+ * its complements in order, with no optionality statuses and no inline
+ * alternatives (ADR 0034). A German Nom stands only first in a pattern, the
+ * subject's; a pattern without one has no subject (`mir graut vor`). A
+ * Preposition, Subject, DirectObject, IndirectObject or Reflexive appears at
+ * most once per pattern; a Case, Adverbial, Predicative or Clause may recur
+ * (`jemanden etwas fragen`).
  */
-export const valencySlotSchema = z.strictObject({
-	status: valencySlotStatusSchema,
-	complements: z.array(valencyComplementSchema).min(1),
-});
+export const valencyPatternSchema = z.array(valencyComplementSchema).min(1);
 /**
- * The owning Reading's Valency Frame: its Slots in order. A Preposition
- * complement sits in at most one of them; a Case, Adverbial, Predicative or
- * Clause may recur in another Slot (ADRs 0034, 0057). A German Nom stands only
- * in the first Slot, the subject's, and a German frame with none has no
- * subject. A Clause with a correlate shares its Slot with the Case or
- * Preposition its word derives from (ADR 0034). A Reflexive is alone in its
- * Slot, at most one per frame (ADR 0052). The governor owns
- * every claim; a preposition's side is a read-time projection. Fixed parts
- * (a separable prefix, a Locution's wording) come from Lemma identity and
- * are never Slots.
+ * The owning Reading's accumulated Valency Patterns: distinct concrete
+ * constructions encountered in context, in arrival order (ADR 0034). The
+ * governor owns every claim; a preposition's side is a read-time projection.
+ * Fixed parts (a separable prefix, a Locution's wording) come from Lemma
+ * identity and are never complements.
  */
-export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
+export const valencyFrameSchema = z.array(valencyPatternSchema).min(1);
 
 /**
  * Where a Breakdown piece or a Source links (ADR 0050): the part's Unit
@@ -409,10 +400,10 @@ export const knowledgeChangeSchema = z.union([
 		kind: z.literal("Retract"),
 		aspect: z.literal("valency"),
 		/**
-		 * Retracts only this complement from its Slot, and the Slot once it is
-		 * empty; without it, the frame.
+		 * Retracts only this concrete pattern from the Reading's accumulated
+		 * valency patterns; without it, retracts the whole valency aspect.
 		 */
-		complement: valencyComplementSchema.optional(),
+		pattern: valencyPatternSchema.optional(),
 	}),
 	z.strictObject({
 		kind: setKinds,

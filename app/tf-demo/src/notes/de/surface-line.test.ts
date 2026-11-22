@@ -1,14 +1,18 @@
 import { expect, test } from "bun:test";
 import {
-	type FrameSlot,
 	type ValencyLinePart,
 	valencyLineText,
 } from "./block-renderers/reading/valency/valency-line";
-import { germanSurfaceLine, type LinedSurface } from "./surface-line";
+import {
+	germanSurfaceLine,
+	type LinedSurface,
+	type SurfaceReadingContext,
+} from "./surface-line";
 
 /**
- * The slotted Surface line (#1293), from stored Surfaces in base order:
- * the Lemma's words inflected, the verb last.
+ * The display line of a German Surface (ADR 0056, ADR 0034): clean base-order
+ * form with separable prefix bar and `sich` for Required lexical reflexives,
+ * without projecting `jD` or open valency slots.
  */
 
 type Lemma = LinedSurface["lemma"];
@@ -44,245 +48,124 @@ const imperative = {
 	person: "2",
 	number: "Sing",
 };
-const infinitive = { verbForm: "Inf" };
-
-const nom = (status: FrameSlot["status"] = "Required"): FrameSlot => ({
-	status,
-	complements: [{ kind: "Case", governedCase: "Nom" }],
-});
-const bare = (
-	governedCase: "Acc" | "Dat",
-	status: FrameSlot["status"] = "Required",
-): FrameSlot => ({
-	status,
-	complements: [{ kind: "Case", governedCase }],
-});
-const prep = (
-	preposition: string,
-	governedCase: "Acc" | "Dat",
-	status: FrameSlot["status"] = "Required",
-): FrameSlot => ({
-	status,
-	complements: [
-		{
-			kind: "Preposition",
-			governedCase,
-			preposition: { canonicalForm: preposition },
-		},
-	],
-});
-const reflexive: FrameSlot = {
-	status: "Required",
-	complements: [{ kind: "Reflexive", governedCase: "Acc" }],
-};
 
 function line(
 	normalizedSurface: string,
 	lemma: Lemma,
 	inflectionalFeatures: Record<string, unknown>,
-	frame?: readonly FrameSlot[],
+	reading?: SurfaceReadingContext | null,
 ): string {
 	return valencyLineText(
 		germanSurfaceLine(
 			{ normalizedSurface, lemma, inflectionalFeatures },
-			frame,
+			reading,
 		),
 	);
 }
 
-test("a Locution's Surface prints its slots among its words, the subject first", () => {
+test("a verb Surface stays clean in base order without jD or open valency slots", () => {
+	expect(line("gefragt hast", lexeme("VERB", "fragen"), finite("Past"))).toBe(
+		"gefragt hast",
+	);
 	expect(
-		line("mit zu tun hatte", locution("mit zu tun haben"), finite("Past"), [
-			nom(),
-			prep("mit", "Dat"),
-		]),
-	).toBe("jD mit jM zu tun hatte");
+		line("mit zu tun hatte", locution("mit zu tun haben"), finite("Past")),
+	).toBe("mit zu tun hatte");
+	expect(line("wartet", lexeme("VERB", "warten"), finite())).toBe("wartet");
 });
 
-test("every slot shows, an Optional one in parentheses", () => {
-	expect(
-		line("wartet", lexeme("VERB", "warten"), finite(), [
-			nom(),
-			prep("auf", "Acc", "Optional"),
-		]),
-	).toBe("jD (auf jN) wartet");
-});
-
-test("a separable verb is stored joined and split by the Citation's bar", () => {
-	const parts = germanSurfaceLine(
+test("a separable verb splits its attached prefix with a bar", () => {
+	const parts = germanSurfaceLine({
+		normalizedSurface: "anfängt",
+		lemma: lexeme("VERB", "anfangen", "an"),
+		inflectionalFeatures: finite(),
+	});
+	expect(valencyLineText(parts)).toBe("anfängt");
+	expect(parts).toEqual([
 		{
-			normalizedSurface: "anfängt",
-			lemma: lexeme("VERB", "anfangen", "an"),
-			inflectionalFeatures: finite(),
-		},
-		[nom(), prep("mit", "Dat", "Optional")],
-	);
-	expect(valencyLineText(parts)).toBe("jD (mit jM) anfängt");
-	expect(parts.at(-1)).toEqual({
-		part: "Head",
-		text: "anfängt",
-		prefix: "an",
-	} satisfies ValencyLinePart);
+			part: "Head",
+			text: "anfängt",
+			prefix: "an",
+		} satisfies ValencyLinePart,
+	]);
 });
 
-test("each Reading of one Surface slots it by its own frame", () => {
-	const erinnert = (frame: readonly FrameSlot[]) =>
-		line("erinnert", lexeme("VERB", "erinnern"), finite(), frame);
-	// 🪞🧠 sich an etwas erinnern: the reflexive where the Citation puts it.
-	expect(erinnert([nom(), reflexive, prep("an", "Acc", "Optional")])).toBe(
-		"jD sich (an jN) erinnert",
-	);
-	// jemanden an etwas erinnern.
-	expect(erinnert([nom(), bare("Acc"), prep("an", "Acc")])).toBe(
-		"jD jN an jN erinnert",
-	);
-});
-
-test("a Locution's own es is its subject, so it takes no jD", () => {
-	expect(line("es gibt", locution("es geben"), finite(), [bare("Acc")])).toBe(
-		"es jN gibt",
-	);
-});
-
-test("an adjective prints its head first", () => {
+test("a Required lexical reflexive places sich according to the active Reading", () => {
+	const erinnert = (reading: SurfaceReadingContext | null) =>
+		line("erinnert", lexeme("VERB", "erinnern"), finite(), reading);
 	expect(
-		line("stolz", lexeme("ADJ", "stolz"), { degree: "Pos" }, [
-			prep("auf", "Acc", "Optional"),
-		]),
-	).toBe("stolz (auf jN)");
+		erinnert({
+			emojiDescription: "🪞🧠",
+			reflexive: {
+				status: "Required",
+				governedCase: "Acc",
+				preposition: null,
+			},
+		}),
+	).toBe("sich erinnert");
+	// Also works from 🪞 alone before Knowledge arrives.
+	expect(erinnert({ emojiDescription: "🪞🧠", reflexive: null })).toBe(
+		"sich erinnert",
+	);
+	// Plain Reading without Required reflexive stays bare.
+	expect(erinnert({ emojiDescription: "💭", reflexive: null })).toBe(
+		"erinnert",
+	);
+	// Fixed-phrase reflexive goes after its preposition; leading es stays first.
+	expect(
+		line("außer war", locution("außer sein"), finite("Past"), {
+			emojiDescription: "🪞😤",
+			reflexive: {
+				status: "Required",
+				governedCase: "Dat",
+				preposition: "außer",
+			},
+		}),
+	).toBe("außer sich war");
+	expect(
+		line(
+			"es gemütlich machte",
+			locution("es gemütlich machen"),
+			finite("Past"),
+			{
+				emojiDescription: "🪞🛋️",
+				reflexive: {
+					status: "Required",
+					governedCase: "Dat",
+					preposition: null,
+				},
+			},
+		),
+	).toBe("es sich gemütlich machte");
 });
 
-test("a Surface without a frame is its stored form", () => {
+test("an imperative keeps its order and separated prefix", () => {
+	const sieh = germanSurfaceLine({
+		normalizedSurface: "sieh an",
+		lemma: lexeme("VERB", "ansehen", "an"),
+		inflectionalFeatures: imperative,
+	});
+	expect(valencyLineText(sieh)).toBe("sieh an");
+	expect(sieh[0]).toEqual({ part: "Head", text: "sieh", prefix: null });
+	expect(
+		line("erinnere", lexeme("VERB", "erinnern"), imperative, {
+			emojiDescription: "🪞🧠",
+			reflexive: {
+				status: "Required",
+				governedCase: "Acc",
+				preposition: null,
+			},
+		}),
+	).toBe("erinnere sich");
+});
+
+test("non-verb Surfaces stay as their stored forms", () => {
 	expect(
 		line("Kindern", lexeme("NOUN", "Kind"), {
 			case: "Dat",
 			number: "Plur",
 		}),
 	).toBe("Kindern");
-	expect(
-		line("mit zu tun hatte", locution("mit zu tun haben"), finite("Past")),
-	).toBe("mit zu tun hatte");
-	expect(
-		line("anfängt", lexeme("VERB", "anfangen", "an"), finite(), []),
-	).toBe("anfängt");
-});
-
-test("an imperative keeps its own order and takes no jD", () => {
-	expect(
-		line("warte", lexeme("VERB", "warten"), imperative, [
-			nom(),
-			prep("auf", "Acc", "Optional"),
-		]),
-	).toBe("warte (auf jN)");
-	const sieh = germanSurfaceLine(
-		{
-			normalizedSurface: "sieh an",
-			lemma: lexeme("VERB", "ansehen", "an"),
-			inflectionalFeatures: imperative,
-		},
-		[nom(), bare("Acc")],
+	expect(line("stolz", lexeme("ADJ", "stolz"), { degree: "Pos" })).toBe(
+		"stolz",
 	);
-	expect(valencyLineText(sieh)).toBe("sieh jN an");
-	expect(sieh[0]).toEqual({ part: "Head", text: "sieh", prefix: null });
-});
-
-test("jD needs a finite form, a Nom slot and no expletive subject", () => {
-	expect(
-		line("graut", lexeme("VERB", "grauen"), finite(), [bare("Dat")]),
-	).toBe("jM graut");
-	expect(
-		line(
-			"es regnet",
-			lexeme("VERB", "regnen"),
-			{
-				...finite(),
-				expletive: "Subject",
-			},
-			[nom()],
-		),
-	).toBe("es regnet");
-	expect(
-		line("zu warten", lexeme("VERB", "warten"), infinitive, [
-			nom(),
-			prep("auf", "Acc"),
-		]),
-	).toBe("auf jN zu warten");
-	// A frame with only its subject still shows it.
-	expect(line("schläft", lexeme("VERB", "schlafen"), finite(), [nom()])).toBe(
-		"jD schläft",
-	);
-});
-
-test("free-marker complements and Slot alternatives render on a Surface's line (#676)", () => {
-	expect(
-		line(
-			"zurückkehrte",
-			lexeme("VERB", "zurückkehren", "zurück"),
-			finite("Past"),
-			[
-				nom(),
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							governedCase: "Dat",
-							preposition: { canonicalForm: "zu" },
-						},
-						{ kind: "Adverbial", standIn: "Irgendwohin" },
-					],
-				},
-			],
-		),
-	).toBe("jD (zu jM | irgendwohin) zurückkehrte");
-
-	expect(
-		line("wohnt", lexeme("VERB", "wohnen"), finite(), [
-			nom(),
-			{
-				status: "Required",
-				complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
-			},
-		]),
-	).toBe("jD irgendwo wohnt");
-
-	expect(
-		line("versucht", lexeme("VERB", "versuchen"), finite(), [
-			nom(),
-			{
-				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Acc" },
-					{ kind: "Clause", form: "ZuInfinitive" },
-				],
-			},
-		]),
-	).toBe("jD [jN | etw zu tun] versucht");
-
-	expect(
-		line("sieh aus", lexeme("VERB", "aussehen", "aus"), imperative, [
-			nom(),
-			{
-				status: "Required",
-				complements: [{ kind: "Predicative", marker: "None" }],
-			},
-		]),
-	).toBe("sieh irgendwie aus");
-
-	// A subject Slot with Clause alternatives still prints jD once.
-	expect(
-		line("ist", lexeme("VERB", "sein"), finite(), [
-			{
-				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Nom" },
-					{ kind: "Clause", form: "Dass" },
-				],
-			},
-			{
-				status: "Required",
-				complements: [{ kind: "Predicative", marker: "None" }],
-			},
-		]),
-	).toBe("jD irgendwie ist");
 });

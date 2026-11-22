@@ -2,19 +2,51 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Blase jetzt nicht länger Trübsal!",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Blase" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "jetzt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "länger" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Trübsal" },
-		{ "kind": "Punctuation", "text": "!" }
+		{
+			"kind": "ResolvableText",
+			"text": "Blase"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jetzt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "länger"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Trübsal"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -38,21 +70,24 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 8],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				0,
+				8
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "😔",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -93,7 +128,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "blase Trübsal",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",
@@ -109,8 +146,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "Blase", "orthography": "Standard" },
-					{ "attested": "Trübsal", "orthography": "Standard" }
+					{
+						"attested": "Blase",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Trübsal",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

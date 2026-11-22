@@ -44,9 +44,7 @@ export function projectPrepositionalGovernment(
 		if (!edges.has(identity)) edges.set(identity, edge);
 	}
 	for (const { reading, knowledge } of inventory.values())
-		for (const governed of (knowledge.valency ?? []).flatMap(
-			({ complements }) => complements,
-		)) {
+		for (const governed of (knowledge.valency ?? []).flat()) {
 			if (governed.kind !== "Preposition") continue;
 			const governedCase =
 				"governedCase" in governed ? governed.governedCase : null;

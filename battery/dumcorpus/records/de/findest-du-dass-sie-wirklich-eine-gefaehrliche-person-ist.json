@@ -291,7 +291,10 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0031"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0031"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -425,12 +428,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💭" },
+			"reading": {
+				"emojiDescription": "💭"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -479,7 +486,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -526,7 +535,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [
+				5
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -547,7 +558,9 @@
 					"normalizedSurface": "daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null
 				},
@@ -564,7 +577,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [7],
+			"memberSegmentIndices": [
+				7
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -614,12 +629,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
+			"memberSegmentIndices": [
+				9
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "✔" },
+			"reading": {
+				"emojiDescription": "✔"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -662,12 +681,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11, 15],
+			"memberSegmentIndices": [
+				11,
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🧑" },
+			"reading": {
+				"emojiDescription": "🧑"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -716,12 +740,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "⚠" },
+			"reading": {
+				"emojiDescription": "⚠"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -764,12 +792,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [17],
+			"memberSegmentIndices": [
+				17
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -818,12 +850,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [20],
+			"memberSegmentIndices": [
+				20
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🌕" },
+			"reading": {
+				"emojiDescription": "🌕"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -866,12 +902,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [22],
+			"memberSegmentIndices": [
+				22
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "💅" },
+			"reading": {
+				"emojiDescription": "💅"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -913,7 +953,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [24],
+			"memberSegmentIndices": [
+				24
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -947,12 +989,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [26],
+			"memberSegmentIndices": [
+				26
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🦚" },
+			"reading": {
+				"emojiDescription": "🦚"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -994,7 +1040,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1028,12 +1076,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💭" },
+			"reading": {
+				"emojiDescription": "💭"
+			},
 			"notes": {
 				"rationale": "meinen 'be of the opinion' (Duden meinen 1a)."
 			},
@@ -1082,7 +1134,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [
+				33
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1129,7 +1183,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
+			"memberSegmentIndices": [
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -1150,7 +1206,9 @@
 					"normalizedSurface": "daß",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Historical"]
+						"variantTags": [
+							"Historical"
+						]
 					},
 					"surfaceFeatures": null
 				},
@@ -1167,7 +1225,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [38],
+			"memberSegmentIndices": [
+				38
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1223,7 +1283,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [40],
+			"memberSegmentIndices": [
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -1266,12 +1328,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42],
+			"memberSegmentIndices": [
+				42
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔧" },
+			"reading": {
+				"emojiDescription": "🔧"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1307,12 +1373,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [44],
+			"memberSegmentIndices": [
+				44
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "👎" },
+			"reading": {
+				"emojiDescription": "👎"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1355,7 +1425,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [46],
+			"memberSegmentIndices": [
+				46
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1389,12 +1461,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [48],
+			"memberSegmentIndices": [
+				48
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😐" },
+			"reading": {
+				"emojiDescription": "😐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1437,12 +1513,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [50],
+			"memberSegmentIndices": [
+				50
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1491,12 +1571,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [53],
+			"memberSegmentIndices": [
+				53
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔎✅" },
+			"reading": {
+				"emojiDescription": "🔎✅"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1534,12 +1618,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [55],
+			"memberSegmentIndices": [
+				55
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "☝" },
+			"reading": {
+				"emojiDescription": "☝"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1575,12 +1663,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [57],
+			"memberSegmentIndices": [
+				57
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1623,12 +1715,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [59],
+			"memberSegmentIndices": [
+				59
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🤪" },
+			"reading": {
+				"emojiDescription": "🤪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1670,7 +1766,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [62],
+			"memberSegmentIndices": [
+				62
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1720,7 +1818,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [64, 66],
+			"memberSegmentIndices": [
+				64,
+				66
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1729,43 +1830,16 @@
 				"emojiDescription": "🕊",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								},
-								{
-									"kind": "Clause",
-									"form": "Dass",
-									"correlate": "Optional"
-								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1867,12 +1941,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [68],
+			"memberSegmentIndices": [
+				68
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💪" },
+			"reading": {
+				"emojiDescription": "💪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

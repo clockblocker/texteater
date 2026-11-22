@@ -2,23 +2,67 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ohne Mantel fror sie wie ein Schneider.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ohne" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mantel" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fror" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Schneider" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Ohne"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mantel"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fror"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Schneider"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [],
@@ -42,21 +86,26 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 8, 10, 12],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				4,
+				8,
+				10,
+				12
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🥶",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
@@ -109,7 +158,9 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "fror wie ein Schneider",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -125,10 +176,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "fror", "orthography": "Standard" },
-					{ "attested": "wie", "orthography": "Standard" },
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Schneider", "orthography": "Standard" }
+					{
+						"attested": "fror",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wie",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Schneider",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -141,7 +204,12 @@
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
 			"caseId": "draft-translation-idiom-established-equivalent",
-			"memberSegmentIndices": [4, 8, 10, 12],
+			"memberSegmentIndices": [
+				4,
+				8,
+				10,
+				12
+			],
 			"case": {
 				"input": {
 					"markedContext": "Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
@@ -182,8 +250,14 @@
 						]
 					},
 					"rejected": {
-						"en": ["freeze like a tailor", "froze like a tailor"],
-						"ru": ["мёрзнуть как портной", "мёрзла как собака"]
+						"en": [
+							"freeze like a tailor",
+							"froze like a tailor"
+						],
+						"ru": [
+							"мёрзнуть как портной",
+							"мёрзла как собака"
+						]
 					}
 				}
 			}

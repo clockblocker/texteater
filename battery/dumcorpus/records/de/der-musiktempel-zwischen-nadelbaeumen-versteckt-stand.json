@@ -203,7 +203,12 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0036", "ADR-0040"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0036",
+			"ADR-0040"
+		],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -333,7 +338,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2],
+			"memberSegmentIndices": [
+				0,
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -341,7 +349,11 @@
 			"reading": {
 				"emojiDescription": "🎵🏛",
 				"knowledge": {},
-				"paradigm": { "plural": ["Musiktempel"] },
+				"paradigm": {
+					"plural": [
+						"Musiktempel"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -352,7 +364,9 @@
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -403,7 +417,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [
+				5
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -447,7 +463,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [7],
+			"memberSegmentIndices": [
+				7
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -482,7 +500,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Nadelbäume"] },
+				"paradigm": {
+					"plural": [
+						"Nadelbäume"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -493,7 +515,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"attestation": {
@@ -534,7 +558,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
+			"memberSegmentIndices": [
+				9
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -604,12 +630,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12, 46],
+			"memberSegmentIndices": [
+				12,
+				46
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🧍↔🧍" },
+			"reading": {
+				"emojiDescription": "🧍↔🧍"
+			},
 			"notes": {
 				"rationale": "gegenüber in the right bracket is the locative particle of the dictionary verb gegenüberstehen (Duden 1: jemandem zugewandt stehen), and the three coordinated datives are its object; read as a postposition, it would have to govern the whole coordination from the bracket (de/bracket-particle-or-circumposition). Ruled on #743 (MB-A7, A6)."
 			},
@@ -662,12 +693,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤐" },
+			"reading": {
+				"emojiDescription": "🤐"
+			},
 			"notes": {
 				"rationale": "Adverbial Partizip I: ADJ schweigend (de/participial-adjective)."
 			},
@@ -705,12 +740,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16, 18],
+			"memberSegmentIndices": [
+				16,
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "♨🏛" },
+			"reading": {
+				"emojiDescription": "♨🏛"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -756,12 +796,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21, 23],
+			"memberSegmentIndices": [
+				21,
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🍰🏪" },
+			"reading": {
+				"emojiDescription": "🍰🏪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -807,7 +852,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
+			"memberSegmentIndices": [
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -841,12 +888,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27, 44],
+			"memberSegmentIndices": [
+				27,
+				44
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🇨🇭🏠" },
+			"reading": {
+				"emojiDescription": "🇨🇭🏠"
+			},
 			"notes": {
 				"rationale": "den (Dat.Plur) opens the phrase whose Head is Schweizerhäusern, across beiden and the extended attribute. Zwischengebäude sits inside the attribute with its own article, so it cuts nothing off (de/noun-owns-its-article, ADR 0035). Ruled on #743 (MB-A2, A7)."
 			},
@@ -895,12 +947,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "2⃣" },
+			"reading": {
+				"emojiDescription": "2⃣"
+			},
 			"notes": {
 				"rationale": "beiden follows the article den before Schweizerhäusern, so it is ADJ beide, Dat.Plur, not a DET: beide after a determiner is an adjective (de/pron-or-det-by-use). It has no comparison forms."
 			},
@@ -943,7 +999,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [32],
+			"memberSegmentIndices": [
+				32
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -990,12 +1048,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [34, 38],
+			"memberSegmentIndices": [
+				34,
+				38
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🏠🏢🏠" },
+			"reading": {
+				"emojiDescription": "🏠🏢🏠"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1041,12 +1104,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
+			"memberSegmentIndices": [
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "📏" },
+			"reading": {
+				"emojiDescription": "📏"
+			},
 			"notes": {
 				"rationale": "ein langes Zwischengebäude is Duden lang 1a, long in space; the Reading also takes lang 2a, long in time (mit langer Geduld), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
@@ -1089,12 +1156,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [40],
+			"memberSegmentIndices": [
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🤝🔗" },
+			"reading": {
+				"emojiDescription": "🤝🔗"
+			},
 			"notes": {
 				"rationale": "miteinander is a Reciprocal Pronominal Adverb, an ADV Lexeme of its own; it does not join verbunden."
 			},
@@ -1130,7 +1201,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42],
+			"memberSegmentIndices": [
+				42
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1139,23 +1212,20 @@
 				"emojiDescription": "🔗",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "mit",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "mit",
+									"coreFeatures": {}
+								},
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"source": {
 						"target": {

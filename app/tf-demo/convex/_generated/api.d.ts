@@ -83,6 +83,7 @@ import type * as model_tables_resolution from "../model/tables/resolution.js";
 import type * as model_tables_scrolls from "../model/tables/scrolls.js";
 import type * as model_tables_visitors from "../model/tables/visitors.js";
 import type * as model_translationAccumulation from "../model/translationAccumulation.js";
+import type * as model_valencyAccumulation from "../model/valencyAccumulation.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorEncounters from "../model/visitorEncounters.js";
 import type * as modules_notes_breakdown from "../modules/notes/breakdown.js";
@@ -124,6 +125,8 @@ import type * as textFileIntake from "../textFileIntake.js";
 import type * as textFiles from "../textFiles.js";
 import type * as translationAccumulation from "../translationAccumulation.js";
 import type * as translationAccumulationActions from "../translationAccumulationActions.js";
+import type * as valencyAccumulation from "../valencyAccumulation.js";
+import type * as valencyAccumulationActions from "../valencyAccumulationActions.js";
 import type * as visitorEncounters from "../visitorEncounters.js";
 
 import type {
@@ -208,6 +211,7 @@ declare const fullApi: ApiFromModules<{
   "model/tables/scrolls": typeof model_tables_scrolls;
   "model/tables/visitors": typeof model_tables_visitors;
   "model/translationAccumulation": typeof model_translationAccumulation;
+  "model/valencyAccumulation": typeof model_valencyAccumulation;
   "model/validators": typeof model_validators;
   "model/visitorEncounters": typeof model_visitorEncounters;
   "modules/notes/breakdown": typeof modules_notes_breakdown;
@@ -249,6 +253,8 @@ declare const fullApi: ApiFromModules<{
   textFiles: typeof textFiles;
   translationAccumulation: typeof translationAccumulation;
   translationAccumulationActions: typeof translationAccumulationActions;
+  valencyAccumulation: typeof valencyAccumulation;
+  valencyAccumulationActions: typeof valencyAccumulationActions;
   visitorEncounters: typeof visitorEncounters;
 }>;
 

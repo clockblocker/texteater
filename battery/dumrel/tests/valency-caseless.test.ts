@@ -1,4 +1,4 @@
-/** Hebrew and English frames: caseless, marked by function or position and preposition. */
+/** Hebrew and English patterns: caseless, marked by function or position and preposition. */
 import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -6,10 +6,6 @@ import { parseReadingKnowledge } from "dumrel";
 import { projectPrepositionalGovernment } from "../src/project-prepositional-government.js";
 import { alLemma, aufLemma, onLemma, wartenReading } from "./fixtures.js";
 
-const optional = <const C extends unknown[]>(...complements: C) =>
-	({ status: "Optional", complements }) as const;
-const required = <const C extends unknown[]>(...complements: C) =>
-	({ status: "Required", complements }) as const;
 const nom = { kind: "Case", governedCase: "Nom" } as const;
 const aufAcc = {
 	kind: "Preposition",
@@ -48,16 +44,16 @@ const al = {
 	preposition: alLemma,
 } as const;
 
-test("a Hebrew Reading holds a caseless frame its Attestation realizes", () => {
+test("a Hebrew Reading holds a caseless pattern its Attestation realizes", () => {
 	// סמך על: `הוא סמך על חבר`, with the governed על an owned member.
 	expect(
 		parseReadingKnowledge({
 			source: samachReading,
-			knowledge: { valency: [required(subject), required(al)] },
+			knowledge: { valency: [[subject, al]] },
 		}),
 	).toEqual({
 		success: true,
-		value: { valency: [required(subject), required(al)] },
+		value: { valency: [[subject, al]] },
 	});
 	const attestation = {
 		unitKind: "Attestation",
@@ -109,10 +105,10 @@ test("a Hebrew Reading holds a caseless frame its Attestation realizes", () => {
 	expect(parseUnit(withoutEvidence).success).toBe(true);
 });
 
-test("a Hebrew frame takes only its route's Hebrew complements", () => {
+test("a Hebrew pattern takes only its route's Hebrew complements", () => {
 	const germanCase = parseReadingKnowledge({
 		source: samachReading,
-		knowledge: { valency: [required(nom)] },
+		knowledge: { valency: [[nom]] },
 	});
 	expect(germanCase.success).toBe(false);
 	if (!germanCase.success)
@@ -120,7 +116,6 @@ test("a Hebrew frame takes only its route's Hebrew complements", () => {
 			"knowledge",
 			"valency",
 			0,
-			"complements",
 			0,
 			"kind",
 		]);
@@ -133,35 +128,35 @@ test("a Hebrew frame takes only its route's Hebrew complements", () => {
 		expect(
 			parseReadingKnowledge({
 				source: samachReading,
-				knowledge: { valency: [optional(complement)] },
+				knowledge: { valency: [[complement]] },
 			} as never).success,
 		).toBe(false);
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [required(subject)] },
+			knowledge: { valency: [[subject]] },
 		}).success,
 	).toBe(false);
 	// Hebrew nouns, like German ones, take only governed prepositions.
 	expect(
 		parseReadingKnowledge({
 			source: todaReading,
-			knowledge: { valency: [optional(al)] },
+			knowledge: { valency: [[al]] },
 		}).success,
 	).toBe(true);
 	expect(
 		parseReadingKnowledge({
 			source: todaReading,
-			knowledge: { valency: [optional(subject)] },
+			knowledge: { valency: [[subject]] },
 		}).success,
 	).toBe(false);
 });
 
-test("a Hebrew Preposition Slot projects government with no case", () => {
+test("a Hebrew Preposition pattern projects government with no case", () => {
 	const result = projectPrepositionalGovernment([
 		{
 			reading: samachReading,
-			knowledge: { valency: [required(subject), required(al)] },
+			knowledge: { valency: [[subject, al]] },
 		},
 	]);
 	expect(result.success && result.value).toEqual([
@@ -201,12 +196,11 @@ const on = {
 	preposition: onLemma,
 } as const;
 
-test("an English Reading holds a caseless frame by position and preposition", () => {
+test("an English Reading holds caseless patterns by position and preposition", () => {
 	// give him a book: the first object is the IndirectObject.
 	const give = [
-		required(subject),
-		required(directObject),
-		optional(indirectObject),
+		[subject, directObject],
+		[subject, indirectObject, directObject],
 	];
 	expect(
 		parseReadingKnowledge({
@@ -214,7 +208,7 @@ test("an English Reading holds a caseless frame by position and preposition", ()
 			knowledge: { valency: give },
 		}),
 	).toEqual({ success: true, value: { valency: give } });
-	const depend = [required(subject), required(on)];
+	const depend = [[subject, on]];
 	expect(
 		parseReadingKnowledge({
 			source: dependReading,
@@ -244,7 +238,6 @@ test("an English Reading holds a caseless frame by position and preposition", ()
 		],
 	} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 	expect(parseUnit(attestation).success).toBe(true);
-	// A sentence-initial On still spells on.
 	expect(
 		parseUnit({
 			...attestation,
@@ -268,14 +261,11 @@ test("an English Reading holds a caseless frame by position and preposition", ()
 	expect(parseUnit(withoutEvidence).success).toBe(true);
 });
 
-test("an English frame takes only its route's English complements", () => {
+test("an English pattern takes only its route's English complements", () => {
 	const germanCase = parseReadingKnowledge({
 		source: giveReading,
 		knowledge: {
-			valency: [
-				required(subject),
-				optional({ ...nom, governedCase: "Dat" }),
-			],
+			valency: [[subject, { ...nom, governedCase: "Dat" }]],
 		},
 	} as never);
 	expect(germanCase.success).toBe(false);
@@ -283,9 +273,8 @@ test("an English frame takes only its route's English complements", () => {
 		expect(germanCase.error.issues[0]?.path).toEqual([
 			"knowledge",
 			"valency",
-			1,
-			"complements",
 			0,
+			1,
 			"kind",
 		]);
 	for (const complement of [
@@ -298,7 +287,7 @@ test("an English frame takes only its route's English complements", () => {
 		expect(
 			parseReadingKnowledge({
 				source: dependReading,
-				knowledge: { valency: [optional(complement)] },
+				knowledge: { valency: [[complement]] },
 			} as never).success,
 		).toBe(false);
 	// Neither German nor Hebrew has an IndirectObject.
@@ -306,16 +295,16 @@ test("an English frame takes only its route's English complements", () => {
 		expect(
 			parseReadingKnowledge({
 				source,
-				knowledge: { valency: [optional(indirectObject)] },
+				knowledge: { valency: [[indirectObject]] },
 			} as never).success,
 		).toBe(false);
 });
 
-test("an English Preposition Slot projects government with no case", () => {
+test("an English Preposition pattern projects government with no case", () => {
 	const result = projectPrepositionalGovernment([
 		{
 			reading: dependReading,
-			knowledge: { valency: [required(subject), required(on)] },
+			knowledge: { valency: [[subject, on]] },
 		},
 	]);
 	expect(result.success && result.value).toEqual([

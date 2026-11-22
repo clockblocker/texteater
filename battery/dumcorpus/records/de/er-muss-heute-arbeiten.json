@@ -2,29 +2,62 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er muss heute arbeiten.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "muss" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heute" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "arbeiten" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "muss"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "heute"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "arbeiten"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"reviewDepth": "Knowledge",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0034", "ADR-0038"],
+		"adrs": [
+			"ADR-0026",
+			"ADR-0034",
+			"ADR-0038"
+		],
 		"rules": [
-			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
+			{
+				"rule": "de/verb-core-features",
+				"hash": "53f39c352354bcbe"
+			},
 			{
 				"rule": "de/modal-is-a-verb",
 				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "b0e43da9d292b84d"
+				"hash": "bb0916c5f324dcf2"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -60,30 +93,27 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				2
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "❗",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Clause",
-									"form": "BareInfinitive"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Clause",
+								"form": "BareInfinitive"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -101,12 +131,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["musste"],
-					"present1": ["muss"],
-					"present2": ["musst"],
-					"present3": ["muss"],
-					"pastParticiple": ["gemusst"],
-					"subjunctivePast": ["müsste"]
+					"preterite": [
+						"musste"
+					],
+					"present1": [
+						"muss"
+					],
+					"present2": [
+						"musst"
+					],
+					"present3": [
+						"muss"
+					],
+					"pastParticiple": [
+						"gemusst"
+					],
+					"subjunctivePast": [
+						"müsste"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -133,7 +175,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "muss", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "muss",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -141,7 +188,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "muss",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -169,8 +218,13 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "💼",
 				"knowledge": {
@@ -187,15 +241,12 @@
 						}
 					},
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -223,12 +274,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["arbeitete"],
-					"present1": ["arbeite"],
-					"present2": ["arbeitest"],
-					"present3": ["arbeitet"],
-					"pastParticiple": ["gearbeitet"],
-					"subjunctivePast": ["arbeitete"]
+					"preterite": [
+						"arbeitete"
+					],
+					"present1": [
+						"arbeite"
+					],
+					"present2": [
+						"arbeitest"
+					],
+					"present3": [
+						"arbeitet"
+					],
+					"pastParticiple": [
+						"gearbeitet"
+					],
+					"subjunctivePast": [
+						"arbeitete"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -256,7 +319,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "arbeiten", "orthography": "Standard" }
+					{
+						"attested": "arbeiten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -265,7 +331,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "arbeiten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

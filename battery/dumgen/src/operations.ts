@@ -13,12 +13,15 @@ import { explainPronoun } from "./explain/pronoun.js";
 import type { Antecedent, ExplainPronounInput } from "./explain/types.js";
 import type { Jev } from "./jev-call.js";
 import { accumulateTranslations } from "./knowledge/accumulate.js";
+import { accumulateValency } from "./knowledge/accumulate-valency.js";
 import { produceKnowledge } from "./knowledge/produce.js";
 import type {
 	AccumulateTranslationsInput,
+	AccumulateValencyInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 	TranslationAccumulation,
+	ValencyAccumulation,
 } from "./knowledge/types.js";
 import {
 	type DetectLanguagesInput,
@@ -176,6 +179,20 @@ export const operations = {
 			runOperation(
 				"knowledge.accumulateTranslations",
 				accumulateTranslations(input),
+			),
+		/**
+		 * The concrete Valency Pattern one occurrence realizes and adds to a
+		 * Reading's accumulated patterns (ADR 0034): jev judges stored
+		 * patterns first, and only after NoMatch (or when none are stored)
+		 * does Luna extract the occurrence's concrete pattern. Returns both
+		 * any Contribute change and the Attestation's `realizedPattern`.
+		 */
+		accumulateValency: (
+			input: AccumulateValencyInput,
+		): Effect.Effect<ValencyAccumulation, never, Jev | Luna> =>
+			runOperation(
+				"knowledge.accumulateValency",
+				accumulateValency(input),
 			),
 	},
 };

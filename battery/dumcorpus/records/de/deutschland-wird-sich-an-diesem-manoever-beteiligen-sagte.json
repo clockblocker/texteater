@@ -2,40 +2,135 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "\"Deutschland wird sich an diesem Manöver beteiligen\", sagte Regierungssprecher Stefan Kornelius der Deutschen Presse-Agentur.",
 	"segments": [
-		{ "kind": "Punctuation", "text": "\"" },
-		{ "kind": "ResolvableText", "text": "Deutschland" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wird" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "diesem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Manöver" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "beteiligen" },
-		{ "kind": "Punctuation", "text": "\"" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sagte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Regierungssprecher" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Stefan" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kornelius" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Deutschen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Presse-Agentur" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "Punctuation",
+			"text": "\""
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Deutschland"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wird"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "an"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "diesem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Manöver"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "beteiligen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "\""
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sagte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Regierungssprecher"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Stefan"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kornelius"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Deutschen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Presse-Agentur"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
 		"adrs": [],
 		"rules": [
@@ -81,47 +176,42 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [3, 5, 7, 13],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [
+				3,
+				5,
+				7,
+				13
+			],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🪞🙋👥",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Reflexive",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "an",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Reflexive",
+								"governedCase": "Acc"
+							},
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "an",
+									"coreFeatures": {}
+								},
+								"governedCase": "Dat"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -159,12 +249,24 @@
 					}
 				},
 				"paradigm": {
-					"preterite": ["beteiligte"],
-					"present1": ["beteilige"],
-					"present2": ["beteiligst"],
-					"present3": ["beteiligt"],
-					"pastParticiple": ["beteiligt"],
-					"subjunctivePast": ["beteiligte"]
+					"preterite": [
+						"beteiligte"
+					],
+					"present1": [
+						"beteilige"
+					],
+					"present2": [
+						"beteiligst"
+					],
+					"present3": [
+						"beteiligt"
+					],
+					"pastParticiple": [
+						"beteiligt"
+					],
+					"subjunctivePast": [
+						"beteiligte"
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
@@ -204,7 +306,9 @@
 						}
 					},
 					"normalizedSurface": "beteiligen wird",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -220,10 +324,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "wird", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" },
-					{ "attested": "an", "orthography": "Standard" },
-					{ "attested": "beteiligen", "orthography": "Standard" }
+					{
+						"attested": "wird",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "an",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "beteiligen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

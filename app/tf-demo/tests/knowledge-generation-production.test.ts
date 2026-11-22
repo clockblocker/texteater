@@ -109,16 +109,13 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 			knowledge: {
 				definition: "Furcht.",
 				valency: [
-					{
-						status: "Optional",
-						complements: [
-							{
-								kind: "Preposition",
-								preposition: { canonicalForm: "vor" },
-								governedCase: "Dat",
-							},
-						],
-					},
+					[
+						{
+							kind: "Preposition",
+							preposition: { canonicalForm: "vor" },
+							governedCase: "Dat",
+						},
+					],
 				],
 			},
 			checkedRelationKinds: [],

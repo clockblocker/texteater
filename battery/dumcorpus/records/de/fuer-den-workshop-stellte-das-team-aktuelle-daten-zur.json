@@ -2,32 +2,101 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Für den Workshop stellte das Team aktuelle Daten zur Verfügung.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Für" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Workshop" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stellte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Team" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aktuelle" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Daten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
-		{ "kind": "ResolvableText", "text": "r", "surface": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Verfügung" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Für"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Workshop"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stellte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Team"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "aktuelle"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Daten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "r",
+			"surface": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Verfügung"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
-	"provenance": { "kind": "Authored" },
+	"provenance": {
+		"kind": "Authored"
+	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": [
+			"ADR-0039"
+		],
 		"rules": [],
 		"references": [
 			{
@@ -54,39 +123,30 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 16, 17, 19],
-			"route": { "family": "Locution", "kind": "VERB" },
+			"memberSegmentIndices": [
+				6,
+				16,
+				17,
+				19
+			],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"reading": {
 				"emojiDescription": "🫴",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Dat"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
@@ -140,15 +200,24 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "stellte", "orthography": "Standard" },
+					{
+						"attested": "stellte",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "zu",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "zur",
 							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "r", "surface": "der" }
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "r",
+									"surface": "der"
+								}
 							]
 						},
 						"component": 0
@@ -159,13 +228,22 @@
 						"fusion": {
 							"spelling": "zur",
 							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "r", "surface": "der" }
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "r",
+									"surface": "der"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Verfügung", "orthography": "Standard" }
+					{
+						"attested": "Verfügung",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -174,7 +252,9 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "zur Verfügung stellte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

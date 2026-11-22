@@ -79,68 +79,61 @@ const clauseFormValues = [
 	"Ob",
 	"W",
 ] as const satisfies readonly GermanComplement<"Clause">["form"][];
-const clauseCorrelateValues = [
-	"Required",
-	"Optional",
-] as const satisfies readonly NonNullable<
-	GermanComplement<"Clause">["correlate"]
->[];
 
 /**
- * A Valency Frame Slot, as the Valency Block reads it: its status and its
- * alternatives (ADR 0034). German complements are marked by case, or are an
- * Adverbial, Predicative, Clause or Reflexive; Hebrew and English ones are
- * marked by function or position and preposition.
+ * One concrete Valency Pattern realized by an occurrence of a Reading
+ * (ADR 0034): a flat array of concrete complements, with no optionality
+ * statuses and no inline alternatives. German complements are marked by case,
+ * or are an Adverbial, Predicative, Clause (with optional `da(r)-` correlate
+ * preposition), or Reflexive; Hebrew and English ones are marked by function
+ * or position and preposition.
  */
-export const valencySlotValidator = v.object({
-	status: v.union(v.literal("Required"), v.literal("Optional")),
-	complements: v.array(
-		v.union(
-			v.object({
-				kind: v.literal("Case"),
-				governedCase: v.union(v.literal("Nom"), governedCaseValidator),
-			}),
-			v.object({
-				kind: v.literal("Preposition"),
-				preposition: readingValueLemmaValidator,
-				governedCase: governedCaseValidator,
-			}),
-			v.object({
-				kind: v.literal("Adverbial"),
-				standIn: literalUnion(adverbialStandInValues),
-			}),
-			v.object({
-				kind: v.literal("Predicative"),
-				marker: literalUnion(predicativeMarkerValues),
-			}),
-			v.object({
-				kind: v.literal("Clause"),
-				form: literalUnion(clauseFormValues),
-				correlate: v.optional(literalUnion(clauseCorrelateValues)),
-			}),
-			// A lexical reflexive: German names its case, English none, and
-			// one inside a fixed phrase its preposition (ADR 0052).
-			v.object({
-				kind: v.literal("Reflexive"),
-				governedCase: v.optional(
-					v.union(v.literal("Acc"), v.literal("Dat")),
-				),
-				preposition: v.optional(readingValueLemmaValidator),
-			}),
-			v.object({
-				kind: v.union(
-					v.literal("Subject"),
-					v.literal("DirectObject"),
-					v.literal("IndirectObject"),
-				),
-			}),
-			v.object({
-				kind: v.literal("Preposition"),
-				preposition: readingValueLemmaValidator,
-			}),
-		),
+export const valencyPatternValidator = v.array(
+	v.union(
+		v.object({
+			kind: v.literal("Case"),
+			governedCase: v.union(v.literal("Nom"), governedCaseValidator),
+		}),
+		v.object({
+			kind: v.literal("Preposition"),
+			preposition: readingValueLemmaValidator,
+			governedCase: governedCaseValidator,
+		}),
+		v.object({
+			kind: v.literal("Adverbial"),
+			standIn: literalUnion(adverbialStandInValues),
+		}),
+		v.object({
+			kind: v.literal("Predicative"),
+			marker: literalUnion(predicativeMarkerValues),
+		}),
+		v.object({
+			kind: v.literal("Clause"),
+			form: literalUnion(clauseFormValues),
+			preposition: v.optional(readingValueLemmaValidator),
+		}),
+		// A lexical reflexive: German names its case, English none, and
+		// one inside a fixed phrase its preposition (ADR 0052).
+		v.object({
+			kind: v.literal("Reflexive"),
+			governedCase: v.optional(
+				v.union(v.literal("Acc"), v.literal("Dat")),
+			),
+			preposition: v.optional(readingValueLemmaValidator),
+		}),
+		v.object({
+			kind: v.union(
+				v.literal("Subject"),
+				v.literal("DirectObject"),
+				v.literal("IndirectObject"),
+			),
+		}),
+		v.object({
+			kind: v.literal("Preposition"),
+			preposition: readingValueLemmaValidator,
+		}),
 	),
-});
+);
 
 /**
  * A Reading's Knowledge as the Reading Note returns it; Dumrel's parse has
@@ -161,7 +154,7 @@ export const readingKnowledgeValidator = v.object({
 			morphemes: v.optional(breakdownPiecesValidator),
 		}),
 	),
-	valency: v.optional(v.array(valencySlotValidator)),
+	valency: v.optional(v.array(valencyPatternValidator)),
 	source: v.optional(
 		v.object({
 			target: linkTargetValidator,

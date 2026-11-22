@@ -6,6 +6,7 @@
  * `knowledge.accumulateTranslations`.
  */
 import { accumulateGermanTranslations } from "../knowledge/de/accumulate.js";
+import { accumulateGermanValency } from "../knowledge/de/accumulate-valency.js";
 import { produceGermanKnowledge } from "../knowledge/de/produce.js";
 import type { LanguageModule } from "../language-module.js";
 import type { LanguageOptions } from "../languages.js";
@@ -42,5 +43,6 @@ export function germanLanguage(options: LanguageOptions): LanguageModule {
 		lunaAhead: germanLunaAhead,
 		produceKnowledge: produceGermanKnowledge,
 		accumulateTranslations: accumulateGermanTranslations,
+		accumulateValency: accumulateGermanValency,
 	};
 }

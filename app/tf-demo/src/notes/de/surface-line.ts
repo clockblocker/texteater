@@ -1,14 +1,12 @@
+import { reflexiveMarker } from "dumcorpus/inventories";
+import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
 import {
-	CASE_TOKEN,
-	DEFAULT_VALENCY_LINE_STYLE,
-	type FrameSlot,
-	type LineHead,
+	fixedPart,
+	fixedPhrase,
 	separablePrefix,
 	splitCanonicalForm,
 	type ValencyLemma,
 	type ValencyLinePart,
-	type ValencyLineStyle,
-	valencyLineAround,
 } from "./block-renderers/reading/valency/valency-line";
 
 /** What a Surface's line is printed from: the stored Surface and its Lemma. */
@@ -20,79 +18,39 @@ export type LinedSurface = {
 };
 
 /**
- * The slotted line of a German Surface (#1293): its stored base-order
- * form, with the slots of the Reading in front of it printed as their case
- * tokens, the way the Reading's heading prints its Citation. The stored
- * `mit zu tun hatte` of `mit jM zu tun haben` reads `jD mit jM zu tun
- * hatte`. It is derived each render and never stored, since the slots
- * belong to the Reading and the Surface is shared by all of its Lemma's
- * Readings.
- *
- * - The line shows the frame's shape: every slot, Optional ones in
- *   parentheses (`jD (auf jN) wartet`), placed by the Valency Line's own
- *   ordering. A Surface records no fillers, so no slot can be dropped as
- *   filled.
- * - `jD`, the subject, leads a finite, non-imperative verb whose frame has
- *   a Nom slot. An expletive `es`, or a Locution's own `es` (`es jN gibt`),
- *   is the subject itself, so neither takes one; nor does an infinitive.
- * - A lexical reflexive prints as `sich` wherever the Citation puts it.
- * - A separable verb is stored joined (`anfängt`) and gets the Citation's
- *   bar: `an|fängt`.
- * - An imperative keeps its own order, the verb first and a separated
- *   prefix last: `warte (auf jN)`, `sieh jN an`.
- * - An ADJ or NOUN prints its head first: `stolz (auf jN)`.
- * - Without a frame, or a frame with nothing to show, the line is the
- *   stored form alone: `Kindern`.
+ * The Reading context a German Surface line reads: only whether the active
+ * Reading is lexically reflexive (`sich` in `sich erinnert`, `außer sich
+ * war`, `es sich gemütlich machte`). Variable valency complements live in
+ * the Reading's dedicated Valency Block (ADR 0034), never on the Surface
+ * tail or Attestation caption.
+ */
+export type SurfaceReadingContext = {
+	readonly emojiDescription?: string;
+	readonly reflexive?: ReflexiveSlot | null;
+};
+
+/**
+ * The display line of a German Surface (ADR 0056, ADR 0034): its stored
+ * base-order form with any separable prefix split by a bar (`an|fängt`),
+ * plus `sich` when the active Reading has a Required lexical reflexive
+ * (`🪞`). Never projects `jD` or open valency slots onto the Surface tail.
  */
 export function germanSurfaceLine(
 	surface: LinedSurface,
-	frame: readonly FrameSlot[] | null | undefined,
-	style: ValencyLineStyle = DEFAULT_VALENCY_LINE_STYLE,
+	reading?: SurfaceReadingContext | null,
 ): readonly ValencyLinePart[] {
-	const bare: ValencyLinePart[] = [
-		{ part: "Head", text: surface.normalizedSurface, prefix: null },
-	];
-	if (!frame || frame.length === 0) return bare;
-	const split = surfaceHead(surface);
-	if (!split) return bare;
-	const { head, separated } = split;
-	const subject = subjectOf(surface, head, frame);
-	const line = valencyLineAround(head, frame, style);
-	if (!line && !subject) return bare;
-	const parts: ValencyLinePart[] = [
-		...(subject ? [subject] : []),
-		...(line ?? [{ part: "Head", text: head.text, prefix: head.prefix }]),
-	];
-	return separated ? [...parts, { part: "Fixed", text: separated }] : parts;
-}
-
-const VERBAL_KINDS = new Set(["VERB", "AUX"]);
-
-/**
- * The stored form split as its Lemma's Citation is: a verb's inflected
- * words are the head, and a Locution's other words keep their places. In
- * base order the verb comes last, after them; an imperative puts it
- * first, and its separated prefix (`sieh an`) closes the line. Null when
- * the stored form is too short to hold the Locution's words and a verb.
- */
-function surfaceHead(
-	surface: LinedSurface,
-): { readonly head: LineHead; readonly separated: string | null } | null {
 	const { lemma, normalizedSurface } = surface;
-	if (!VERBAL_KINDS.has(lemma.kind))
-		return {
-			head: {
-				text: normalizedSurface,
-				fixed: [],
-				prefix: null,
-				first: true,
-			},
-			separated: null,
-		};
+	const isVerb = lemma.kind === "VERB" || lemma.kind === "AUX";
+	const bare: ValencyLinePart[] = [
+		{ part: "Head", text: normalizedSurface, prefix: null },
+	];
+	if (!isVerb) return bare;
+
 	const words = normalizedSurface.trim().split(/\s+/u);
 	const { fixed } = splitCanonicalForm(lemma);
-	if (words.length <= fixed.length) return null;
-	const imperative = isImperative(surface.inflectionalFeatures);
+	if (words.length <= fixed.length) return bare;
+
+	const imperative = surface.inflectionalFeatures.mood === "Imp";
 	const verbWords = imperative
 		? words.slice(0, words.length - fixed.length)
 		: words.slice(fixed.length);
@@ -104,18 +62,76 @@ function surfaceHead(
 		last === sepPrefixOf(lemma.coreFeatures)
 			? last
 			: null;
-	const text = (separated ? verbWords.slice(0, -1) : verbWords).join(" ");
-	return {
-		head: {
-			text,
-			fixed: imperative
-				? words.slice(words.length - fixed.length)
-				: words.slice(0, fixed.length),
-			prefix: separablePrefix(lemma.coreFeatures, text),
-			first: imperative,
-		},
-		separated,
+	const headText = (separated ? verbWords.slice(0, -1) : verbWords).join(" ");
+	const prefix = separablePrefix(lemma.coreFeatures, headText);
+	const fixedWords = imperative
+		? words.slice(words.length - fixed.length)
+		: words.slice(0, fixed.length);
+
+	const requiredReflexive = requiredReflexiveOf(reading);
+	const headPart: ValencyLinePart = {
+		part: "Head",
+		text: headText,
+		prefix,
 	};
+
+	if (!requiredReflexive) {
+		const parts: ValencyLinePart[] = imperative
+			? [
+					headPart,
+					...fixedPart(fixedWords),
+					...(separated
+						? [{ part: "Fixed" as const, text: separated }]
+						: []),
+				]
+			: [...fixedPart(fixedWords), headPart];
+		return parts;
+	}
+
+	const sichPart: ValencyLinePart = {
+		part: "Reflexive",
+		text: "sich",
+		case: null,
+	};
+	const governor = requiredReflexive.preposition;
+	const governed = governor !== null && fixedWords.includes(governor);
+	const lead =
+		!governed && fixedWords[0] === "es" ? fixedWords.slice(0, 1) : [];
+	const phrase = fixedPhrase(fixedWords.slice(lead.length), [
+		...(governed ? [{ after: governor, part: sichPart }] : []),
+	]);
+
+	if (imperative) {
+		return [
+			headPart,
+			...fixedPart(lead),
+			...(governed ? [] : [sichPart]),
+			...phrase,
+			...(separated ? [{ part: "Fixed" as const, text: separated }] : []),
+		];
+	}
+	return [
+		...fixedPart(lead),
+		...(governed ? [] : [sichPart]),
+		...phrase,
+		headPart,
+	];
+}
+
+function requiredReflexiveOf(
+	reading: SurfaceReadingContext | null | undefined,
+): ReflexiveSlot | null {
+	if (!reading) return null;
+	if (reading.reflexive?.status === "Required") return reading.reflexive;
+	if (reading.reflexive === undefined || reading.reflexive === null) {
+		if (reading.emojiDescription?.startsWith(reflexiveMarker))
+			return {
+				status: "Required",
+				governedCase: null,
+				preposition: null,
+			};
+	}
+	return null;
 }
 
 function sepPrefixOf(coreFeatures: unknown): string | null {
@@ -125,45 +141,4 @@ function sepPrefixOf(coreFeatures: unknown): string | null {
 		typeof coreFeatures.hasSepPrefix === "string"
 		? coreFeatures.hasSepPrefix
 		: null;
-}
-
-/** The subject slot `jD`, when the Surface takes one. */
-function subjectOf(
-	surface: LinedSurface,
-	head: LineHead,
-	frame: readonly FrameSlot[],
-): ValencyLinePart | null {
-	const features = surface.inflectionalFeatures;
-	if (
-		!VERBAL_KINDS.has(surface.lemma.kind) ||
-		features.verbForm !== "Fin" ||
-		isImperative(features) ||
-		features.expletive === "Subject" ||
-		head.fixed[0]?.toLocaleLowerCase("de") === "es"
-	)
-		return null;
-	const nominative = frame.find(({ complements }) =>
-		complements.some(
-			(complement) =>
-				complement.kind === "Case" && complement.governedCase === "Nom",
-		),
-	);
-	return nominative
-		? {
-				part: "Slot",
-				optional: nominative.status === "Optional",
-				alternatives: [
-					{
-						kind: "Case",
-						preposition: null,
-						case: "Nom",
-						token: CASE_TOKEN.Nom,
-					},
-				],
-			}
-		: null;
-}
-
-function isImperative(features: LinedSurface["inflectionalFeatures"]) {
-	return features.mood === "Imp";
 }

@@ -424,12 +424,16 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "👨" },
+			"reading": {
+				"emojiDescription": "👨"
+			},
 			"notes": {
 				"rationale": "Alfred is a given name cited bare, so its PROPN Lemma has no Core article; it is the subject of neigte."
 			},
@@ -471,7 +475,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -480,24 +486,16 @@
 				"emojiDescription": "⤵",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					]
 				},
 				"coverage": {
@@ -559,7 +557,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [
+				4,
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -594,7 +595,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Häupter"] },
+				"paradigm": {
+					"plural": [
+						"Häupter"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -605,7 +610,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -656,12 +663,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [9],
+			"memberSegmentIndices": [
+				9
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😶" },
+			"reading": {
+				"emojiDescription": "😶"
+			},
 			"notes": {
 				"rationale": "leer modifies lächelnd adverbially ('with an empty smile'), so it stays ADJ (de/adjective-stays-adj). leer compares (leerer, am leersten), so it marks Pos (de/comparability-is-lexical). leer lächelnd is Duden leer 2, Sinn und Inhalt vermissen lassend (mit leerem Blick, 'abwesend-ausdruckslos'), not 1a, a container with nothing in it."
 			},
@@ -704,7 +715,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [
+				11
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -774,7 +787,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [
+				13
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -811,7 +826,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [15],
+			"memberSegmentIndices": [
+				15
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -872,12 +889,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16, 18],
+			"memberSegmentIndices": [
+				16,
+				18
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👍" },
+			"reading": {
+				"emojiDescription": "👍"
+			},
 			"notes": {
 				"rationale": "The article piece m of zum is the owned Fused article of Einverständnis, deriving dem Dat.Neut.Sg (de/fused-word-pieces, de/noun-owns-its-article)."
 			},
@@ -940,12 +962,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "✊" },
+			"reading": {
+				"emojiDescription": "✊"
+			},
 			"notes": {
 				"rationale": "ergriff is the simple past of ergreifen (grasp); ihre Hände is its free object."
 			},
@@ -994,7 +1020,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23],
+			"memberSegmentIndices": [
+				23
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -1050,12 +1078,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
+			"memberSegmentIndices": [
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "✋" },
+			"reading": {
+				"emojiDescription": "✋"
+			},
 			"notes": {
 				"rationale": "Hände is Acc.Plur of Hand. ihre is a DET, not an article, so the noun owns none."
 			},
@@ -1097,7 +1129,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
+			"memberSegmentIndices": [
+				27
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
@@ -1140,12 +1174,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "➕⏳" },
+			"reading": {
+				"emojiDescription": "➕⏳"
+			},
 			"notes": {
 				"rationale": "mehr after a negation means 'any longer' (DWDS mehr, sense 7: nicht mehr, kein … mehr, nie mehr). It combines with any negator, so nicht mehr is no Locution, and nicht stays a PART of its own (de/nicht-is-part, de/fixed-member-test). In this sense mehr compares nothing, so it is the non-comparable ADV mehr, not the Cmp of sehr or viel."
 			},
@@ -1181,7 +1219,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [32],
+			"memberSegmentIndices": [
+				32
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1231,7 +1271,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [34],
+			"memberSegmentIndices": [
+				34
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1281,7 +1323,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
+			"memberSegmentIndices": [
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1351,7 +1395,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [38],
+			"memberSegmentIndices": [
+				38
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1360,24 +1406,12 @@
 				"emojiDescription": "🪝",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Adverbial",
-									"standIn": "Irgendwo"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							}
+						]
 					],
 					"semanticRelations": {
 						"nearSynonym": [
@@ -1463,7 +1497,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [40],
+			"memberSegmentIndices": [
+				40
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1472,33 +1508,20 @@
 				"emojiDescription": "👐",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Clause",
-									"form": "BareInfinitive"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							},
+							{
+								"kind": "Clause",
+								"form": "BareInfinitive"
+							}
+						]
 					],
 					"semanticRelations": {
 						"synonym": [
@@ -1596,7 +1619,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [43],
+			"memberSegmentIndices": [
+				43
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -1605,24 +1630,16 @@
 				"emojiDescription": "↪",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Nom"
-								}
-							]
-						},
-						{
-							"status": "Required",
-							"complements": [
-								{
-									"kind": "Case",
-									"governedCase": "Acc"
-								}
-							]
-						}
+						[
+							{
+								"kind": "Case",
+								"governedCase": "Nom"
+							},
+							{
+								"kind": "Case",
+								"governedCase": "Acc"
+							}
+						]
 					]
 				},
 				"coverage": {
@@ -1684,7 +1701,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [45],
+			"memberSegmentIndices": [
+				45
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1734,7 +1753,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [47],
+			"memberSegmentIndices": [
+				47
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -1768,12 +1789,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [49],
+			"memberSegmentIndices": [
+				49
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚶" },
+			"reading": {
+				"emojiDescription": "🚶"
+			},
 			"notes": {
 				"rationale": "gehen 'leave a place' (Duden gehen 6a 'einen Ort verlassen; weggehen') is folded into one Reading 🚶 with walking (1) and going somewhere (4a), by the user's split ruling (2026-10-02, ADR 0031)."
 			},

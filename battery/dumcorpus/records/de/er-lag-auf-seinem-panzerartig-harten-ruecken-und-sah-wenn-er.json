@@ -420,7 +420,10 @@
 				"rule": "de/verb-core-features",
 				"hash": "53f39c352354bcbe"
 			},
-			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
+			{
+				"rule": "de/open-referent",
+				"hash": "eae1e1fa056277e4"
+			}
 		],
 		"references": [
 			{
@@ -502,7 +505,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [
+				0
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -549,12 +554,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [
+				2
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📍" },
+			"reading": {
+				"emojiDescription": "📍"
+			},
 			"notes": {
 				"rationale": "Lying on one's back (Duden liegen 1a) shares the gold Reading of das Band lag auf dem Geschenk (3, 'irgendwo sein') under ADR 0031: both are lying somewhere."
 			},
@@ -603,7 +612,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [
+				4
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -647,7 +658,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [
+				6
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -685,7 +698,10 @@
 						"case": "Dat",
 						"degree": null,
 						"gender": "Masc",
-						"gender[psor]": ["Masc", "Neut"],
+						"gender[psor]": [
+							"Masc",
+							"Neut"
+						],
 						"number": "Sing",
 						"number[psor]": "Sing"
 					}
@@ -700,12 +716,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [
+				8
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🛡" },
+			"reading": {
+				"emojiDescription": "🛡"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -743,12 +763,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [
+				10
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🪨" },
+			"reading": {
+				"emojiDescription": "🪨"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -788,12 +812,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [
+				12
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🎒" },
+			"reading": {
+				"emojiDescription": "🎒"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -832,7 +860,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [
+				14
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -866,12 +896,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [16],
+			"memberSegmentIndices": [
+				16
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👀" },
+			"reading": {
+				"emojiDescription": "👀"
+			},
 			"notes": {
 				"rationale": "sehen 'see, catch sight of' (Duden sehen 5a) shares the gold Reading of Sieh einmal ('look', 2a) under ADR 0031."
 			},
@@ -920,7 +954,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19],
+			"memberSegmentIndices": [
+				19
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "SCONJ"
@@ -954,7 +990,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [
+				21
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1001,12 +1039,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [23, 25],
+			"memberSegmentIndices": [
+				23,
+				25
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👤" },
+			"reading": {
+				"emojiDescription": "👤"
+			},
 			"notes": {
 				"rationale": "den Kopf heben is DWDS Kopf 1 'Körperteil von Menschen und Tieren, in dem sich Gehirn und Augen befinden', a second Reading beside the nail's head 📌🔝."
 			},
@@ -1055,12 +1098,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [27, 29],
+			"memberSegmentIndices": [
+				27,
+				29
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1107,12 +1155,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [
+				31
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🫴⬆" },
+			"reading": {
+				"emojiDescription": "🫴⬆"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1158,7 +1210,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [34],
+			"memberSegmentIndices": [
+				34
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -1196,7 +1250,10 @@
 						"case": "Acc",
 						"degree": null,
 						"gender": "Masc",
-						"gender[psor]": ["Masc", "Neut"],
+						"gender[psor]": [
+							"Masc",
+							"Neut"
+						],
 						"number": "Sing",
 						"number[psor]": "Sing"
 					}
@@ -1211,7 +1268,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [36],
+			"memberSegmentIndices": [
+				36
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1310,12 +1369,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [39],
+			"memberSegmentIndices": [
+				39
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🟤" },
+			"reading": {
+				"emojiDescription": "🟤"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1355,7 +1418,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [42],
+			"memberSegmentIndices": [
+				42
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1402,12 +1467,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [44],
+			"memberSegmentIndices": [
+				44
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🌈" },
+			"reading": {
+				"emojiDescription": "🌈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1447,12 +1516,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [46],
+			"memberSegmentIndices": [
+				46
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🦴" },
+			"reading": {
+				"emojiDescription": "🦴"
+			},
 			"notes": {
 				"rationale": "Versteifungen here are Duden's 'etwas, was dazu dient, etwas zu versteifen', the stiffening ribs across the belly, not the act of stiffening."
 			},
@@ -1494,7 +1567,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [48],
+			"memberSegmentIndices": [
+				48
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1502,25 +1577,6 @@
 			"reading": {
 				"emojiDescription": "➗",
 				"knowledge": {
-					"valency": [
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "in",
-										"coreFeatures": {}
-									},
-									"governedCase": "Acc"
-								}
-							]
-						}
-					],
 					"source": {
 						"target": {
 							"unitKind": "Lemma",
@@ -1562,7 +1618,7 @@
 					}
 				},
 				"coverage": {
-					"valency": "Authored",
+					"valency": "ReviewedEmpty",
 					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -1614,7 +1670,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [50],
+			"memberSegmentIndices": [
+				50
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -1659,7 +1717,11 @@
 						]
 					}
 				},
-				"paradigm": { "plural": ["Bäuche"] },
+				"paradigm": {
+					"plural": [
+						"Bäuche"
+					]
+				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -1670,7 +1732,9 @@
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
 					},
-					"paradigm": { "plural": "Authored" }
+					"paradigm": {
+						"plural": "Authored"
+					}
 				}
 			},
 			"notes": {
@@ -1714,7 +1778,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [53],
+			"memberSegmentIndices": [
+				53
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADP"
@@ -1758,7 +1824,9 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [55],
+			"memberSegmentIndices": [
+				55
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
@@ -1808,12 +1876,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [57],
+			"memberSegmentIndices": [
+				57
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "⛰🔝" },
+			"reading": {
+				"emojiDescription": "⛰🔝"
+			},
 			"notes": {
 				"rationale": "auf dessen Höhe, on the top of the domed belly, is Duden's Höhe 'Höhe-, Gipfelpunkt' under 'kleinerer Berg; Anhöhe', not height as a measure."
 			},
@@ -1855,12 +1927,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [59, 80],
+			"memberSegmentIndices": [
+				59,
+				80
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🪞📌" },
+			"reading": {
+				"emojiDescription": "🪞📌"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1922,12 +1999,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [61, 63],
+			"memberSegmentIndices": [
+				61,
+				63
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🛏🧣" },
+			"reading": {
+				"emojiDescription": "🛏🧣"
+			},
 			"notes": {
 				"rationale": "Bettdecke is the cover one sleeps under (DWDS); the bed 🛏 with the warm cloth 🧣 draws the cover itself, where 🛌 reads 'sleeping'."
 			},
@@ -1976,7 +2058,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [66, 73],
+			"memberSegmentIndices": [
+				66,
+				73
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1985,28 +2070,20 @@
 				"emojiDescription": "🙋",
 				"knowledge": {
 					"valency": [
-						{
-							"status": "Optional",
-							"complements": [
-								{
-									"kind": "Preposition",
-									"preposition": {
-										"unitKind": "Lemma",
-										"language": "de",
-										"family": "Lexeme",
-										"kind": "ADP",
-										"canonicalForm": "zu",
-										"coreFeatures": {}
-									},
-									"governedCase": "Dat"
+						[
+							{
+								"kind": "Preposition",
+								"preposition": {
+									"unitKind": "Lemma",
+									"language": "de",
+									"family": "Lexeme",
+									"kind": "ADP",
+									"canonicalForm": "zu",
+									"coreFeatures": {}
 								},
-								{
-									"kind": "Clause",
-									"form": "ZuInfinitive",
-									"correlate": "Optional"
-								}
-							]
-						}
+								"governedCase": "Dat"
+							}
+						]
 					]
 				},
 				"coverage": {
@@ -2092,12 +2169,17 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [67, 71],
+			"memberSegmentIndices": [
+				67,
+				71
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🛝" },
+			"reading": {
+				"emojiDescription": "🛝"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -2160,12 +2242,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [69],
+			"memberSegmentIndices": [
+				69
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "💯" },
+			"reading": {
+				"emojiDescription": "💯"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -2205,12 +2291,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [76],
+			"memberSegmentIndices": [
+				76
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏"
+			},
 			"notes": {
 				"rationale": "kaum noch erhalten 'barely held' is DWDS kaum 1 'fast gar nicht'; the Reading also takes the temporal kaum 2 'no sooner' (kaum ergriffen), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
@@ -2246,12 +2336,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [78],
+			"memberSegmentIndices": [
+				78
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "⏳" },
+			"reading": {
+				"emojiDescription": "⏳"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -2284,12 +2378,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [82],
+			"memberSegmentIndices": [
+				82
+			],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💪" },
+			"reading": {
+				"emojiDescription": "💪"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
