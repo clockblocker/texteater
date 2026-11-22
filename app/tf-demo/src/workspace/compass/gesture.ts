@@ -15,6 +15,12 @@ import type { MotionValue } from "motion/react";
  * React; the hooks feed it pointer samples and read its answers.
  */
 
+/** Release velocity handed into a Note's box morph, in px/s. */
+export type MorphVelocity = {
+	readonly vx: number;
+	readonly vy: number;
+};
+
 /**
  * A Note's own motion: its box, and the drag transforms on top. At rest
  * the box is where its Pane places it; a gesture reads it and moves it
@@ -24,10 +30,13 @@ export type NoteHandle = {
 	/** The box the Note shows now, drag offset aside: measured, so in flight too. */
 	readonly box: () => Box;
 	/**
-	 * The Note shows at `box` now and morphs to its place from there; under
-	 * reduced motion it is at its place at once.
+	 * The Note shows at `box` now and morphs to its place from there,
+	 * optionally carrying the hand's release velocity; under reduced motion
+	 * it is at its place at once.
 	 */
-	readonly morphFrom: (box: Box) => void;
+	readonly morphFrom: (box: Box, velocity?: MorphVelocity) => void;
+	/** Resolves once the Note's active box morph animations finish. */
+	readonly settled?: () => Promise<unknown>;
 	readonly x: MotionValue<number>;
 	readonly y: MotionValue<number>;
 	readonly rotate: MotionValue<number>;

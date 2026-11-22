@@ -74,11 +74,13 @@ const DECK_FOOT_REM = 1;
 export const NARROW_BELOW_REM = 48;
 
 /**
- * A Cover's box: flush with its Pane's top, over the Pane bar, and inset
- * by these from the Pane's sides and foot. A Ground fills its Pane.
+ * A Cover's box: rising sheet inset `SHEET_TOP_REM` from the Pane's top,
+ * flush to its foot, and capped at `SHEET_MAX_WIDTH_REM` horizontally with
+ * `SHEET_INSET_X_REM` breathing room on each side. A Ground fills its Pane.
  */
 const SHEET_INSET_X_REM = 1.5;
-const SHEET_INSET_Y_REM = 1.5;
+const SHEET_TOP_REM = 0.75;
+const SHEET_MAX_WIDTH_REM = 56;
 
 /** A spawned Pane never takes more than this share of the Pane it splits. */
 const SPAWN_SHARE = 0.5;
@@ -343,19 +345,33 @@ export function returnBandIn(
 /* --------------------------------------------------------------- Sheets */
 
 /**
- * Where a Cover sits in its Pane: from the Pane's top edge, over its bar,
- * and inset from its sides and foot. A Cover carries its own bar. On a
- * narrow screen it fills its Pane: what would have been a Pane of its
+ * Where a Cover sits in its Pane: a centered rising editorial sheet, inset
+ * `SHEET_TOP_REM` from the Pane's top, flush to its foot, and capped to
+ * `min(paneWidth - 3rem, 56rem)` horizontally. A Cover carries its own bar.
+ * On a narrow screen it fills its Pane: what would have been a Pane of its
  * own opens full-screen as a Cover.
  */
 export function coverPlacement(narrow = false): Placement {
-	const insetX = narrow ? 0 : SHEET_INSET_X_REM;
-	const insetY = narrow ? 0 : SHEET_INSET_Y_REM;
+	if (narrow) {
+		return {
+			inlineStart: inRem(0),
+			top: inRem(0),
+			width: paneWidth,
+			height: paneHeight,
+		};
+	}
+	const width = greatest(
+		inRem(0),
+		least(
+			minus(paneWidth, inRem(2 * SHEET_INSET_X_REM)),
+			inRem(SHEET_MAX_WIDTH_REM),
+		),
+	);
 	return {
-		inlineStart: inRem(insetX),
-		top: inRem(0),
-		width: greatest(inRem(0), minus(paneWidth, inRem(2 * insetX))),
-		height: greatest(inRem(0), minus(paneHeight, inRem(insetY))),
+		inlineStart: times(0.5, minus(paneWidth, width)),
+		top: inRem(SHEET_TOP_REM),
+		width,
+		height: greatest(inRem(0), minus(paneHeight, inRem(SHEET_TOP_REM))),
 	};
 }
 

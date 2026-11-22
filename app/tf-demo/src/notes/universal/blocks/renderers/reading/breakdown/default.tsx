@@ -1,4 +1,4 @@
-import { NoteSection } from "lego";
+import { NoteList, NoteMorphReveal, NoteSection } from "lego";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { NoteDataFor } from "../../../../note/data";
@@ -15,23 +15,29 @@ function ReadingBreakdown({
 	breakdown,
 	sourceLinks,
 	readingId,
+	language,
 	family,
 	follow,
 }: {
 	readonly breakdown: ReadingNoteData["breakdown"];
 	readonly sourceLinks: NonNullable<ReadingNoteData["sourceLinks"]>;
 	readonly readingId: string;
+	readonly language: string;
 	readonly family: string;
 	readonly follow: Follow;
 }) {
 	const constituents = breakdown?.constituents;
 	const morphemes = breakdown?.morphemes;
 	if (!constituents && !morphemes && sourceLinks.length === 0) return null;
+	const sheetOnly = !constituents && sourceLinks.length === 0;
 	return (
-		<NoteSection aria-label="Breakdown" label="Breakdown">
+		<NoteSection
+			label="Breakdown"
+			visibility={sheetOnly ? "sheet" : "always"}
+		>
 			{/* the morphemes line keeps room above its letters for the school
 			    marks, and that room is the gap: the lines read as one block */}
-			<div className="grid gap-0.5 compact:gap-1.5">
+			<NoteList as="div" gap="tight" lang={language}>
 				{constituents ? (
 					<ConstituentsLine
 						pieces={constituents}
@@ -51,13 +57,15 @@ function ReadingBreakdown({
 					/>
 				))}
 				{morphemes ? (
-					<MorphemesLine
-						owner={readingId}
-						pieces={morphemes}
-						follow={follow}
-					/>
+					<NoteMorphReveal visibility="sheet">
+						<MorphemesLine
+							owner={readingId}
+							pieces={morphemes}
+							follow={follow}
+						/>
+					</NoteMorphReveal>
 				) : null}
-			</div>
+			</NoteList>
 		</NoteSection>
 	);
 }
@@ -76,6 +84,7 @@ export const renderDefaultReadingBreakdown = (({
 		breakdown={noteData.breakdown}
 		sourceLinks={noteData.sourceLinks ?? []}
 		readingId={noteData.reading.readingId}
+		language={noteData.reading.lemma.language}
 		family={noteData.reading.lemma.family}
 		follow={PresentationCapabilities.follow}
 	/>

@@ -37,17 +37,15 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	// The frame's Reflexive Slot is cited; the Canonical Form is bare (ADR 0052).
 	expect(markup).toContain(">sich freuen<");
 	expect(markup).toContain('data-slot="ipa"');
-	expect(markup).toContain("/zɪç/");
-	expect(markup).toContain("de");
+	expect(markup).toMatch(/\/<\/span>zɪç<span[^>]*>\//);
+	expect(markup).toContain("<span>Verb</span>");
 	expect(markup).toMatch(
 		/<span data-slot="reader-plain-segment"[^>]*>A <\/span><button data-slot="reader-segment"[^>]*>source<\/button><span data-slot="reader-plain-segment"[^>]*> sentence\.<\/span>/,
 	);
 	expect(markup).not.toMatch(/<button[^>]*>A <\/button>/);
-	expect(markup).toContain("relation to Unit Shadow traurig");
+	expect(markup).toContain('aria-label="traurig, not yet in dictionary"');
 	// A Sheet's translations are a row per language: `en`, then its words.
-	expect(markup).toContain(
-		'>en</dt><dd lang="en" class="text-pretty">to be happy</dd>',
-	);
+	expect(markup).toContain('>en</dt><dd lang="en">to be happy</dd>');
 	expect(markup).toContain("To experience happiness.");
 	expect(markup).toContain("Remember the reflexive form.");
 	expect(markup.match(/<textarea/g)).toHaveLength(1);
@@ -55,16 +53,19 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(4);
 	expect(markup).not.toContain("href=");
 	expect(markup.indexOf('data-reading-title=""')).toBeLessThan(
-		markup.indexOf('aria-label="Source Contexts"'),
+		markup.indexOf(">Translations</h2>"),
 	);
-	expect(markup.indexOf('aria-label="Source Contexts"')).toBeLessThan(
-		markup.indexOf('aria-label="Relations"'),
+	expect(markup.indexOf(">Translations</h2>")).toBeLessThan(
+		markup.indexOf(">Definition</h2>"),
 	);
-	expect(markup.indexOf('aria-label="Relations"')).toBeLessThan(
-		markup.indexOf('aria-label="Translations"'),
+	expect(markup.indexOf(">Definition</h2>")).toBeLessThan(
+		markup.indexOf(">Relations</h2>"),
 	);
-	expect(markup.indexOf('aria-label="Translations"')).toBeLessThan(
-		markup.indexOf('aria-label="Definition"'),
+	expect(markup.indexOf(">Relations</h2>")).toBeLessThan(
+		markup.indexOf(">In context</h2>"),
+	);
+	expect(markup.indexOf(">In context</h2>")).toBeLessThan(
+		markup.indexOf(">Margin note</label></h2>"),
 	);
 	expect(markup).not.toContain('role="alert"');
 });
@@ -130,8 +131,8 @@ test("the Relations block says quietly when more relations exist than it shows",
 		);
 	};
 
-	expect(render(true)).toContain("More relations not shown");
-	expect(render(false)).not.toContain("More relations not shown");
+	expect(render(true)).toContain("Some related words aren’t shown");
+	expect(render(false)).not.toContain("Some related words aren’t shown");
 });
 
 function readingNote(): ReadingNote {

@@ -1,6 +1,7 @@
 import { restingCards, type WritingDirection } from "compass";
 import type { RefObject } from "react";
-import type { Destination, Drag, NoteHandle } from "./gesture";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
+import type { Destination, Drag, MorphVelocity, NoteHandle } from "./gesture";
 import type { NoteMoves } from "./note-moves";
 import { findSheet } from "./sheets";
 import type { CompassWorkspace } from "./use-compass-workspace";
@@ -28,6 +29,7 @@ export function useRelease<S>({
 	handles: RefObject<Map<string, NoteHandle>>;
 	direction: WritingDirection;
 }) {
+	const { VELOCITY_STALE_MS } = useDeckMotion();
 	const { current, dispatch } = workspace;
 	const { dragRef } = gesture;
 
@@ -52,8 +54,10 @@ export function useRelease<S>({
 	/** A release with nothing under it, or in the Card's own Pane. */
 	function goHome(d: Drag<S>) {
 		if (d.home === "slot") {
+			d.h.opacity.jump(1);
+			if (d.lifted) moves.foldOffset(d.h);
 			dispatch({ type: "Release" });
-			gesture.snapBack(d.h);
+			gesture.snapBack(d.h, d.lifted);
 		} else if (d.home === "restore") restore(d);
 		else leave(d);
 	}
@@ -77,11 +81,15 @@ export function useRelease<S>({
 	}
 	/**
 	 * The Note stays exactly where the hand left it and grows from there:
-	 * its drag offset is folded into its box, and the state change gives it
-	 * a new target box to animate to.
+	 * its drag offset and fresh release velocity are folded into its box,
+	 * and the state change gives it a new target box to animate to.
 	 */
-	function growFromHand(d: Drag<S>, commit: () => void) {
-		moves.foldOffset(d.h);
+	function growFromHand(d: Drag<S>, commit: () => void, now: number) {
+		const fresh = !d.keyboard && now - d.last.t <= VELOCITY_STALE_MS;
+		const velocity: MorphVelocity | undefined = fresh
+			? { vx: d.v.vx * 1000, vy: d.v.vy * 1000 }
+			: undefined;
+		moves.foldOffset(d.h, velocity);
 		dragRef.current = null;
 		gesture.setDrag(null);
 		gesture.setDestination(null);
@@ -95,7 +103,11 @@ export function useRelease<S>({
 		restore,
 		sweepByDrag,
 		/** Let go over `target`: do what the preview showed. */
-		commitAt: (d: Drag<S>, target: Destination | null) => {
+		commitAt: (
+			d: Drag<S>,
+			target: Destination | null,
+			now = performance.now(),
+		) => {
 			if (!target || target.kind === "return" || target.kind === "home") {
 				goHome(d);
 				return;
@@ -105,10 +117,17 @@ export function useRelease<S>({
 				return;
 			}
 			if (target.kind === "sheet")
-				growFromHand(d, () => commands.openCover(target.paneId));
+				growFromHand(d, () => commands.openCover(target.paneId), now);
 			else
-				growFromHand(d, () =>
-					commands.splitPane(target.paneId, target.edge, target.size),
+				growFromHand(
+					d,
+					() =>
+						commands.splitPane(
+							target.paneId,
+							target.edge,
+							target.size,
+						),
+					now,
 				);
 		},
 		/**

@@ -1,9 +1,13 @@
-import { DensityScope, NoteTags } from "lego";
+import { NoteFrame, NoteTags } from "lego";
 import { createElement, type ReactElement } from "react";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
 import type { CitationPresenter } from "../blocks/citation";
 import type { NoteBlockKind } from "../blocks/kind";
 import { ReadingMetadata } from "../blocks/renderers/reading/heading/default";
+import {
+	formatAttestationMetadata,
+	formatShadowMetadata,
+} from "../caption/metadata";
 import type {
 	ReadingPresentationCapabilities,
 	RoutePresentationCapabilities,
@@ -134,21 +138,18 @@ export function renderUniversalNoteBody({
 			(renderCapabilities as { presentation?: "Card" | "Sheet" })
 				.presentation ?? "Sheet";
 		return (
-			<DensityScope
-				density={presentation === "Card" ? "compact" : "comfortable"}
+			<NoteFrame
+				mode={presentation === "Card" ? "card" : "sheet"}
+				underHeading={!heading}
+				frameAs={heading ? "article" : "div"}
 				data-note-presentation={presentation}
 				data-note-kind={noteData.kind}
-				className="min-h-full bg-paper text-base text-ink compact:text-sm"
+				frameLabel={heading ? `${noteData.kind} Note` : undefined}
 			>
-				<article
-					className={`mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5 ${heading ? "" : CARD_BODY_UNDER_HEADING}`}
-					aria-label={`${noteData.kind} Note`}
-				>
-					{heading}
-					{blocks}
-					{plan.heading ? renderNoteMetadata(noteData) : null}
-				</article>
-			</DensityScope>
+				{heading}
+				{blocks}
+				{plan.heading ? renderNoteMetadata(noteData) : null}
+			</NoteFrame>
 		);
 	} catch (cause) {
 		return renderErrorNote(cause, `${safeKind(noteData)} Note unavailable`);
@@ -210,35 +211,23 @@ function renderNoteMetadata(note: NoteData): ReactElement {
 		case "Surface":
 			return (
 				<NoteTags>
-					<span>{note.target.language}</span>
-					<span>Surface</span>
+					<span>Inflected form</span>
 				</NoteTags>
 			);
-		case "Attestation": {
-			const { surface, members, realizationCoverage } = note.presented;
-			const orthographies = [
-				...new Set(members.map(({ orthography }) => orthography)),
-			].filter((orthography) => orthography !== "Standard");
+		case "Attestation":
 			return (
 				<NoteTags>
-					<span>{surface.language}</span>
-					<span>Attestation</span>
-					{orthographies.map((orthography) => (
-						<span key={orthography}>{orthography}</span>
+					{formatAttestationMetadata(note.presented).map((item) => (
+						<span key={item}>{item}</span>
 					))}
-					{realizationCoverage !== "Full" ? (
-						<span>{realizationCoverage}</span>
-					) : null}
 				</NoteTags>
 			);
-		}
 		case "Shadow":
 			return (
 				<NoteTags>
-					<span>{note.descriptor.language}</span>
-					<span>Shadow</span>
-					<span>{note.descriptor.family}</span>
-					<span>{note.descriptor.kind}</span>
+					{formatShadowMetadata(note.descriptor).map((item) => (
+						<span key={item}>{item}</span>
+					))}
 				</NoteTags>
 			);
 	}

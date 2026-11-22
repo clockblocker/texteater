@@ -8,26 +8,82 @@ import {
 	type ReaderSegmentTone,
 } from "lego";
 import { LockIcon } from "lucide-react";
-import { Fragment, type ReactNode, useState } from "react";
-
+import { type ReactNode, useState } from "react";
+import { segmentKey } from "@/hooks/use-segment-selection";
+import {
+	ReaderSentence,
+	type ReaderSentenceData,
+} from "@/views/reader-sentence";
+import { READER_PROSE_CLASS } from "@/views/scroll-view";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { Stage } from "./staged-presentation";
 
 /* ---------- The two axes a word can sit on ---------- */
 
-const TONES: readonly {
+type ToneRow = {
+	readonly label: string;
 	readonly tone: ReaderSegmentTone;
+	readonly gender?: "Fem" | "Masc" | "Neut";
+	readonly sample: string;
 	readonly meaning: string;
-}[] = [
-	{ tone: "plain", meaning: "not a candidate, or never touched" },
+};
+
+const TONES: readonly ToneRow[] = [
 	{
+		label: "plain",
+		tone: "plain",
+		sample: "bleiben",
+		meaning: "not a candidate, or never touched",
+	},
+	{
+		label: "unknown",
 		tone: "unknown",
+		sample: "bleiben",
 		meaning: "nothing known, or resolution gave nothing; retryable",
 	},
-	{ tone: "resolving", meaning: "resolution in flight" },
-	{ tone: "known", meaning: "a Unit with a Note" },
-	{ tone: "shadow", meaning: "a Unit without a Note yet" },
 	{
+		label: "resolving",
+		tone: "resolving",
+		sample: "bleiben",
+		meaning: "resolution in flight",
+	},
+	{
+		label: "known",
+		tone: "known",
+		sample: "bleiben",
+		meaning: "a Unit with a Note",
+	},
+	{
+		label: "known · Fem",
+		tone: "known",
+		gender: "Fem",
+		sample: "Tür",
+		meaning: "known feminine noun",
+	},
+	{
+		label: "known · Masc",
+		tone: "known",
+		gender: "Masc",
+		sample: "Laden",
+		meaning: "known masculine noun",
+	},
+	{
+		label: "known · Neut",
+		tone: "known",
+		gender: "Neut",
+		sample: "Geschäft",
+		meaning: "known neuter noun",
+	},
+	{
+		label: "shadow",
+		tone: "shadow",
+		sample: "verschließen",
+		meaning: "a Unit without a Note yet",
+	},
+	{
+		label: "failed",
 		tone: "failed",
+		sample: "bleiben",
 		meaning: "resolution failed for good; dead text, no interaction",
 	},
 ];
@@ -54,6 +110,27 @@ type Swatch = {
 	readonly role: string;
 	readonly className: string;
 };
+
+const FOUNDATIONS: readonly Swatch[] = [
+	{ token: "canvas", role: "surface behind Panes", className: "bg-canvas" },
+	{ token: "paper", role: "Sheet & Card surface", className: "bg-paper" },
+	{
+		token: "raised",
+		role: "hover & popup surface",
+		className: "bg-raised",
+	},
+	{ token: "scrim", role: "backdrop scrim", className: "bg-scrim" },
+	{ token: "ink", role: "primary body text", className: "bg-ink" },
+	{ token: "ink-soft", role: "secondary text", className: "bg-ink-soft" },
+	{ token: "ink-muted", role: "captions & hints", className: "bg-ink-muted" },
+	{ token: "ink-faint", role: "faintest mark", className: "bg-ink-faint" },
+	{ token: "line", role: "hairline rule", className: "bg-line" },
+	{
+		token: "line-strong",
+		role: "Card & separator edge",
+		className: "bg-line-strong",
+	},
+];
 
 const PRIMITIVES: readonly Swatch[] = [
 	{
@@ -121,14 +198,20 @@ const ROLES: readonly Swatch[] = [
 		role: "= green-500",
 		className: "bg-gender-neuter",
 	},
+	{ token: "destructive", role: "= red-500", className: "bg-destructive" },
+	{
+		token: "pen",
+		role: "pronoun explainer stroke",
+		className: "bg-[var(--color-pen)]",
+	},
 ];
 
 /**
  * Every colour a word or link can wear, laid out so that one meaning shows
- * one colour across the reader, a Quote, a Note title and a link list.
- * Rows are knowledge states, columns are interaction states. No word ever
- * has a background: the only wash in the reader is the browser's own text
- * selection.
+ * one colour across the live `ReaderSentence`, a `Quote`, a `NoteTitle` and
+ * a `LinkButton`. Rows are knowledge states, columns are interaction states.
+ * No word ever has a background: the only wash in the reader is the browser's
+ * own text selection.
  */
 export function PaletteGallery() {
 	return (
@@ -161,11 +244,11 @@ export function PaletteGallery() {
 									</th>
 								</tr>
 							</thead>
-							<tbody className="text-lg leading-[1.52] font-[430] tracking-[-0.015em]">
+							<tbody className={READER_PROSE_CLASS}>
 								{TONES.map((row) => (
-									<tr key={row.tone}>
+									<tr key={row.label}>
 										<th className="px-3 py-1.5 text-start font-mono text-xs font-normal text-ink-soft">
-											{row.tone}
+											{row.label}
 										</th>
 										{INTERACTIONS.map((column) => (
 											<td
@@ -174,11 +257,17 @@ export function PaletteGallery() {
 											>
 												<ReaderSegment
 													tone={row.tone}
+													gender={row.gender}
 													interaction={
 														column.interaction
 													}
+													disabled={
+														row.tone ===
+															"resolving" ||
+														row.tone === "failed"
+													}
 												>
-													bleiben
+													{row.sample}
 												</ReaderSegment>
 											</td>
 										))}
@@ -199,17 +288,30 @@ export function PaletteGallery() {
 						<LiveReader />
 					</Labeled>
 					<Labeled label="quote">
-						<Quote>
-							Morgen{" "}
-							<ReaderSegment tone="known" interaction="hover">
-								bleiben
-							</ReaderSegment>{" "}
-							sie{" "}
-							<ReaderSegment tone="known" interaction="hover">
-								geschlossen
-							</ReaderSegment>
-							.
-						</Quote>
+						<div className="grid gap-3">
+							<Quote onFollow={() => {}}>
+								<span>Morgen </span>
+								<ReaderSegment tone="known" interaction="hover">
+									bleiben
+								</ReaderSegment>
+								<span> sie </span>
+								<ReaderSegment tone="known" interaction="hover">
+									geschlossen
+								</ReaderSegment>
+								<span>.</span>
+							</Quote>
+							<Quote tone="feminine" onFollow={() => {}}>
+								<span>Die </span>
+								<ReaderSegment
+									tone="known"
+									gender="Fem"
+									interaction="hover"
+								>
+									Tür
+								</ReaderSegment>
+								<span> steht offen.</span>
+							</Quote>
+						</div>
 					</Labeled>
 					<Labeled label="titles">
 						<div className="flex flex-wrap gap-x-8 gap-y-2">
@@ -225,19 +327,25 @@ export function PaletteGallery() {
 							<NoteTitle tone="neuter">
 								<NoteTitleLink>Geschäft</NoteTitleLink>
 							</NoteTitle>
-							<NoteTitle className="flex items-center gap-2 text-link-shadow">
+							<NoteTitle
+								data-shadow-title=""
+								className="flex items-center gap-2 text-link-shadow"
+							>
 								<LockIcon
 									aria-hidden="true"
-									className="size-[0.8em]"
+									className="size-[0.8em] shrink-0"
 								/>
-								verschließen
+								<span>verschließen</span>
 							</NoteTitle>
 						</div>
 					</Labeled>
 					<Labeled label="links">
 						<ul className="grid gap-2">
-							<li>
+							<li className="flex flex-wrap gap-x-6 gap-y-2">
 								<LinkButton>geschlossen</LinkButton>
+								<LinkButton tone="feminine">Tür</LinkButton>
+								<LinkButton tone="masculine">Laden</LinkButton>
+								<LinkButton tone="neuter">Geschäft</LinkButton>
 							</li>
 							<li>
 								<LinkButton tone="shadow">
@@ -257,7 +365,7 @@ export function PaletteGallery() {
 						</ul>
 					</Labeled>
 					<Labeled label="selection">
-						<p className="text-lg leading-[1.52] font-[430] tracking-[-0.015em]">
+						<p className={READER_PROSE_CLASS}>
 							Drag across this sentence: the only background a
 							word ever gets is the browser's{" "}
 							<ReaderSegment tone="known" interaction="hover">
@@ -272,6 +380,9 @@ export function PaletteGallery() {
 				</div>
 			</Stage>
 
+			<Stage label="Surfaces, inks & lines">
+				<SwatchRow swatches={FOUNDATIONS} />
+			</Stage>
 			<Stage label="Primitives">
 				<SwatchRow swatches={PRIMITIVES} />
 			</Stage>
@@ -282,73 +393,112 @@ export function PaletteGallery() {
 	);
 }
 
-/* ---------- A reader you can touch ---------- */
+/* ---------- The live ReaderSentence, interactive ---------- */
 
-const LIVE_WORDS: readonly {
-	readonly text: string;
-	readonly tone: ReaderSegmentTone;
-}[] = [
-	{ text: "Morgen", tone: "known" },
-	{ text: "bleiben", tone: "known" },
-	{ text: "sie", tone: "resolving" },
-	{ text: "geschlossen", tone: "known" },
-	{ text: "und", tone: "plain" },
-	{ text: "verschlossen", tone: "failed" },
-];
+const att = (name: string) => `palette:${name}` as Id<"attestations">;
+
+const LIVE_SENTENCE: ReaderSentenceData = {
+	sentenceId: "palette:live-sentence",
+	language: "de",
+	stitchedText:
+		"Morgen bleiben Tür, Laden und Geschäft offen, sie warten verschlossen.",
+	segments: [
+		{
+			index: 0,
+			kind: "ResolvableText",
+			text: "Morgen",
+			encountered: true,
+			attestationId: att("morgen"),
+		},
+		{ index: 1, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 2,
+			kind: "ResolvableText",
+			text: "bleiben",
+			encountered: true,
+			attestationId: att("bleiben"),
+		},
+		{ index: 3, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 4,
+			kind: "ResolvableText",
+			text: "Tür",
+			encountered: true,
+			attestationId: att("tuer"),
+			gender: "Fem",
+		},
+		{ index: 5, kind: "Punctuation", text: ",", encountered: false },
+		{ index: 6, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 7,
+			kind: "ResolvableText",
+			text: "Laden",
+			encountered: true,
+			attestationId: att("laden"),
+			gender: "Masc",
+		},
+		{ index: 8, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 9,
+			kind: "ResolvableText",
+			text: "und",
+			encountered: false,
+		},
+		{ index: 10, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 11,
+			kind: "ResolvableText",
+			text: "Geschäft",
+			encountered: true,
+			attestationId: att("geschaeft"),
+			gender: "Neut",
+		},
+		{ index: 12, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 13,
+			kind: "ResolvableText",
+			text: "offen",
+			encountered: true,
+			resolutionState: "Unresolved",
+		},
+		{ index: 14, kind: "Punctuation", text: ",", encountered: false },
+		{ index: 15, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 16,
+			kind: "ResolvableText",
+			text: "sie",
+			encountered: true,
+			resolutionState: "Active",
+		},
+		{ index: 17, kind: "Whitespace", text: " ", encountered: false },
+		{
+			index: 18,
+			kind: "ResolvableText",
+			text: "verschlossen",
+			encountered: true,
+			resolutionState: "PermanentFailure",
+		},
+		{ index: 19, kind: "Punctuation", text: ".", encountered: false },
+	],
+};
 
 /**
- * The reader's own rules, live: hover or focus previews a word, a click
- * selects it, a second click clears it. Colour never moves; only the rule
- * under the word does. Plain and failed words behave as in the Scroll view:
- * a plain word previews on hover, a failed one ignores the pointer.
+ * The live `ReaderSentence` component fed fixture segments spanning every
+ * knowledge state (known, gendered known, unresolved, resolving, plain and
+ * failed). Hover, focus and click follow the real Scroll view rules directly.
  */
 function LiveReader() {
-	const [hovered, setHovered] = useState<number | null>(null);
-	const [focused, setFocused] = useState<number | null>(null);
-	const [selected, setSelected] = useState<number | null>(null);
-	const previewed = hovered ?? focused;
+	const [selectedKey, setSelectedKey] = useState<string | null>(null);
 	return (
-		<p className="text-lg leading-[1.52] font-[430] tracking-[-0.015em]">
-			{LIVE_WORDS.map((word, index) => (
-				<Fragment key={word.text}>
-					{index > 0 ? " " : null}
-					<ReaderSegment
-						tone={word.tone}
-						interaction={
-							selected === index
-								? "selected"
-								: previewed === index
-									? "previewed"
-									: "idle"
-						}
-						disabled={
-							word.tone === "resolving" || word.tone === "failed"
-						}
-						aria-pressed={selected === index}
-						onMouseEnter={() => setHovered(index)}
-						onMouseLeave={() =>
-							setHovered((current) =>
-								current === index ? null : current,
-							)
-						}
-						onFocus={() => setFocused(index)}
-						onBlur={() =>
-							setFocused((current) =>
-								current === index ? null : current,
-							)
-						}
-						onClick={() =>
-							setSelected((current) =>
-								current === index ? null : index,
-							)
-						}
-					>
-						{word.text}
-					</ReaderSegment>
-				</Fragment>
-			))}
-			.
-		</p>
+		<ReaderSentence
+			sentence={LIVE_SENTENCE}
+			selectedSegmentKey={selectedKey}
+			className={READER_PROSE_CLASS}
+			onSegmentClick={(sentence, clickedIndex) => {
+				const next = segmentKey(sentence.sentenceId, clickedIndex);
+				setSelectedKey((current) => (current === next ? null : next));
+			}}
+		/>
 	);
 }
 

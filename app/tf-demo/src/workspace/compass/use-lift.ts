@@ -185,7 +185,7 @@ export function useLift<S>({
 					deckColumnOf(holder.paneId)?.height,
 				)
 			: LOOSE_CARD_REM * rem;
-		emergeFrom(card, bar);
+		if (sheet.ground) emergeFrom(card, bar);
 		startLift(
 			card,
 			lift,

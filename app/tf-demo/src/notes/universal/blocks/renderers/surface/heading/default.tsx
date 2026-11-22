@@ -51,6 +51,7 @@ export function SurfaceHeading({
 			title={
 				<NoteTitle
 					data-surface-title=""
+					lang={noteData.target.language}
 					tone={
 						active ? genderTone(active.presented.lemma) : undefined
 					}

@@ -28,7 +28,22 @@ export async function startHeadingDrag(
 	dx: number,
 	dy: number,
 ) {
-	const bar = await sheet.locator("[data-heading]").boundingBox();
+	const heading = sheet.locator("[data-heading]");
+	/* Wait until the Cover's Heading stops traveling so the pointer hits it. */
+	let previousY: number | null = null;
+	await expect
+		.poll(async () => {
+			const box = await heading.boundingBox();
+			if (!box) return Number.POSITIVE_INFINITY;
+			const delta =
+				previousY === null
+					? Number.POSITIVE_INFINITY
+					: Math.abs(box.y - previousY);
+			previousY = box.y;
+			return delta;
+		})
+		.toBeLessThan(1);
+	const bar = await heading.boundingBox();
 	if (!bar) throw new Error("Missing cover heading geometry");
 	const x = bar.x + bar.width * 0.6;
 	const y = bar.y + bar.height / 2;
@@ -49,6 +64,7 @@ type Frame = {
 	readonly t: number;
 	readonly x: number;
 	readonly y: number;
+	readonly height: number;
 	readonly z: number;
 	readonly held: boolean;
 	readonly place: string | null;
@@ -81,6 +97,7 @@ export async function armFrames(target: Locator, afterMs: number) {
 				at: performance.now(),
 				x: box.x,
 				y: box.y,
+				height: box.height,
 				z: Number(getComputedStyle(element).zIndex),
 				held: element.getAttribute("data-held") === "true",
 				place: element.getAttribute("data-place"),

@@ -45,6 +45,7 @@ export function useDismiss<S>({
 	dragging,
 	swallowClick,
 	sweep,
+	coverBack,
 	clearCovers,
 	cancelDrag,
 }: {
@@ -56,6 +57,7 @@ export function useDismiss<S>({
 	/** A Lift started under this click: the click is not a click. */
 	swallowClick: RefObject<boolean>;
 	sweep: (sheetId: string) => void;
+	coverBack: (paneId: string, sheetId: string) => void;
 	clearCovers: (paneId: string) => void;
 	cancelDrag: () => void;
 }) {
@@ -82,7 +84,13 @@ export function useDismiss<S>({
 			const { layout, activePaneId } = current();
 			const pane = findPane(layout, activePaneId);
 			const top = pane ? topSheetOf(pane) : null;
-			if (top?.deck && hasCards(top.sheetId)) sweep(top.sheetId);
+			if (top?.deck && hasCards(top.sheetId)) {
+				sweep(top.sheetId);
+				return;
+			}
+			if (pane && top && !top.ground) {
+				coverBack(pane.id, top.sheetId);
+			}
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
@@ -106,7 +114,7 @@ export function useDismiss<S>({
 		if (target.closest('[data-form="card"], [data-return-zone]'))
 			return false;
 		const at = target.closest<HTMLElement>(
-			'[data-deck-pane], [data-form="ground"]',
+			'[data-deck-pane], [data-form="ground"], [data-scrim="cover"]',
 		);
 		const paneId = at?.dataset.deckPane ?? at?.dataset.pane;
 		const pane = paneId ? findPane(current().layout, paneId) : null;

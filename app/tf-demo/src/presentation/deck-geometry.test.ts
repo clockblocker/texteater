@@ -113,12 +113,12 @@ describe("a Card's size", () => {
 });
 
 describe("a Cover's box", () => {
-	test("is flush with its Pane's top and inset from its sides and foot", () => {
+	test("is a centered rising sheet inset 0.75rem from the top, flush to the foot, and capped at 56rem", () => {
 		const cover = coverBoxIn(PANE, REM);
-		expect(cover.top).toBe(0);
-		expect(cover.inlineStart).toBeGreaterThan(0);
-		expect(cover.width).toBe(PANE.width - 2 * cover.inlineStart);
-		expect(cover.height).toBeLessThan(PANE.height);
+		expect(cover.top).toBe(0.75 * REM);
+		expect(cover.top + cover.height).toBe(PANE.height);
+		expect(cover.width).toBe(56 * REM);
+		expect(cover.inlineStart).toBe((PANE.width - cover.width) / 2);
 	});
 
 	test("fills its Pane on a narrow screen", () => {

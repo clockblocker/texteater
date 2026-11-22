@@ -1,4 +1,4 @@
-import { NoteLinesSkeleton, NoteSection } from "lego";
+import { NoteLinesSkeleton, NoteProse, NoteSection } from "lego";
 
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { DefinitionCapabilities } from "../../../../note/capabilities";
@@ -8,25 +8,17 @@ type DefinitionText =
 	Parameters<ReadingDefaultRenderer>[0]["noteData"]["definitionText"];
 
 /**
- * The definition's prose: body size on a reading measure of about 70
- * characters. A Card is narrower than the measure, so it shows no cap.
- */
-const DEFINITION_PROSE = "max-w-[36rem] leading-relaxed text-pretty";
-
-/**
- * The Reading's definition. In a Sheet it reads like a Sentence: every word
- * selects the way the reader's words do. A Source Context that came from this
- * definition opens its Definition Text instead (tf-demo ADR 0005). A Card
- * shows the bare prose. The block is loaded only once the definition
- * is both generated and segmented; until then it keeps its skeleton.
+ * The Reading's definition. When `definition` selection capability is present
+ * (Sheet), it reads like a Sentence whose words select like the reader's;
+ * otherwise it renders bare prose through the exact same `NoteProse` molecule.
  */
 export const renderReadingDefinition = (({
 	noteData,
 	PresentationCapabilities,
 }) => {
-	const { knowledgeSettings, presentation, definition } =
-		PresentationCapabilities;
+	const { knowledgeSettings, definition } = PresentationCapabilities;
 	if (!knowledgeSettings.definition) return null;
+	const language = noteData.reading.lemma.language;
 	const text = noteData.knowledge.definition;
 	const definitionText: DefinitionText | undefined = noteData.definitionText;
 	const generating =
@@ -35,18 +27,10 @@ export const renderReadingDefinition = (({
 
 	if (generating || definitionText?.state === "Pending") {
 		return (
-			<NoteSection
-				aria-label="Definition"
-				label="Definition"
-				aria-busy="true"
-			>
+			<NoteSection label="Definition" aria-busy="true">
 				<NoteLinesSkeleton
-					className="max-w-[36rem] compact:py-1"
-					widths={
-						presentation === "Card"
-							? ["w-full", "w-2/3"]
-							: ["w-full", "w-11/12", "w-1/2"]
-					}
+					className="max-w-[36rem]"
+					widths={["w-full", "w-11/12", "w-1/2"]}
 				/>
 			</NoteSection>
 		);
@@ -54,14 +38,14 @@ export const renderReadingDefinition = (({
 
 	if (definitionText?.state === "Failed") {
 		return (
-			<NoteSection aria-label="Definition" label="Definition">
+			<NoteSection label="Definition">
 				<div
 					className="rounded-lg border border-destructive/40 px-2 py-1"
 					role="alert"
 				>
-					<p className="leading-relaxed text-ink text-pretty">
+					<NoteProse as="div" lang={language}>
 						{text}
-					</p>
+					</NoteProse>
 					<p className="mt-1 text-sm text-destructive">
 						{definitionText.failureMessage ??
 							"This definition could not be segmented."}
@@ -71,15 +55,12 @@ export const renderReadingDefinition = (({
 		);
 	}
 
-	if (
-		definitionText?.state === "Ready" &&
-		presentation === "Sheet" &&
-		definition
-	) {
+	if (definitionText?.state === "Ready" && definition) {
 		return (
-			<NoteSection aria-label="Definition" label="Definition">
+			<NoteSection label="Definition">
 				<DefinitionSentence
 					sentence={definitionText.sentence}
+					language={language}
 					capabilities={definition}
 				/>
 			</NoteSection>
@@ -87,23 +68,25 @@ export const renderReadingDefinition = (({
 	}
 
 	return (
-		<NoteSection aria-label="Definition" label="Definition">
-			<p className={`text-ink compact:py-1 ${DEFINITION_PROSE}`}>
+		<NoteSection label="Definition">
+			<NoteProse as="div" lang={language}>
 				{text}
-			</p>
+			</NoteProse>
 		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;
 
 function DefinitionSentence({
 	sentence,
+	language,
 	capabilities,
 }: {
 	readonly sentence: Extract<DefinitionText, { state: "Ready" }>["sentence"];
+	readonly language: string;
 	readonly capabilities: DefinitionCapabilities;
 }) {
 	return (
-		<div data-slot="definition-sentence" className={DEFINITION_PROSE}>
+		<NoteProse as="div" data-slot="definition-sentence" lang={language}>
 			<ReaderSentence
 				sentence={sentence}
 				className="text-reader__sentence"
@@ -121,6 +104,6 @@ function DefinitionSentence({
 					{capabilities.error}
 				</p>
 			) : null}
-		</div>
+		</NoteProse>
 	);
 }

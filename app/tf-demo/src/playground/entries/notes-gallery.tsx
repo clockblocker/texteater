@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "lego";
-import { type ReactNode, useMemo } from "react";
+import {
+	DEFAULT_NOTE_SECTION_CHROME,
+	type NoteSectionChrome,
+	NoteSurface,
+	Skeleton,
+} from "lego";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { renderFixtureNoteParts } from "@/notes";
 import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
@@ -9,26 +15,33 @@ import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 import type { EntryRoute } from "../playground-router";
-import { playgroundNotesQuery, playgroundParts } from "./playground-note";
+import { MorphStudio } from "./notes-morph-studio";
+import {
+	fixtureNoteKey,
+	playgroundNotesQuery,
+	playgroundParts,
+} from "./playground-note";
 import { Stage, StagedPresentation } from "./staged-presentation";
+
+export { MorphStudio };
 
 type PlaygroundCatalog = PlaygroundSnapshot["catalog"];
 
 /**
- * One Note at a time, in the forms the app shows it in: a Card in front
- * of its Deck, a Card Tail behind another Card, and a Cover. Each is drawn
- * by the Presentation foundation the app's renderer draws it with, so a
- * change to a Block, the Heading row or the box shows here and in the app
- * together. A Card's links rest, as in the app; following a link in the
- * Cover replaces the shown Note, so the route from an Attestation up to
- * its Reading can be walked exactly as the Deck would walk it. The
- * Cover's ← steps back through that walk and its × puts the Note away.
+ * One Note at a time, in the forms the app shows it in: an interactive
+ * Card ↔ Sheet Morph Studio (with live section-label / divider variant
+ * comparison and progress scrubber) plus static Card, Card Tail, and Cover
+ * reference stages. Each is drawn by the Presentation foundation the app's
+ * renderer draws it with, so changes show here and in the app together.
  *
  * The shown Note is the route: `/playground/notes/<kind>/<id>`, so every step
  * of that walk is a history entry and can be reloaded or linked to.
  */
 export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 	const catalog = useQuery(playgroundNotesQuery);
+	const [sectionChrome, setSectionChrome] = useState<NoteSectionChrome>(
+		DEFAULT_NOTE_SECTION_CHROME,
+	);
 	const target = useMemo(
 		() => targetFromSegments(route.segments),
 		[route.segments],
@@ -41,6 +54,32 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 		}),
 		[setTarget],
 	);
+	const handleBack = useCallback(() => window.history.back(), []);
+	const handleClear = useCallback(() => setTarget([]), [setTarget]);
+	const snapshot = catalog.data;
+	const parts = useMemo(
+		() =>
+			target && snapshot
+				? playgroundParts({
+						target,
+						snapshot,
+						follow: interaction.follow,
+					})
+				: null,
+		[interaction.follow, snapshot, target],
+	);
+	const unifiedNote = useMemo(() => {
+		if (!target || !snapshot) return null;
+		const noteKey = fixtureNoteKey(target);
+		const noteData = noteKey ? snapshot.notes[noteKey] : null;
+		return noteData
+			? renderFixtureNoteParts({
+					noteData,
+					presentation: "Sheet",
+					follow: interaction.follow,
+				})
+			: null;
+	}, [interaction.follow, snapshot, target]);
 
 	if (catalog.isPending) {
 		return (
@@ -65,13 +104,6 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 		);
 	}
 
-	const parts = target
-		? playgroundParts({
-				target,
-				snapshot: catalog.data,
-				follow: interaction.follow,
-			})
-		: null;
 	return (
 		<div className="flex h-full min-h-0">
 			<Catalog
@@ -82,41 +114,59 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 			<div className="min-w-0 flex-1 overflow-auto p-6">
 				{parts ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
-						<div className="flex flex-wrap items-start gap-8">
-							<div className="grid max-w-full gap-8">
-								<Stage label="Card">
+						<NoteSurface
+							sectionChrome={sectionChrome}
+							className="grid gap-10"
+						>
+							<MorphStudio
+								label={parts.label}
+								columnRem={parts.columnRem}
+								unifiedHeading={
+									unifiedNote?.heading ?? parts.heading.cover
+								}
+								unifiedBody={
+									unifiedNote?.body ?? parts.body.sheet
+								}
+								sectionChrome={sectionChrome}
+								onSectionChromeChange={setSectionChrome}
+								onBack={handleBack}
+								onClear={handleClear}
+							/>
+							<div className="flex flex-wrap items-start gap-8">
+								<div className="grid max-w-full gap-8">
+									<Stage label="Card">
+										<StagedPresentation
+											form="card"
+											parts={parts}
+										/>
+									</Stage>
+									<Stage label="Card Tail">
+										<StagedPresentation
+											form="tail-above"
+											parts={parts}
+										/>
+									</Stage>
+								</div>
+								<Stage label="Cover" className="min-w-0 flex-1">
 									<StagedPresentation
-										form="card"
+										form="cover"
 										parts={parts}
-									/>
-								</Stage>
-								<Stage label="Card Tail">
-									<StagedPresentation
-										form="tail-above"
-										parts={parts}
+										chrome={{
+											back: {
+												label: "Back",
+												enabled: true,
+												onPress: handleBack,
+											},
+											clear: {
+												label: "Put the Note away",
+												enabled: true,
+												onPress: handleClear,
+											},
+										}}
 									/>
 								</Stage>
 							</div>
-							<Stage label="Cover" className="min-w-0 flex-1">
-								<StagedPresentation
-									form="cover"
-									parts={parts}
-									chrome={{
-										back: {
-											label: "Back",
-											enabled: true,
-											onPress: () =>
-												window.history.back(),
-										},
-										clear: {
-											label: "Put the Note away",
-											enabled: true,
-											onPress: () => setTarget([]),
-										},
-									}}
-								/>
-							</Stage>
-						</div>
+						</NoteSurface>
 					</WorkspaceInteractionProvider>
 				) : (
 					<p className="text-sm text-ink-muted">

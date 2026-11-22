@@ -26,6 +26,7 @@
 	"files": [
 		"dist",
 		"src/styles.css",
+		"src/note-morph.css",
 		"README.md"
 	],
 	"scripts": {

@@ -48,6 +48,10 @@ function headingText(card: ReturnType<typeof clickDeck>[number]): string {
 	});
 	/* the words as they read, whatever elements hold them */
 	return renderToStaticMarkup(heading)
+		.replace(
+			/(<span aria-hidden="true"[^>]*me-\[0\.38em\][^>]*>.*?<\/span>)/,
+			"$1 ",
+		)
 		.replaceAll(/<[^>]+>/g, "")
 		.replaceAll(/\s+/g, " ")
 		.trim();

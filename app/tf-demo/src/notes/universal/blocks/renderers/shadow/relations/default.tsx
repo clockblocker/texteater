@@ -1,6 +1,16 @@
-import { IconSwap, LinkButton, NoteSection } from "lego";
+import {
+	IconSwap,
+	LinkButton,
+	NoteList,
+	NoteMorphReveal,
+	NoteSection,
+} from "lego";
 import { BrushCleaningIcon, LoaderCircleIcon } from "lucide-react";
 
+import {
+	formatCoreFeatureEntries,
+	formatLemmaClassLine,
+} from "../../../../caption/metadata";
 import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
@@ -11,7 +21,8 @@ import { RouteMark } from "../../common/route-mark";
 /**
  * Who points at this Shadow, and what it might turn out to be. Each pending
  * relation can be cleaned up from here once the referring Reading no longer
- * needs it.
+ * needs it. Secondary sections and cleanup controls fold cleanly in Card via
+ * `visibility="sheet"` without forking the DOM tree.
  */
 type ShadowRelationsProps = Parameters<GrammaticalDefaultRenderer<"Shadow">>[0];
 
@@ -21,7 +32,6 @@ function ShadowRelations({
 	Citation,
 }: ShadowRelationsProps) {
 	const { references, cleanup } = PresentationCapabilities;
-	const isCard = PresentationCapabilities.presentation === "Card";
 	const { candidates } = noteData.inspection;
 	// A Breakdown's Constituents and a Source show under Formations instead
 	// (ADR 0050).
@@ -41,8 +51,8 @@ function ShadowRelations({
 	return (
 		<>
 			{referrers.length > 0 ? (
-				<NoteSection aria-label="Referenced by" label="Referenced by">
-					<ul className="grid gap-2">
+				<NoteSection label="Referenced by">
+					<NoteList>
 						{referrers.map((referrer) => (
 							<li
 								key={referrer.reading.readingId}
@@ -56,7 +66,10 @@ function ShadowRelations({
 									}
 								>
 									<RouteMark hop="reachedFrom" />
-									<span className="me-[0.35em] text-ink">
+									<span
+										aria-hidden="true"
+										className="me-[0.35em] text-ink"
+									>
 										{referrer.reading.emojiDescription}
 									</span>
 									{citationText(
@@ -68,7 +81,10 @@ function ShadowRelations({
 								</LinkButton>
 								{referrer.pendingRelations.length > 0 ||
 								referrer.structuralReferences.length > 0 ? (
-									<ul className="ms-7 grid gap-1 text-sm text-ink-soft">
+									<NoteList
+										gap="tight"
+										className="ms-7 text-[length:var(--note-aside-size,0.875rem)] text-ink-soft"
+									>
 										{referrer.pendingRelations.map(
 											(pending) => (
 												<li
@@ -83,35 +99,40 @@ function ShadowRelations({
 													<span>
 														{pending.relation}
 													</span>
-													{cleanup.resolve &&
-													!isCard ? (
-														<LinkButton
-															tone="quiet"
-															className="ms-3 text-xs"
-															disabled={
-																cleanup.activeLocator !==
-																null
-															}
-															onClick={() =>
-																void cleanup.resolve?.(
-																	pending.locatorKey,
-																)
-															}
+													{cleanup.resolve ? (
+														<NoteMorphReveal
+															as="span"
+															visibility="sheet"
+															className="inline-grid"
 														>
-															<IconSwap
-																active={
-																	cleanup.activeLocator ===
-																	pending.locatorKey
+															<LinkButton
+																tone="quiet"
+																className="ms-3 text-xs"
+																disabled={
+																	cleanup.activeLocator !==
+																	null
 																}
-																idle={
-																	<BrushCleaningIcon />
+																onClick={() =>
+																	void cleanup.resolve?.(
+																		pending.locatorKey,
+																	)
 																}
-																busy={
-																	<LoaderCircleIcon className="animate-spin" />
-																}
-															/>
-															Clean up
-														</LinkButton>
+															>
+																<IconSwap
+																	active={
+																		cleanup.activeLocator ===
+																		pending.locatorKey
+																	}
+																	idle={
+																		<BrushCleaningIcon />
+																	}
+																	busy={
+																		<LoaderCircleIcon className="animate-spin" />
+																	}
+																/>
+																Clean up
+															</LinkButton>
+														</NoteMorphReveal>
 													) : null}
 												</li>
 											),
@@ -127,12 +148,12 @@ function ShadowRelations({
 												</li>
 											),
 										)}
-									</ul>
+									</NoteList>
 								) : null}
 							</li>
 						))}
-					</ul>
-					{!isCard && references.hasMore ? (
+					</NoteList>
+					{references.hasMore ? (
 						<LoadMore
 							label="Load more references"
 							isLoading={references.isLoading}
@@ -149,9 +170,9 @@ function ShadowRelations({
 					) : null}
 				</NoteSection>
 			) : null}
-			{!isCard && candidates.length > 0 ? (
-				<NoteSection aria-label="Could be" label="Could be">
-					<ul className="grid gap-2">
+			{candidates.length > 0 ? (
+				<NoteSection label="Could be" visibility="sheet">
+					<NoteList>
 						{candidates.map((candidate) => (
 							<li key={candidate.lemmaId}>
 								<LinkButton
@@ -166,16 +187,19 @@ function ShadowRelations({
 								</LinkButton>
 								<RouteAside>
 									{[
-										`${candidate.family} · ${candidate.kind}`,
-										...candidate.coreFeatures.map(
-											({ name, value }) =>
-												`${name} ${value}`,
+										formatLemmaClassLine(
+											candidate.family,
+											candidate.kind,
+										),
+										...formatCoreFeatureEntries(
+											noteData.descriptor.language,
+											candidate.coreFeatures,
 										),
 									].join(" · ")}
 								</RouteAside>
 							</li>
 						))}
-					</ul>
+					</NoteList>
 				</NoteSection>
 			) : null}
 			{cleanup.outcome ? (

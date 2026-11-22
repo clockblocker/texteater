@@ -2,7 +2,7 @@ import type { Box, WritingDirection } from "compass";
 import { animate, type MotionValue } from "motion/react";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
-import { inlineSign, type NoteHandle } from "./gesture";
+import { inlineSign, type MorphVelocity, type NoteHandle } from "./gesture";
 
 /**
  * The imperative moves a gesture makes on a Note's motion values. Every
@@ -14,6 +14,7 @@ export function useNoteMoves() {
 		transition,
 		SPRING,
 		MORPH,
+		LEAVING,
 		FLY_DISTANCE,
 		FLY_ROTATE_TO,
 		FLY_TRAVEL,
@@ -87,21 +88,31 @@ export function useNoteMoves() {
 		},
 		/**
 		 * The Note stays exactly where the hand left it and grows from
-		 * there: its drag offset is folded into its box, so the next box it
-		 * is given is a morph from the hand.
+		 * there: its drag offset is folded into its box, carrying any fresh
+		 * release velocity so the next box it is given morphs seamlessly
+		 * from the hand.
 		 */
-		foldOffset(h: NoteHandle) {
+		foldOffset(h: NoteHandle, velocity?: MorphVelocity) {
 			const at = h.box();
-			h.morphFrom({
-				...at,
-				left: at.left + h.x.get(),
-				top: at.top + h.y.get(),
-			});
+			h.morphFrom(
+				{
+					...at,
+					left: at.left + h.x.get(),
+					top: at.top + h.y.get(),
+				},
+				velocity,
+			);
 			/* jump, not set: a set would hand the spring the drag's velocity */
 			h.x.jump(0);
 			h.y.jump(0);
-			if (reduce) h.rotate.jump(0);
-			else animate(h.rotate, 0, MORPH);
+			if (reduce) {
+				h.rotate.jump(0);
+				h.opacity.jump(1);
+			} else {
+				animate(h.rotate, 0, MORPH);
+				if (h.opacity.get() < 1)
+					animate(h.opacity, 1, transition(LEAVING));
+			}
 		},
 		/** The box jumps to `box`: a Sheet lifted by its bar emerges from the bar. */
 		jumpTo(h: NoteHandle, box: Box) {

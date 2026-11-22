@@ -1,9 +1,10 @@
 import {
 	NoteBone,
 	NoteLinesSkeleton,
+	NoteList,
+	NoteMorphReveal,
 	NoteQuoteSkeleton,
 	NoteRouteRowsSkeleton,
-	NoteSection,
 	NoteSectionSkeleton,
 	NoteSkeleton,
 	NoteTagsSkeleton,
@@ -32,9 +33,9 @@ type SkeletonProps = {
 };
 
 /**
- * What a Note looks like while its data is still on the way. Each kind keeps
- * the blocks its loaded form will have, in the density its Presentation
- * gives it: a Card shows the first block only, a Sheet the whole route.
+ * What a Note looks like while its data is still on the way. Each kind uses
+ * one unified skeleton tree across Card and Sheet forms: primary blocks stay
+ * anchored in both, while secondary blocks fold smoothly via `visibility="sheet"`.
  */
 export function NoteSkeletonFor({
 	kind,
@@ -70,43 +71,30 @@ function Hop({ hop }: { hop: RouteHop }) {
 }
 
 function ReadingNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const title =
-		part === "Note" ? (
-			<NoteTitleSkeleton>
-				<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
-				<NoteBone tone="headword" className="h-[0.8em] w-28" />
-			</NoteTitleSkeleton>
-		) : null;
-	if (presentation === "Card")
-		return (
-			<NoteSkeleton density="compact" label="Loading Reading Note">
-				{title}
-				<NoteSection label="">
-					<NoteLinesSkeleton
-						className="px-2"
-						widths={["w-full", "w-2/3"]}
-					/>
-				</NoteSection>
-				<NoteSectionSkeleton className="compact:before:hidden">
-					<NoteQuoteSkeleton />
-				</NoteSectionSkeleton>
-				<NoteTagsSkeleton count={4} />
-			</NoteSkeleton>
-		);
-	/* a Sheet keeps the Blocks of a loaded Reading in their order: its
-	   Source Contexts, its Relations, its Definition */
 	return (
-		<NoteSkeleton density="comfortable" label="Loading Reading Note">
-			{title}
+		<NoteSkeleton
+			density={densityFor(presentation)}
+			underHeading={part === "Body"}
+			label="Loading Reading Note"
+		>
+			{part === "Note" ? (
+				<NoteTitleSkeleton>
+					<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
+					<NoteBone tone="headword" className="h-[0.8em] w-28" />
+				</NoteTitleSkeleton>
+			) : null}
 			<NoteSectionSkeleton>
-				<div className="grid gap-3">
+				<NoteList as="div" gap="loose">
 					<NoteQuoteSkeleton />
-					<NoteQuoteSkeleton widths={["w-full", "w-5/6", "w-2/5"]} />
-				</div>
+					<NoteMorphReveal visibility="sheet">
+						<NoteQuoteSkeleton
+							widths={["w-full", "w-5/6", "w-2/5"]}
+						/>
+					</NoteMorphReveal>
+				</NoteList>
 			</NoteSectionSkeleton>
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
-					className="gap-1"
 					mark={
 						<RelationMark
 							relation="nearSynonym"
@@ -128,45 +116,43 @@ function ReadingNoteSkeleton({ presentation, part }: SkeletonProps) {
 }
 
 function LemmaNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
+			underHeading={part === "Body"}
 			label="Loading Lemma Note"
 		>
 			{part === "Note" ? <NoteTitleSkeleton width="w-24" /> : null}
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="leadsTo" />}
-					widths={isCard ? ["w-36"] : ["w-36", "w-28"]}
+					widths={["w-36", "w-28"]}
 				/>
 			</NoteSectionSkeleton>
-			{isCard ? null : (
-				<NoteSectionSkeleton>
-					<NoteRouteRowsSkeleton
-						mark={<Hop hop="reachedFrom" />}
-						widths={["w-20", "w-24", "w-16"]}
-						className="flex flex-wrap gap-x-5 gap-y-2"
-					/>
-				</NoteSectionSkeleton>
-			)}
+			<NoteSectionSkeleton visibility="sheet">
+				<NoteRouteRowsSkeleton
+					mark={<Hop hop="reachedFrom" />}
+					widths={["w-20", "w-24", "w-16"]}
+					layout="wrap"
+				/>
+			</NoteSectionSkeleton>
 			<NoteTagsSkeleton count={3} />
 		</NoteSkeleton>
 	);
 }
 
 function SurfaceNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
+			underHeading={part === "Body"}
 			label="Loading Surface Note"
 		>
 			{part === "Note" ? <NoteTitleSkeleton width="w-32" /> : null}
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="leadsTo" />}
-					widths={isCard ? ["w-40"] : ["w-40", "w-32"]}
+					widths={["w-40", "w-32"]}
 				/>
 			</NoteSectionSkeleton>
 			<NoteTagsSkeleton count={2} />
@@ -175,40 +161,32 @@ function SurfaceNoteSkeleton({ presentation, part }: SkeletonProps) {
 }
 
 function AttestationNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
+			underHeading={part === "Body"}
 			label="Loading Attestation Note"
 		>
 			{part === "Note" ? <NoteTitleSkeleton width="w-36" /> : null}
-			<NoteSectionSkeleton className="compact:before:hidden">
-				<NoteQuoteSkeleton
-					widths={
-						isCard
-							? ["w-full", "w-3/5"]
-							: ["w-full", "w-full", "w-2/5"]
-					}
+			<NoteSectionSkeleton>
+				<NoteQuoteSkeleton widths={["w-full", "w-4/5"]} />
+			</NoteSectionSkeleton>
+			<NoteSectionSkeleton visibility="sheet">
+				<NoteRouteRowsSkeleton
+					mark={<Hop hop="leadsTo" />}
+					widths={["w-40"]}
 				/>
 			</NoteSectionSkeleton>
-			{isCard ? null : (
-				<NoteSectionSkeleton>
-					<NoteRouteRowsSkeleton
-						mark={<Hop hop="leadsTo" />}
-						widths={["w-40"]}
-					/>
-				</NoteSectionSkeleton>
-			)}
 			<NoteTagsSkeleton count={2} />
 		</NoteSkeleton>
 	);
 }
 
 function ShadowNoteSkeleton({ presentation, part }: SkeletonProps) {
-	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
+			underHeading={part === "Body"}
 			label="Loading Shadow Note"
 		>
 			{part === "Note" ? (
@@ -223,17 +201,15 @@ function ShadowNoteSkeleton({ presentation, part }: SkeletonProps) {
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="reachedFrom" />}
-					widths={isCard ? ["w-32"] : ["w-32", "w-28"]}
+					widths={["w-32", "w-28"]}
 				/>
 			</NoteSectionSkeleton>
-			{isCard ? null : (
-				<NoteSectionSkeleton>
-					<NoteRouteRowsSkeleton
-						mark={<Hop hop="candidate" />}
-						widths={["w-24"]}
-					/>
-				</NoteSectionSkeleton>
-			)}
+			<NoteSectionSkeleton visibility="sheet">
+				<NoteRouteRowsSkeleton
+					mark={<Hop hop="candidate" />}
+					widths={["w-24"]}
+				/>
+			</NoteSectionSkeleton>
 			<NoteTagsSkeleton count={4} />
 		</NoteSkeleton>
 	);

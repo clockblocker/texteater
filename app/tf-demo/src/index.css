@@ -32,6 +32,40 @@
 			color, background-color, border-color, outline-color,
 			text-decoration-color, fill, stroke;
 	}
+
+	:root[data-motion-preference="ignore"] [data-slot="quote"]::before {
+		transition: background-color 150ms ease-out;
+	}
+
+	:root[data-motion-preference="ignore"]
+		[data-slot="note-section"][data-visibility="sheet"],
+	:root[data-motion-preference="ignore"] [data-slot="note-morph-reveal"] {
+		transition: grid-template-rows 220ms cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	@supports (height: calc-size(auto, size)) {
+		:root[data-motion-preference="ignore"]
+			[data-slot="note-section"][data-visibility="sheet"],
+		:root[data-motion-preference="ignore"] [data-slot="note-morph-reveal"] {
+			transition: none;
+		}
+	}
+
+	:root[data-motion-preference="ignore"]
+		[data-title-bar][data-title-fold-transition]
+		[data-slot="note-title-row"] {
+		transition:
+			font-size 200ms cubic-bezier(0.23, 1, 0.32, 1),
+			line-height 200ms cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	:root[data-motion-preference="ignore"]
+		[data-title-bar][data-title-fold-transition]
+		[data-slot="note-title"] {
+		transition:
+			font-weight 200ms cubic-bezier(0.23, 1, 0.32, 1),
+			letter-spacing 200ms cubic-bezier(0.23, 1, 0.32, 1);
+	}
 }
 
 /* A word that arrives into a Note that was already showing its bone for it. */

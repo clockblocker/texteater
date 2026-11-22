@@ -12,19 +12,36 @@ export function ValencyPreposition({
 	readonly children: ReactNode;
 }) {
 	return (
-		<span data-slot="valency-preposition" className="italic">
+		<span
+			data-slot="valency-preposition"
+			className="font-normal text-ink-soft"
+		>
 			{children}
 		</span>
 	);
 }
 
-/** A slot: the German line's case token, or a translation's placeholder. */
-export function ValencySlot({ children }: { readonly children: ReactNode }) {
+/**
+ * A slot: the German line's case token (`token`, monospaced and softened), a
+ * German free-marker placeholder (`placeholder`, proportional sans in soft
+ * ink), or a translation's placeholder (`gloss`, proportional sans in muted
+ * ink).
+ */
+export function ValencySlot({
+	children,
+	variant = "token",
+}: {
+	readonly children: ReactNode;
+	readonly variant?: "token" | "placeholder" | "gloss";
+}) {
+	const className =
+		variant === "gloss"
+			? "text-ink-muted"
+			: variant === "placeholder"
+				? "font-normal text-ink-soft"
+				: "font-mono text-[0.82em] font-[450] text-ink-soft";
 	return (
-		<span
-			data-slot="valency-token"
-			className="font-mono text-[0.9em] text-ink-soft"
-		>
+		<span data-slot="valency-token" className={className}>
 			{children}
 		</span>
 	);

@@ -15,6 +15,7 @@ export const renderDefaultShadowHeading = (({ noteData }) => {
 			<NoteTitleRow>
 				<NoteTitle
 					data-shadow-title=""
+					lang={descriptor.language}
 					className="flex items-center gap-2 text-link-shadow"
 				>
 					<LockIcon
@@ -23,7 +24,7 @@ export const renderDefaultShadowHeading = (({ noteData }) => {
 					/>
 					<span>{descriptor.canonicalForm}</span>
 				</NoteTitle>
-				<span className="text-sm text-ink-muted">
+				<span className="text-sm tabular-nums text-ink-muted">
 					{inspection.candidates.length === 0
 						? "not in the dictionary yet"
 						: inspection.candidates.length === 1

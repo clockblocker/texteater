@@ -40,6 +40,10 @@ import { api } from "../../convex/_generated/api";
  * column's top leaves the first two lines above it under the Pane bar, and
  * its foot lets the last Sentence scroll clear of it.
  */
+/** The reading passage's typography, shared with the Palette live view. */
+export const READER_PROSE_CLASS =
+	"text-lg leading-[1.52] font-[430] tracking-[-0.015em]";
+
 const READER_BODY_CLASS =
 	"mx-auto w-full pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
 
@@ -395,7 +399,7 @@ export function SentenceList({
 
 	return (
 		<article
-			className="space-y-7 text-lg leading-[1.52] font-[430] tracking-[-0.015em] @max-md:space-y-6 @max-md:text-base"
+			className={`space-y-7 ${READER_PROSE_CLASS} @max-md:space-y-6 @max-md:text-base`}
 			aria-label="Text"
 		>
 			{paragraphsOf(sentences).map((paragraph) => (

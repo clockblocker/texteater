@@ -1,5 +1,5 @@
 import {
-	DensityScope,
+	NoteFrame,
 	NoteRouteRowsSkeleton,
 	NoteSection,
 	NoteTags,
@@ -13,7 +13,6 @@ import { SourceQuote } from "../blocks/renderers/common/source-quote";
 import { CaptionedHeading } from "../caption/heading-caption";
 import { UnitTitle, type UnitTitlePart } from "../caption/unit-title";
 import type { Caption } from "../caption/wording";
-import { CARD_BODY_UNDER_HEADING } from "./render";
 
 type ResolvingAttestation = {
 	/** The clicked unit, as the stored Note's Heading will spell it. */
@@ -42,7 +41,7 @@ export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 		<CaptionedHeading
 			presentation={input.presentation}
 			title={
-				<NoteTitle data-attestation-title="">
+				<NoteTitle data-attestation-title="" lang={input.language}>
 					<UnitTitle parts={input.title} />
 				</NoteTitle>
 			}
@@ -64,53 +63,41 @@ function ResolvingAttestationBody({
 	readonly heading: ReactElement | null;
 }) {
 	return (
-		<DensityScope
-			density={input.presentation === "Card" ? "compact" : "comfortable"}
+		<NoteFrame
+			mode={input.presentation === "Card" ? "card" : "sheet"}
+			underHeading={!heading}
+			frameAs={heading ? "article" : "div"}
 			data-note-presentation={input.presentation}
 			data-note-kind="Attestation"
-			className="min-h-full bg-paper text-base text-ink compact:text-sm"
+			frameLabel={heading ? "Attestation Note" : undefined}
+			frameBusy={!input.settled}
 		>
-			<article
-				className={`mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5 ${heading ? "" : CARD_BODY_UNDER_HEADING}`}
-				aria-label="Attestation Note"
-				aria-busy={input.settled ? undefined : true}
-			>
-				{heading}
-				<NoteSection
-					aria-label="Source"
-					label="Source"
-					className="compact:before:hidden"
-				>
-					<SourceQuote
-						segments={input.segments}
-						memberSegmentIndices={input.memberSegmentIndices}
-						language={input.language}
-						origin={{ kind: "Scroll" }}
-						follow={input.follow}
+			{heading}
+			<NoteSection label="Source">
+				<SourceQuote
+					segments={input.segments}
+					memberSegmentIndices={input.memberSegmentIndices}
+					language={input.language}
+					origin={{ kind: "Scroll" }}
+					follow={input.follow}
+				/>
+			</NoteSection>
+			{input.settled ? null : (
+				<NoteSection label="Route" aria-busy="true">
+					<NoteRouteRowsSkeleton
+						mark={
+							<RouteMark
+								hop="leadsTo"
+								className="text-ink-faint"
+							/>
+						}
+						widths={["w-36", "w-28"]}
 					/>
 				</NoteSection>
-				{input.settled ? null : (
-					<NoteSection
-						aria-label="Route"
-						label="Route"
-						aria-busy="true"
-					>
-						<NoteRouteRowsSkeleton
-							mark={
-								<RouteMark
-									hop="leadsTo"
-									className="text-ink-faint"
-								/>
-							}
-							widths={["w-36", "w-28"]}
-						/>
-					</NoteSection>
-				)}
-				<NoteTags>
-					<span>de</span>
-					<span>Attestation</span>
-				</NoteTags>
-			</article>
-		</DensityScope>
+			)}
+			<NoteTags>
+				<span>In text</span>
+			</NoteTags>
+		</NoteFrame>
 	);
 }

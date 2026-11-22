@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "./note-morph.css";
 
 /* Utility classes used inside lego live next to this file, outside any
    consumer's automatic source detection. */
@@ -9,15 +10,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Density is set by a presentation container (`group/density` with
-   `data-density`) so molecules can tighten themselves inside a Card. */
+/* Density variant retained for backwards compatibility with legacy consumers. */
 @custom-variant compact (&:is([data-density="compact"] *));
+
+/* Declarative Card (0) -> Sheet (1) morph progress. Registered as a typed
+   custom property so CSS transitions and Motion-driven values alike can
+   interpolate smoothly across every Note molecule beneath a `NoteSurface`. */
+@property --note-morph {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 1;
+}
 
 @theme inline {
 	--font-sans: "Geist Variable", sans-serif;
 	--font-heading: var(--font-sans);
 	--font-mono:
 		ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+	--font-ipa:
+		"Doulos SIL", "Charis SIL", "Gentium Plus", "Noto Sans", "Segoe UI",
+		system-ui, sans-serif;
 
 	/* shadcn semantic palette */
 	--color-background: var(--background);
@@ -52,22 +64,32 @@
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
 
-	/* Ink: four steps from body text to the faintest legible mark. */
+	/* Ink: five steps from primary body text to placeholder and decorative marks. */
 	--color-ink: var(--ink);
 	--color-ink-soft: var(--ink-soft);
 	--color-ink-muted: var(--ink-muted);
 	--color-ink-faint: var(--ink-faint);
+	--color-ink-placeholder: var(--ink-placeholder);
 
 	/* Surfaces: the canvas behind Panes, the paper a Sheet or Card rests on,
-	   and one raised step for hover and popups. */
+	   the elevated paper plane for active floating Cards, and raised hover/popups. */
 	--color-canvas: var(--canvas);
 	--color-paper: var(--paper);
+	--color-paper-elevated: var(--paper-elevated);
 	--color-raised: var(--raised);
 	--color-scrim: var(--scrim);
+	--color-skeleton: var(--skeleton);
 
-	/* Lines: hairline rules and the stronger edge of a separator or Card. */
+	/* Lines: whisper-quiet hairlines, structural borders, and stronger dividers. */
+	--color-hairline: var(--hairline);
 	--color-line: var(--line);
 	--color-line-strong: var(--line-strong);
+
+	/* Elevation shadows for floating Cards, inactive tails, and rising Covers. */
+	--shadow-card-rest: var(--shadow-card-rest);
+	--shadow-card-lift: var(--shadow-card-lift);
+	--shadow-card-tail: var(--shadow-card-tail);
+	--shadow-cover: var(--shadow-cover);
 
 	/* Linguistic tones: grammatical gender of a headword. Each sits at the
 	   link's lightness and chroma on its own hue, so a gendered title reads
@@ -102,8 +124,8 @@
 	--radius-3xl: calc(var(--radius) * 2.2);
 	--radius-4xl: calc(var(--radius) * 2.6);
 
-	/* One reading column shared by Texts and Notes. */
-	--container-note: 48rem;
+	/* One reading column shared by Texts and Notes (38rem content + 5rem gutters). */
+	--container-note: 43rem;
 	--spacing-note-gutter: 2.5rem;
 	--spacing-note-top: 3.5rem;
 
@@ -120,12 +142,12 @@
 	}
 }
 
-/* A bone's sheen: a soft highlight drawn over the bone's own colour. */
+/* A bone's sheen: a soft oklab highlight drawn over the bone's own colour. */
 @utility bone-sheen {
 	background-image: linear-gradient(
-		100deg,
+		100deg in oklab,
 		transparent 30%,
-		color-mix(in srgb, var(--ink) 18%, transparent) 50%,
+		color-mix(in oklab, var(--ink) 16%, transparent) 50%,
 		transparent 70%
 	);
 	background-attachment: fixed;
@@ -140,7 +162,7 @@
    colour of its own because the text is transparent. */
 @utility word-sheen {
 	background-image: linear-gradient(
-		100deg,
+		100deg in oklab,
 		transparent 30%,
 		var(--word-known) 50%,
 		transparent 70%
@@ -152,19 +174,37 @@
 	animation: var(--animate-bone);
 }
 
-/* One palette for now. The light theme deliberately reuses these values
-   until a light appearance is designed; `.dark` therefore adds nothing. */
+/* Dark appearance is the default on `:root`; `.light` overrides surfaces,
+   inks, borders, shadows, and accent primitives with WCAG AA contrast. */
 :root {
 	--canvas: oklch(21.2% 0.016 256.8);
 	--paper: oklch(24.6% 0.015 256.8);
+	--paper-elevated: oklch(27.2% 0.016 256.8);
 	--raised: oklch(31.8% 0.031 256.3);
 	--scrim: oklch(13.4% 0.01 260.6);
-	--ink: oklch(92.1% 0.006 255.5);
-	--ink-soft: oklch(73.6% 0.016 257.2);
-	--ink-muted: oklch(66.6% 0.021 255.6);
-	--ink-faint: oklch(51.2% 0.023 260.1);
+	--ink: oklch(93.5% 0.006 255.5);
+	--ink-soft: oklch(85% 0.012 257);
+	--ink-muted: oklch(77% 0.016 256);
+	--ink-faint: oklch(60% 0.02 258);
+	--ink-placeholder: oklch(64% 0.018 258);
 	--line: oklch(36.2% 0.018 258.4);
 	--line-strong: oklch(50.2% 0.038 256.8);
+	--hairline: oklch(1 0 0 / 0.06);
+	--skeleton: oklch(32% 0.016 257);
+
+	--border-card-rest: oklch(1 0 0 / 0.09);
+	--border-card-tail: oklch(1 0 0 / 0.06);
+	--border-cover: oklch(1 0 0 / 0.08);
+
+	--shadow-card-rest:
+		inset 0 1px 0 oklch(1 0 0 / 0.06), 0 10px 28px -6px oklch(0 0 0 / 0.55),
+		0 24px 52px -14px oklch(0 0 0 / 0.45);
+	--shadow-card-lift:
+		inset 0 1px 0 oklch(1 0 0 / 0.09), 0 16px 38px -8px oklch(0 0 0 / 0.62),
+		0 32px 68px -16px oklch(0 0 0 / 0.52);
+	--shadow-card-tail: 0 2px 8px -2px oklch(0 0 0 / 0.22);
+	--shadow-cover:
+		inset 0 1px 0 oklch(1 0 0 / 0.06), 0 -10px 36px -8px oklch(0 0 0 / 0.55);
 
 	/* Primitives. One accent ramp on hue 257, plus one step per status hue.
 	   The link and the three gender hues share one lightness (82%) and
@@ -202,7 +242,9 @@
 	--card-foreground: var(--ink);
 	--popover: var(--paper);
 	--popover-foreground: var(--ink);
-	--primary: var(--link);
+	/* Primary UI control accent is independent of `--link` so grammatical
+	   tone overrides on `--link` never bleed into control chrome. */
+	--primary: oklch(78% 0.09 257);
 	--primary-foreground: oklch(20.8% 0.026 260.9);
 	--secondary: var(--raised);
 	--secondary-foreground: oklch(92.5% 0.036 256);
@@ -230,6 +272,57 @@
 	--sidebar-ring: var(--primary);
 }
 
+.light {
+	color-scheme: light;
+	--canvas: oklch(95.5% 0.006 256.8);
+	--paper: oklch(99% 0.003 256.8);
+	--paper-elevated: oklch(100% 0 0);
+	--raised: oklch(92.5% 0.012 256.8);
+	--scrim: oklch(18% 0.015 260);
+	--ink: oklch(20% 0.015 256.8);
+	--ink-soft: oklch(34% 0.018 257);
+	--ink-muted: oklch(44% 0.02 256);
+	--ink-faint: oklch(55% 0.018 258);
+	--ink-placeholder: oklch(50% 0.018 258);
+	--line: oklch(86% 0.012 258);
+	--line-strong: oklch(72% 0.022 257);
+	--hairline: oklch(0 0 0 / 0.08);
+	--skeleton: oklch(90% 0.009 257);
+
+	--border-card-rest: oklch(0 0 0 / 0.08);
+	--border-card-tail: oklch(0 0 0 / 0.06);
+	--border-cover: oklch(0 0 0 / 0.08);
+
+	--shadow-card-rest:
+		0 8px 24px -6px oklch(20% 0.02 257 / 0.12),
+		0 20px 44px -14px oklch(20% 0.02 257 / 0.1);
+	--shadow-card-lift:
+		0 14px 34px -8px oklch(20% 0.02 257 / 0.18),
+		0 28px 60px -16px oklch(20% 0.02 257 / 0.14);
+	--shadow-card-tail: 0 1px 4px -1px oklch(20% 0.02 257 / 0.06);
+	--shadow-cover: 0 -8px 32px -8px oklch(20% 0.02 257 / 0.14);
+
+	--blue-600: oklch(48% 0.11 257);
+	--blue-500: oklch(42% 0.13 257);
+	--blue-400: oklch(36% 0.13 257);
+	--amber-500: oklch(48% 0.12 75);
+	--red-500: oklch(48% 0.18 24);
+	--rose-500: oklch(46% 0.14 15);
+	--violet-500: oklch(45% 0.14 295);
+	--green-500: oklch(44% 0.12 150);
+
+	--primary: oklch(44% 0.14 257);
+	--primary-foreground: oklch(98.5% 0.004 257);
+	--secondary: var(--raised);
+	--secondary-foreground: var(--ink);
+	--muted: oklch(93% 0.008 258);
+	--muted-foreground: var(--ink-muted);
+	--accent: var(--raised);
+	--accent-foreground: var(--ink);
+	--sidebar: oklch(93.5% 0.008 258);
+	--sidebar-accent-foreground: var(--ink);
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
@@ -239,8 +332,13 @@
 		color-scheme: dark;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		font-optical-sizing: auto;
+		-webkit-tap-highlight-color: transparent;
+		-webkit-text-size-adjust: 100%;
+		overscroll-behavior: none;
 		/* Underlines sit below descenders in German and Hebrew prose alike. */
 		text-underline-position: from-font;
+		text-decoration-thickness: from-font;
 		text-decoration-skip-ink: auto;
 	}
 	body {
@@ -260,9 +358,11 @@
 		scrollbar-color: color-mix(in oklch, var(--ink) 18%, transparent)
 			transparent;
 	}
-	*:hover {
-		scrollbar-color: color-mix(in oklch, var(--ink) 34%, transparent)
-			transparent;
+	@media (hover: hover) and (pointer: fine) {
+		*:hover {
+			scrollbar-color: color-mix(in oklch, var(--ink) 34%, transparent)
+				transparent;
+		}
 	}
 	@supports not (scrollbar-color: auto auto) {
 		::-webkit-scrollbar {
@@ -278,8 +378,14 @@
 			background-clip: padding-box;
 			border: 2px solid transparent;
 		}
-		:hover::-webkit-scrollbar-thumb {
-			background-color: color-mix(in oklch, var(--ink) 34%, transparent);
+		@media (hover: hover) and (pointer: fine) {
+			:hover::-webkit-scrollbar-thumb {
+				background-color: color-mix(
+					in oklch,
+					var(--ink) 34%,
+					transparent
+				);
+			}
 		}
 	}
 }

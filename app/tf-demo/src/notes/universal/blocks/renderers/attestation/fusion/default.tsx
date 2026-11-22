@@ -12,7 +12,7 @@ export const renderDefaultAttestationFusion = (({ noteData }) => {
 	const { fusions } = noteData.presented;
 	if (fusions.length === 0) return null;
 	return (
-		<NoteSection aria-label="Fusion" label="Fusion">
+		<NoteSection label="Fusion">
 			<ul className="grid gap-3">
 				{fusions.map((fusion) => (
 					<li key={JSON.stringify(fusion.components)}>

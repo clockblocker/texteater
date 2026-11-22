@@ -4,11 +4,10 @@ import {
 	animate,
 	type MotionValue,
 	useMotionValue,
-	useTransform,
 } from "motion/react";
 import { type RefObject, useEffect, useLayoutEffect, useRef } from "react";
 import type { motionOf, Spec, Tween } from "@/workspace/motion/motion-spec";
-import type { NoteHandle } from "./gesture";
+import type { MorphVelocity, NoteHandle } from "./gesture";
 import type { Form } from "./subject";
 
 type Transition = ReturnType<typeof motionOf>;
@@ -68,6 +67,54 @@ function placedBox(note: HTMLElement, place: PlacementStyle): Box | null {
 
 /** Below this many px, a morph's offset is no offset. */
 const SAME_PX = 0.01;
+/** Cap forwarded release velocity (px/s) to guard against touch spike artifacts. */
+const MAX_VELOCITY_PX_S = 4000;
+
+function clampVelocity(value: number): number {
+	if (!Number.isFinite(value)) return 0;
+	return Math.max(-MAX_VELOCITY_PX_S, Math.min(MAX_VELOCITY_PX_S, value));
+}
+
+function animateOffsetAxis(
+	value: MotionValue<number>,
+	initialVelocity: number,
+	MORPH: Transition,
+): AnimationPlaybackControls | null {
+	if (
+		Math.abs(value.get()) < SAME_PX &&
+		Math.abs(initialVelocity) < SAME_PX
+	) {
+		value.jump(0);
+		return null;
+	}
+	const spec =
+		initialVelocity !== 0 ? { ...MORPH, velocity: initialVelocity } : MORPH;
+	return animate(value, 0, spec);
+}
+
+function readLiveVelocity(
+	pending: MorphVelocity | null,
+	offsetX: MotionValue<number>,
+	offsetY: MotionValue<number>,
+): MorphVelocity | undefined {
+	if (pending) return pending;
+	const vx = offsetX.getVelocity();
+	const vy = offsetY.getVelocity();
+	return vx !== 0 || vy !== 0 ? { vx, vy } : undefined;
+}
+
+/** Visual bounding box of `box` when scaled by `scale` about `(0.5, growsFromTop ? 0 : 0.5)`. */
+function scaledBox(box: Box, scale: number, growsFromTop: boolean): Box {
+	if (Math.abs(scale - 1) < 1e-4) return box;
+	const width = box.width * scale;
+	const height = box.height * scale;
+	return {
+		left: box.left - (width - box.width) / 2,
+		top: growsFromTop ? box.top : box.top - (height - box.height) / 2,
+		width,
+		height,
+	};
+}
 
 /**
  * A Note's box. At rest it is its `place`: CSS the browser resolves
@@ -94,6 +141,8 @@ export function useNoteBox({
 	preview,
 	reduce,
 	MORPH,
+	restScale = 1,
+	growsFromTop = false,
 }: {
 	/** The Note's element, which the box is drawn on. */
 	element: RefObject<HTMLElement | null>;
@@ -101,6 +150,10 @@ export function useNoteBox({
 	preview: boolean;
 	reduce: boolean;
 	MORPH: Transition;
+	/** The Card's resting scale (`OPEN_SCALE` when front of Deck, `1` otherwise). */
+	restScale?: number;
+	/** Whether `restScale` anchors to the top edge (`originY: 0`) rather than centre. */
+	growsFromTop?: boolean;
 }): {
 	handle: RefObject<NoteHandle>;
 	insetInlineStart: MotionValue<string>;
@@ -110,6 +163,7 @@ export function useNoteBox({
 	shownX: MotionValue<number>;
 	shownY: MotionValue<number>;
 	rotate: MotionValue<number>;
+	scale: MotionValue<number>;
 	opacity: MotionValue<number>;
 } {
 	const insetInlineStart = useMotionValue(place.insetInlineStart);
@@ -123,20 +177,67 @@ export function useNoteBox({
 		width: useMotionValue(0),
 		height: useMotionValue(0),
 	};
-	const width = useTransform(() =>
-		offsetSize(placeWidth.get(), offset.width.get()),
-	);
-	const height = useTransform(() =>
-		offsetSize(placeHeight.get(), offset.height.get()),
-	);
+	const width = useMotionValue(offsetSize(place.width, 0));
+	const height = useMotionValue(offsetSize(place.height, 0));
 	const x = useMotionValue(0);
 	const y = useMotionValue(0);
 	const rotate = useMotionValue(0);
+	const scale = useMotionValue(restScale);
 	/* A dealt Note is simply there: opaque on its first frame, never faded. */
 	const opacity = useMotionValue(1);
-	const shownX = useTransform(() => offset.x.get() + x.get());
-	const shownY = useTransform(() => offset.y.get() + y.get());
+	const shownX = useMotionValue(0);
+	const shownY = useMotionValue(0);
 	const running = useRef<AnimationPlaybackControls[]>([]);
+	const pendingVelocity = useRef<MorphVelocity | null>(null);
+
+	function syncDerived() {
+		width.set(offsetSize(placeWidth.get(), offset.width.get()));
+		height.set(offsetSize(placeHeight.get(), offset.height.get()));
+		shownX.set(offset.x.get() + x.get());
+		shownY.set(offset.y.get() + y.get());
+	}
+
+	/* Drive derived size & translation synchronously rather than via Motion's
+	   async `useTransform` frame step, which can be cancelled on sibling
+	   reorders or StrictMode layout-effect reconnects when values `jump()`. */
+	useLayoutEffect(() => {
+		const updateWidth = () =>
+			width.set(offsetSize(placeWidth.get(), offset.width.get()));
+		const updateHeight = () =>
+			height.set(offsetSize(placeHeight.get(), offset.height.get()));
+		const updateX = () => shownX.set(offset.x.get() + x.get());
+		const updateY = () => shownY.set(offset.y.get() + y.get());
+		updateWidth();
+		updateHeight();
+		updateX();
+		updateY();
+		const stops = [
+			placeWidth.on("change", updateWidth),
+			offset.width.on("change", updateWidth),
+			placeHeight.on("change", updateHeight),
+			offset.height.on("change", updateHeight),
+			offset.x.on("change", updateX),
+			x.on("change", updateX),
+			offset.y.on("change", updateY),
+			y.on("change", updateY),
+		];
+		return () => {
+			for (const unsub of stops) unsub();
+		};
+	}, [
+		placeWidth,
+		placeHeight,
+		offset.width,
+		offset.height,
+		offset.x,
+		offset.y,
+		x,
+		y,
+		width,
+		height,
+		shownX,
+		shownY,
+	]);
 
 	function stop() {
 		for (const control of running.current) control.stop();
@@ -147,13 +248,11 @@ export function useNoteBox({
 	 * frame, so what the page lays out next agrees with the motion values.
 	 */
 	function paint(target: HTMLElement) {
+		syncDerived();
 		target.style.insetInlineStart = insetInlineStart.get();
 		target.style.top = top.get();
-		target.style.width = offsetSize(placeWidth.get(), offset.width.get());
-		target.style.height = offsetSize(
-			placeHeight.get(),
-			offset.height.get(),
-		);
+		target.style.width = width.get();
+		target.style.height = height.get();
 	}
 	/** The box the Note shows now, drag offset aside. */
 	function shown(target: HTMLElement): Box | null {
@@ -172,10 +271,12 @@ export function useNoteBox({
 		for (const value of Object.values(offset)) value.jump(0);
 	}
 	/**
-	 * The Note shows at `from` now and morphs to its place from there.
-	 * Reduced, it is at its place at once.
+	 * The Note shows at `from` now and morphs to its place from there,
+	 * optionally carrying the hand's release velocity. Reduced, it is at
+	 * its place at once.
 	 */
-	function morphFrom(from: Box) {
+	function morphFrom(from: Box, velocity?: MorphVelocity) {
+		if (velocity) pendingVelocity.current = velocity;
 		rest();
 		const target = element.current;
 		if (!target) return;
@@ -199,14 +300,53 @@ export function useNoteBox({
 				from.left - (rtl ? to.left - offset.width.get() : to.left),
 			);
 			offset.y.jump(from.top - to.top);
-			const controls: AnimationPlaybackControls[] = [];
-			for (const value of Object.values(offset)) {
-				if (Math.abs(value.get()) < SAME_PX) value.jump(0);
-				else controls.push(animate(value, 0, MORPH));
-			}
-			running.current = controls;
+			const vx = velocity ? clampVelocity(velocity.vx) : 0;
+			const vy = velocity ? clampVelocity(velocity.vy) : 0;
+			const entries: readonly [MotionValue<number>, number][] = [
+				[offset.x, vx],
+				[offset.y, vy],
+				[offset.width, 0],
+				[offset.height, 0],
+			];
+			running.current = entries.flatMap(([value, initialVelocity]) => {
+				const control = animateOffsetAxis(
+					value,
+					initialVelocity,
+					MORPH,
+				);
+				return control ? [control] : [];
+			});
 		}
 		paint(target);
+	}
+
+	/**
+	 * Fold active `OPEN_SCALE` into the starting box when expanding to an
+	 * unscaled Sheet so Frame 0 never snaps inward, and animate `scale` on
+	 * `MORPH` when returning to a scaled open Card.
+	 */
+	function morphWithScale(
+		rawFrom: Box,
+		prevScale: number,
+		prevGrowsFromTop: boolean,
+		liveVelocity: MorphVelocity | undefined,
+	) {
+		const activeScale = scale.get();
+		const foldScaleIntoBox =
+			Math.abs(restScale - 1) < 1e-4 && Math.abs(activeScale - 1) >= 1e-4;
+		const from = foldScaleIntoBox
+			? scaledBox(rawFrom, activeScale, prevGrowsFromTop)
+			: rawFrom;
+		if (foldScaleIntoBox || reduce) scale.jump(restScale);
+		morphFrom(from, liveVelocity);
+		if (
+			foldScaleIntoBox ||
+			reduce ||
+			Math.abs(activeScale - restScale) < 1e-4
+		)
+			return;
+		if (Math.abs(prevScale - activeScale) < 1e-4) scale.jump(activeScale);
+		running.current.push(animate(scale, restScale, MORPH));
 	}
 
 	/* the handle outlives renders; a morph must run on this one's motion */
@@ -228,25 +368,78 @@ export function useNoteBox({
 				}
 			);
 		},
-		morphFrom: (box) => latestMorph.current(box),
+		morphFrom: (box, velocity) => latestMorph.current(box, velocity),
+		settled: () => Promise.all(running.current),
 	});
 
 	/* a new place: from wherever the Note shows now, morph there */
 	const placed = useRef(place);
+	const previousScale = useRef(restScale);
+	const previousGrowsFromTop = useRef(growsFromTop);
 	useLayoutEffect(() => {
-		if (samePlace(placed.current, place)) return;
+		const placeChanged = !samePlace(placed.current, place);
+		const prevScale = previousScale.current;
+		const prevGrowsFromTop = previousGrowsFromTop.current;
+		previousScale.current = restScale;
+		previousGrowsFromTop.current = growsFromTop;
+
+		if (!placeChanged) {
+			if (
+				Math.abs(prevScale - restScale) >= 1e-4 &&
+				Math.abs(scale.get() - restScale) >= 1e-4
+			)
+				scale.jump(restScale);
+			return;
+		}
 		placed.current = place;
 		const target = element.current;
-		const from = target && !preview ? shown(target) : null;
+		const rawFrom = target && !preview ? shown(target) : null;
+		const liveVelocity = readLiveVelocity(
+			pendingVelocity.current,
+			offset.x,
+			offset.y,
+		);
+		pendingVelocity.current = null;
 		rest();
 		insetInlineStart.jump(place.insetInlineStart);
 		top.jump(place.top);
 		placeWidth.jump(place.width);
 		placeHeight.jump(place.height);
-		if (from) morphFrom(from);
-		else if (target) paint(target);
+		if (rawFrom) {
+			morphWithScale(rawFrom, prevScale, prevGrowsFromTop, liveVelocity);
+			return;
+		}
+		scale.jump(restScale);
+		if (target) paint(target);
 	});
-	useEffect(() => stop, []);
+	const resumeStalled = useRef<() => void>(() => {});
+	resumeStalled.current = () => {
+		if (running.current.length > 0) return;
+		const axes = [offset.x, offset.y, offset.width, offset.height];
+		const stalled = axes.some((value) => Math.abs(value.get()) >= SAME_PX);
+		if (reduce) {
+			if (stalled) {
+				for (const value of axes) value.jump(0);
+				if (element.current) paint(element.current);
+			}
+			if (Math.abs(scale.get() - restScale) >= 1e-4)
+				scale.jump(restScale);
+			return;
+		}
+		if (stalled) {
+			running.current = axes.flatMap((value) => {
+				const control = animateOffsetAxis(value, 0, MORPH);
+				return control ? [control] : [];
+			});
+		}
+		if (Math.abs(scale.get() - restScale) >= 1e-4) {
+			running.current.push(animate(scale, restScale, MORPH));
+		}
+	};
+	useEffect(() => {
+		resumeStalled.current();
+		return stop;
+	}, []);
 
 	return {
 		handle,
@@ -257,6 +450,7 @@ export function useNoteBox({
 		shownX,
 		shownY,
 		rotate,
+		scale,
 		opacity,
 	};
 }

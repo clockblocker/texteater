@@ -12,11 +12,7 @@ export const renderDefaultAttestationSource = (({
 	const { source } = noteData;
 	if (!source.sentenceSnippet) return null;
 	return (
-		<NoteSection
-			aria-label="Source"
-			label="Source"
-			className="compact:before:hidden"
-		>
+		<NoteSection label="Source">
 			<SourceQuote
 				segments={source.segments}
 				memberSegmentIndices={source.memberSegmentIndices}

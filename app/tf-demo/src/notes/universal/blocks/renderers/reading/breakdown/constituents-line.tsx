@@ -37,8 +37,8 @@ function PieceLink({
 	);
 }
 
-/** `+` and `·` between parts: faint in a Sheet, muted in a Card. */
-const SEPARATOR = "text-ink-faint compact:text-ink-muted";
+/** `+` and `·` between parts: quiet separator across both Card and Sheet. */
+const SEPARATOR = "text-ink-faint";
 
 function Filler({ children }: { readonly children: ReactNode }) {
 	return <span className="text-ink-muted">{children}</span>;
@@ -72,7 +72,11 @@ function PhrasemeConstituents({
 				key={key}
 				target={piece.target}
 				follow={follow}
-				label={`${piece.letters}, ${piece.target.canonicalForm}`}
+				label={
+					piece.letters === piece.target.canonicalForm
+						? undefined
+						: `${piece.letters}, ${piece.target.canonicalForm}`
+				}
 			>
 				{piece.letters}
 			</PieceLink>
@@ -97,12 +101,16 @@ function DictionaryForms({
 	);
 	return shown.map((piece, index) => (
 		<Fragment key={`${index}:${piece.letters}`}>
-			{index > 0 ? <span className={SEPARATOR}> + </span> : null}
+			{index > 0 ? <span className={SEPARATOR}>{"\u00A0+ "}</span> : null}
 			{piece.target ? (
 				<PieceLink
 					target={piece.target}
 					follow={follow}
-					label={`${piece.target.canonicalForm}, shown as ${piece.letters}`}
+					label={
+						piece.target.canonicalForm === piece.letters
+							? undefined
+							: `${piece.target.canonicalForm}, shown as ${piece.letters}`
+					}
 				>
 					{piece.target.canonicalForm}
 				</PieceLink>

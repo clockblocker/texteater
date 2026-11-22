@@ -1,6 +1,11 @@
 import { translationLanguageValues, translationText } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { NoteBone, NoteSection, noteLabelClassName } from "lego";
+import {
+	NoteBone,
+	NoteSection,
+	NoteTranslationList,
+	NoteTranslationRow,
+} from "lego";
 import { Fragment, type ReactNode } from "react";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
@@ -8,6 +13,12 @@ import { ValencyPreposition, ValencySlot } from "../../../valency-pieces";
 
 type TranslationLanguage = (typeof translationLanguageValues)[number];
 
+/**
+ * Renders a Reading's translations using one shared molecule across Card and
+ * Sheet forms: grouped uppercase `EN`/`RU` rows separated by `·`. Space-aware
+ * single-line tightening in Card is expressed declaratively on
+ * `NoteTranslationList`, with no forked Card/Sheet DOM trees.
+ */
 export const renderDefaultReadingTranslations = (({
 	noteData,
 	PresentationCapabilities,
@@ -24,111 +35,47 @@ export const renderDefaultReadingTranslations = (({
 		noteData.knowledge.translations === undefined &&
 		noteData.knowledgeState.activity === "Loading";
 	if (rows.length === 0 && (!generating || enabled.length === 0)) return null;
-	const card = PresentationCapabilities.presentation === "Card";
 
 	if (rows.length === 0) {
 		// Translations are being generated: hold their rows so the block does
 		// not appear from nowhere once they land.
 		return (
-			<NoteSection
-				aria-label="Translations"
-				label="Translations"
-				aria-busy="true"
-			>
-				{card ? (
-					<div className="flex flex-wrap gap-2">
-						{enabled.map((language) => (
-							<span key={language} className="inline-flex gap-1">
-								<span className="text-ink-muted">
-									{language}:
-								</span>
-								<NoteBone className={boneWidth(language)} />
-							</span>
-						))}
-					</div>
-				) : (
-					<TranslationRows>
-						{enabled.map((language) => (
-							<TranslationRow key={language} language={language}>
-								<NoteBone className={boneWidth(language)} />
-							</TranslationRow>
-						))}
-					</TranslationRows>
-				)}
+			<NoteSection label="Translations" aria-busy="true">
+				<NoteTranslationList>
+					{enabled.map((language) => (
+						<NoteTranslationRow key={language} language={language}>
+							<NoteBone className={boneWidth(language)} />
+						</NoteTranslationRow>
+					))}
+				</NoteTranslationList>
 			</NoteSection>
 		);
 	}
 
 	return (
-		<NoteSection aria-label="Translations" label="Translations">
-			{card ? (
-				<div className="flex flex-wrap gap-2">
-					{rows.flatMap(({ language, values }) =>
-						values.map((value) => (
-							<span
-								key={`${language}:${translationText(value)}`}
-								lang={language}
-							>
-								{language}:{" "}
+		<NoteSection label="Translations">
+			<NoteTranslationList>
+				{rows.map(({ language, values }) => (
+					<NoteTranslationRow key={language} language={language}>
+						{values.map((value, index) => (
+							<Fragment key={translationText(value)}>
+								{index > 0 ? (
+									<span className="text-ink-faint">
+										{" · "}
+									</span>
+								) : null}
 								<TranslationPieces translation={value} />
-							</span>
-						)),
-					)}
-				</div>
-			) : (
-				<TranslationRows>
-					{rows.map(({ language, values }) => (
-						<TranslationRow key={language} language={language}>
-							{values.map((value, index) => (
-								<Fragment key={translationText(value)}>
-									{index > 0 ? (
-										<span className="text-ink-faint">
-											{" · "}
-										</span>
-									) : null}
-									<TranslationPieces translation={value} />
-								</Fragment>
-							))}
-						</TranslationRow>
-					))}
-				</TranslationRows>
-			)}
+							</Fragment>
+						))}
+					</NoteTranslationRow>
+				))}
+			</NoteTranslationList>
 		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;
 
 function boneWidth(language: TranslationLanguage): string {
 	return language === "en" ? "w-16" : "w-20";
-}
-
-/**
- * A Sheet's translations: one row per language. The language's tag sits on
- * the Note's leading edge, and its translations start 1.75rem in, where a
- * quoted passage and a relation's word do.
- */
-function TranslationRows({ children }: { readonly children: ReactNode }) {
-	return (
-		<dl className="grid grid-cols-[minmax(1.75rem,auto)_minmax(0,1fr)] items-baseline gap-y-1">
-			{children}
-		</dl>
-	);
-}
-
-function TranslationRow({
-	language,
-	children,
-}: {
-	readonly language: TranslationLanguage;
-	readonly children: ReactNode;
-}) {
-	return (
-		<div className="contents">
-			<dt className={noteLabelClassName}>{language}</dt>
-			<dd lang={language} className="text-pretty">
-				{children}
-			</dd>
-		</div>
-	);
 }
 
 /**
@@ -156,6 +103,6 @@ function renderPiece({ kind, text }: Dumrel.TranslationPiece): ReactNode {
 		case "Preposition":
 			return <ValencyPreposition>{text}</ValencyPreposition>;
 		case "Slot":
-			return <ValencySlot>{text}</ValencySlot>;
+			return <ValencySlot variant="gloss">{text}</ValencySlot>;
 	}
 }

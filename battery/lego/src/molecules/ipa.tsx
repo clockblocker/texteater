@@ -3,9 +3,9 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 /**
- * A phonetic transcription set quietly beside a headword: upright, as IPA
- * is printed, and never broken mid-transcription. Compact density keeps
- * its slanted, breakable form.
+ * A phonetic transcription set quietly beside a headword: always upright in
+ * a dedicated IPA-complete font stack, tagged `lang="und-fonipa"`, with
+ * softened boundary slashes and never broken mid-symbol.
  */
 export function Ipa({
 	transcription,
@@ -17,13 +17,20 @@ export function Ipa({
 	return (
 		<span
 			data-slot="ipa"
+			lang="und-fonipa"
 			className={cn(
-				"text-sm whitespace-nowrap text-ink-muted compact:whitespace-normal compact:italic compact:[overflow-wrap:anywhere]",
+				"shrink-0 whitespace-nowrap not-italic text-ink-muted",
 				className,
 			)}
 			{...props}
 		>
-			/{transcription}/
+			<span aria-hidden="true" className="me-[0.05em] text-ink-faint">
+				/
+			</span>
+			{transcription}
+			<span aria-hidden="true" className="ms-[0.05em] text-ink-faint">
+				/
+			</span>
 		</span>
 	);
 }

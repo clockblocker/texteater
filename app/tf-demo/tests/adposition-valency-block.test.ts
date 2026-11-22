@@ -45,9 +45,7 @@ for (const [family, canonicalForm, expected] of lines)
 	});
 
 test("an adposition the ADP Case Table does not list has no Valency Block", () => {
-	expect(renderAdposition("Lexeme", "quend")).not.toContain(
-		'aria-label="Valency"',
-	);
+	expect(renderAdposition("Lexeme", "quend")).not.toContain(">Valency</h2>");
 });
 
 test("each Source Context shows its realized case and marks a colloquial one", () => {
@@ -70,7 +68,7 @@ test("each Source Context shows its realized case and marks a colloquial one", (
 /** The rendered lines, with the complement token written back as backticked text. */
 function valencyLines(markup: string): string[] {
 	const section = markup.match(
-		/<section[^>]*aria-label="Valency"[^>]*>(.*?)<\/section>/,
+		/<section[^>]*>(?:(?!<\/section>).)*?>Valency<\/h2>(.*?)<\/section>/,
 	)?.[1];
 	if (section === undefined) throw new Error("no Valency Block rendered");
 	return [

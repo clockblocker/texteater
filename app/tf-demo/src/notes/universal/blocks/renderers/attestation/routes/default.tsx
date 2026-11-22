@@ -1,5 +1,6 @@
-import { LinkButton, NoteSection } from "lego";
+import { LinkButton, NoteList, NoteSection } from "lego";
 
+import { formatLemmaClassLine } from "../../../../caption/metadata";
 import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { featureSummary } from "../../common/feature-values";
@@ -22,8 +23,8 @@ export const renderDefaultAttestationRoutes = (({
 			? null
 			: `Variant: ${surface.spelling.variantTags.join(", ")}`;
 	return (
-		<NoteSection aria-label="Route" label="Route">
-			<ul className="grid gap-2">
+		<NoteSection label="Route">
+			<NoteList>
 				<li>
 					<LinkButton
 						onClick={() =>
@@ -58,7 +59,10 @@ export const renderDefaultAttestationRoutes = (({
 						}
 					>
 						<RouteMark hop="leadsTo" />
-						<span className="me-[0.35em] text-ink">
+						<span
+							aria-hidden="true"
+							className="me-[0.35em] text-ink"
+						>
 							{noteData.reading.emojiDescription}
 						</span>
 						{citationText(
@@ -69,10 +73,13 @@ export const renderDefaultAttestationRoutes = (({
 						)}
 					</LinkButton>
 					<RouteAside>
-						{surface.lemma.family} · {surface.lemma.kind}
+						{formatLemmaClassLine(
+							surface.lemma.family,
+							surface.lemma.kind,
+						)}
 					</RouteAside>
 				</li>
-			</ul>
+			</NoteList>
 		</NoteSection>
 	);
 }) satisfies GrammaticalDefaultRenderer<"Attestation">;

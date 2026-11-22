@@ -3,10 +3,10 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 /**
- * A quiet row of metadata tags closing a Note. Comfortable density sets it
- * apart with space and draws a middle dot between tags; the dot is CSS, so
- * the tags' own text stays plain. Compact density keeps a dashed rule on
- * top and a gap between tags.
+ * A quiet row of metadata tags closing a Note. Separated from the body by a
+ * whisper-thin top hairline, with screen-reader-silent `·` middle dot
+ * separators defined in `@layer components`; top spacing expands smoothly
+ * via `--note-morph`.
  */
 export function NoteTags({
 	className,
@@ -16,7 +16,7 @@ export function NoteTags({
 		<footer
 			data-slot="note-tags"
 			className={cn(
-				"mt-10 flex flex-wrap gap-y-1.5 text-xs text-ink-muted [&>*:not(:last-child)]:after:mx-2 [&>*:not(:last-child)]:after:text-ink-faint [&>*:not(:last-child)]:after:content-['·'] compact:mt-3 compact:gap-x-2.5 compact:border-t compact:border-dashed compact:border-line compact:pt-3 compact:text-ink-soft compact:[&>*:not(:last-child)]:after:content-none",
+				"flex flex-wrap gap-y-1.5 border-t border-hairline pt-3 text-xs leading-[1.4] text-ink-muted",
 				className,
 			)}
 			{...props}

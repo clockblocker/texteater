@@ -110,7 +110,7 @@ export function motionOf(spec: Spec) {
  * whenever the model hands the Note a new box (deck slot, Sheet box, or
  * the hand), and the Heading's row height and title size with it.
  */
-export const MORPH = spring(380, 38);
+export const MORPH = spring(380, 39);
 
 /**
  * The drag spring: what a Held Card settles on when it snaps back, and

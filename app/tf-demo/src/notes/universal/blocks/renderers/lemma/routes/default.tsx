@@ -1,6 +1,7 @@
-import { LinkButton, NoteSection } from "lego";
+import { LinkButton, NoteList, NoteSection } from "lego";
 import type { ReactNode } from "react";
 
+import { formatLemmaClassLine } from "../../../../caption/metadata";
 import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
@@ -10,22 +11,22 @@ import { RouteMark } from "../../common/route-mark";
 /**
  * What this Lemma connects: the Readings it leads to, a verb's participial
  * adjectives, the written forms it was reached from, and other Lemmas spelled
- * the same. A Card keeps only the Readings; the Sheet reveals the rest.
+ * the same. Secondary sections fold smoothly in Card via `visibility="sheet"`
+ * and unfold into Sheet without forking the DOM tree.
  */
 export const renderDefaultLemmaRoutes = (({
 	noteData,
 	PresentationCapabilities,
 	Citation,
 }) => {
-	const { connections, presented } = noteData;
-	const isCard = PresentationCapabilities.presentation === "Card";
+	const { connections, presented, participialAdjectives } = noteData;
 	const { pagination } = PresentationCapabilities;
 	const sections: ReactNode[] = [];
 
 	if (connections.readings.length > 0) {
 		sections.push(
-			<NoteSection key="readings" aria-label="Readings" label="Readings">
-				<ul className="grid gap-2">
+			<NoteSection key="readings" label="Readings">
+				<NoteList>
 					{connections.readings.map((reading) => (
 						<li key={reading.readingId}>
 							<LinkButton
@@ -36,7 +37,10 @@ export const renderDefaultLemmaRoutes = (({
 								}
 							>
 								<RouteMark hop="leadsTo" />
-								<span className="me-[0.35em] text-ink">
+								<span
+									aria-hidden="true"
+									className="me-[0.35em] text-ink"
+								>
 									{reading.emojiDescription}
 								</span>
 								{citationText(
@@ -45,20 +49,19 @@ export const renderDefaultLemmaRoutes = (({
 							</LinkButton>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			</NoteSection>,
 		);
 	}
 
-	const { participialAdjectives } = noteData;
-	if (!isCard && participialAdjectives.length > 0) {
+	if (participialAdjectives.length > 0) {
 		sections.push(
 			<NoteSection
 				key="participial"
-				aria-label="Participial adjectives"
 				label="Participial adjectives"
+				visibility="sheet"
 			>
-				<ul className="grid gap-2">
+				<NoteList>
 					{participialAdjectives.map((adjective) => (
 						<li key={adjective.readingId}>
 							<LinkButton
@@ -68,26 +71,29 @@ export const renderDefaultLemmaRoutes = (({
 									)
 								}
 							>
-								<span className="me-[0.35em] text-ink">
+								<span
+									aria-hidden="true"
+									className="me-[0.35em] text-ink"
+								>
 									{adjective.emojiDescription}
 								</span>
 								{adjective.canonicalForm}
 							</LinkButton>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			</NoteSection>,
 		);
 	}
 
-	if (!isCard && connections.surfaces.length > 0) {
+	if (connections.surfaces.length > 0) {
 		sections.push(
 			<NoteSection
 				key="surfaces"
-				aria-label="Written forms"
 				label="Written forms"
+				visibility="sheet"
 			>
-				<ul className="flex flex-wrap gap-x-5 gap-y-2">
+				<NoteList layout="wrap">
 					{connections.surfaces.map((surface) => (
 						<li key={surface.surfaceId}>
 							<LinkButton
@@ -115,19 +121,19 @@ export const renderDefaultLemmaRoutes = (({
 							</LinkButton>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			</NoteSection>,
 		);
 	}
 
-	if (!isCard && connections.sameWrittenForm.length > 0) {
+	if (connections.sameWrittenForm.length > 0) {
 		sections.push(
 			<NoteSection
 				key="same"
-				aria-label="Same written form"
 				label="Same written form"
+				visibility="sheet"
 			>
-				<ul className="grid gap-2">
+				<NoteList>
 					{connections.sameWrittenForm.map((lemma) => (
 						<li key={lemma.lemmaId}>
 							<LinkButton
@@ -141,11 +147,11 @@ export const renderDefaultLemmaRoutes = (({
 								{lemma.canonicalForm}
 							</LinkButton>
 							<RouteAside>
-								{lemma.family} · {lemma.kind}
+								{formatLemmaClassLine(lemma.family, lemma.kind)}
 							</RouteAside>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			</NoteSection>,
 		);
 	}
@@ -155,7 +161,7 @@ export const renderDefaultLemmaRoutes = (({
 	return (
 		<>
 			{sections}
-			{!isCard && pagination.hasMore ? (
+			{pagination.hasMore ? (
 				<LoadMore
 					label="Load more connections"
 					isLoading={pagination.isLoading}

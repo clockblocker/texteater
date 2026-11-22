@@ -93,6 +93,7 @@ export function SourceQuote({
 					: "default";
 	const quote = {
 		tone,
+		lang: language,
 		onFollow: follow,
 		followLabel: `Open in ${destination}`,
 	};
@@ -108,7 +109,7 @@ export function SourceQuote({
 					follow();
 				}}
 			>
-				<span className="me-[0.35em] text-ink">
+				<span aria-hidden="true" className="me-[0.35em] text-ink">
 					{origin.emojiDescription}
 				</span>
 				{origin.citation}:

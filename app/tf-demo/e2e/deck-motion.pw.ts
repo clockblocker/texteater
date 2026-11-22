@@ -198,9 +198,9 @@ test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 	const sheet = frame.locator('[data-form="sheet"]');
 	const id = await sheet.getAttribute("data-card-id");
 	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
-	/* lift it by its bar and let go without going anywhere: the Note is
-	   in the hand, and its slot is a whole Sheet's height away */
-	await startHeadingDrag(page, sheet, 3, 3);
+	/* lift it by its bar past slop and let go without going anywhere: the Note
+	   is in the hand, and its slot is a whole Sheet's height away */
+	await startHeadingDrag(page, sheet, 12, 12);
 	await expect(note).toHaveAttribute("data-held", "true");
 	const frames = await armFrames(note, 900);
 	await page.mouse.up();
@@ -249,4 +249,124 @@ test("a held card is drawn where it rests, whatever its resting scale", async ({
 	await expect
 		.poll(async () => (await card.boundingBox())?.y ?? null)
 		.toBeCloseTo(atRest.y, 0);
+});
+
+test("under reduced motion, collapsing or lifting a cover snaps box size and --note-morph to the card", async ({
+	page,
+}) => {
+	await page.emulateMedia({ reducedMotion: "reduce" });
+	const frame = await openDeck(page);
+	const openCard = frame.locator('[data-place="open"]');
+	const cardAtRest = await openCard.boundingBox();
+	if (!cardAtRest) throw new Error("Missing card geometry");
+
+	/* Expand to Cover, then collapse via ←: width, height, and --note-morph
+	   must snap back to Card values rather than freezing at Cover size. */
+	await openSheet(page, frame);
+	await frame.getByRole("button", { name: "Collapse back to card" }).click();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
+	await expect(openCard).toBeVisible();
+	const afterBack = await openCard.evaluate((element) => {
+		const rect = element.getBoundingClientRect();
+		const surface = element.firstElementChild as HTMLElement | null;
+		const morph = surface
+			? getComputedStyle(surface).getPropertyValue("--note-morph").trim()
+			: "";
+		return {
+			width: Math.round(rect.width),
+			height: Math.round(rect.height),
+			morph: Number.parseFloat(morph),
+		};
+	});
+	expect(afterBack.width).toBeCloseTo(cardAtRest.width, -1);
+	expect(afterBack.height).toBeCloseTo(cardAtRest.height, -1);
+	expect(afterBack.morph).toBe(0);
+
+	/* Expand again and lift via Cover Heading drag past slop: the held Note
+	   must snap to Card size immediately, and releasing returns it to the Deck. */
+	await openSheet(page, frame);
+	const sheet = frame.locator('[data-form="sheet"]');
+	const id = await sheet.getAttribute("data-card-id");
+	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
+	await startHeadingDrag(page, sheet, 20, 20);
+	await expect(note).toHaveAttribute("data-held", "true");
+	const heldBox = await note.boundingBox();
+	if (!heldBox) throw new Error("Missing held note geometry");
+	expect(heldBox.width).toBeLessThan(cardAtRest.width + 10);
+	expect(heldBox.height).toBeLessThan(cardAtRest.height + 10);
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+});
+
+test("cover heading tap keeps cover open, drag shrinks monotonically, and Escape collapses it", async ({
+	page,
+}) => {
+	const frame = await openDeck(page);
+	await openSheet(page, frame);
+	const sheet = frame.locator('[data-form="sheet"]');
+	const heading = sheet.locator("[data-heading]");
+	const box = await heading.boundingBox();
+	if (!box) throw new Error("Missing cover heading geometry");
+
+	/* A plain click (within slop) on the Cover heading must not tear it off. */
+	await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+	await page.mouse.down();
+	await page.mouse.move(
+		box.x + box.width / 2 + 3,
+		box.y + box.height / 2 + 2,
+	);
+	await page.mouse.up();
+	await expect(sheet).toHaveCount(1);
+
+	/* Dragging past slop lifts the Cover without squashing it down to the
+	   88px heading bar height before growing back into a Card. */
+	const id = await sheet.getAttribute("data-card-id");
+	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
+	const frames = await armFrames(note, 450);
+	await startHeadingDrag(page, sheet, 24, 24);
+	await expect(note).toHaveAttribute("data-held", "true");
+	const taken = await frames();
+	const minHeight = Math.min(...taken.map((sample) => sample.height));
+	expect(minHeight).toBeGreaterThan(220);
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+
+	/* Escape collapses an open Cover back to its Card. */
+	await openSheet(page, frame);
+	await expect(sheet).toHaveCount(1);
+	await page.keyboard.press("Escape");
+	await expect(sheet).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+});
+
+test("an open card paints one unified surface and single hairline border", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="Dämmerung"]').first().click();
+	const card = frame.locator('[data-place="open"]');
+	await expect(card.locator("[data-note-presentation]")).toBeVisible();
+	const visual = await card.evaluate((element) => {
+		const boxStyle = getComputedStyle(element);
+		const noteSurface = element.querySelector<HTMLElement>(
+			"[data-note-presentation]",
+		);
+		if (!noteSurface) throw new Error("Missing NoteSurface element");
+		const surfaceStyle = getComputedStyle(noteSurface);
+		return {
+			boxBg: boxStyle.backgroundColor,
+			surfaceBg: surfaceStyle.backgroundColor,
+			borderTopWidth: boxStyle.borderTopWidth,
+			borderTopColor: boxStyle.borderTopColor,
+			shadow: boxStyle.boxShadow,
+		};
+	});
+	/* Body background matches the elevated Card surface (no darker inner seam). */
+	expect(visual.surfaceBg).toBe(visual.boxBg);
+	/* Single real 1px border (non-transparent), no stacked outer 0 0 0 1px ring. */
+	expect(visual.borderTopWidth).toBe("1px");
+	expect(visual.borderTopColor).not.toBe("rgba(0, 0, 0, 0)");
+	expect(visual.shadow).not.toContain("0px 0px 0px 1px");
 });

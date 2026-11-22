@@ -43,27 +43,26 @@ export const framedKinds: ReadonlySet<string> = new Set(["Ending", "Interfix"]);
 
 export type RevealMotion = "Draw" | "Instant";
 
+/** Quiet resting opacity so Sheet readers immediately perceive interactive school marks. */
+const RESTING_MARK_OPACITY = 0.32;
+
 /**
- * How a revealed mark comes and goes. It enters with a short wipe from the
- * inline start on a strong ease-out and leaves with a quicker fade; the wipe
- * resets only once the fade is done, so a pointer that comes back mid-exit
- * fades the whole mark back in. CSS transitions retarget from the current
- * value, so every change interrupts cleanly. The durations come from the
- * line's custom properties. Keyboard focus reveals `Instant`ly.
+ * How a mark responds to hover, focus, or pin. At rest in Sheet each school
+ * mark sits quietly at low opacity so learners can tell the word is
+ * interactive; on hover, focus, or pin it brightens cleanly to full opacity.
+ * Keyboard focus reveals `Instant`ly.
  */
 export function markMotionStyle(
 	shown: boolean,
 	motion: RevealMotion,
 ): CSSProperties {
-	const clipPath = shown ? "inset(0 0 0 0)" : "inset(0 100% 0 0)";
-	if (motion === "Instant")
-		return { opacity: shown ? 1 : 0, clipPath, transition: "none" };
+	const opacity = shown ? 1 : RESTING_MARK_OPACITY;
+	if (motion === "Instant") return { opacity, transition: "none" };
 	return {
-		opacity: shown ? 1 : 0,
-		clipPath,
+		opacity,
 		transition: shown
-			? "clip-path var(--reveal-in) var(--reveal-ease), opacity calc(var(--reveal-in) * 0.5) linear"
-			: "opacity var(--reveal-out) ease-out, clip-path 0s linear var(--reveal-out)",
+			? "opacity var(--reveal-in) var(--reveal-ease)"
+			: "opacity var(--reveal-out) ease-out",
 	};
 }
 
@@ -83,7 +82,7 @@ export function AboveMark({
 			aria-hidden="true"
 			viewBox="0 0 100 10"
 			preserveAspectRatio="none"
-			className={`absolute inset-x-px top-0 h-[0.45em] w-[calc(100%-2px)] overflow-visible rtl:-scale-x-100 ${className}`}
+			className={`absolute inset-x-px top-0 h-[0.42em] w-[calc(100%-2px)] overflow-visible motion-reduce:transition-none rtl:-scale-x-100 ${className}`}
 			style={style}
 		>
 			{path ? (
@@ -120,7 +119,7 @@ export function FrameMark({
 	return (
 		<span
 			aria-hidden="true"
-			className={`pointer-events-none absolute rtl:-scale-x-100 ${
+			className={`pointer-events-none absolute motion-reduce:transition-none rtl:-scale-x-100 ${
 				ring
 					? "-inset-x-[0.14em] -inset-y-[0.02em]"
 					: "-inset-x-[0.04em] inset-y-[0.06em]"

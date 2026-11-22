@@ -1,5 +1,12 @@
-import { LinkButton, NoteSection } from "lego";
+import {
+	LinkButton,
+	NoteAside,
+	NoteList,
+	NoteMorphReveal,
+	NoteSection,
+} from "lego";
 
+import { formatLemmaClassLine } from "../../../../caption/metadata";
 import type { SurfaceDefaultRenderer } from "../../../renderer";
 import { featureSummary, genderTone } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
@@ -7,43 +14,37 @@ import { LoadMore } from "../../common/load-more";
 import { RouteMark } from "../../common/route-mark";
 
 /**
- * Every Lemma this written form can be. In Card form only the analysis the
- * opening context selected is shown; the Sheet reveals the whole aggregate.
+ * Every Lemma this written form can be. When an opening context selected one
+ * active analysis, it leads the list; other analyses fold cleanly in Card via
+ * `NoteMorphReveal` while a compact count hints at them, then unfold smoothly
+ * as the Card opens into a Sheet.
  */
 export const renderDefaultSurfaceRoutes = (({
 	noteData,
 	PresentationCapabilities,
 }) => {
-	const { activeAnalysisKey, presentation, pagination } =
-		PresentationCapabilities;
-	const isCard = presentation === "Card";
+	const { activeAnalysisKey, pagination } = PresentationCapabilities;
 	const active = noteData.analyses.find(
 		({ analysisKey }) => analysisKey === activeAnalysisKey,
 	);
-	const shown =
-		isCard && active
-			? [active]
-			: [...noteData.analyses].sort((left, right) =>
-					left === active ? -1 : right === active ? 1 : 0,
-				);
-	const hidden = noteData.analyses.length - shown.length;
-	if (shown.length === 0) return null;
+	const ordered = [...noteData.analyses].sort((left, right) =>
+		left === active ? -1 : right === active ? 1 : 0,
+	);
+	if (ordered.length === 0) return null;
+	const otherCount = active ? ordered.length - 1 : 0;
 
 	return (
-		<NoteSection aria-label="Analyses" label="Analyses">
-			<ul className="grid gap-2">
-				{shown.map((analysis) => {
+		<NoteSection label="Analyses">
+			<NoteList>
+				{ordered.map((analysis) => {
 					const { lemma } = analysis.presented;
 					const isActive = analysis.analysisKey === activeAnalysisKey;
 					const tone = genderTone(lemma) ?? "default";
 					const inflection = featureSummary(
 						analysis.presented.inflectionalFeatures,
 					);
-					return (
-						<li
-							key={analysis.analysisKey}
-							data-active={isActive || undefined}
-						>
+					const row = (
+						<>
 							<LinkButton
 								aria-current={isActive ? "true" : undefined}
 								onClick={() =>
@@ -63,7 +64,10 @@ export const renderDefaultSurfaceRoutes = (({
 							</LinkButton>
 							<RouteAside>
 								{[
-									`${lemma.family} · ${lemma.kind}`,
+									formatLemmaClassLine(
+										lemma.family,
+										lemma.kind,
+									),
 									inflection,
 									analysis.presented.surfaceFeatures
 										.historicalStatus,
@@ -71,18 +75,39 @@ export const renderDefaultSurfaceRoutes = (({
 									.filter(Boolean)
 									.join(" · ")}
 							</RouteAside>
+						</>
+					);
+					if (active && !isActive) {
+						return (
+							<NoteMorphReveal
+								as="li"
+								key={analysis.analysisKey}
+								visibility="sheet"
+							>
+								{row}
+							</NoteMorphReveal>
+						);
+					}
+					return (
+						<li
+							key={analysis.analysisKey}
+							data-active={isActive || undefined}
+						>
+							{row}
 						</li>
 					);
 				})}
-			</ul>
-			{hidden > 0 ? (
-				<p className="mt-2 text-sm text-ink-muted compact:text-xs">
-					{hidden === 1
-						? "1 other reading of this form"
-						: `${hidden} other readings of this form`}
-				</p>
+			</NoteList>
+			{otherCount > 0 ? (
+				<NoteMorphReveal visibility="card">
+					<NoteAside as="p" className="mt-2 tabular-nums">
+						{otherCount === 1
+							? "1 other reading of this form"
+							: `${otherCount} other readings of this form`}
+					</NoteAside>
+				</NoteMorphReveal>
 			) : null}
-			{!isCard && pagination?.hasMore ? (
+			{pagination?.hasMore ? (
 				<LoadMore
 					label="Load more analyses"
 					isLoading={pagination.isLoading}

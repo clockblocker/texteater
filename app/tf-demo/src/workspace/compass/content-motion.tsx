@@ -1,8 +1,14 @@
-import { AnimatePresence, motion } from "motion/react";
-import { type RefObject, useEffect, useRef } from "react";
+import { clampMorph } from "lego";
+import { animate, motion, useMotionValue } from "motion/react";
+import {
+	type CSSProperties,
+	type RefObject,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import { remPx } from "@/presentation/deck-geometry";
 import type { ContentDrawing } from "@/presentation/presentation-content";
-import { after } from "@/workspace/motion/motion-spec";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { Form } from "./subject";
@@ -13,14 +19,9 @@ import { useHeadingEdgeSlide } from "./use-note-box";
  * 0006): the foundation says what the parts are, and this draws each as a
  * Motion element.
  *
- * The Heading row is one element whose height rides `MORPH` with the
- * Note's box, so the Cover's top edge is the Note's own edge in every
- * frame. Only the words change: the face leaving goes on `BAR_EXIT`, the
- * one arriving overlaps it on `BAR_ENTER`, and the row between them never
- * fades. A change of height with no change of form, a fold, rides
- * `HEADING_RESIZE`. The Blocks travel with the Heading: the row it
- * vacates is the row they take. The Card's clip fades its content out on
- * `CLIP_FADE`; the Sheet lifts the fade.
+ * A single `--note-morph` `MotionValue` (`0` = Card, `1` = Sheet), clamped
+ * to `[0, 1]`, rides `MORPH` alongside the box and the Heading row's height,
+ * starting in `useLayoutEffect` to stay frame-locked with `useNoteBox`.
  */
 export function useContentMotion({
 	section,
@@ -35,28 +36,91 @@ export function useContentMotion({
 	below: boolean;
 	held: boolean;
 }): ContentDrawing {
-	const {
-		transition,
-		MORPH,
-		HEADING_EDGE,
-		HEADING_RESIZE,
-		BAR_ENTER,
-		BAR_EXIT,
-		CLIP_FADE,
-	} = useDeckMotion();
+	const { transition, MORPH, HEADING_EDGE, HEADING_RESIZE } = useDeckMotion();
 	const reduce = useDeckReducedMotion();
+	const targetMorph = form === "sheet" ? 1 : 0;
+	const morphProgress = useMotionValue(targetMorph);
+	const clampedMorph = useMotionValue(clampMorph(targetMorph));
+	const [animating, setAnimating] = useState(false);
+	const [layoutEdgeFlip, setLayoutEdgeFlip] = useState(false);
+
+	/* Sync `--note-morph` synchronously on every change instead of via
+	   `useTransform`'s async frame step, which can be cancelled on sibling
+	   reorders or StrictMode reconnects when `morphProgress.jump()` runs. */
+	useLayoutEffect(() => {
+		clampedMorph.set(clampMorph(morphProgress.get()));
+		return morphProgress.on("change", (value) => {
+			clampedMorph.set(clampMorph(value));
+		});
+	}, [clampedMorph, morphProgress]);
+
 	/**
-	 * Which transition the Heading and the Blocks ride when they swap ends.
-	 * A change of form is a morph on `MORPH`; a deck tap changes only which
-	 * edge the Heading sits at, on `HEADING_EDGE`.
+	 * Track form transitions synchronously during render so Frame 0 sets
+	 * `data-morphing` and disables scroll-fold CSS transitions before paint,
+	 * and only activate `layout="position"` when `headingAtFoot` (`below`)
+	 * actually flips across the morph (keeping it live until settle so mid-
+	 * flight re-renders never abort the projection).
 	 */
 	const previousForm = useRef(form);
-	const morphing = previousForm.current !== form;
-	useEffect(() => {
+	const previousBelow = useRef(below);
+	const formChanged = previousForm.current !== form;
+	const edgeFlipped = formChanged && previousBelow.current !== below;
+	const morphing = !reduce && (formChanged || animating);
+
+	useLayoutEffect(() => {
+		const didFormChange = previousForm.current !== form;
+		const didEdgeFlip = previousBelow.current !== below;
 		previousForm.current = form;
-	}, [form]);
-	const positionSpec = morphing ? MORPH : transition(HEADING_EDGE);
-	const rowSpec = morphing ? MORPH : transition(HEADING_RESIZE);
+		previousBelow.current = below;
+		if (didFormChange && didEdgeFlip && !held && !reduce) {
+			setLayoutEdgeFlip(true);
+		} else if (held || reduce) {
+			setLayoutEdgeFlip(false);
+		}
+	}, [below, form, held, reduce]);
+
+	useLayoutEffect(() => {
+		if (reduce) {
+			morphProgress.jump(targetMorph);
+			clampedMorph.jump(clampMorph(targetMorph));
+			setAnimating(false);
+			setLayoutEdgeFlip(false);
+			return;
+		}
+		if (Math.abs(morphProgress.get() - targetMorph) < 1e-4) {
+			morphProgress.jump(targetMorph);
+			clampedMorph.jump(clampMorph(targetMorph));
+			setAnimating(false);
+			setLayoutEdgeFlip(false);
+			return;
+		}
+		setAnimating(true);
+		let active = true;
+		const control = animate(morphProgress, targetMorph, MORPH);
+		void control.then(() => {
+			if (!active) return;
+			morphProgress.jump(targetMorph);
+			clampedMorph.jump(clampMorph(targetMorph));
+			setAnimating(false);
+			setLayoutEdgeFlip(false);
+		});
+		return () => {
+			active = false;
+			control.stop();
+		};
+	}, [MORPH, clampedMorph, morphProgress, reduce, targetMorph]);
+
+	const instant = { duration: 0 } as const;
+	const positionSpec = reduce
+		? instant
+		: morphing
+			? MORPH
+			: transition(HEADING_EDGE);
+	const rowSpec = reduce
+		? instant
+		: morphing
+			? MORPH
+			: transition(HEADING_RESIZE);
 	const { headingOffset, bodyOffset } = useHeadingEdgeSlide({
 		section,
 		form,
@@ -66,25 +130,25 @@ export function useContentMotion({
 		HEADING_EDGE,
 		transition,
 	});
-	const layout = !held && morphing ? ("position" as const) : false;
+	const layout =
+		!held && (edgeFlipped || layoutEdgeFlip)
+			? ("position" as const)
+			: false;
 	const layoutDependency = `${form}:${below.toString()}`;
-	/* the two faces overlap for a beat, and a touch of blur makes the
-	   overlap read as one title turning rather than two stacked. Reduced,
-	   the box is already there, so the words do not wait for it */
-	const turn = {
-		initial: { opacity: 0, filter: "blur(2px)" },
-		animate: {
-			opacity: 1,
-			filter: "blur(0px)",
-			transition: transition(reduce ? after(BAR_ENTER, 0) : BAR_ENTER),
-		},
-		exit: {
-			opacity: 0,
-			filter: "blur(2px)",
-			transition: transition(BAR_EXIT),
-		},
-	};
+
 	return {
+		morphing,
+		surface: (dom) => (
+			<motion.div
+				{...dom}
+				style={
+					{
+						...dom.style,
+						"--note-morph": clampedMorph,
+					} as CSSProperties
+				}
+			/>
+		),
 		row: (dom, { face, heightRem }) => (
 			<motion.div
 				{...dom}
@@ -101,10 +165,6 @@ export function useContentMotion({
 				style={{ ...dom.style, y: headingOffset }}
 			/>
 		),
-		faces: (face) => (
-			<AnimatePresence initial={false}>{face}</AnimatePresence>
-		),
-		face: (dom, face) => <motion.div key={face} {...dom} {...turn} />,
 		scroller: (dom) => (
 			<motion.div
 				{...dom}
@@ -114,13 +174,6 @@ export function useContentMotion({
 				style={{ y: bodyOffset }}
 			/>
 		),
-		fade: (dom, shown) => (
-			<motion.div
-				{...dom}
-				initial={false}
-				animate={{ opacity: shown ? 1 : 0 }}
-				transition={transition(CLIP_FADE)}
-			/>
-		),
+		fade: (dom) => <div {...dom} />,
 	};
 }

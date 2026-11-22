@@ -12,6 +12,7 @@ import {
 import {
 	DEFAULT_VALENCY_LINE_STYLE,
 	germanValencyLine,
+	type SlotAlternative,
 	type ValencyLinePart,
 	type ValencyLineStyle,
 } from "./valency-line";
@@ -117,20 +118,56 @@ function renderPart(part: ValencyLinePart): ReactNode {
 		case "Preposition":
 			return <ValencyPreposition>{part.text}</ValencyPreposition>;
 		case "Slot": {
-			const slot = (
+			const slot = part.alternatives.map((alternative, index) => (
+				<Fragment key={`${index}:${alternative.kind}`}>
+					{index > 0 ? (
+						<span className="font-normal text-ink-muted">
+							{" | "}
+						</span>
+					) : null}
+					{renderAlternative(alternative)}
+				</Fragment>
+			));
+			if (part.optional) return <Optional>{slot}</Optional>;
+			return part.alternatives.length > 1 ? (
+				<RequiredAlternatives>{slot}</RequiredAlternatives>
+			) : (
+				slot
+			);
+		}
+	}
+}
+
+function renderAlternative(alternative: SlotAlternative): ReactNode {
+	switch (alternative.kind) {
+		case "Case":
+			return (
 				<>
-					{part.preposition ? (
+					{alternative.preposition ? (
 						<>
 							<ValencyPreposition>
-								{part.preposition}
+								{alternative.preposition}
 							</ValencyPreposition>{" "}
 						</>
 					) : null}
-					<ValencySlot>{part.token}</ValencySlot>
+					<ValencySlot>{alternative.token}</ValencySlot>
 				</>
 			);
-			return part.optional ? <Optional>{slot}</Optional> : slot;
-		}
+		case "Placeholder":
+			return (
+				<>
+					{alternative.marker ? (
+						<>
+							<ValencyPreposition>
+								{alternative.marker}
+							</ValencyPreposition>{" "}
+						</>
+					) : null}
+					<ValencySlot variant="placeholder">
+						{alternative.text}
+					</ValencySlot>
+				</>
+			);
 	}
 }
 
@@ -138,9 +175,20 @@ function renderPart(part: ValencyLinePart): ReactNode {
 function Optional({ children }: { readonly children: ReactNode }) {
 	return (
 		<>
-			<span className="text-ink-muted">(</span>
+			<span className="font-normal text-ink-muted">(</span>
 			{children}
-			<span className="text-ink-muted">)</span>
+			<span className="font-normal text-ink-muted">)</span>
+		</>
+	);
+}
+
+/** Required alternatives in one Slot, in muted square brackets. */
+function RequiredAlternatives({ children }: { readonly children: ReactNode }) {
+	return (
+		<>
+			<span className="font-normal text-ink-muted">[</span>
+			{children}
+			<span className="font-normal text-ink-muted">]</span>
 		</>
 	);
 }

@@ -76,7 +76,7 @@ export function useGestureState<S>() {
 	 * closes over it at the release rather than on arrival: the frame it
 	 * gets its resting z back is then no event at all.
 	 */
-	function snapBack(h: NoteHandle) {
+	function snapBack(h: NoteHandle, waitMorph = false) {
 		returningRef.current = true;
 		setReturning(true);
 		if (reduce) {
@@ -95,7 +95,13 @@ export function useGestureState<S>() {
 					animate(h.rotate, 0, SPRING),
 				];
 				returnRun.current = run;
-				return Promise.all(run);
+				if (!waitMorph || !h.settled) return Promise.all(run);
+				const morph = new Promise<void>((resolve) => {
+					window.requestAnimationFrame(() => {
+						void h.settled?.().then(() => resolve());
+					});
+				});
+				return Promise.all([...run, morph]);
 			},
 			() => {},
 		);

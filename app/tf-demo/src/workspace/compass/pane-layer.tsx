@@ -47,11 +47,42 @@ export type PaneScope<S> = {
 	handleIn: (selector: string) => HTMLElement | null;
 };
 
+function renderGroundRung<S>(
+	pane: PaneNode<S>,
+	scope: PaneScope<S>,
+	covered: boolean,
+): ReactNode {
+	const ground = groundOf(pane);
+	if (ground.kind !== "Menu" && ground.kind !== "MenuItem") return null;
+	return (
+		<div
+			inert={covered || undefined}
+			aria-hidden={covered || undefined}
+			className="h-full"
+		>
+			{ground.kind === "Menu" ? (
+				<GroundList
+					title="Menu"
+					items={scope.menu}
+					onPick={(item) =>
+						scope.commands.openMenuItem(pane.id, item)
+					}
+				/>
+			) : (
+				scope.renderMenuItem(ground.item, {
+					paneId: pane.id,
+					select: (subject) =>
+						scope.commands.select(pane.id, subject),
+				})
+			)}
+		</div>
+	);
+}
+
 function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 	const {
 		renderer,
 		menu,
-		renderMenuItem,
 		rem,
 		fold,
 		drags,
@@ -82,7 +113,7 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 			data-preview={preview || undefined}
 			/* the anchor its Notes are placed against */
 			style={{ anchorName: paneAnchor(pane.id) }}
-			className={`relative h-full min-h-0 overflow-hidden bg-paper ${preview ? "pointer-events-none" : ""}`}
+			className={`relative h-full min-h-0 overflow-clip bg-paper ${preview ? "pointer-events-none" : ""}`}
 		>
 			<PaneBar
 				rem={rem}
@@ -181,18 +212,7 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 			/>
 			{/* the Menu and a Menu Item are the Ground's first rungs:
 			    lists, in the Pane */}
-			{ground.kind === "Menu" ? (
-				<GroundList
-					title="Menu"
-					items={menu}
-					onPick={(item) => commands.openMenuItem(pane.id, item)}
-				/>
-			) : ground.kind === "MenuItem" ? (
-				renderMenuItem(ground.item, {
-					paneId: pane.id,
-					select: (subject) => commands.select(pane.id, subject),
-				})
-			) : null}
+			{renderGroundRung(pane, scope, covered)}
 		</section>
 	);
 }

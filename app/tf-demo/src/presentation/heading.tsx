@@ -9,21 +9,23 @@ import {
 } from "react";
 import { remPx } from "./deck-geometry";
 import { coverFoldRem, foldedAt } from "./form";
+import {
+	HEADING_CHROME_OPACITY_CSS,
+	HEADING_CHROME_SCALE_CSS,
+	headingGutterCss,
+	headingTitleStyle,
+	sheetChromeTitleStyle,
+} from "./morph";
 import { RestingControls } from "./resting-controls";
 import { COVER_GUTTER_REM } from "./skin";
 
 /**
- * What a Heading row holds: a Card's title row, and the Sheet chrome the
- * Heading carries as a Cover (tf-demo ADR 0006). `PresentationContent`
- * places the row; nothing here moves.
+ * What a Heading row holds: one persistent layout shared across Card and
+ * Cover forms (tf-demo ADR 0006), plus `SheetChrome` for a Pane bar's Ground.
  *
- * As a Cover the Heading is the Cover's bar: ← in the column's inline-start
- * gutter, × in its inline-end one, and the title on the body's own
- * column, so the Heading's first letter is the Blocks' first letter. It
- * folds on scroll: while the body rests at its top it is the page's
- * headword, set large with room above it and no rule of its own; once the
- * body scrolls it folds to the Pane bar's height and the bar's type, and
- * the divider arrives with the fold.
+ * `lego`'s `[data-title-bar]` rules own `NoteTitle` / `NoteTitleRow` layout,
+ * truncation, and fluid sizing via `--note-title-size`, so this module needs
+ * no deep descendant selector overrides.
  */
 
 /** How a Heading's title reads a press. */
@@ -95,51 +97,127 @@ export type HeadingControl = {
  */
 const STILL_LINKS =
 	"[&_button]:relative [&_button]:before:absolute [&_button]:before:inset-y-0 [&_button]:before:-inset-x-2 [&_button]:before:content-['']";
-/** One line in every design: the row's height is fixed, so the title truncates. */
-const ONE_LINE_TITLE =
-	"[&_[data-slot=note-title-row]]:flex-nowrap [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:truncate";
-/**
- * One line in a Sheet's chrome. The title is a row of its own parts, an
- * emoji or an icon and then its words, and only the words give way: they
- * end in an ellipsis, where a title that truncated as a whole would swap a
- * linked headword for the ellipsis alone. The title's row is one line tall
- * and clips, so an aside that finds no room beside the title, such as a
- * transcription, wraps under it and is not drawn, rather than being cut
- * off mid-word. The title clips, so a linked headword draws its focus ring
- * inside its own box, which is a little wider than its words.
- */
-const ONE_LINE_SHEET_TITLE =
-	"[&_[data-slot=note-title-row]]:max-h-[1lh] [&_[data-slot=note-title-row]]:overflow-hidden [&_[data-slot=note-title]]:flex [&_[data-slot=note-title]]:max-w-full [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:overflow-hidden [&_[data-slot=note-title]>*]:shrink-0 [&_[data-slot=note-title]>*:last-child]:min-w-0 [&_[data-slot=note-title]>*:last-child]:shrink [&_[data-slot=note-title]>*:last-child]:truncate [&_[data-slot=note-title-link]]:-ms-1 [&_[data-slot=note-title-link]]:px-1 [&_[data-slot=note-title-link]]:focus-visible:ring-inset";
 
 /**
- * A Note's title in a Cover takes its size from its row, so it can change
- * with the fold: the title inherits what the row is given, and the row is
- * one line of that size tall. A title that is no Note's, such as a
- * Scroll's, keeps its own type. The change rides the fold's own clock,
- * `HEADING_RESIZE`, as the Heading's height does. Reduced motion ends
- * every CSS transition at once, so the type snaps. The line keeps the
- * title's own leading at both sizes: a tighter one would clip the rule a
- * linked headword draws under itself.
+ * One unified Heading layout for a Note Presentation across Card and Cover
+ * forms. Never unmounts or crossfades between two heading trees:
+ *
+ * - Gutters glide from `0.875rem` (Card) to `2.5rem` (Cover) via `--note-morph`,
+ *   keeping the headword's first letter aligned with the Body's blocks at every
+ *   frame.
+ * - `←` and `×` fade smoothly into the gutters as the Card opens into a Cover
+ *   and rest `inert` while in Card form.
+ * - The title scales fluidly from `1rem` (Card / folded bar) to the Cover
+ *   headword (`clamp(1.375rem, 5.5cqi, 1.75rem)`).
  */
-const COVER_TITLE =
-	"[&_[data-slot=note-title-row]]:leading-[1.4] [&_[data-slot=note-title-row]]:transition-[font-size] [&_[data-slot=note-title-row]]:duration-200 [&_[data-slot=note-title-row]]:ease-[cubic-bezier(0.23,1,0.32,1)] [&_[data-slot=note-title]]:text-[length:inherit] [&_[data-slot=note-title]]:transition-[font-weight,letter-spacing] [&_[data-slot=note-title]]:duration-200 [&_[data-slot=note-title]]:ease-[cubic-bezier(0.23,1,0.32,1)]";
-/**
- * The page's headword: a Note's title in a Cover while its Body rests at
- * its top. It is 1.75rem where the column has the room and gives a little
- * in a narrow Pane, so a phone shows a headword of several words whole.
- */
-const LARGE_TITLE =
-	"[&_[data-slot=note-title-row]]:text-[length:clamp(1.375rem,5.5cqi,1.75rem)] [&_[data-slot=note-title]]:font-[600] [&_[data-slot=note-title]]:tracking-[-0.03em]";
-/** The bar's title: the size a Note's title has in a Card. */
-const BAR_TITLE = "[&_[data-slot=note-title-row]]:text-base";
+export function PresentationHeading({
+	maxWidth,
+	atFoot,
+	folded,
+	foldTransition = false,
+	resting,
+	chromeActive,
+	back,
+	clear,
+	children,
+}: {
+	readonly maxWidth: string;
+	readonly atFoot: boolean;
+	readonly folded: boolean;
+	/**
+	 * Enables CSS transitions on title font-size/weight/tracking ONLY when a
+	 * settled Cover folds or unfolds via scroll — never while `--note-morph`
+	 * is animating or scrubbed.
+	 */
+	readonly foldTransition?: boolean;
+	readonly resting: boolean;
+	readonly chromeActive: boolean;
+	readonly back: HeadingControl | null;
+	readonly clear: HeadingControl | null;
+	readonly children: ReactNode;
+}) {
+	const { linksDrag } = useHeadingDesign();
+	const gutter = headingGutterCss();
+	const bottomPad = folded
+		? "0px"
+		: atFoot
+			? "0.875rem"
+			: "calc(0.875rem - 0.375rem * var(--note-morph))";
+	const chromeStyle = {
+		opacity: HEADING_CHROME_OPACITY_CSS,
+		scale: HEADING_CHROME_SCALE_CSS,
+	};
+	return (
+		<>
+			<div className="absolute inset-0 flex">
+				<div
+					className={`@container mx-auto grid h-full w-full min-w-0 ${folded ? "items-center" : "items-end"}`}
+					style={{ maxWidth, paddingBottom: bottomPad }}
+				>
+					<div
+						className="grid min-w-0 items-center"
+						style={{
+							gridTemplateColumns: `${gutter} minmax(0, 1fr) ${gutter}`,
+						}}
+					>
+						{back ? (
+							<div
+								inert={!chromeActive || undefined}
+								className={`col-start-1 row-start-1 justify-self-start ${chromeActive ? "" : "pointer-events-none"}`}
+								style={chromeStyle}
+							>
+								<ChromeButton control={back} name="back">
+									{/* Back points toward inline-start (#479) */}
+									<ArrowLeftIcon
+										aria-hidden="true"
+										className="-translate-x-px rtl:translate-x-px rtl:-scale-x-100"
+									/>
+								</ChromeButton>
+							</div>
+						) : null}
+						<div
+							data-heading-title=""
+							data-title-bar=""
+							data-title-fold-transition={
+								foldTransition || undefined
+							}
+							data-links={linksDrag ? "drag" : "still"}
+							style={headingTitleStyle(folded)}
+							className={`col-start-2 row-start-1 min-w-0 ${linksDrag ? "" : STILL_LINKS}`}
+						>
+							<RestingControls
+								resting={resting}
+								className="min-w-0"
+							>
+								{children}
+							</RestingControls>
+						</div>
+						{clear ? (
+							<div
+								inert={!chromeActive || undefined}
+								className={`col-start-3 row-start-1 justify-self-end ${chromeActive ? "" : "pointer-events-none"}`}
+								style={chromeStyle}
+							>
+								<ChromeButton control={clear} name="clear">
+									<XIcon aria-hidden="true" />
+								</ChromeButton>
+							</div>
+						) : null}
+					</div>
+				</div>
+			</div>
+			<span
+				aria-hidden="true"
+				className={`absolute inset-x-0 bottom-0 h-px bg-line transition-opacity duration-200 ease-out motion-reduce:transition-none ${folded && chromeActive ? "opacity-100" : "opacity-0"}`}
+			/>
+		</>
+	);
+}
 
 /**
- * A Sheet's chrome: ← in the column's inline-start gutter, × in its
- * inline-end one, the title on the body's column between them. A Cover
- * draws it as its Heading; a Pane bar draws it too, because a Ground's
- * chrome is its Pane's (ADR 0006). The three share one line, so ← and ×
- * sit level with the title's middle whatever the row's height, and they
- * stay by the title however wide the Sheet is.
+ * A Pane bar's Sheet chrome: ← in the column's inline-start gutter, × in its
+ * inline-end one, and the Ground's title or trail on the body's column
+ * between them (ADR 0006).
  */
 export function SheetChrome({
 	ruled,
@@ -156,9 +234,8 @@ export function SheetChrome({
 	back: HeadingControl | null;
 	clear: HeadingControl | null;
 	/**
-	 * A Cover's title: a Note's is set large as the page's headword, or at
-	 * the bar's size once the Cover folds. Left out, the title keeps the
-	 * type its words bring, as a Pane bar's does.
+	 * When given, scales a Note's title between large headword and bar size.
+	 * Left out, the title keeps the type its words bring (e.g. a trail).
 	 */
 	large?: boolean;
 	children: ReactNode;
@@ -169,8 +246,7 @@ export function SheetChrome({
 		<>
 			<div className="absolute inset-0 flex">
 				<div
-					/* the column is the container a large title sizes against */
-					className="@container mx-auto grid h-full w-full min-w-0 items-end pb-2"
+					className={`@container mx-auto grid h-full w-full min-w-0 ${large ? "items-end pb-2" : "items-center"}`}
 					style={{ maxWidth }}
 				>
 					<div
@@ -185,17 +261,25 @@ export function SheetChrome({
 								name="back"
 								className="col-start-1 justify-self-start"
 							>
-								{/* Back points toward inline-start (#479) */}
 								<ArrowLeftIcon
 									aria-hidden="true"
-									className="rtl:-scale-x-100"
+									className="-translate-x-px rtl:translate-x-px rtl:-scale-x-100"
 								/>
 							</ChromeButton>
 						) : null}
 						<div
 							data-heading-title=""
+							data-title-bar=""
+							data-title-fold-transition={
+								large !== undefined || undefined
+							}
 							data-links={linksDrag ? "drag" : "still"}
-							className={`col-start-2 row-start-1 min-w-0 ${ONE_LINE_SHEET_TITLE} ${large === undefined ? "" : `${COVER_TITLE} ${large ? LARGE_TITLE : BAR_TITLE}`} ${linksDrag ? "" : STILL_LINKS}`}
+							style={
+								large === undefined
+									? undefined
+									: sheetChromeTitleStyle(large)
+							}
+							className={`col-start-2 row-start-1 min-w-0 ${linksDrag ? "" : STILL_LINKS}`}
 						>
 							{children}
 						</div>
@@ -213,7 +297,7 @@ export function SheetChrome({
 			</div>
 			<span
 				aria-hidden="true"
-				className={`absolute inset-x-0 bottom-0 h-px bg-line transition-opacity duration-200 ease-out ${ruled ? "opacity-100" : "opacity-0"}`}
+				className={`absolute inset-x-0 bottom-0 h-px bg-line transition-opacity duration-200 ease-out motion-reduce:transition-none ${ruled ? "opacity-100" : "opacity-0"}`}
 			/>
 		</>
 	);
@@ -221,28 +305,23 @@ export function SheetChrome({
 
 /**
  * ← or ×: one icon size and one stroke, at the outer side of its gutter so
- * the title keeps some air. At rest it is chrome, in ink; under the
- * pointer it glows with what it does: ← the blue of a link, × the red a
- * Card turns when letting go removes it. It does not grow on hover: ← is
- * pressed many times a session, and a 15 % swell under the pointer made
- * the press a swing from 1.15 to 0.95. Pressed, it gives a little. Its box
- * is larger than the line it sits on; the negative margin keeps it from
- * making the line taller.
+ * the title keeps some air. Expands hit target to 44×44px via pseudo-element
+ * and gates hover surfaces to fine pointers so touch devices never stick.
  */
 const CHROME_HOVER = {
-	back: "enabled:hover:text-link enabled:hover:drop-shadow-[0_0_6px_color-mix(in_oklab,var(--link)_55%,transparent)]",
-	clear: "enabled:hover:text-destructive enabled:hover:drop-shadow-[0_0_6px_color-mix(in_oklab,var(--destructive)_55%,transparent)]",
+	back: "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:bg-raised [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:text-ink",
+	clear: "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:bg-destructive/12 [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:text-destructive",
 } as const;
 
 function ChromeButton({
 	control,
 	name,
-	className,
+	className = "",
 	children,
 }: {
 	control: HeadingControl;
 	name: keyof typeof CHROME_HOVER;
-	className: string;
+	className?: string;
 	children: ReactNode;
 }) {
 	return (
@@ -253,7 +332,7 @@ function ChromeButton({
 			aria-label={control.label}
 			title={control.label}
 			onClick={control.onPress}
-			className={`${className} ${CHROME_HOVER[name]} row-start-1 -my-1.5 grid size-8 place-items-center rounded-md text-ink-muted transition-[color,scale,filter] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 enabled:active:scale-95 disabled:text-ink-muted/40 [&_svg]:size-4 [&_svg]:stroke-[1.75]`}
+			className={`${className} ${CHROME_HOVER[name]} relative row-start-1 -my-1.5 grid size-8 translate-y-[1px] touch-manipulation place-items-center rounded-md text-ink-muted transition-[color,background-color,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] after:absolute after:-inset-1.5 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 enabled:active:scale-[0.96] disabled:text-ink-faint/75 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:stroke-[1.75]`}
 		>
 			{children}
 		</button>
@@ -263,8 +342,7 @@ function ChromeButton({
 /**
  * The keyboard's way to Lift and Expand: buttons that are out of sight
  * and out of the pointer's way until they have keyboard focus, then show
- * at the inline-end of the row they handle. A pointer lifts by dragging
- * the row itself.
+ * at the inline-end of the row they handle.
  */
 export function KeyHandles({
 	controls,
@@ -272,7 +350,7 @@ export function KeyHandles({
 	controls: readonly (HeadingControl & { readonly text: string })[];
 }) {
 	return (
-		<div className="pointer-events-none absolute end-2 top-1 z-10 flex gap-1">
+		<div className="pointer-events-none absolute end-2 top-2 z-10 flex gap-1">
 			{controls.map((control) => (
 				<button
 					key={control.text}
@@ -284,52 +362,13 @@ export function KeyHandles({
 						event.stopPropagation();
 						control.onPress();
 					}}
-					className="pointer-events-auto sr-only rounded-md border border-link/50 bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase focus-visible:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50"
+					className="pointer-events-auto sr-only rounded-sm border border-link/50 bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase focus-visible:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50"
 				>
 					{control.text}
 				</button>
 			))}
 		</div>
 	);
-}
-
-/**
- * A Card's title row: the Heading's words on one line, centred at the
- * content column, resting on the row's lower edge. A Card's title reads,
- * but its links rest until it is a Sheet (#485).
- */
-export function CardTitleRow({
-	column,
-	atFoot,
-	children,
-}: {
-	/** The content column's width, as CSS. */
-	column: string;
-	/** The row sits at its Card's lower edge, as a Card Tail's does. */
-	atFoot: boolean;
-	children: ReactNode;
-}) {
-	return (
-		<div
-			/* a Card's Heading is part of the Card: its words are set in
-			   the Card's density, as its Blocks are */
-			data-density="compact"
-			className="relative flex h-full w-full min-w-0 items-end"
-			style={{ maxWidth: column }}
-		>
-			<RestingControls
-				resting
-				className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atFoot ? "pb-3.5" : ""}`}
-			>
-				{children}
-			</RestingControls>
-		</div>
-	);
-}
-
-/** The classes of the face a Card's title row is drawn in, filling the Heading row. */
-export function cardFaceClass(atFoot: boolean): string {
-	return `absolute inset-0 flex justify-center px-4 ${atFoot ? "" : "pb-3.5"}`;
 }
 
 /** A Heading's words for a Subject with a plain name, such as a Scroll or a Section. */

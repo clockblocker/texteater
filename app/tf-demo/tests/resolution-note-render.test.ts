@@ -389,15 +389,13 @@ test("a stored Resolution whose every step says something opens all four canonic
 test("before the Session's first result, the Reading step is laid out by the clicked unit's route", () => {
 	const markup = renderResolving(null, unit.route);
 	expect(markup).toContain('data-note-kind="Reading"');
-	expect(markup).toContain('aria-label="Headword on the way"');
-	expect(markup).toContain('aria-label="Emoji on the way"');
+	expect(markup).toContain('aria-label="Loading headword"');
+	expect(markup).toContain('aria-label="Loading icon"');
 	expect(markup).toMatch(
-		/aria-label="Source Contexts"[^>]*aria-busy="true"|aria-busy="true"[^>]*aria-label="Source Contexts"/,
+		/<section[^>]*aria-busy="true"[^>]*>(?:(?!<\/section>).)*?>In context<\/h2>/,
 	);
 	// The route is named where the stored Note names it: in its tags.
-	expect(markup).toMatch(
-		/<span>de<\/span><span>Lexeme<\/span><span>NOUN<\/span>/,
-	);
+	expect(markup).toContain("<span>Noun</span>");
 });
 
 test("before Grammar, the Reading step is headed by the clicked words, resolving", () => {
@@ -416,8 +414,8 @@ test("before Grammar, the Reading step is headed by the clicked words, resolving
 	});
 	expect(markup).toMatch(/data-resolving="true"[^>]*>Die Banken</);
 	expect(markup).toContain("word-sheen");
-	expect(markup).toContain("<span>NOUN</span>");
-	expect(markup).not.toContain("Headword on the way");
+	expect(markup).toContain("<span>Noun</span>");
+	expect(markup).not.toContain("Loading headword");
 	expect(markup).toContain("Banken</button>");
 });
 
@@ -497,13 +495,15 @@ test("the Attestation step titles the clicked words and quotes their sentence, i
 	};
 	const heading = renderStep({ stepKind: "Attestation", note }, "heading");
 	expect(heading).toContain(
-		'data-attestation-title=""><bdi><span data-clicked-piece="true">Banken</span></bdi><',
+		'data-attestation-title="" lang="de"><bdi><span data-clicked-piece="true">Banken</span></bdi><',
 	);
 	expect(heading).not.toContain('role="status"');
 	const body = renderStep({ stepKind: "Attestation", note }, "body");
 	expect(body).toContain('data-note-kind="Attestation"');
 	expect(body).toContain("Banken</button>");
-	expect(body).toMatch(/aria-label="Route"[^>]*aria-busy="true"/);
+	expect(body).toMatch(
+		/<section[^>]*aria-busy="true"[^>]*>(?:(?!<\/section>).)*?>Route<\/h2>/,
+	);
 	expect(body).not.toContain(">Banken</h");
 
 	// A failed Session has nothing more on its way.
@@ -623,12 +623,12 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 	expect(grammatical).toContain(">Bank<");
 	expect(grammatical).toContain("note-arrival");
 	expect(grammatical).not.toContain("word-sheen");
-	expect(grammatical).toContain('aria-label="Emoji on the way"');
+	expect(grammatical).toContain('aria-label="Loading icon"');
 	expect(grammatical).not.toContain("open its Lemma");
-	expect(grammatical).toContain('aria-label="Definition"');
-	expect(grammatical).toContain('aria-label="Translations"');
+	expect(grammatical).toContain(">Definition</h2>");
+	expect(grammatical).toContain(">Translations</h2>");
 	expect(grammatical).toMatch(
-		/aria-label="Translations"[\s\S]*aria-busy="true"/,
+		/<section[^>]*aria-busy="true"[^>]*>(?:(?!<\/section>).)*?>Translations<\/h2>/,
 	);
 	expect(grammatical).toMatch(
 		/<span data-slot="reader-plain-segment"[^>]*>Die <\/span><button data-slot="reader-segment"[^>]*>Banken<\/button><span data-slot="reader-plain-segment"[^>]*>\.<\/span>/,
@@ -644,7 +644,7 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 		reading,
 		updatedAt: 3,
 	});
-	expect(readable).not.toContain("Emoji on the way");
+	expect(readable).not.toContain("Loading icon");
 	expect(readable).toContain("🏦");
 	expect(readable).toContain("note-arrival");
 	expect(readable).not.toContain("open its Lemma");

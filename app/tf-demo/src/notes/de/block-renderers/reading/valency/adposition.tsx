@@ -26,7 +26,7 @@ export const renderDeAdpositionValency = (({ noteData }) => {
 	if (lines.length === 0) return null;
 
 	return (
-		<NoteSection aria-label="Valency" label="Valency">
+		<NoteSection label="Valency">
 			{lines.map((line) => (
 				<p
 					key={lineKey(line)}

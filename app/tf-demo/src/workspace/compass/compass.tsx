@@ -6,7 +6,6 @@ import {
 	deckColumnIn,
 	deckHolding,
 	deckSlots,
-	dropRegions,
 	findPane,
 	groundPlacement,
 	isRooted,
@@ -36,12 +35,12 @@ import {
 } from "@/presentation/heading";
 import { VELOCITY_SAMPLE_MS } from "@/workspace/motion/motion-spec";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
+import { CoverScrim, DeckScrim, renderDropZones } from "./compass-scrims";
 import type { DropReading } from "./destination";
-import { DropZones, ReturnZone } from "./drop-zones";
+import { ReturnZone } from "./drop-zones";
 import {
 	type Fate,
 	fateOf,
-	homeLabel,
 	inHandOf,
 	type NoteHandle,
 	type ThrowTuning,
@@ -254,6 +253,7 @@ function CompassRuntime<S>({
 		dragging: () => gesture.dragRef.current !== null,
 		swallowClick: drags.swallowClick,
 		sweep: commands.sweep,
+		coverBack: commands.coverBack,
 		clearCovers: commands.clearCovers,
 		cancelDrag: () => drags.cancelDrag(),
 	});
@@ -310,35 +310,6 @@ function CompassRuntime<S>({
 		return root.current?.querySelector<HTMLElement>(selector) ?? null;
 	}
 
-	function renderZones(): ReactNode[] {
-		if (!showZones) return [];
-		return shown.flatMap((pane) => {
-			const box = restBoxes[pane.id];
-			return box
-				? [
-						<DropZones
-							key={`zones-${pane.id}`}
-							paneId={pane.id}
-							regions={dropRegions(
-								box,
-								renderer.columnRem(drag.card.subject),
-								rem,
-								{
-									barRem: fold.barRemOf(pane),
-									direction,
-									edges: splits,
-								},
-							)}
-							destination={destination}
-							homeLabel={homeLabel(drag)}
-							shown={zonesShown}
-							direction={direction}
-						/>,
-					]
-				: [];
-		});
-	}
-
 	/**
 	 * The top Sheet's Deck: Cards in slots one Heading row apart. While a
 	 * ghost Cover hides the Deck, only the Card in hand is drawn, in the
@@ -390,6 +361,7 @@ function CompassRuntime<S>({
 					}
 					z={z}
 					held={held}
+					lifted={held && !returning && drag.lifted}
 					fate={held ? fate : null}
 					swiping={swiping}
 					pastCommit={sweeps}
@@ -444,119 +416,146 @@ function CompassRuntime<S>({
 			const anchor = paneAnchor(pane.id);
 			const sheets = sheetsOf(pane);
 			const top = topSheetOf(pane);
+			const real = findPane(layout, pane.id);
+			const realTop = real ? topSheetOf(real) : null;
+			const hasCover = sheets.length > 1;
+			const hasRealCover = (real?.covers.length ?? 0) > 0;
+			const paneCoverStyle = placementStyle(groundPlacement(0), anchor);
+			const pushCoverScrim = () => {
+				notes.push(
+					<CoverScrim
+						key={`cover-scrim-${pane.id}`}
+						paneId={pane.id}
+						placement={paneCoverStyle}
+						visible={hasCover}
+						interactive={hasRealCover && !showZones}
+					/>,
+				);
+			};
 			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			sheets.forEach((sheet, index) => {
 				const card = sheet.presentation;
-				if (!card) return;
-				const isTop = index === sheets.length - 1;
-				const ghost = sheet.preview;
-				if (!ghost) rendered.add(card.id);
-				/* a Cover's Heading is its bar: the ← and the handle ride
-				   the Note's own box rather than sitting beside it */
-				const grabs = isTop && !ghost;
-				const live = !ghost && isTop;
-				notes.push(
-					<PresentationView
-						key={
-							ghost
-								? `ghost-${pane.id}-${sheet.sheetId}`
-								: card.id
-						}
-						renderer={renderer}
-						card={card}
-						form="sheet"
-						place="open"
-						placement={placementStyle(
-							sheet.ground
-								? groundPlacement(fold.barRemOf(pane))
-								: coverPlacement(narrow),
-							anchor,
-						)}
-						z={sheetZ(index)}
-						held={false}
-						fate={null}
-						pastCommit={false}
-						paneId={pane.id}
-						sheetId={ghost ? null : sheet.sheetId}
-						ground={sheet.ground}
-						covered={!isTop}
-						preview={ghost}
-						lit={isTop ? (sheet.deck?.selection ?? null) : null}
-						register={ghost ? ignore : register}
-						back={
-							sheet.ground
-								? null
-								: {
-										label: deckHolding(layout, card.id)
-											? "Collapse back to card"
-											: "Close cover",
-										enabled: live,
-										onPress: () =>
-											commands.coverBack(
-												pane.id,
-												sheet.sheetId,
-											),
-									}
-						}
-						clear={
-							sheet.ground
-								? null
-								: {
-										label: "Close every Cover",
-										enabled: live,
-										onPress: () =>
-											commands.clearCovers(pane.id),
-									}
-						}
-						keys={
-							sheet.ground || !grabs
-								? []
-								: [
-										{
-											text: "Lift",
-											label: `Lift ${label(card.subject)}`,
-											enabled: true,
-											onPress: () => {
-												const heading = handleIn(
-													`[data-sheet-id="${sheet.sheetId}"] [data-heading]`,
-												);
-												if (heading)
-													keyboard.liftSheet(
-														sheet,
-														heading,
+				if (card) {
+					const isTop = index === sheets.length - 1;
+					const ghost = sheet.preview;
+					if (!ghost) rendered.add(card.id);
+					/* a Cover's Heading is its bar: the ← and the handle ride
+					   the Note's own box rather than sitting beside it */
+					const grabs = isTop && !ghost;
+					const live = !ghost && isTop;
+					notes.push(
+						<PresentationView
+							key={
+								ghost
+									? `ghost-${pane.id}-${sheet.sheetId}`
+									: card.id
+							}
+							renderer={renderer}
+							card={card}
+							form="sheet"
+							place="open"
+							placement={placementStyle(
+								sheet.ground
+									? groundPlacement(fold.barRemOf(pane))
+									: coverPlacement(narrow),
+								anchor,
+							)}
+							z={sheetZ(index)}
+							held={false}
+							fate={null}
+							pastCommit={false}
+							paneId={pane.id}
+							sheetId={ghost ? null : sheet.sheetId}
+							ground={sheet.ground}
+							covered={!isTop}
+							preview={ghost}
+							lit={isTop ? (sheet.deck?.selection ?? null) : null}
+							register={ghost ? ignore : register}
+							back={
+								sheet.ground
+									? null
+									: {
+											label: deckHolding(layout, card.id)
+												? "Collapse back to card"
+												: "Close cover",
+											enabled: live,
+											onPress: () =>
+												commands.coverBack(
+													pane.id,
+													sheet.sheetId,
+												),
+										}
+							}
+							clear={
+								sheet.ground
+									? null
+									: {
+											label: "Close every Cover",
+											enabled: live,
+											onPress: () =>
+												commands.clearCovers(pane.id),
+										}
+							}
+							keys={
+								sheet.ground || !grabs
+									? []
+									: [
+											{
+												text: "Lift",
+												label: `Lift ${label(card.subject)}`,
+												enabled: true,
+												onPress: () => {
+													const heading = handleIn(
+														`[data-sheet-id="${sheet.sheetId}"] [data-heading]`,
 													);
+													if (heading)
+														keyboard.liftSheet(
+															sheet,
+															heading,
+														);
+												},
 											},
-										},
-									]
-						}
-						actions={
-							ghost
-								? inert
-								: actionsOf(
-										pane.id,
-										sheet.sheetId,
-										card.id,
-										sheet.ground ? lineOf(pane) : null,
-									)
-						}
-						onDown={
-							grabs
-								? (event) =>
-										drags.coverHeadingDown(event, sheet)
-								: ignore
-						}
-					/>,
-				);
+										]
+							}
+							actions={
+								ghost
+									? inert
+									: actionsOf(
+											pane.id,
+											sheet.sheetId,
+											card.id,
+											sheet.ground ? lineOf(pane) : null,
+										)
+							}
+							onDown={
+								grabs
+									? (event) =>
+											drags.coverHeadingDown(event, sheet)
+									: ignore
+							}
+						/>,
+					);
+				}
+				if (index === 0) pushCoverScrim();
 			});
 			/* the Deck is the real top Sheet's; a ghost Cover hides it, and
 			   the Card in hand is the one thing still drawn from it */
-			const real = findPane(layout, pane.id);
-			const realTop = real ? topSheetOf(real) : null;
-			if (!realTop?.deck) continue;
 			const hidden = top.preview && !top.ground;
-			if (!hidden)
-				for (const card of restingCards(layout, realTop.deck))
-					rendered.add(card.id);
+			const deckCards =
+				realTop?.deck && !hidden
+					? restingCards(layout, realTop.deck)
+					: [];
+			const hasDeck = deckCards.length > 0;
+			notes.push(
+				<DeckScrim
+					key={`deck-scrim-${pane.id}`}
+					paneId={pane.id}
+					placement={paneCoverStyle}
+					visible={hasDeck}
+				/>,
+			);
+			if (!realTop?.deck) continue;
+			if (!hidden) for (const card of deckCards) rendered.add(card.id);
 			else if (drag) rendered.add(drag.card.id);
 			notes.push(...renderDeck(realTop, hidden));
 			const paneBox = paneBoxes[pane.id];
@@ -594,6 +593,7 @@ function CompassRuntime<S>({
 					)}
 					z={Z.held}
 					held={held}
+					lifted={held && Boolean(drag?.lifted)}
 					fate={held ? fate : null}
 					pastCommit={false}
 					paneId={drag?.paneId ?? activePaneId}
@@ -606,7 +606,22 @@ function CompassRuntime<S>({
 				/>,
 			);
 		}
-		notes.push(...renderZones());
+		if (showZones && drag) {
+			notes.push(
+				...renderDropZones({
+					shown,
+					restBoxes,
+					drag,
+					renderer,
+					rem,
+					barRemOf: fold.barRemOf,
+					direction,
+					splits,
+					destination,
+					zonesShown,
+				}),
+			);
+		}
 		return notes;
 	}
 
@@ -631,7 +646,15 @@ function CompassRuntime<S>({
 			data-narrow={narrow || undefined}
 			tabIndex={-1}
 			onPointerDownCapture={(event) => {
-				root.current?.focus({ preventScroll: true });
+				const target = event.target;
+				if (
+					!(target instanceof Element) ||
+					!target.closest(
+						"input, textarea, button, a, select, [contenteditable]",
+					)
+				) {
+					root.current?.focus({ preventScroll: true });
+				}
 				dismiss.pageDown(event);
 			}}
 			onPointerMoveCapture={dismiss.pageMove}
@@ -641,7 +664,7 @@ function CompassRuntime<S>({
 				fold.onScroll(event);
 			}}
 			onClickCapture={dismiss.pageClick}
-			className="relative h-full min-h-0 overflow-hidden"
+			className={`relative h-full min-h-0 overflow-clip ${drag && drag.phase !== "pressed" ? "cursor-grabbing" : ""}`}
 			onPointerMove={drags.frameMove}
 			onPointerUp={drags.frameUp}
 			onPointerCancel={drags.cancelDrag}

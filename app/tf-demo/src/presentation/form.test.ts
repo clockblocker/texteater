@@ -101,15 +101,38 @@ describe("the Heading row", () => {
 });
 
 describe("the paper skin", () => {
-	test("every form but the Ground has the paper's corners and resting border", () => {
+	test("every form uses tokenized corners, elevation planes, and a single resting hairline border", () => {
 		for (const form of FORMS) {
 			const ground = form === "ground";
-			expect(boxClass(form).includes("rounded-")).toBe(!ground);
-			expect(boxClass(form).includes("border-line-strong")).toBe(!ground);
-			expect(restingBorder(form)).toBe(
-				ground ? "transparent" : "var(--line-strong)",
-			);
+			const classes = boxClass(form);
+			expect(classes.includes("rounded-")).toBe(!ground);
+			expect(classes).toContain("bg-clip-padding");
+			expect(classes).not.toContain("border-line-strong");
 		}
+		expect(boxClass("ground")).toContain("border-transparent");
+		expect(restingBorder("ground")).toBe("transparent");
+		expect(boxClass("card")).toContain("rounded-xl");
+		expect(boxClass("card")).toContain("border-[var(--border-card-rest)]");
+		expect(restingBorder("card")).toBe("var(--border-card-rest)");
+		expect(boxClass("card")).toContain("bg-paper-elevated");
+		expect(boxClass("card")).toContain("shadow-card-rest");
+		expect(boxClass("card")).toContain("[--note-bg:var(--paper-elevated)]");
+		for (const tail of ["tail-above", "tail-below"] as const) {
+			expect(boxClass(tail)).toContain("rounded-xl");
+			expect(boxClass(tail)).toContain(
+				"border-[var(--border-card-tail)]",
+			);
+			expect(restingBorder(tail)).toBe("var(--border-card-tail)");
+			expect(boxClass(tail)).toContain("bg-paper");
+			expect(boxClass(tail)).not.toContain("bg-paper-elevated");
+			expect(boxClass(tail)).toContain("shadow-card-tail");
+		}
+		expect(boxClass("cover")).toContain("rounded-t-2xl");
+		expect(boxClass("cover")).toContain("rounded-b-none");
+		expect(boxClass("cover")).toContain("border-[var(--border-cover)]");
+		expect(restingBorder("cover")).toBe("var(--border-cover)");
+		expect(boxClass("cover")).toContain("bg-paper");
+		expect(boxClass("cover")).toContain("shadow-cover");
 	});
 
 	test("a Card is all handle and selects nothing; a Sheet's text selects", () => {
@@ -127,17 +150,14 @@ describe("the paper skin", () => {
 		expect(boxClass("cover")).not.toContain("cursor-grab");
 	});
 
-	test("the shadow grows with the lift, and a Ground casts none", () => {
-		expect(paperShadow("card", 0)).toBe(
-			"0 0.25rem 0.75rem rgb(0 0 0 / 0.20)",
-		);
-		expect(paperShadow("card", 1)).toBe(
-			"0 1.50rem 3.00rem rgb(0 0 0 / 0.45)",
-		);
-		expect(paperShadow("cover")).toBe(paperShadow("card"));
-		expect(paperShadow("ground", 1)).toBe(
-			"0 0.00rem 0.00rem rgb(0 0 0 / 0.00)",
-		);
+	test("the shadow follows the elevation tokens and lift, and a Ground casts none", () => {
+		expect(paperShadow("card", 0)).toBe("var(--shadow-card-rest)");
+		expect(paperShadow("card", 1)).toBe("var(--shadow-card-lift)");
+		expect(paperShadow("card", 0.5)).toContain("oklch(");
+		expect(paperShadow("tail-above", 0)).toBe("var(--shadow-card-tail)");
+		expect(paperShadow("tail-below", 0)).toBe("var(--shadow-card-tail)");
+		expect(paperShadow("cover")).toBe("var(--shadow-cover)");
+		expect(paperShadow("ground", 1)).toBe("none");
 	});
 
 	test("a Sheet's column widens by its gutters, so the text keeps its measure", () => {

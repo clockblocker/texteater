@@ -23,7 +23,11 @@ export const renderDefaultLemmaHeading = (({
 		<CaptionedHeading
 			presentation={PresentationCapabilities.presentation}
 			title={
-				<NoteTitle data-lemma-title="" tone={genderTone(presented)}>
+				<NoteTitle
+					data-lemma-title=""
+					lang={presented.language}
+					tone={genderTone(presented)}
+				>
 					<bdi>{presented.canonicalForm}</bdi>
 				</NoteTitle>
 			}

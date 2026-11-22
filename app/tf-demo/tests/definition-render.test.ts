@@ -138,7 +138,7 @@ test("a Sheet reads the definition as a Sentence of selectable Segments", () => 
 		{ state: "Ready", sentence: SENTENCE },
 		{ definition: selection },
 	);
-	expect(markup).toContain('aria-label="Definition"');
+	expect(markup).toContain("aria-labelledby=");
 	expect(markup).toContain(">Definition</h2>");
 	expect(markup.match(/data-slot="reader-segment"/g)).toHaveLength(5);
 	expect(markup).toContain('aria-label="Haus, part of a known occurrence"');
@@ -164,7 +164,7 @@ test("the block waits for generation and segmentation, and keeps the prose when 
 	const generating = render({ state: "Absent" }, { activity: "Loading" });
 	expect(generating).toContain('aria-busy="true"');
 	const absent = render({ state: "Absent" });
-	expect(absent).not.toContain('aria-label="Definition"');
+	expect(absent).not.toContain(">Definition</h2>");
 	const failed = render(
 		{ state: "Failed", failureMessage: "Segmenter unavailable." },
 		{ definition: selection },

@@ -3,16 +3,14 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
 import { lazy, type ReactNode, Suspense } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { pathnameAtom } from "@/playground/pathname-atoms";
+import { PLAYGROUND_GROUPS } from "@/playground/playground-registry";
 import {
 	isPlaygroundPath,
 	PLAYGROUND_BASE,
 	playgroundPath,
 	playgroundSegments,
 } from "@/playground/playground-router";
-import {
-	PLAYGROUND_ENTRIES,
-	PlaygroundView,
-} from "@/playground/playground-view";
+import { PlaygroundView } from "@/playground/playground-view";
 import { ApplicationWorkspace } from "@/workspace/application-workspace";
 
 const ResolutionInspector = import.meta.env.DEV
@@ -34,7 +32,7 @@ function App() {
 	const workspace = (
 		<section
 			aria-label="Workspace"
-			className="h-svh min-h-0 min-w-0 flex-1 bg-canvas max-md:h-[calc(100svh-3rem)]"
+			className="h-dvh min-h-0 min-w-0 flex-1 bg-canvas max-md:h-[calc(100dvh-3rem)]"
 		>
 			<ApplicationWorkspace />
 		</section>
@@ -56,22 +54,28 @@ function DevelopmentShell({ workspace }: { workspace: ReactNode }) {
 						pathname: playgroundOpen ? "/" : PLAYGROUND_BASE,
 					})
 				}
-				playgroundPages={
+				playgroundGroups={
 					playgroundOpen
-						? PLAYGROUND_ENTRIES.map((entry) => ({
-								key: entry.key,
-								title: entry.title,
-								icon: entry.icon,
-								active: entry.key === playgroundEntryKey,
-								onShow: () =>
-									navigate({
-										pathname: playgroundPath([entry.key]),
-									}),
+						? PLAYGROUND_GROUPS.map((group) => ({
+								key: group.key,
+								label: group.label,
+								pages: group.entries.map((entry) => ({
+									key: entry.key,
+									title: entry.title,
+									icon: entry.icon,
+									active: entry.key === playgroundEntryKey,
+									onShow: () =>
+										navigate({
+											pathname: playgroundPath([
+												entry.key,
+											]),
+										}),
+								})),
 							}))
 						: []
 				}
 			/>
-			<SidebarInset className="min-h-svh min-w-0 overflow-hidden">
+			<SidebarInset className="min-h-dvh min-w-0 overflow-hidden">
 				<header className="flex h-12 shrink-0 items-center border-b px-3 md:hidden">
 					<SidebarTrigger />
 				</header>

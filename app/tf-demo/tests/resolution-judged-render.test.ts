@@ -91,7 +91,7 @@ function render(note: ResolutionNote) {
 test("the judged Card shows jev's Core Features under the clicked words, still resolving", () => {
 	const before = render(runningNote());
 	const { noteData, markup } = render(runningNote({ judged }));
-	expect(before.markup).not.toContain("nounKind");
+	expect(before.markup).not.toContain("<span>common</span>");
 	expect(noteData.reading.lemma.coreFeatures as unknown).toEqual(
 		judged.coreFeatures,
 	);
@@ -99,7 +99,7 @@ test("the judged Card shows jev's Core Features under the clicked words, still r
 		words: "Bnaken",
 		resolving: true,
 	});
-	expect(markup).toContain("nounKind");
+	expect(markup).toContain("<span>common</span>");
 	expect(markup).toContain("Bnaken");
 });
 

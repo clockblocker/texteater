@@ -248,82 +248,82 @@ How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 
 **Rendering.**
 
-A Reading Note's heading shows the learner the Lemma with its frame, as a
-citation after the emoji. Optional slots are in parentheses. A slot's token
-names its case alone: `jN` Acc, `jM` Dat, `jS` Gen. A verb comes last, after
-its slots and a Locution's Fixed words, and its `hasSepPrefix` Core Feature
-splits a separable prefix off by a bar: `auf|passen`. A Reflexive Slot
-prints `sich`, never stored in the Canonical Form, where the Reading's
-Citation puts it (ADR 0052): `sich (an jN) erinnern`, `es sich gemütlich
-machen`. A slot whose preposition is a Locution's Fixed word follows it:
-`mit jM zu tun haben`. A Surface's slotted line, `jD (auf jN) wartet`, is
-printed the same way and never stored (ADR 0056). A Reading has no separate
-Valency Block.
+A Reading Note's heading cites the Lemma with its frame after the emoji.
+Optional slots take parentheses; Slot alternatives use `|`, sharing parentheses
+when Optional (`(über jN | von jM) reden`) and square brackets when Required
+(`[jN | etw zu tun] versuchen`). Case tokens name case alone (`jN` Acc, `jM`
+Dat, `jS` Gen). Markerless complements use dictionary stand-ins: Adverbials
+(`irgendwo`, `irgendwohin`, `irgendwie`, `irgendwie lange`, `irgendwie viel`),
+Predicatives (`irgendwie`, `als …`, `für …`) and Clauses (`etw zu tun`,
+`etw tun`, `dass …`, `ob …`, `w- …`). A verb comes last after its slots
+(reflexive, bare case, preposition, markerless) and a Locution's Fixed words,
+with `hasSepPrefix` marked by `|` (`auf|passen`). Reflexive prints `sich`
+(never stored in Canonical Form, ADR 0052): `sich (an jN) erinnern`, `es sich
+gemütlich machen`. A slot whose preposition is a Locution's Fixed word follows
+it (`mit jM zu tun haben`). A Surface's slotted line (`jD (auf jN) wartet`)
+prints the same way and is never stored (ADR 0056). A Reading has no Valency
+Block.
 
 ```text
-(auf `jN`) auf|passen                   aufpassen
-(mit `jM`) an|fangen                    anfangen
-(auf `jN`) warten                       warten
-stolz (auf `jN`)                        stolz
-`jM` auf den Keks gehen                 jemandem auf den Keks gehen
-(`jM`) `jN` zur Verfügung stellen       (jemandem) etwas zur Verfügung stellen
+(auf `jN`) auf|passen -> aufpassen
+(mit `jM`) an|fangen -> anfangen
+(auf `jN`) warten -> warten
+stolz (auf `jN`) -> stolz
+`jM` auf den Keks gehen -> jemandem auf den Keks gehen
+(`jM`) `jN` zur Verfügung stellen -> (jemandem) etwas zur Verfügung stellen
+`irgendwo` wohnen -> wohnen
+`jN` `irgendwohin` legen -> legen
+`irgendwie` aus|sehen -> aussehen
+(über `jN` | von `jM`) reden -> reden
+[`jN` | `etw zu tun`] versuchen -> versuchen
+(zu `jM` | `irgendwohin`) zurück|kehren -> zurückkehren
 ```
 
 ## Consequences
 
 - [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)
-  keeps government out of Lemma identity. This ADR stores it in the frame on
-  the Reading and in `valencyEvidence` on the Attestation.
-- Valency may come from the sense alone. The frame is proposed once, by the
-  Knowledge call that creates the Reading, so a guess can be wrong and is
-  fixed through Correct. Guessing valency from the sense in every sentence
-  was rejected.
-- The `governedBy` view of a preposition is projected from every Preposition
-  complement of a frame, alternatives included: `von` lists `reden`.
-- Every governor Kind takes in its governed preposition as an Attestation
-  member: VERB, ADJ, NOUN, Locutions and routine formulas. Clicking `auf` in
-  `Er ist stolz auf seinen Sohn` opens `stolz`, and clicking `über` in `Er
-  weiß Bescheid über die Pläne` opens the Collocation `Bescheid wissen`. The
-  member carries no Member Role
+  keeps government out of Lemma identity; this ADR stores it on the Reading's
+  frame and in the Attestation's `valencyEvidence`.
+- Valency may come from sense alone. The Knowledge call creating a Reading
+  proposes the frame once; mistakes go through Correct. Re-guessing valency on
+  every sentence was rejected.
+- A preposition's `governedBy` view projects from every Preposition complement,
+  alternatives included (`von` lists `reden`).
+- Every governor Kind takes its governed preposition as an Attestation member:
+  VERB, ADJ, NOUN, Locutions and routine formulas (`Er ist stolz auf seinen
+  Sohn` → `stolz`, `Er weiß Bescheid über die Pläne` → `Bescheid wissen`), with
+  no Member Role
   ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
-  `valencyEvidence` names it and `normalizedSurface` leaves it out, so
-  `stolz auf` projects `stolz`.
-  Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn stolze
-  Vater`) work the way separable verbs do. Taking it into verbs only was
-  rejected, because one relation would behave three ways. Taking it into no
-  governor was rejected too: it is consistent, but a learner who clicks a
-  verb's preposition would land on a preposition Note that only lists
-  governors.
+  `valencyEvidence` names it and `normalizedSurface` omits it (`stolz auf` →
+  `stolz`). Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn
+  stolze Vater`) work like separable verbs. Restricting membership to verbs was
+  rejected (three behaviors for one relation), as was omitting it for all
+  governors (clicking a governed preposition would land on a bare preposition
+  Note).
 - A routine formula
   ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)) governs
-  through its head word, so the Lexeme INTJ is a governor. It takes in the
-  preposition its head word governs, as `Angst haben` takes in `vor`:
-  `Vielen Dank für Ihre Hilfe` gives `[Vielen, Dank, für]` INTJ `vielen
-  Dank`, and `danke für die Hilfe` gives `[danke, für]` INTJ `danke`, which
-  governs what its Grundform `danken` does. A locative or adjunct preposition
-  stays free: the `in` of `willkommen in Leipzig` is no member. An INTJ
-  records no `valencyEvidence`, so the member carries no evidence, but
-  `normalizedSurface` leaves it out all the same: `danke für` projects
-  `danke`. The user ruled this on
-  [#701](https://github.com/clockblocker/texteater/issues/701).
-- A governed preposition belongs to the smallest unit its government
-  survives with in the same sense: `stolz auf` to ADJ `stolz`, `Angst vor`
-  to NOUN `Angst`, but `Bescheid wissen über` to the Collocation, because
-  `Bescheid` means 'being informed' only inside its Collocations and
-  `Bescheid über` alone is the official notice.
-  Duden and grammis list these complements under the adjective and the noun,
-  UD HDT attaches the PP to `stolz` in 6 of 9 cases and to `Angst` in 31 of
-  33 (all 5 `Angst haben … vor` included), and the government survives
-  without the verb (`aus Angst vor Hunden`, `der auf seinen Sohn stolze
-  Vater`). When the whole Collocation is present, the largest-unit rule
-  resolves the click to it: `Sie hat Angst vor Hunden` and `Hast du Angst?`
-  open `Angst haben`, while `aus Angst vor Hunden` opens `Angst`. The
-  Collocation Note reaches the governor's frame and the verb through its
-  Breakdown
+  through its head word, so Lexeme INTJ is a governor (`Vielen Dank für Ihre
+  Hilfe` → `[Vielen, Dank, für]` `vielen Dank`; `danke für die Hilfe` →
+  `[danke, für]` `danke`, matching `danken`). Locative/adjunct prepositions
+  stay free (`in` in `willkommen in Leipzig`). INTJ records no
+  `valencyEvidence`, yet `normalizedSurface` still omits the governed
+  preposition (`danke für` → `danke`, ruled in
+  [#701](https://github.com/clockblocker/texteater/issues/701)).
+- A governed preposition belongs to the smallest unit whose government survives
+  in the same sense: ADJ `stolz` (`stolz auf`), NOUN `Angst` (`Angst vor`), but
+  Collocation `Bescheid wissen` (`Bescheid` means 'informed' only inside its
+  Collocations; `Bescheid über` alone is an official notice). Duden/grammis
+  attach these complements to the adjective/noun, UD HDT attaches the PP to
+  `stolz` in 6/9 cases and `Angst` in 31/33 (including all 5 `Angst haben …
+  vor`), and government survives without the verb (`aus Angst vor Hunden`, `der
+  auf seinen Sohn stolze Vater`). When the full Collocation is present, the
+  largest-unit rule resolves the click to it (`Sie hat Angst vor Hunden`, `Hast
+  du Angst?` → `Angst haben`; `aus Angst vor Hunden` → `Angst`), reaching the
+  governor's frame and verb via Breakdown
   ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
-  The Collocation stores its own frame, not a projection of its members'
-  frames, because slots like the Dat of `jemandem auf den Keks gehen` come
-  from no member.
-- An adposition's own cases are no frame. dumcorpus's ADP Case Table lists
-  them, checks every Preposition complement against them and renders the
-  ADP's Valency Block from them ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).
+  A Collocation stores its own frame (slots like the Dat of `jemandem auf den
+  Keks gehen` come from no member).
+- An adposition's own cases are no frame; dumcorpus's ADP Case Table lists
+  them, validates every Preposition complement against them and renders the
+  ADP's Valency Block
+  ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).

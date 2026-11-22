@@ -42,11 +42,11 @@ test("inserts newly available Blocks in their default relative order", () => {
 		hidden: new Set(),
 	});
 
-	expect(layout.order).toEqual(["Definition", "Relations", "Translations"]);
+	expect(layout.order).toEqual(["Definition", "Translations", "Relations"]);
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
 		"Definition",
-		"Relations",
 		"Translations",
+		"Relations",
 	]);
 });
 
@@ -96,12 +96,39 @@ test("drops Anchor Blocks that a stale layout still names", () => {
 	expect([...layout.hidden]).toEqual([]);
 	expect(plan.heading?.blockKind).toBe("Heading");
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
-		"SourceContexts",
 		"Relations",
+		"SourceContexts",
 	]);
 });
 
-test("pins Source Contexts first in the Body, ahead of the layout", () => {
+test("places Reading Source Contexts after lookup Blocks and before Personal Annotation", () => {
+	const registry: RegisteredBlockMap = {
+		Heading: () => <p>heading</p>,
+		Translations: () => <p>translations</p>,
+		Definition: () => <p>definition</p>,
+		Breakdown: () => <p>breakdown</p>,
+		Valency: () => <p>valency</p>,
+		Relations: () => <p>relations</p>,
+		SourceContexts: () => <p>source contexts</p>,
+		PersonalAnnotation: () => <p>personal annotation</p>,
+	};
+	const { plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: [],
+		hidden: new Set(),
+	});
+
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
+		"Translations",
+		"Definition",
+		"Breakdown",
+		"Valency",
+		"Relations",
+		"SourceContexts",
+		"PersonalAnnotation",
+	]);
+});
+
+test("keeps Reading Source Contexts visible when layout Blocks are hidden, and leads Attestation Bodies with it", () => {
 	const registry: RegisteredBlockMap = {
 		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
@@ -116,6 +143,20 @@ test("pins Source Contexts first in the Body, ahead of the layout", () => {
 	expect(layout.order).toEqual(["Definition", "Relations"]);
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
 		"SourceContexts",
+	]);
+
+	const attestationPlan = resolveRenderPlan(
+		() => ({
+			Heading: () => <p>heading</p>,
+			SourceContexts: () => <p>source</p>,
+			Routes: () => <p>routes</p>,
+		}),
+		{ ...coordinates, noteKind: "Attestation" },
+		{ order: ["Routes"], hidden: new Set() },
+	).plan;
+	expect(attestationPlan.body.map(({ blockKind }) => blockKind)).toEqual([
+		"SourceContexts",
+		"Routes",
 	]);
 });
 
@@ -159,7 +200,10 @@ test("splits the Heading from a Body that keeps the Note's tags", () => {
 	);
 
 	expect(heading && renderToStaticMarkup(heading)).toBe("<p>heading</p>");
-	expect(body).not.toContain("heading");
+	expect(body).not.toContain("<p>heading</p>");
+	expect(body).toContain('data-under-heading="true"');
+	expect(body).toContain('<div data-slot="note-frame"');
+	expect(body).not.toContain("<article");
 	expect(body).toContain("relations");
 	expect(body).toContain('data-slot="note-tags"');
 });
@@ -185,7 +229,7 @@ test("composes the Heading first inside the Body", () => {
 	);
 
 	expect(markup).toMatch(
-		/<article[^>]*><p>heading<\/p><p>source contexts<\/p><p>relations<\/p>/,
+		/<article[^>]*><p>heading<\/p><p>relations<\/p><p>source contexts<\/p>/,
 	);
 });
 

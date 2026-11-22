@@ -2,51 +2,47 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 import { cn } from "../utils";
-import { type Density, DensityScope } from "./density";
+import type { Density } from "./density";
 import { Mark } from "./mark";
+import { NoteList } from "./note-list";
 import { NoteSection } from "./note-section";
+import { NoteFrame } from "./note-surface";
 import { NoteTags } from "./note-tags";
 import { NoteTitleRow, noteTitleVariants } from "./note-title";
 
 /**
- * The loading form of a Note. It keeps the Note's own structure (headword
- * row, section labels, route marks, quote bar, tag footer) and fills only the
- * places where words will appear with quiet bones, so a Note that is still
- * on its way already reads as the kind of Note it is about to become.
- *
- * One band of light crosses the whole block; nothing inside it moves on its own.
+ * The loading form of a Note. Shares `NoteFrame` and the exact same morph
+ * tokens as a loaded Note, so bones sit where words will land in both Card
+ * and Sheet forms without layout jumps.
  */
 export function NoteSkeleton({
 	density,
+	underHeading = false,
 	label,
 	className,
 	children,
 	...props
 }: Omit<React.ComponentProps<"div">, "aria-label"> & {
 	readonly density: Density;
+	readonly underHeading?: boolean;
 	/** What is loading, for assistive technology: "Loading Lemma Note". */
 	readonly label: string;
 }) {
 	return (
-		<DensityScope
-			density={density}
+		<NoteFrame
+			mode={density === "compact" ? "card" : "sheet"}
+			underHeading={underHeading}
+			frameAs="div"
+			frameHidden
 			role="status"
 			aria-busy="true"
 			aria-label={label}
 			data-slot="note-skeleton"
-			className={cn(
-				"min-h-full bg-paper text-base text-ink compact:text-sm",
-				className,
-			)}
+			className={className}
 			{...props}
 		>
-			<div
-				aria-hidden="true"
-				className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
-			>
-				{children}
-			</div>
-		</DensityScope>
+			{children}
+		</NoteFrame>
 	);
 }
 
@@ -56,7 +52,7 @@ const noteBoneVariants = cva(
 		variants: {
 			tone: {
 				/** A run of body text. */
-				ink: "bg-line",
+				ink: "bg-skeleton",
 				/** A headword, tinted the way a loaded headword will be. */
 				headword: "bg-primary/25",
 			},
@@ -109,14 +105,18 @@ export function NoteTitleSkeleton({
 
 /** A titled block whose label is also still on the way. */
 export function NoteSectionSkeleton({
+	visibility = "always",
 	className,
 	children,
 	...props
-}: React.ComponentProps<"section">) {
+}: React.ComponentProps<"section"> & {
+	readonly visibility?: "always" | "sheet";
+}) {
 	return (
 		<NoteSection
 			data-slot="note-section-skeleton"
 			label={<NoteBone className="h-[0.5rem] w-14 rounded-[0.15rem]" />}
+			visibility={visibility}
 			className={className}
 			{...props}
 		>
@@ -153,16 +153,19 @@ export function NoteLinesSkeleton({
 export function NoteRouteRowsSkeleton({
 	widths,
 	mark,
+	layout = "stack",
 	className,
 	...props
 }: React.ComponentProps<"ul"> & {
 	readonly widths: readonly string[];
 	readonly mark?: React.ReactNode;
+	readonly layout?: "stack" | "wrap";
 }) {
 	return (
-		<ul
+		<NoteList
 			data-slot="note-route-rows-skeleton"
-			className={cn("grid gap-2", className)}
+			layout={layout}
+			className={className}
 			{...props}
 		>
 			{widths.map((width, index) => (
@@ -171,11 +174,11 @@ export function NoteRouteRowsSkeleton({
 					<NoteBone className={width} />
 				</li>
 			))}
-		</ul>
+		</NoteList>
 	);
 }
 
-/** A quoted passage before its words arrive. Mirrors `Quote`. */
+/** A quoted passage before its words arrive. Mirrors `Quote` rail and indent. */
 export function NoteQuoteSkeleton({
 	widths = ["w-full", "w-3/4"],
 	className,
@@ -185,7 +188,7 @@ export function NoteQuoteSkeleton({
 		<div
 			data-slot="note-quote-skeleton"
 			className={cn(
-				"max-w-[38rem] border-s-2 border-line py-0.5 ps-[calc(1.75rem_-_2px)] compact:max-w-none compact:border-s-[3px] compact:py-1 compact:ps-3",
+				"relative max-w-[38rem] py-0.5 before:pointer-events-none before:absolute before:inset-y-[0.18em] before:start-0 before:w-[2.5px] before:rounded-full before:bg-skeleton",
 				className,
 			)}
 			{...props}

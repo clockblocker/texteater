@@ -212,3 +212,77 @@ test("jD needs a finite form, a Nom slot and no expletive subject", () => {
 		"jD schläft",
 	);
 });
+
+test("free-marker complements and Slot alternatives render on a Surface's line (#676)", () => {
+	expect(
+		line(
+			"zurückkehrte",
+			lexeme("VERB", "zurückkehren", "zurück"),
+			finite("Past"),
+			[
+				nom(),
+				{
+					status: "Optional",
+					complements: [
+						{
+							kind: "Preposition",
+							governedCase: "Dat",
+							preposition: { canonicalForm: "zu" },
+						},
+						{ kind: "Adverbial", standIn: "Irgendwohin" },
+					],
+				},
+			],
+		),
+	).toBe("jD (zu jM | irgendwohin) zurückkehrte");
+
+	expect(
+		line("wohnt", lexeme("VERB", "wohnen"), finite(), [
+			nom(),
+			{
+				status: "Required",
+				complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
+			},
+		]),
+	).toBe("jD irgendwo wohnt");
+
+	expect(
+		line("versucht", lexeme("VERB", "versuchen"), finite(), [
+			nom(),
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Acc" },
+					{ kind: "Clause", form: "ZuInfinitive" },
+				],
+			},
+		]),
+	).toBe("jD [jN | etw zu tun] versucht");
+
+	expect(
+		line("sieh aus", lexeme("VERB", "aussehen", "aus"), imperative, [
+			nom(),
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "None" }],
+			},
+		]),
+	).toBe("sieh irgendwie aus");
+
+	// A subject Slot with Clause alternatives still prints jD once.
+	expect(
+		line("ist", lexeme("VERB", "sein"), finite(), [
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Nom" },
+					{ kind: "Clause", form: "Dass" },
+				],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "None" }],
+			},
+		]),
+	).toBe("jD irgendwie ist");
+});

@@ -1,4 +1,4 @@
-import { LinkButton, NoteSection } from "lego";
+import { LinkButton, NoteAside, NoteList, NoteSection } from "lego";
 import { LockIcon } from "lucide-react";
 import { relationPreference } from "../../../../../../../shared/knowledge-preferences";
 import { citationText } from "../../../citation";
@@ -33,12 +33,9 @@ export const renderDefaultReadingRelations = (({
 	}
 
 	return (
-		<NoteSection aria-label="Relations" label="Relations">
+		<NoteSection label="Relations">
 			{relations.length > 0 || pendingRelations.length > 0 ? (
-				<ul
-					className="grid gap-1 compact:gap-2"
-					aria-label="Semantic relations"
-				>
+				<NoteList gap="tight" aria-label="Semantic relations">
 					{relations.map((relation) => (
 						<li
 							key={`${relation.relation}:${
@@ -72,36 +69,33 @@ export const renderDefaultReadingRelations = (({
 						<li key={relation.locatorKey}>
 							<LinkButton
 								tone="shadow"
-								className="relative"
 								onClick={() =>
 									PresentationCapabilities.follow(
 										relation.target,
 									)
 								}
-								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
+								aria-label={`${relation.targetCanonicalForm}, not yet in dictionary`}
 							>
-								{/* the lock hangs in the margin, so a locked
-								    word lines up with every other word */}
+								<RelationMark relation={relation.relation} />
 								<LockIcon
 									aria-hidden="true"
 									strokeWidth={1.5}
-									className="absolute end-full top-1/2 -translate-y-1/2 compact:static compact:translate-y-0"
 								/>
-								<RelationMark relation={relation.relation} />
 								{relation.targetCanonicalForm}
 							</LinkButton>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			) : null}
 			{noteData.relationsTruncated ? (
-				<p className="mt-2 text-sm text-ink-muted compact:text-xs">
-					More relations not shown
-				</p>
+				<NoteAside as="p" className="mt-2">
+					Some related words aren’t shown
+				</NoteAside>
 			) : null}
 			{grammaticalAlternatives.length > 0 ? (
-				<ul
-					className="grid gap-1 compact:gap-2 [p+&]:mt-2 [ul+&]:mt-2"
+				<NoteList
+					gap="tight"
+					className="[p+&]:mt-2 [ul+&]:mt-2"
 					aria-label="Grammatical alternatives"
 				>
 					{grammaticalAlternatives.map((alternative) => (
@@ -127,7 +121,7 @@ export const renderDefaultReadingRelations = (({
 							</LinkButton>
 						</li>
 					))}
-				</ul>
+				</NoteList>
 			) : null}
 			{PresentationCapabilities.grammaticalAlternatives?.error ? (
 				<p role="alert" className="mt-2 text-sm text-destructive">

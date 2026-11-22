@@ -199,7 +199,7 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 	} as unknown as NoteDataFor<"Attestation">;
 	const markup = renderToStaticMarkup(renderNote({ noteData: attestation }));
 	expect(markup).not.toContain('role="alert"');
-	expect(markup).toContain('aria-label="Fusion"');
+	expect(markup).toContain(">Fusion</h2>");
 	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im = in + dem");
 	expect(markup).toContain('data-realized="true"');
 	expect(markup).toContain("„im“ ist „in dem“.");
@@ -228,7 +228,7 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 		presented: { ...attestation.presented, fusions: [] },
 	} as NoteDataFor<"Attestation">;
 	expect(renderToStaticMarkup(renderNote({ noteData: bare }))).not.toContain(
-		'aria-label="Fusion"',
+		">Fusion</h2>",
 	);
 });
 

@@ -152,9 +152,14 @@ function subjectOf(
 		? {
 				part: "Slot",
 				optional: nominative.status === "Optional",
-				preposition: null,
-				case: "Nom",
-				token: CASE_TOKEN.Nom,
+				alternatives: [
+					{
+						kind: "Case",
+						preposition: null,
+						case: "Nom",
+						token: CASE_TOKEN.Nom,
+					},
+				],
 			}
 		: null;
 }

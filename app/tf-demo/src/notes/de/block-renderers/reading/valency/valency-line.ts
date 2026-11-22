@@ -13,11 +13,37 @@ export type FrameSlot = {
 		readonly kind: string;
 		readonly governedCase?: string;
 		readonly preposition?: { readonly canonicalForm: string };
+		readonly standIn?: string;
+		readonly marker?: string;
+		readonly form?: string;
 	}[];
 };
-/** The German complements the line shows are the ones marked by case. */
+/** The German complements the line shows by case. */
 type SlotCase = "Nom" | "Acc" | "Dat" | "Gen";
 type RenderedCase = Exclude<SlotCase, "Nom">;
+
+/** One alternative rendered inside a Valency Line Slot. */
+export type SlotAlternative =
+	| {
+			readonly kind: "Case";
+			/**
+			 * The preposition printed before the token. It is `null` for a bare
+			 * case object, and for a slot whose preposition is the Fixed word
+			 * right before it (`mit jM zu tun haben`).
+			 */
+			readonly preposition: string | null;
+			/** Nom only on a Surface's line, as its subject `jD` (#1293). */
+			readonly case: SlotCase;
+			/** The person form of the case: `jD`, `jN`, `jM` or `jS`. */
+			readonly token: string;
+	  }
+	| {
+			readonly kind: "Placeholder";
+			/** A Predicative's free marker (`als`, `für`), if it has one. */
+			readonly marker: string | null;
+			/** The dictionary stand-in (`irgendwo`, `dass …`, `etw zu tun`, `…`). */
+			readonly text: string;
+	  };
 
 /** One piece of a German Valency Line, in reading order. */
 export type ValencyLinePart =
@@ -40,16 +66,8 @@ export type ValencyLinePart =
 	| {
 			readonly part: "Slot";
 			readonly optional: boolean;
-			/**
-			 * The preposition printed before the token. It is `null` for a bare
-			 * case object, and for a slot whose preposition is the Fixed word
-			 * right before it (`mit jM zu tun haben`).
-			 */
-			readonly preposition: string | null;
-			/** Nom only on a Surface's line, as its subject `jD` (#1293). */
-			readonly case: SlotCase;
-			/** The person form of the case: `jD`, `jN`, `jM` or `jS`. */
-			readonly token: string;
+			/** The Slot's alternatives in frame order, one for an ordinary Slot. */
+			readonly alternatives: readonly SlotAlternative[];
 	  };
 
 /**
@@ -95,19 +113,24 @@ const CASE_SLOT_ORDER = [
  *
  * The line reads as a citation. A verb's line reads: the frame's lexical
  * reflexive `sich`, the bare case slots (Dat before Acc before Gen), the
- * preposition slots, a Locution's other Fixed words, and last the head with
- * any separable prefix on it: `sich (Dat) jN vorstellen`, `jM auf den Keks
- * gehen`. Any other head comes first, its slots after it: `stolz (auf jN)`.
- * Optional slots are parenthesised. A Nom slot is the subject and is not
- * shown.
+ * preposition slots, the markerless slots (Adverbial, Predicative, Clause),
+ * a Locution's other Fixed words, and last the head with any separable
+ * prefix on it: `sich (Dat) jN vorstellen`, `jM auf den Keks gehen`,
+ * `jN irgendwohin legen`, `irgendwie aus|sehen`. Any other head comes first,
+ * its slots after it: `stolz (auf jN | dass …)`.
+ *
+ * Optional slots are parenthesised (`(auf jN)`, `(über jN | von jM)`). A
+ * Slot's alternatives are separated by `|`; Required alternatives are
+ * grouped in square brackets (`[jN | etw zu tun] versuchen`). The subject
+ * Slot (any Slot holding Nom) is not shown.
  *
  * A slot whose preposition is one of the Locution's Fixed words goes right
- * after that word and prints only its token: `mit jM zu tun haben`. A
- * reflexive with a preposition does the same (`außer sich sein`), and a
- * leading `es` stays before the reflexive (`es sich gemütlich machen`), as
- * the Citation places `sich`. Keep the whole ordering rule here; a
- * Surface's line (`../../../surface-line.ts`) runs it around its inflected
- * head.
+ * after that word and drops that preposition from its alternative:
+ * `mit jM zu tun haben`. A reflexive with a preposition does the same
+ * (`außer sich sein`), and a leading `es` stays before the reflexive (`es
+ * sich gemütlich machen`), as the Citation places `sich`. Keep the whole
+ * ordering rule here; a Surface's line (`../../../surface-line.ts`) runs it
+ * around its inflected head.
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
@@ -151,37 +174,69 @@ export function valencyLineAround(
 
 	const inFixed = (preposition: string | null): preposition is string =>
 		preposition !== null && fixed.includes(preposition);
+	const fixedPrepositionOf = (slot: SlotPart): string | null => {
+		for (const alt of slot.alternatives)
+			if (alt.kind === "Case" && inFixed(alt.preposition))
+				return alt.preposition;
+		return null;
+	};
+	const remaining: SlotPart[] = [];
+	const fixedInserts: {
+		readonly after: string;
+		readonly part: ValencyLinePart;
+	}[] = [];
+	for (const slot of slots) {
+		const fixedPreposition = fixedPrepositionOf(slot);
+		if (fixedPreposition !== null) {
+			fixedInserts.push({
+				after: fixedPreposition,
+				part: {
+					...slot,
+					alternatives: slot.alternatives.map((alt) =>
+						alt.kind === "Case" &&
+						alt.preposition === fixedPreposition
+							? { ...alt, preposition: null }
+							: alt,
+					),
+				},
+			});
+		} else {
+			remaining.push(slot);
+		}
+	}
+
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
-		slots.filter(
-			(slot) =>
-				slot.preposition === null && slot.case === grammaticalCase,
-		),
+		remaining.filter((slot) => {
+			const primary = slot.alternatives[0];
+			return (
+				primary?.kind === "Case" &&
+				primary.preposition === null &&
+				primary.case === grammaticalCase
+			);
+		}),
 	);
-	const freeSlots = slots.filter(
-		(slot) => slot.preposition !== null && !inFixed(slot.preposition),
+	const prepositionSlots = remaining.filter((slot) => {
+		const primary = slot.alternatives[0];
+		return primary?.kind === "Case" && primary.preposition !== null;
+	});
+	const markerlessSlots = remaining.filter(
+		(slot) => slot.alternatives[0]?.kind === "Placeholder",
 	);
+
 	const sich = reflexive ? reflexivePart(reflexive, style) : null;
 	const governor = reflexive?.preposition ?? null;
 	const governed = inFixed(governor);
 	const lead = !governed && fixed[0] === "es" ? fixed.slice(0, 1) : [];
 	const phrase = fixedPhrase(fixed.slice(lead.length), [
 		...(sich && governed ? [{ after: governor, part: sich }] : []),
-		...slots.flatMap((slot) =>
-			inFixed(slot.preposition)
-				? [
-						{
-							after: slot.preposition,
-							part: { ...slot, preposition: null },
-						},
-					]
-				: [],
-		),
+		...fixedInserts,
 	]);
 	const complements = [
 		...fixedPart(lead),
 		...(sich && !governed ? [sich] : []),
 		...caseSlots,
-		...freeSlots,
+		...prepositionSlots,
+		...markerlessSlots,
 		...phrase,
 	];
 	const headPart: ValencyLinePart = { part: "Head", text, prefix };
@@ -190,10 +245,24 @@ export function valencyLineAround(
 
 /**
  * A line as one run of text, for a caption: `jD mit jM zu tun hatte`,
- * `sich (Dat) jN vorstellen`. A separable prefix loses its bar.
+ * `sich (Dat) jN vorstellen`, `[jN | etw zu tun] versuchen`. A separable
+ * prefix loses its bar.
  */
 export function valencyLineText(parts: readonly ValencyLinePart[]): string {
 	return parts.map(partText).join(" ");
+}
+
+function alternativeText(alternative: SlotAlternative): string {
+	switch (alternative.kind) {
+		case "Case":
+			return alternative.preposition
+				? `${alternative.preposition} ${alternative.token}`
+				: alternative.token;
+		case "Placeholder":
+			return alternative.marker
+				? `${alternative.marker} ${alternative.text}`
+				: alternative.text;
+	}
 }
 
 function partText(part: ValencyLinePart): string {
@@ -207,10 +276,9 @@ function partText(part: ValencyLinePart): string {
 			return part.optional ? `(${text})` : text;
 		}
 		case "Slot": {
-			const text = part.preposition
-				? `${part.preposition} ${part.token}`
-				: part.token;
-			return part.optional ? `(${text})` : text;
+			const text = part.alternatives.map(alternativeText).join(" | ");
+			if (part.optional) return `(${text})`;
+			return part.alternatives.length > 1 ? `[${text}]` : text;
 		}
 	}
 }
@@ -309,35 +377,114 @@ export function separablePrefix(
 }
 
 type SlotPart = Extract<ValencyLinePart, { part: "Slot" }>;
+type FrameComplement = FrameSlot["complements"][number];
+
+const ADVERBIAL_STAND_IN: Readonly<Record<string, string>> = {
+	Irgendwo: "irgendwo",
+	Irgendwohin: "irgendwohin",
+	Irgendwie: "irgendwie",
+	IrgendwieLange: "irgendwie lange",
+	IrgendwieViel: "irgendwie viel",
+};
+
+const PREDICATIVE_MARKER: Readonly<Record<string, string | null>> = {
+	None: null,
+	Als: "als",
+	Für: "für",
+};
+
+const CLAUSE_FORM_TEXT: Readonly<Record<string, string>> = {
+	ZuInfinitive: "etw zu tun",
+	BareInfinitive: "etw tun",
+	Dass: "dass …",
+	Ob: "ob …",
+	W: "w- …",
+};
 
 /**
- * The part a Slot shows: its one complement marked by case, unless that is
- * the subject's Nom. A Slot with alternatives, or with an Adverbial,
- * Predicative or Clause, shows nothing until #676 decides how the line
- * renders them. A Reflexive is placed by {@link germanValencyLine} itself.
+ * The part a Slot shows: every renderable complement in frame order, as
+ * alternatives when there are several (#676). A subject Slot (any Slot
+ * holding Nom, including subject clauses) is omitted; a Reflexive is placed
+ * by {@link germanValencyLine} itself.
  */
 function slotPart(slot: FrameSlot): SlotPart[] {
-	const [complement, ...alternatives] = slot.complements;
 	if (
-		complement === undefined ||
-		alternatives.length > 0 ||
-		(complement.kind !== "Case" && complement.kind !== "Preposition")
+		slot.complements.some(
+			(complement) =>
+				complement.kind === "Case" && complement.governedCase === "Nom",
+		)
 	)
 		return [];
-	const grammaticalCase = CASE_SLOT_ORDER.find(
-		(rendered) => rendered === complement.governedCase,
-	);
-	if (grammaticalCase === undefined) return [];
+
+	const alternatives: SlotAlternative[] = [];
+	const seen = new Set<string>();
+	for (const complement of slot.complements) {
+		const rendered = complementAlternative(complement);
+		if (rendered === null) continue;
+		const key = alternativeText(rendered);
+		if (seen.has(key)) continue;
+		seen.add(key);
+		alternatives.push(rendered);
+	}
+	if (alternatives.length === 0) return [];
 	return [
 		{
 			part: "Slot",
 			optional: slot.status === "Optional",
-			preposition:
-				complement.kind === "Preposition"
-					? (complement.preposition?.canonicalForm ?? null)
-					: null,
-			case: grammaticalCase,
-			token: CASE_TOKEN[grammaticalCase],
+			alternatives,
 		},
 	];
+}
+
+function complementAlternative(
+	complement: FrameComplement,
+): SlotAlternative | null {
+	switch (complement.kind) {
+		case "Case":
+		case "Preposition": {
+			const grammaticalCase = CASE_SLOT_ORDER.find(
+				(rendered) => rendered === complement.governedCase,
+			);
+			if (grammaticalCase === undefined) return null;
+			return {
+				kind: "Case",
+				preposition:
+					complement.kind === "Preposition"
+						? (complement.preposition?.canonicalForm ?? null)
+						: null,
+				case: grammaticalCase,
+				token: CASE_TOKEN[grammaticalCase],
+			};
+		}
+		case "Adverbial": {
+			const text =
+				complement.standIn !== undefined
+					? ADVERBIAL_STAND_IN[complement.standIn]
+					: undefined;
+			return text !== undefined
+				? { kind: "Placeholder", marker: null, text }
+				: null;
+		}
+		case "Predicative": {
+			const marker =
+				complement.marker !== undefined
+					? PREDICATIVE_MARKER[complement.marker]
+					: undefined;
+			if (marker === undefined) return null;
+			return marker === null
+				? { kind: "Placeholder", marker: null, text: "irgendwie" }
+				: { kind: "Placeholder", marker, text: "…" };
+		}
+		case "Clause": {
+			const text =
+				complement.form !== undefined
+					? CLAUSE_FORM_TEXT[complement.form]
+					: undefined;
+			return text !== undefined
+				? { kind: "Placeholder", marker: null, text }
+				: null;
+		}
+		default:
+			return null;
+	}
 }

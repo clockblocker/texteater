@@ -1,4 +1,4 @@
-import { NoteQuoteSkeleton, NoteSection } from "lego";
+import { NoteList, NoteQuoteSkeleton, NoteSection } from "lego";
 import type { ReactNode } from "react";
 
 import type { NoteDataFor } from "../../../../note/data";
@@ -29,12 +29,7 @@ export function readingSourceContextsRenderer(
 		const { sourceContexts } = PresentationCapabilities;
 		if (noteData.pending?.sourceContexts) {
 			return (
-				<NoteSection
-					aria-label="Source Contexts"
-					label="Source Contexts"
-					aria-busy="true"
-					className="compact:before:hidden"
-				>
+				<NoteSection label="In context" aria-busy="true">
 					<NoteQuoteSkeleton />
 				</NoteSection>
 			);
@@ -48,13 +43,9 @@ export function readingSourceContextsRenderer(
 		}
 
 		return (
-			<NoteSection
-				aria-label="Source Contexts"
-				label="Source Contexts"
-				className="compact:before:hidden"
-			>
+			<NoteSection label="In context">
 				{sourceContexts.items.length > 0 ? (
-					<ul className="grid gap-3">
+					<NoteList gap="loose">
 						{sourceContexts.items.map((sourceContext) => (
 							<li key={sourceContext.attestationId}>
 								<SourceQuote
@@ -79,14 +70,13 @@ export function readingSourceContextsRenderer(
 								)}
 							</li>
 						))}
-					</ul>
+					</NoteList>
 				) : null}
 				{sourceContexts.hasMore ? (
 					<LoadMore
-						label="Load more Source Contexts"
+						label="Load more passages"
 						isLoading={sourceContexts.isLoading}
 						loadMore={sourceContexts.loadMore}
-						card={PresentationCapabilities.presentation === "Card"}
 					/>
 				) : null}
 				{sourceContexts.error ? (

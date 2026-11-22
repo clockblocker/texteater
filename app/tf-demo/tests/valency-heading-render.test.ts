@@ -1,69 +1,14 @@
 import { expect, test } from "bun:test";
-import type { FunctionReturnType } from "convex/server";
-import { renderToStaticMarkup } from "react-dom/server";
-import type { api } from "../convex/_generated/api";
-import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
-import { renderNote } from "../src/notes";
-
-type ReadingNote = Extract<
-	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
-	{ readonly kind: "Reading" }
->;
-type ValencyFrame = NonNullable<ReadingNote["knowledge"]["valency"]>;
-type Lemma = {
-	readonly family: "Lexeme" | "Locution";
-	readonly kind: string;
-	readonly canonicalForm: string;
-	readonly coreFeatures: Record<string, unknown>;
-};
-
-const verb = (canonicalForm: string, hasSepPrefix: string | null): Lemma => ({
-	family: "Lexeme",
-	kind: "VERB",
-	canonicalForm,
-	coreFeatures: { hasSepPrefix },
-});
-type GermanPreposition = Extract<
-	Extract<
-		ValencyFrame[number]["complements"][number],
-		{ readonly kind: "Preposition" }
-	>["preposition"],
-	{ readonly language: "de" }
->;
-
-const adp = (canonicalForm: string): GermanPreposition => ({
-	unitKind: "Lemma",
-	language: "de",
-	family: "Lexeme",
-	kind: "ADP",
-	canonicalForm,
-	coreFeatures: {},
-});
-
-const locution = (canonicalForm: string): Lemma => ({
-	family: "Locution",
-	kind: "VERB",
-	canonicalForm,
-	coreFeatures: {},
-});
-
-/** A Reflexive Slot, with the preposition a fixed phrase puts it after. */
-const reflexive = (
-	status: "Required" | "Optional",
-	governedCase: "Acc" | "Dat",
-	preposition?: string,
-): ValencyFrame[number] => ({
-	status,
-	complements: [
-		{
-			kind: "Reflexive",
-			governedCase,
-			...(preposition === undefined
-				? {}
-				: { preposition: adp(preposition) }),
-		},
-	],
-});
+import {
+	adp,
+	headingLine,
+	type Lemma,
+	locution,
+	reflexive,
+	renderReading,
+	type ValencyFrame,
+	verb,
+} from "./support/valency-heading-fixture";
 
 const cases: readonly {
 	readonly lemma: Lemma;
@@ -266,12 +211,311 @@ const cases: readonly {
 					},
 				],
 			},
+		],
+		heading: "mit `jM` zu tun haben",
+	},
+	{
+		lemma: locution("mit zu tun haben"),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("mit"),
+						governedCase: "Dat",
+					},
+				],
+			},
 			{
 				status: "Optional",
 				complements: [{ kind: "Clause", form: "Dass" }],
 			},
 		],
-		heading: "mit `jM` zu tun haben",
+		heading: "(`dass …`) mit `jM` zu tun haben",
+	},
+	// Free-marker complements and Slot alternatives (#676).
+	{
+		lemma: verb("wohnen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
+			},
+		],
+		heading: "`irgendwo` wohnen",
+	},
+	{
+		lemma: verb("legen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Acc" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Adverbial", standIn: "Irgendwohin" }],
+			},
+		],
+		heading: "`jN` `irgendwohin` legen",
+	},
+	{
+		lemma: verb("aussehen", "aus"),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "None" }],
+			},
+		],
+		heading: "`irgendwie` aus|sehen",
+	},
+	{
+		lemma: verb("reden", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Optional",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("über"),
+						governedCase: "Acc",
+					},
+					{
+						kind: "Preposition",
+						preposition: adp("von"),
+						governedCase: "Dat",
+					},
+				],
+			},
+		],
+		heading: "(über `jN` | von `jM`) reden",
+	},
+	{
+		lemma: verb("versuchen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Acc" },
+					{ kind: "Clause", form: "ZuInfinitive" },
+				],
+			},
+		],
+		heading: "[`jN` | `etw zu tun`] versuchen",
+	},
+	{
+		lemma: verb("zurückkehren", "zurück"),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Optional",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("zu"),
+						governedCase: "Dat",
+					},
+					{ kind: "Adverbial", standIn: "Irgendwohin" },
+				],
+			},
+		],
+		heading: "(zu `jM` | `irgendwohin`) zurück|kehren",
+	},
+	{
+		lemma: verb("dauern", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Adverbial", standIn: "IrgendwieLange" }],
+			},
+		],
+		heading: "`irgendwie lange` dauern",
+	},
+	{
+		lemma: verb("kosten", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Optional",
+				complements: [{ kind: "Case", governedCase: "Acc" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Adverbial", standIn: "IrgendwieViel" }],
+			},
+		],
+		heading: "(`jN`) `irgendwie viel` kosten",
+	},
+	{
+		lemma: verb("halten", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Acc" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "Für" }],
+			},
+		],
+		heading: "`jN` für `…` halten",
+	},
+	{
+		lemma: verb("zeigen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			reflexive("Required", "Acc"),
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "Als" }],
+			},
+		],
+		heading: "sich als `…` zeigen",
+	},
+	{
+		lemma: verb("müssen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Clause", form: "BareInfinitive" }],
+			},
+		],
+		heading: "`etw tun` müssen",
+	},
+	{
+		lemma: verb("fragen", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Optional",
+				complements: [{ kind: "Case", governedCase: "Acc" }],
+			},
+			{
+				status: "Optional",
+				complements: [
+					{ kind: "Case", governedCase: "Acc" },
+					{ kind: "Clause", form: "Ob" },
+					{ kind: "Clause", form: "W" },
+				],
+			},
+		],
+		heading: "(`jN`) (`jN` | `ob …` | `w- …`) fragen",
+	},
+	{
+		lemma: {
+			family: "Lexeme",
+			kind: "ADJ",
+			canonicalForm: "stolz",
+			coreFeatures: {},
+		},
+		frame: [
+			{
+				status: "Optional",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("auf"),
+						governedCase: "Acc",
+					},
+					{ kind: "Clause", form: "Dass", correlate: "Optional" },
+				],
+			},
+		],
+		heading: "stolz (auf `jN` | `dass …`)",
+	},
+	// A subject Slot with Clause alternatives stays omitted.
+	{
+		lemma: verb("sein", null),
+		frame: [
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Nom" },
+					{ kind: "Clause", form: "Dass", correlate: "Optional" },
+					{
+						kind: "Clause",
+						form: "ZuInfinitive",
+						correlate: "Optional",
+					},
+					{ kind: "Clause", form: "Ob", correlate: "Optional" },
+					{ kind: "Clause", form: "W", correlate: "Optional" },
+				],
+			},
+			{
+				status: "Required",
+				complements: [{ kind: "Predicative", marker: "None" }],
+			},
+		],
+		heading: "`irgendwie` sein",
+	},
+	{
+		lemma: locution("eine Frage stellen"),
+		frame: [
+			{
+				status: "Required",
+				complements: [{ kind: "Case", governedCase: "Nom" }],
+			},
+			{
+				status: "Optional",
+				complements: [
+					{ kind: "Case", governedCase: "Dat" },
+					{
+						kind: "Preposition",
+						preposition: adp("an"),
+						governedCase: "Acc",
+					},
+				],
+			},
+		],
+		heading: "(`jM` | an `jN`) eine Frage stellen",
 	},
 ];
 
@@ -318,21 +562,23 @@ test("the heading and the translations print a preposition and a slot in the sam
 		],
 	});
 	const preposition = (text: string) =>
-		`<span data-slot="valency-preposition" class="italic">${text}</span>`;
-	const slot = (text: string) =>
-		`<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">${text}</span>`;
+		`<span data-slot="valency-preposition" class="font-normal text-ink-soft">${text}</span>`;
+	const tokenSlot = (text: string) =>
+		`<span data-slot="valency-token" class="font-mono text-[0.82em] font-[450] text-ink-soft">${text}</span>`;
+	const glossSlot = (text: string) =>
+		`<span data-slot="valency-token" class="text-ink-muted">${text}</span>`;
 	// The Locution's Fixed `mit` is its slot's preposition.
 	expect(markup).toContain(
-		`${preposition("mit")} ${slot("jM")} zu tun haben`,
+		`${preposition("mit")} ${tokenSlot("jM")} zu tun haben`,
 	);
 	// A Sheet sets one row per language: its tag, then its translations.
 	const row = (language: string) =>
-		`>${language}</dt><dd lang="${language}" class="text-pretty">`;
+		`>${language}</dt><dd lang="${language}">`;
 	expect(markup).toContain(
-		`${row("en")}have to do ${preposition("with")} ${slot("something")}`,
+		`${row("en")}have to do ${preposition("with")} ${glossSlot("something")}`,
 	);
 	expect(markup).toContain(
-		`${row("ru")}иметь отношение ${preposition("к")} ${slot("чему-то")}`,
+		`${row("ru")}иметь отношение ${preposition("к")} ${glossSlot("чему-то")}`,
 	);
 	// A translation with no valency stays plain, a middle dot after the first.
 	expect(markup).toContain(
@@ -354,15 +600,13 @@ test("a free slot's preposition takes the preposition style", () => {
 		},
 	]);
 	expect(markup).toContain(
-		'<span data-slot="valency-preposition" class="italic">auf</span> <span data-slot="valency-token"',
+		'<span data-slot="valency-preposition" class="font-normal text-ink-soft">auf</span> <span data-slot="valency-token"',
 	);
 });
 
 test("a German Reading shows its frame in the heading alone, with no Valency Block", () => {
 	for (const { lemma, frame } of cases)
-		expect(renderReading(lemma, frame)).not.toContain(
-			'aria-label="Valency"',
-		);
+		expect(renderReading(lemma, frame)).not.toContain(">Valency</h2>");
 });
 
 test("a heading without a frame to show cites the Canonical Form", () => {
@@ -389,7 +633,7 @@ test("a heading without a frame to show cites the Canonical Form", () => {
 	).toBe("🧩 warten");
 });
 
-test("a Slot with alternatives or a free complement shows nothing until #676", () => {
+test("a Slot orders bare case, preposition and markerless Slots and styles placeholders and alternatives (#676)", () => {
 	const reden = verb("reden", null);
 	const frame = [
 		{
@@ -422,7 +666,9 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 			],
 		},
 	] satisfies ValencyFrame;
-	expect(headingLine(renderReading(reden, frame))).toBe("🧩 reden");
+	expect(headingLine(renderReading(reden, frame))).toBe(
+		"🧩 (über `jN` | von `jM`) (`irgendwie`) (als `…`) (`dass …`) reden",
+	);
 	expect(
 		headingLine(
 			renderReading(reden, [
@@ -438,112 +684,31 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 				},
 			]),
 		),
-	).toBe("🧩 `jM` reden");
-});
-
-/** The Reading's title, emoji included, with slot tokens written back as backticked text. */
-function headingLine(markup: string): string {
-	const title = markup.match(/data-reading-title=""[^>]*>(.*?)<\/h\d>/)?.[1];
-	if (title === undefined) throw new Error("no Reading title rendered");
-	return plainText(title);
-}
-
-function plainText(html: string): string {
-	return html
-		.replace(/<span data-slot="valency-token"[^>]*>(.*?)<\/span>/g, "`$1`")
-		.replace(/<[^>]+>/g, "")
-		.replaceAll("&gt;", ">")
-		.replaceAll("&lt;", "<");
-}
-
-function renderReading(
-	lemma: Lemma,
-	valency: ValencyFrame | undefined,
-	translations?: ReadingNote["knowledge"]["translations"],
-): string {
-	const note = readingNote(lemma, valency, translations);
-	return renderToStaticMarkup(
-		renderNote({
-			noteData: note,
-			capabilities: {
-				knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
-				sourceContexts: {
-					items: note.sourceContexts.page,
-					hasMore: false,
-					isLoading: false,
-					error: null,
-					loadMore: null,
-				},
-				personalAnnotation: {
-					isSaving: false,
-					error: null,
-					save: null,
-				},
-				follow: () => {},
-			},
-		}),
+	).toBe(
+		"🧩 `jM` (über `jN` | von `jM`) (`irgendwie`) (als `…`) (`dass …`) reden",
 	);
-}
 
-function readingNote(
-	lemma: Lemma,
-	valency: ValencyFrame | undefined,
-	translations: ReadingNote["knowledge"]["translations"] = {
-		en: [[{ kind: "Text", text: "a translation" }]],
-	},
-): ReadingNote {
-	return {
-		kind: "Reading",
-		target: { kind: "Reading", readingId: "reading-1" },
-		reading: {
-			unitKind: "Reading",
-			ownerKind: "Reading",
-			ownerKey: "reading-key-1",
-			readingId: "reading-1",
-			emojiDescription: "🧩",
-			lemma: {
-				unitKind: "Lemma",
-				ownerKind: "Lemma",
-				ownerKey: "lemma-key-1",
-				lemmaId: "lemma-1",
-				language: "de",
-				...lemma,
-			},
-		},
-		knowledgeState: { status: "Full", activity: "Idle" },
-		personalAnnotation: "",
-		knowledge: {
-			translations,
-			...(valency ? { valency } : {}),
-		},
-		knowledgeUpdatedAt: null,
-		definitionText: { state: "Plain" },
-		relations: [],
-		relationsTruncated: false,
-		grammaticalAlternatives: [],
-		pendingRelations: [],
-		structuralReferences: [],
-		sourceContexts: {
-			page: [
-				{
-					attestationId: "attestation-1",
-					scrollId: "text-1",
-					sentencePosition: 0,
-					sentenceSnippet: "A source sentence.",
-					segments: [{ kind: "ResolvableText", text: "source" }],
-					memberSegmentIndices: [0],
-					memberTexts: ["source"],
-					origin: { kind: "Scroll" },
-					target: {
-						kind: "Scroll",
-						scrollId: "text-1",
-						focusAttestationId: "attestation-1",
-						title: "A source sentence.",
-					},
-				},
+	// Placeholders render in proportional soft ink (not mono), markers in
+	// preposition style, and Required alternatives in muted square brackets.
+	const versuchen = renderReading(verb("versuchen", null), [
+		{
+			status: "Required",
+			complements: [
+				{ kind: "Case", governedCase: "Acc" },
+				{ kind: "Clause", form: "ZuInfinitive" },
 			],
-			continueCursor: "",
-			isDone: true,
 		},
-	} as unknown as ReadingNote;
-}
+	]);
+	expect(versuchen).toContain(
+		'<span class="font-normal text-ink-muted">[</span><span data-slot="valency-token" class="font-mono text-[0.82em] font-[450] text-ink-soft">jN</span><span class="font-normal text-ink-muted"> | </span><span data-slot="valency-token" class="font-normal text-ink-soft">etw zu tun</span><span class="font-normal text-ink-muted">]</span>',
+	);
+	const halten = renderReading(verb("halten", null), [
+		{
+			status: "Required",
+			complements: [{ kind: "Predicative", marker: "Für" }],
+		},
+	]);
+	expect(halten).toContain(
+		'<span data-slot="valency-preposition" class="font-normal text-ink-soft">für</span> <span data-slot="valency-token" class="font-normal text-ink-soft">…</span>',
+	);
+});

@@ -1,4 +1,4 @@
-import { LinkButton } from "lego";
+import { LinkButton, NoteAside } from "lego";
 import { LockIcon } from "lucide-react";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
@@ -26,22 +26,24 @@ export function SourceLine({
 			data-breakdown-line="source"
 			className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
 		>
-			<span
-				className={
-					drifted
-						? "text-xs text-ink-muted italic"
-						: "text-sm text-ink-muted compact:text-xs"
-				}
-			>
-				{label}
-			</span>
+			{drifted ? (
+				<span className="text-xs font-normal text-ink-soft">
+					{label}
+				</span>
+			) : (
+				<NoteAside>{label}</NoteAside>
+			)}
 			<LinkButton
 				tone={pending ? "shadow" : drifted ? "quiet" : "link"}
-				className={drifted ? "text-sm compact:text-xs" : undefined}
+				className={
+					drifted
+						? "text-[length:var(--note-aside-size,0.875rem)]"
+						: undefined
+				}
 				onClick={() => follow(link.target)}
 				{...(pending
 					? {
-							"aria-label": `${label} Unit Shadow ${link.targetCanonicalForm}`,
+							"aria-label": `${link.targetCanonicalForm}, pending note`,
 						}
 					: {})}
 			>

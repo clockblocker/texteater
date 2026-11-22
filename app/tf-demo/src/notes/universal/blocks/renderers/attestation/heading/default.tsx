@@ -48,7 +48,10 @@ export function AttestationHeading({
 		<CaptionedHeading
 			presentation={PresentationCapabilities.presentation}
 			title={
-				<NoteTitle data-attestation-title="">
+				<NoteTitle
+					data-attestation-title=""
+					lang={presented.surface.language}
+				>
 					<UnitTitle
 						parts={unitTitleParts(
 							source.segments,

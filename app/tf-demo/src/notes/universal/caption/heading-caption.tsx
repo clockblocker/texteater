@@ -1,4 +1,4 @@
-import { cn, NoteTitleRow } from "lego";
+import { cn, NoteTitleRow, useNoteSurface } from "lego";
 import type { ReactNode } from "react";
 import type { CaptionLanguages } from "./caption";
 import {
@@ -34,14 +34,15 @@ export function CaptionedHeading({
 	readonly caption: Caption | null;
 	readonly presentation?: "Card" | "Sheet";
 }) {
-	const tokens = caption
-		? presentation === "Card"
-			? caption.card
-			: caption.sheet
-		: null;
+	const surface = useNoteSurface();
+	const isCard =
+		presentation !== undefined
+			? presentation === "Card"
+			: surface.mode === "card";
+	const tokens = caption ? (isCard ? caption.card : caption.sheet) : null;
 	return (
 		<header className="min-w-0 flex-1">
-			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5 compact:justify-start compact:gap-x-1.5">
+			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5">
 				{title}
 				{tokens ? (
 					<span

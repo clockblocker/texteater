@@ -77,7 +77,7 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 		examples: [
 			{
 				label: "kaufen 🛒 (Reading)",
-				hint: "Its Reading Note; set Formations to “+ each Reading Note”",
+				hint: "Its Reading Note; Formations live on the Lemma Note, not on individual Readings",
 				note: reading("kaufen", "🛒"),
 			},
 			{

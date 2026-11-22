@@ -82,11 +82,11 @@ test("a noun in free gender variation shows both articles in its Reading heading
 	expect(markup).toContain("Balg, open its Lemma");
 	// The tag row that closes the Note names both genders.
 	expect(renderToStaticMarkup(renderReading(balgNote))).toContain(
-		"<span>gender: Masc/Neut</span>",
+		"<span>masculine/neuter (der/das)</span>",
 	);
 });
 
-test("a Reading Note pins its Heading, then its Source Contexts", () => {
+test("a Reading Note pins its Heading and places Source Contexts before Personal Annotation", () => {
 	const note = readingNote([
 		{
 			attestationId: "attestation-1",
@@ -105,7 +105,8 @@ test("a Reading Note pins its Heading, then its Source Contexts", () => {
 		if (props.resetToken) kinds.push(props.blockKind);
 		return false;
 	});
-	expect(kinds.slice(0, 2)).toEqual(["Heading", "SourceContexts"]);
+	expect(kinds[0]).toBe("Heading");
+	expect(kinds.slice(-2)).toEqual(["SourceContexts", "PersonalAnnotation"]);
 	expect(kinds.length).toBeGreaterThan(2);
 });
 

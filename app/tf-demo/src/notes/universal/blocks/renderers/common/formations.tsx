@@ -1,4 +1,4 @@
-import { LinkButton, NoteSection } from "lego";
+import { LinkButton, NoteAside, NoteList, NoteSection } from "lego";
 import { Fragment, useState } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
@@ -48,9 +48,7 @@ function FormationLine({
 		open || folded <= 0 ? formations : formations.slice(0, FOLDED_AFTER);
 	return (
 		<p className="text-pretty">
-			<span className="text-sm text-ink-muted compact:text-xs">
-				{groupLabel(group)}:{" "}
-			</span>
+			<NoteAside>{groupLabel(group)}: </NoteAside>
 			{shown.map((formation, index) => (
 				<Fragment key={formation.readingId}>
 					{index > 0 ? (
@@ -60,7 +58,7 @@ function FormationLine({
 						{cited(formation)}
 						{/* Two Readings cited alike tell themselves apart by emoji. */}
 						{ambiguous.has(cited(formation)) ? (
-							<span className="ms-[0.25em]">
+							<span aria-hidden="true" className="ms-[0.25em]">
 								{formation.emojiDescription}
 							</span>
 						) : null}
@@ -71,10 +69,10 @@ function FormationLine({
 				<button
 					type="button"
 					aria-expanded={open}
-					className="ms-2 cursor-pointer rounded-sm px-1 text-sm text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 compact:text-xs"
+					className="ms-2 cursor-pointer rounded-sm px-1 text-[length:var(--note-aside-size,0.875rem)] tabular-nums text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 					onClick={() => setOpen(!open)}
 				>
-					{open ? "… less" : `… ${folded} more`}
+					{open ? "Show less" : `Show ${folded} more`}
 				</button>
 			) : null}
 		</p>
@@ -110,8 +108,8 @@ export function FormationsSection({
 		[...counts].flatMap(([form, count]) => (count > 1 ? [form] : [])),
 	);
 	return (
-		<NoteSection aria-label="Formations" label="Formations">
-			<div className="grid gap-1.5">
+		<NoteSection label="Formations">
+			<NoteList as="div" gap="tight">
 				{formations.map((group) => (
 					<FormationLine
 						key={group.group}
@@ -121,7 +119,7 @@ export function FormationsSection({
 						cited={cited}
 					/>
 				))}
-			</div>
+			</NoteList>
 		</NoteSection>
 	);
 }

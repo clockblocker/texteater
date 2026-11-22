@@ -1,4 +1,5 @@
 import {
+	cn,
 	Ipa,
 	NoteBone,
 	NoteTags,
@@ -8,8 +9,8 @@ import {
 } from "lego";
 import { type ReactNode, useId } from "react";
 import type { Id } from "../../../../../../../convex/_generated/dataModel";
-import { featureValueText } from "../../../../../../../shared/feature-values";
 import { coreGender } from "../../../../../../../shared/grammatical-gender";
+import { formatLemmaMetadata } from "../../../../caption/metadata";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingNotePending } from "../../../../note/data";
 import {
@@ -76,24 +77,23 @@ export function ReadingHeading({
 					data-gender={
 						typeof gender === "string" ? gender : undefined
 					}
+					lang={lemma.language}
 					tone={genderTone(lemma)}
 				>
 					{pending?.emojiDescription ? (
 						<NoteBone
-							aria-label="Emoji on the way"
+							aria-label="Loading icon"
 							className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]"
 						/>
 					) : (
 						<span
-							/* `pre` keeps the space after the emoji where the
-							   title lays its parts out in a row */
-							className={
-								pending?.emojiArrived
-									? "note-arrival whitespace-pre text-ink"
-									: "whitespace-pre text-ink"
-							}
+							aria-hidden="true"
+							className={cn(
+								"me-[0.38em] inline-flex shrink-0 items-center text-[0.88em] leading-none translate-y-[-0.03em] text-ink",
+								pending?.emojiArrived && "note-arrival",
+							)}
 						>
-							{note.reading.emojiDescription}{" "}
+							{note.reading.emojiDescription}
 						</span>
 					)}
 					{pending?.headword ? (
@@ -148,7 +148,7 @@ function ResolvingHeadword({
 		return (
 			<NoteBone
 				tone="headword"
-				aria-label="Headword on the way"
+				aria-label="Loading headword"
 				className="h-[0.8em] w-28"
 			/>
 		);
@@ -185,7 +185,7 @@ export function ResolvingReadingHeading({
 				<NoteTitle data-reading-title="">
 					{resolving ? (
 						<NoteBone
-							aria-label="Emoji on the way"
+							aria-label="Loading icon"
 							className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]"
 						/>
 					) : null}
@@ -208,19 +208,9 @@ export function ReadingMetadata({
 }) {
 	return (
 		<NoteTags>
-			<span>{lemma.language}</span>
-			<span>{lemma.family}</span>
-			<span>{lemma.kind}</span>
-			{Object.entries(lemma.coreFeatures).flatMap(([name, feature]) => {
-				const value = featureValueText(feature);
-				return value === undefined
-					? []
-					: [
-							<span key={name}>
-								{name}: {value}
-							</span>,
-						];
-			})}
+			{formatLemmaMetadata(lemma).map((item) => (
+				<span key={item}>{item}</span>
+			))}
 		</NoteTags>
 	);
 }

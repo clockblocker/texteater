@@ -16,14 +16,15 @@ type PlannedBlock = {
 /**
  * The Blocks a Note renders, split where a host places them: the Heading
  * Block, which a Card or a Cover draws as its lift handle, and the Body,
- * every other Block. The Anchor Blocks are pinned (tf-demo ADR 0006): the
- * Heading first and Source Contexts right after it, at the top of the Body,
- * so a Card's box clips neither. A layout orders and hides only the rest.
+ * every other Block. The Heading is pinned first; on Reading Notes, Source
+ * Contexts follows the lookup blocks (right before Personal Annotation) so
+ * mid-sentence lookup lands on Translations and Definition first, while on
+ * Attestation Notes Source Contexts leads the Body.
  */
 export type RenderPlan = {
 	/** Null when the Note's route has no Heading Block. */
 	readonly heading: PlannedBlock | null;
-	/** Source Contexts, when the route has it, then the layout's visible Blocks. */
+	/** The Body's visible Blocks, with Source Contexts placed by Note kind. */
 	readonly body: readonly PlannedBlock[];
 };
 
@@ -46,27 +47,36 @@ export function resolveRenderPlan(
 		requestedLayout,
 		availableLayoutBlockKinds(registry),
 	);
+	const body: PlannedBlock[] = layout.order.flatMap((blockKind) => {
+		if (layout.hidden.has(blockKind)) return [];
+		const renderer = registry[blockKind];
+		return renderer ? [{ blockKind, renderer }] : [];
+	});
+	if (registry.SourceContexts) {
+		const sourceContextsBlock: PlannedBlock = {
+			blockKind: "SourceContexts",
+			renderer: registry.SourceContexts,
+		};
+		if (coordinates.noteKind === "Reading") {
+			const annotationIndex = body.findIndex(
+				({ blockKind }) => blockKind === "PersonalAnnotation",
+			);
+			if (annotationIndex === -1) {
+				body.push(sourceContextsBlock);
+			} else {
+				body.splice(annotationIndex, 0, sourceContextsBlock);
+			}
+		} else {
+			body.unshift(sourceContextsBlock);
+		}
+	}
 	return {
 		layout,
 		plan: {
 			heading: registry.Heading
 				? { blockKind: "Heading", renderer: registry.Heading }
 				: null,
-			body: [
-				...(registry.SourceContexts
-					? [
-							{
-								blockKind: "SourceContexts" as const,
-								renderer: registry.SourceContexts,
-							},
-						]
-					: []),
-				...layout.order.flatMap((blockKind) => {
-					if (layout.hidden.has(blockKind)) return [];
-					const renderer = registry[blockKind];
-					return renderer ? [{ blockKind, renderer }] : [];
-				}),
-			],
+			body,
 		},
 	};
 }

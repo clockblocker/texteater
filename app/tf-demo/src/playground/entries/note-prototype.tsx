@@ -80,7 +80,7 @@ export function NotePrototype({
 
 	return (
 		<div className="flex min-h-full justify-center px-6 py-10 lg:pe-[23rem]">
-			<div className="w-full max-w-2xl">
+			<div className="w-full max-w-note">
 				{target ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
 						{wrapNote(

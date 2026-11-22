@@ -3,27 +3,22 @@ import type * as React from "react";
 import { cn } from "../utils";
 import { type LinkTone, linkToneClasses } from "./link-tone";
 
-/* The passage starts 1.75rem in, where a Mark's word does: a Mark is at
-   least 1rem with 0.75rem after it. The static quote draws its bar on
-   itself, so its padding gives the bar's width back. In comfortable
-   density the passage is set a step softer than body ink and holds a
-   reading measure, so the lit member words are what stand out. */
+/* Consistent typography and rounded 2.5px tinted pseudo-rail across Card and
+   Sheet; inline-start indent interpolates smoothly from 0.875rem (Card) to
+   1.75rem (Sheet, aligned with a Mark's word) via `--note-quote-indent` in
+   `styles.css`. */
 const passage =
-	"max-w-[38rem] py-0.5 ps-7 text-start leading-[1.55] font-[430] tracking-[-0.012em] text-ink-soft text-pretty compact:max-w-none compact:py-1 compact:ps-3 compact:text-ink compact:text-wrap";
-
-/* A fine bar in comfortable density; a Card keeps its heavier one. */
-const bar =
-	"border-s-2 border-line transition-colors duration-150 motion-reduce:transition-none compact:border-s-[3px]";
+	"max-w-[38rem] py-0.5 text-start leading-[1.55] font-[430] text-ink-soft text-pretty";
 
 /**
  * A quoted passage from a source Text. The passage itself is ordinary,
  * selectable text; the words that form the occurrence are rendered inside
- * it as `ReaderSegment` links, and the quote bar lights up while one of them
- * is hovered or focused, echoing the reader.
+ * it as `ReaderSegment` links, and the quote rail lights up while one of them
+ * is hovered (on fine-pointer devices) or focused, echoing the reader.
  *
  * With `onFollow`, the quote as a whole leads where its members lead: the
- * bar and the empty space around the passage hover and click like a member
- * (the bar lights, the members underline), so the reader need not aim for a
+ * rail and the empty space around the passage hover and click like a member
+ * (the rail lights, the members underline), so the reader need not aim for a
  * word. The passage stays on top of that surface and keeps its selection,
  * which is why its plain runs must be elements, not bare text nodes.
  */
@@ -34,38 +29,27 @@ export function Quote({
 	onFollow,
 	followLabel = "Open in the source Text",
 	...props
-}: React.ComponentProps<"div"> & {
+}: React.ComponentProps<"blockquote"> & {
 	readonly tone?: LinkTone;
 	readonly onFollow?: () => void;
 	readonly followLabel?: string;
 }) {
 	if (!onFollow) {
 		return (
-			<div
+			<blockquote
 				data-slot="quote"
-				className={cn(
-					linkToneClasses[tone],
-					bar,
-					passage,
-					"ps-[calc(1.75rem_-_2px)]",
-					"has-[[data-slot=reader-segment]:hover]:border-link has-[[data-slot=reader-segment]:focus-visible]:border-link",
-					className,
-				)}
+				data-quote-static=""
+				className={cn(linkToneClasses[tone], "m-0", passage, className)}
 				{...props}
 			>
 				{children}
-			</div>
+			</blockquote>
 		);
 	}
 	return (
-		<div
+		<blockquote
 			data-slot="quote"
-			className={cn(
-				linkToneClasses[tone],
-				"relative",
-				"has-[[data-slot=quote-surface]:hover]:[&_[data-slot=reader-segment]]:underline",
-				className,
-			)}
+			className={cn(linkToneClasses[tone], "relative m-0", className)}
 			{...props}
 		>
 			{/* Pointer-only: the members already give keyboard and assistive
@@ -76,11 +60,7 @@ export function Quote({
 				tabIndex={-1}
 				aria-hidden
 				title={followLabel}
-				className={cn(
-					bar,
-					"absolute inset-0 cursor-pointer appearance-none bg-transparent p-0 hover:border-link",
-					"[[data-slot=quote]:has([data-slot=reader-segment]:hover)_&]:border-link [[data-slot=quote]:has([data-slot=reader-segment]:focus-visible)_&]:border-link",
-				)}
+				className="absolute inset-0 cursor-pointer appearance-none rounded-r-md border-0 bg-transparent p-0 transition-colors duration-150 motion-reduce:transition-none"
 				onClick={(event) => {
 					if (event.detail > 0) event.currentTarget.blur();
 					onFollow();
@@ -90,11 +70,11 @@ export function Quote({
 				data-slot="quote-passage"
 				className={cn(
 					passage,
-					"pointer-events-none relative [&>*]:pointer-events-auto",
+					"pointer-events-none relative m-0 [&>*]:pointer-events-auto",
 				)}
 			>
 				{children}
 			</p>
-		</div>
+		</blockquote>
 	);
 }

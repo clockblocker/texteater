@@ -5,13 +5,14 @@ import { cn } from "../utils";
 import { linkToneClasses } from "./link-tone";
 
 const linkButtonVariants = cva(
-	"inline-flex cursor-pointer items-baseline rounded-md text-start transition-colors hover:underline hover:underline-offset-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/50 disabled:cursor-default disabled:opacity-50 disabled:hover:no-underline [&_svg]:me-[0.3em] [&_svg]:inline [&_svg]:size-[0.85em] [&_svg]:self-center",
+	"relative inline-flex cursor-pointer touch-manipulation items-baseline rounded-md text-start outline-2 outline-transparent transition-[color,opacity,text-decoration-color] duration-150 before:absolute before:inset-x-0 before:-inset-y-[0.25em] before:content-[''] active:opacity-75 focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-current/50 disabled:cursor-default disabled:opacity-50 disabled:active:opacity-50 motion-reduce:transition-none [&_svg]:me-[0.3em] [&_svg]:inline [&_svg]:size-[0.85em] [&_svg]:self-center",
 	{
 		variants: {
-			/* A link is a known Unit; a shadow link points at a Unit that has
-			   no Note yet and wears the dimmer step of the same hue. */
+			/* Subject-only gender hue policy: outbound links default to `link`
+			   (`--word-known`, isolated from any ancestor gender `--link`
+			   override). Shadow links point at a Unit that has no Note yet. */
 			tone: {
-				link: "text-link",
+				link: "[--link:var(--word-known)] text-link",
 				feminine: `text-link ${linkToneClasses.feminine}`,
 				masculine: `text-link ${linkToneClasses.masculine}`,
 				neuter: `text-link ${linkToneClasses.neuter}`,

@@ -243,7 +243,7 @@ test("a stored Valency Frame reaches the Reading Note and renders in its heading
 	const markup = renderToStaticMarkup(renderNote({ noteData: note }));
 	expect(markup).not.toContain('aria-label="Valency"');
 	expect(markup).toContain(
-		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN</span>',
+		'<span data-slot="valency-token" class="font-mono text-[0.82em] font-[450] text-ink-soft">jN</span>',
 	);
 });
 
@@ -308,6 +308,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 	const frames: readonly {
 		readonly lemma: ReturnType<typeof verb>;
 		readonly valency: Dumrel.ValencyFrame;
+		readonly expectedHeading: string;
 	}[] = [
 		{
 			lemma: verb("reden"),
@@ -329,6 +330,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 					],
 				},
 			],
+			expectedHeading: "(über jN | von jM) reden",
 		},
 		{
 			lemma: verb("wohnen"),
@@ -339,6 +341,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 					complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
 				},
 			],
+			expectedHeading: "irgendwo wohnen",
 		},
 		{
 			lemma: verb("aussehen", "aus"),
@@ -349,6 +352,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 					complements: [{ kind: "Predicative", marker: "None" }],
 				},
 			],
+			expectedHeading: "irgendwie aus|sehen",
 		},
 		{
 			lemma: verb("warten"),
@@ -366,6 +370,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 					],
 				},
 			],
+			expectedHeading: "(auf jN | dass …) warten",
 		},
 		{
 			lemma: verb("bedeuten"),
@@ -391,9 +396,10 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 					],
 				},
 			],
+			expectedHeading: "[jN | dass …] bedeuten",
 		},
 	];
-	for (const { lemma, valency } of frames) {
+	for (const { lemma, valency, expectedHeading } of frames) {
 		const reading = await insertReading(t, {
 			unitKind: "Reading",
 			lemma,
@@ -415,10 +421,11 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 
 		if (!note) throw new Error("Expected a Reading Note.");
 		expect(note.knowledge.valency).toEqual(valency);
-		// The Valency Line shows no alternatives or free complements yet (#676).
-		expect(
-			renderToStaticMarkup(renderNote({ noteData: note })),
-		).not.toContain('aria-label="Valency"');
+		const markup = renderToStaticMarkup(renderNote({ noteData: note }));
+		const title = markup
+			.match(/data-reading-title=""[^>]*>(.*?)<\/h\d>/)?.[1]
+			?.replace(/<[^>]+>/g, "");
+		expect(title).toBe(`🧩${expectedHeading}`);
 	}
 });
 

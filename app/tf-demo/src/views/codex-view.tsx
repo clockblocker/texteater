@@ -123,7 +123,7 @@ function CodexColumn({ children }: { children: ReactNode }) {
 	);
 }
 
-function CodexSkeleton() {
+export function CodexSkeleton() {
 	return (
 		<CodexColumn>
 			<div

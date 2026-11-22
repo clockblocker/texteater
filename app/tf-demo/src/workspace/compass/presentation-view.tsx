@@ -99,12 +99,22 @@ function picksUp(
 	)
 		return false;
 	if (covered) return false;
-	/* a press on a scrollbar scrolls; it never picks the Note up */
-	if (
-		target.hasAttribute("data-scroller") &&
-		event.nativeEvent.offsetX >= target.clientWidth
-	)
-		return false;
+	/* a press on a scrollbar scrolls; it never picks the Note up (works in LTR and RTL) */
+	if (target.hasAttribute("data-scroller")) {
+		const rect = target.getBoundingClientRect();
+		if (rect.width > 0) {
+			const contentStart = rect.left + target.clientLeft;
+			const contentEnd = contentStart + target.clientWidth;
+			if (event.clientX < contentStart || event.clientX >= contentEnd)
+				return false;
+		} else {
+			const rtl = getComputedStyle(target).direction === "rtl";
+			const onScrollbar = rtl
+				? event.nativeEvent.offsetX < 0
+				: event.nativeEvent.offsetX >= target.clientWidth;
+			if (onScrollbar) return false;
+		}
+	}
 	return form === "card" || target.closest("[data-heading]") !== null;
 }
 
@@ -125,6 +135,7 @@ export function PresentationView<S>({
 	placement,
 	z,
 	held,
+	lifted = false,
 	fate,
 	swiping = false,
 	pastCommit,
@@ -158,6 +169,8 @@ export function PresentationView<S>({
 	placement: PlacementStyle;
 	z: number;
 	held: boolean;
+	/** Lifted out of a Sheet or from nowhere (rather than picked off its Deck). */
+	lifted?: boolean;
 	/** In hand: what letting go now does to it. */
 	fate: Fate | null;
 	/** On a Deck being swiped: it moves with the Deck, whichever Card leads. */
@@ -192,6 +205,14 @@ export function PresentationView<S>({
 	const reduce = useDeckReducedMotion();
 	const design = useHeadingDesign();
 	const section = useRef<HTMLElement>(null);
+	/**
+	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
+	 * is a state, not a move: which Card is in front changes at once, with
+	 * no pulse. A Card picked off its Deck keeps its resting scale so pickup
+	 * never jumps, while a lifted Sheet stays unscaled in the hand.
+	 */
+	const restScale =
+		form === "card" && place === "open" && !lifted ? OPEN_SCALE : 1;
 	const {
 		handle,
 		insetInlineStart,
@@ -201,6 +222,7 @@ export function PresentationView<S>({
 		shownX,
 		shownY,
 		rotate,
+		scale,
 		opacity,
 	} = useNoteBox({
 		element: section,
@@ -208,13 +230,9 @@ export function PresentationView<S>({
 		preview,
 		reduce,
 		MORPH,
+		restScale,
+		growsFromTop,
 	});
-	/**
-	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
-	 * is a state, not a move: which Card is in front changes at once, with
-	 * no pulse. A held Card does not swell, so nothing else scales a Note.
-	 */
-	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
 
 	useEffect(() => {
 		if (preview) return;
@@ -233,6 +251,79 @@ export function PresentationView<S>({
 	const sheet = form === "sheet";
 	const below = place === "below" && !sheet;
 	const shape = shapeOf(form, place, ground, back !== null);
+	const activeCover = shape === "cover" && !covered && !preview;
+	const previousFocus = useRef<HTMLElement | null>(null);
+	const wasActiveCover = useRef(false);
+
+	/* Modal focus management: move focus into a newly active Cover and restore
+	   it to the originating trigger once the Cover closes or collapses. */
+	useEffect(() => {
+		if (!activeCover) {
+			if (wasActiveCover.current && !covered) {
+				const restoreTo = previousFocus.current;
+				previousFocus.current = null;
+				wasActiveCover.current = false;
+				if (restoreTo) {
+					queueMicrotask(() => {
+						if (
+							restoreTo.isConnected &&
+							!restoreTo.closest("[inert]") &&
+							(!document.activeElement ||
+								document.activeElement === document.body ||
+								document.activeElement === section.current ||
+								section.current?.contains(
+									document.activeElement,
+								) ||
+								document.activeElement.hasAttribute(
+									"data-deck-frame",
+								))
+						) {
+							restoreTo.focus({ preventScroll: true });
+						}
+					});
+				}
+			}
+			return;
+		}
+		const container = section.current;
+		if (!container) return;
+		if (!wasActiveCover.current) {
+			const active =
+				document.activeElement instanceof HTMLElement
+					? document.activeElement
+					: null;
+			if (active && !container.contains(active)) {
+				previousFocus.current = active;
+			}
+			wasActiveCover.current = true;
+		}
+		if (!container.contains(document.activeElement)) {
+			container.focus({ preventScroll: true });
+		}
+	}, [activeCover, covered]);
+
+	useEffect(
+		() => () => {
+			if (!wasActiveCover.current) return;
+			const restoreTo = previousFocus.current;
+			previousFocus.current = null;
+			wasActiveCover.current = false;
+			if (!restoreTo) return;
+			queueMicrotask(() => {
+				if (
+					restoreTo.isConnected &&
+					!restoreTo.closest("[inert]") &&
+					(!document.activeElement ||
+						document.activeElement === document.body ||
+						document.activeElement.hasAttribute("data-deck-frame"))
+				) {
+					restoreTo.focus({ preventScroll: true });
+				}
+			});
+		},
+		[],
+	);
+
 	const draw = useContentMotion({ section, form, below, held });
 	const opens = fate === "open" || preview;
 	/* a Cover's Heading is its lift handle, unless another Sheet covers it */
@@ -260,6 +351,9 @@ export function PresentationView<S>({
 			form={shape}
 			lift={held ? 1 : 0}
 			ref={section}
+			tabIndex={activeCover ? -1 : undefined}
+			inert={covered || undefined}
+			aria-hidden={covered || undefined}
 			aria-label={`${renderer.label(subject)} ${ground ? "ground" : sheet ? "sheet" : "card"}`}
 			data-card-id={card.id}
 			data-form={ground ? "ground" : form}
@@ -280,24 +374,21 @@ export function PresentationView<S>({
 				x: shownX,
 				y: shownY,
 				rotate,
-				scale: restScale,
+				scale,
 				originY: growsFromTop ? 0 : 0.5,
 				opacity,
 				zIndex: z,
 				...(preview ? { borderStyle: "dashed" } : {}),
 			}}
 			onPointerDown={down}
-			/* the shadow follows the lift as a state: it is no part of a
-			   move, so it rides no spring */
-			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute transition-shadow duration-200 ease-out`}
+			/* the shadow and surface plane follow form and lift as state: they
+			   are no part of a move, so they ride a short ease-out */
+			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute outline-none transition-[box-shadow,background-color] duration-200 ease-out`}
 		>
 			<PresentationContent
 				form={shape}
 				columnRem={renderer.columnRem(subject)}
-				heading={{
-					card: renderer.render(subject, view("card"), "heading"),
-					cover: renderer.render(subject, view("sheet"), "heading"),
-				}}
+				heading={renderer.render(subject, view(form), "heading")}
 				body={renderer.render(subject, view(form), "body")}
 				chrome={{ back, clear }}
 				grab={grabs}

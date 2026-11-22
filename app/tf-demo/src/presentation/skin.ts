@@ -8,16 +8,18 @@ import { formLayout, type PresentationForm } from "./form";
  */
 
 /**
- * The paper: its fill, its border, and the clip that makes every edge of
- * the Note its own. `contain` stops a size change's layout and paint at
- * this box rather than letting it walk the Deck.
+ * The paper: its fill, its border slot (transparent at rest so armed state
+ * borders never shift layout), and the clip that makes every edge of the
+ * Note its own. `contain` stops a size change's layout and paint at this
+ * box rather than letting it walk the Deck.
  */
 const PAPER =
-	"flex flex-col overflow-hidden border bg-paper [contain:layout_paint]";
-/** The paper's corners; a Ground fills its Pane, so it has none of its own. */
-const PAPER_CORNERS = "rounded-[0.9rem]";
-/** The corners of what is drawn inside a box's border, flush with it. */
-export const PAPER_INNER_CORNERS = "rounded-[calc(0.9rem_-_1px)]";
+	"flex flex-col overflow-hidden border bg-clip-padding [contain:layout_paint]";
+/** Tokenized Card corners (`14px`); a rising Cover rounds only its top corners. */
+const CARD_CORNERS = "rounded-xl";
+const COVER_CORNERS = "rounded-t-2xl rounded-b-none";
+/** The corners of what is drawn inside a Card box's border, flush with it. */
+export const PAPER_INNER_CORNERS = "rounded-[calc(var(--radius-xl)_-_1px)]";
 /**
  * A Card is all handle, so none of it selects; a Sheet's text does, and
  * its Heading is the handle.
@@ -32,11 +34,17 @@ const CARD_HANDLE = "cursor-grab touch-none active:cursor-grabbing";
  */
 export function boxClass(form: PresentationForm, liftable = true): string {
 	const { sheet } = formLayout(form);
+	const surface =
+		form === "card"
+			? `${CARD_CORNERS} border-[var(--border-card-rest)] bg-paper-elevated [--note-bg:var(--paper-elevated)] shadow-card-rest`
+			: form === "tail-above" || form === "tail-below"
+				? `${CARD_CORNERS} border-[var(--border-card-tail)] bg-paper shadow-card-tail [&_[data-heading-title]]:opacity-80`
+				: form === "ground"
+					? "border-transparent bg-paper shadow-none"
+					: `${COVER_CORNERS} border-[var(--border-cover)] bg-paper shadow-cover`;
 	return [
 		PAPER,
-		form === "ground"
-			? "border-transparent"
-			: `${PAPER_CORNERS} border-line-strong`,
+		surface,
 		sheet ? "" : CARD,
 		sheet || !liftable ? "" : CARD_HANDLE,
 	]
@@ -46,25 +54,44 @@ export function boxClass(form: PresentationForm, liftable = true): string {
 
 /**
  * The border colour a box rests at, as CSS, for an engine that animates
- * the border to a fate's colour and back: `boxClass` names the same one.
+ * the border to a fate's colour and back: one real 1px border carries both
+ * the subtle resting rim and armed states (`--link` / `--destructive`), so
+ * the box never stacks a second outer shadow ring around a transparent border.
  */
 export function restingBorder(form: PresentationForm): string {
-	return form === "ground" ? "transparent" : "var(--line-strong)";
+	if (form === "ground") return "transparent";
+	if (form === "card") return "var(--border-card-rest)";
+	if (form === "tail-above" || form === "tail-below")
+		return "var(--border-card-tail)";
+	return "var(--border-cover)";
+}
+
+function lerp(a: number, b: number, t: number): string {
+	return (a + (b - a) * t).toFixed(2);
 }
 
 /**
  * The shadow a Presentation casts for a lift of 0, at rest, to 1, in the
- * hand: it drops further, spreads wider and darkens as the Card rises. A
- * Sheet is the same object lying down, so a Cover casts the resting one;
- * a Ground fills its Pane and casts none. Every form's shadow has the same
- * parts, so an engine can animate from one to another.
+ * hand: active Cards rest on `--shadow-card-rest` and rise to
+ * `--shadow-card-lift`, inactive deck tails recede to `--shadow-card-tail`,
+ * Covers cast `--shadow-cover`, and Grounds cast none.
  */
 export function paperShadow(form: PresentationForm, lift = 0): string {
-	const cast = form === "ground" ? 0 : 1;
-	const offset = (cast * (0.25 + 1.25 * lift)).toFixed(2);
-	const blur = (cast * (0.75 + 2.25 * lift)).toFixed(2);
-	const alpha = (cast * (0.2 + 0.25 * lift)).toFixed(2);
-	return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
+	if (form === "ground") return "none";
+	if (form === "cover" || form === "sheet") return "var(--shadow-cover)";
+	if (form === "tail-above" || form === "tail-below") {
+		return lift > 0.5
+			? "var(--shadow-card-lift)"
+			: "var(--shadow-card-tail)";
+	}
+	if (lift <= 0) return "var(--shadow-card-rest)";
+	if (lift >= 1) return "var(--shadow-card-lift)";
+	const t = Math.max(0, Math.min(1, lift));
+	return [
+		`inset 0 1px 0 oklch(1 0 0 / ${lerp(0.06, 0.09, t)})`,
+		`0 ${lerp(10, 16, t)}px ${lerp(28, 38, t)}px ${lerp(-6, -8, t)}px oklch(0 0 0 / ${lerp(0.55, 0.62, t)})`,
+		`0 ${lerp(24, 32, t)}px ${lerp(52, 68, t)}px ${lerp(-14, -16, t)}px oklch(0 0 0 / ${lerp(0.45, 0.52, t)})`,
+	].join(", ");
 }
 
 /** The Notes page's gutter; a Sheet's ← and × hang inside it. */

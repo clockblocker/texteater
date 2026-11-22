@@ -108,11 +108,12 @@ export function useDrag<S>({
 	const staleTimer = useRef<number | undefined>(undefined);
 	useEffect(() => () => window.clearTimeout(staleTimer.current), []);
 	const pendingLift = useRef<PendingLift<S> | null>(null);
-	/** A link in a Cover's Heading under a pointer that has not moved yet. */
+	/** A Cover Heading or Floating Pane bar under a pointer that has not moved past slop yet. */
 	const pendingHeading = useRef<
 		| (Lift & {
 				readonly sheet: SheetView<S>;
 				readonly heading: HTMLElement;
+				readonly fromLink: boolean;
 		  })
 		| null
 	>(null);
@@ -248,26 +249,26 @@ export function useDrag<S>({
 
 	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	function frameMove(event: ReactPointerEvent<HTMLElement>) {
-		const fromLink = pendingHeading.current;
-		if (fromLink && fromLink.pointerId === event.pointerId) {
+		const fromHeading = pendingHeading.current;
+		if (fromHeading && fromHeading.pointerId === event.pointerId) {
 			if (
 				Math.hypot(
-					event.clientX - fromLink.x,
-					event.clientY - fromLink.y,
+					event.clientX - fromHeading.x,
+					event.clientY - fromHeading.y,
 				) <= ARM_SLOP
 			)
 				return;
 			pendingHeading.current = null;
-			/* the link under the press is not followed */
-			swallowClick.current = true;
+			/* a link under the press is not followed once the drag arms */
+			if (fromHeading.fromLink) swallowClick.current = true;
 			liftSheet(
-				fromLink.sheet,
+				fromHeading.sheet,
 				{
-					pointerId: fromLink.pointerId,
-					x: fromLink.x,
-					y: fromLink.y,
+					pointerId: fromHeading.pointerId,
+					x: fromHeading.x,
+					y: fromHeading.y,
 				},
-				fromLink.heading,
+				fromHeading.heading,
 			);
 		}
 		const pending = pendingLift.current;
@@ -386,6 +387,7 @@ export function useDrag<S>({
 						d,
 						event.timeStamp,
 					),
+					event.timeStamp,
 				);
 		}
 	}
@@ -501,6 +503,7 @@ export function useDrag<S>({
 						y: event.clientY,
 						sheet: ground,
 						heading: bar,
+						fromLink: true,
 					};
 				return;
 			}
@@ -513,7 +516,12 @@ export function useDrag<S>({
 			};
 			event.preventDefault();
 			if (!isRooted(pane)) {
-				liftSheet(ground, lift, bar);
+				pendingHeading.current = {
+					...lift,
+					sheet: ground,
+					heading: bar,
+					fromLink: false,
+				};
 				return;
 			}
 			if (pane.line.length < 2) return;
@@ -521,7 +529,10 @@ export function useDrag<S>({
 		},
 		paneBarMove: barHold.move,
 		stopBarHold: barHold.stop,
-		/** A Cover's Heading is its bar: it lifts the Cover, straight into the hand. */
+		/**
+		 * A Cover's Heading is its bar: dragging past the arm slop lifts the
+		 * Cover into the hand, while a plain click inside slop leaves it calm.
+		 */
 		coverHeadingDown(
 			event: ReactPointerEvent<HTMLElement>,
 			sheet: SheetView<S>,
@@ -530,29 +541,18 @@ export function useDrag<S>({
 			const target = event.target as HTMLElement;
 			const heading = target.closest<HTMLElement>("[data-heading]");
 			if (!heading || target.closest("[data-heading-chrome]")) return;
-			/* a link in the title waits for the slop: a release inside it is
-			   the link's click, a move past it lifts the Cover */
-			if (target.closest("[data-heading-title] button")) {
-				if (!linksDrag) return;
-				pendingHeading.current = {
-					pointerId: event.pointerId,
-					x: event.clientX,
-					y: event.clientY,
-					sheet,
-					heading,
-				};
-				return;
-			}
-			event.preventDefault();
-			liftSheet(
+			const fromLink =
+				target.closest("[data-heading-title] button") !== null;
+			if (fromLink && !linksDrag) return;
+			if (!fromLink) event.preventDefault();
+			pendingHeading.current = {
+				pointerId: event.pointerId,
+				x: event.clientX,
+				y: event.clientY,
 				sheet,
-				{
-					pointerId: event.pointerId,
-					x: event.clientX,
-					y: event.clientY,
-				},
 				heading,
-			);
+				fromLink,
+			};
 		},
 		/** A press on a Segment or a Link: past the slop, a fresh Card lifts. */
 		segmentDown(

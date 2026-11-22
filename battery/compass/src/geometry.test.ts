@@ -259,12 +259,21 @@ describe("regionAt", () => {
 });
 
 describe("Sheet boxes", () => {
-	test("a Cover is flush with its Pane's top and inset from its sides and foot", () => {
+	test("a Cover is a centered rising sheet, inset 0.75rem from the top, flush to the foot, and capped at 56rem", () => {
+		/* PANE is 1200px wide (> 59rem = 944px), so width caps at 56rem (896px) and centres */
 		expect(coverBoxIn(PANE, REM)).toEqual({
-			left: 124,
-			top: 50,
-			width: 1152,
-			height: 876,
+			left: 100 + (1200 - 56 * REM) / 2,
+			top: 50 + 0.75 * REM,
+			width: 56 * REM,
+			height: 900 - 0.75 * REM,
+		});
+		/* narrower than 59rem: keeps 1.5rem side insets and stays centered */
+		const medium: Box = { left: 100, top: 50, width: 800, height: 900 };
+		expect(coverBoxIn(medium, REM)).toEqual({
+			left: 100 + 1.5 * REM,
+			top: 50 + 0.75 * REM,
+			width: 800 - 3 * REM,
+			height: 900 - 0.75 * REM,
 		});
 	});
 
@@ -283,7 +292,7 @@ describe("Sheet boxes", () => {
 	});
 
 	test("neither collapses below nothing in a Pane too small for it", () => {
-		const tiny: Box = { left: 0, top: 0, width: 20, height: 20 };
+		const tiny: Box = { left: 0, top: 0, width: 10, height: 10 };
 		expect(coverBoxIn(tiny, REM)).toMatchObject({ width: 0, height: 0 });
 		expect(groundBoxIn(tiny, REM)).toMatchObject({ height: 0 });
 	});

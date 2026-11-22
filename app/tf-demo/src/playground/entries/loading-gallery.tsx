@@ -1,7 +1,12 @@
-import { NoteSkeletonFor } from "@/notes";
+import type { NoteSkeletonFor } from "@/notes";
+import { CodexSkeleton } from "@/views/codex-view";
 import { ScrollViewSkeleton } from "@/views/scroll-view";
 import { applicationRenderer } from "@/workspace/application-renderer";
-import { HeadingSkeleton, NoteHeadingSkeleton } from "@/workspace/note-part";
+import {
+	HeadingSkeleton,
+	NotePartProvider,
+	PlacedNoteSkeleton,
+} from "@/workspace/note-part";
 import {
 	Stage,
 	type StagedParts,
@@ -30,19 +35,36 @@ const NOTE_COLUMN_REM = applicationRenderer.columnRem({
 	target: { kind: "Reading", readingId: "" },
 });
 
-/** A Note of `kind` while it loads, as the app splits it: the Heading's bone, and the Body's. */
+/**
+ * A Note of `kind` while it loads, rendered through `NotePartProvider` and
+ * `PlacedNoteSkeleton` exactly as `applicationRenderer` and the Note views do.
+ */
 function loadingNote(kind: NoteKind): StagedParts {
-	const heading = <NoteHeadingSkeleton />;
 	return {
 		label: `Loading ${kind}`,
 		columnRem: NOTE_COLUMN_REM,
-		heading: { card: heading, cover: heading },
+		heading: {
+			card: (
+				<NotePartProvider value="heading">
+					<PlacedNoteSkeleton kind={kind} presentation="Card" />
+				</NotePartProvider>
+			),
+			cover: (
+				<NotePartProvider value="heading">
+					<PlacedNoteSkeleton kind={kind} presentation="Sheet" />
+				</NotePartProvider>
+			),
+		},
 		body: {
 			card: (
-				<NoteSkeletonFor kind={kind} presentation="Card" part="Body" />
+				<NotePartProvider value="body">
+					<PlacedNoteSkeleton kind={kind} presentation="Card" />
+				</NotePartProvider>
 			),
 			sheet: (
-				<NoteSkeletonFor kind={kind} presentation="Sheet" part="Body" />
+				<NotePartProvider value="body">
+					<PlacedNoteSkeleton kind={kind} presentation="Sheet" />
+				</NotePartProvider>
 			),
 		},
 	};
@@ -58,10 +80,20 @@ const LOADING_SCROLL: StagedParts = {
 	body: { card: <ScrollViewSkeleton />, sheet: <ScrollViewSkeleton /> },
 };
 
+const LOADING_SECTION: StagedParts = {
+	label: "Loading Section",
+	columnRem: applicationRenderer.columnRem({
+		kind: "Section",
+		target: { kind: "Section", sectionId: "" },
+	}),
+	heading: { card: <HeadingSkeleton />, cover: <HeadingSkeleton /> },
+	body: { card: <CodexSkeleton />, sheet: <CodexSkeleton /> },
+};
+
 /**
- * Every Note kind while its data is still on the way, in the forms the app
- * shows it in: a Card, a Card Tail and a Cover, each drawn by the
- * Presentation foundation.
+ * Every Note kind, Scroll and Section while its data is still on the way, in
+ * the forms the app shows it in: a Card, a Card Tail and a Cover, each drawn
+ * by the Presentation foundation and live skeleton components.
  */
 export function LoadingGallery() {
 	return (
@@ -102,6 +134,13 @@ export function LoadingGallery() {
 				<StagedPresentation
 					form="cover"
 					parts={LOADING_SCROLL}
+					chrome={WAITING}
+				/>
+			</Stage>
+			<Stage label="Section · Cover">
+				<StagedPresentation
+					form="cover"
+					parts={LOADING_SECTION}
 					chrome={WAITING}
 				/>
 			</Stage>

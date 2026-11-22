@@ -1,3 +1,4 @@
+import { cn } from "lego";
 import {
 	type CSSProperties,
 	type KeyboardEvent,
@@ -70,9 +71,10 @@ function RevealPiece({
 			data-shown={shown}
 			tabIndex={tabbable ? 0 : -1}
 			aria-label={morphemeLabel(piece)}
-			className={`relative inline-block cursor-pointer pt-[0.55em] outline-none ${
-				zero ? "w-[0.8em]" : ""
-			}`}
+			className={cn(
+				"relative inline-block min-w-6 cursor-pointer touch-manipulation pt-[0.45em] text-start focus-visible:rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link",
+				zero && "text-center",
+			)}
 			onPointerEnter={(event) => {
 				if (event.pointerType !== "touch") onReveal(index);
 			}}
@@ -102,7 +104,14 @@ function RevealPiece({
 				</span>
 			) : (
 				<span
-					className={`relative ${shown ? tone : "text-ink"}`}
+					className={cn(
+						"relative motion-reduce:transition-none",
+						shown
+							? tone
+							: isChunk
+								? "text-ink underline decoration-dotted decoration-line-strong/65 underline-offset-[0.25em]"
+								: "text-ink",
+					)}
 					style={lettersStyle(shown, motion)}
 				>
 					{framed ? (
@@ -246,7 +255,7 @@ export function MorphemesLine({
 	return (
 		<div
 			data-breakdown-line="morphemes"
-			className="text-[1.2em] tracking-[0.02em] compact:pt-[0.2em]"
+			className="text-[1.0625em] tracking-[0.02em]"
 		>
 			<div
 				ref={lineRef}

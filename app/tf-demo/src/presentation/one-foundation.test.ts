@@ -20,8 +20,9 @@ const SOURCES = readdirSync(SRC, { recursive: true, encoding: "utf8" })
 
 const read = (file: string) => readFileSync(join(SRC, file), "utf8");
 
-/** The paper's corners, outer or inner: the mark of a box skinned by hand. */
-const PAPER_CORNERS = /rounded-\[(calc\()?0\.9rem/;
+/** The paper's elevation skin or legacy 0.9rem corners: the mark of a box skinned by hand. */
+const PAPER_CORNERS =
+	/rounded-\[(calc\()?0\.9rem|bg-paper-elevated|shadow-card-(?:rest|lift|tail)|shadow-cover|rounded-t-2xl/;
 
 /**
  * The sizes a pile is built from. The app's renderer and its gestures read
