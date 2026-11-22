@@ -159,13 +159,91 @@ const apostrophes = /[’‘´`]/g;
 export const foldApostrophes = (text: string) =>
 	text.replaceAll(apostrophes, "'");
 
+type FusionIndex = {
+	readonly fusions: ReadonlyMap<string, FusionEntry>;
+	readonly clitics: ReadonlyMap<string, CliticEntry>;
+	readonly abbreviations: ReadonlyMap<string, AbbreviationEntry>;
+	readonly abbreviationsByFirstChar: ReadonlyMap<
+		string,
+		readonly AbbreviationEntry[]
+	>;
+};
+
+const fusionIndexCache = new WeakMap<FusionTable, FusionIndex>();
+
+const capitalizedFirst = (table: FusionTable, text: string) =>
+	text.charAt(0).toLocaleUpperCase(table.language) + text.slice(1);
+
+function indexAbbreviations(table: FusionTable): {
+	readonly abbreviations: ReadonlyMap<string, AbbreviationEntry>;
+	readonly abbreviationsByFirstChar: ReadonlyMap<
+		string,
+		readonly AbbreviationEntry[]
+	>;
+} {
+	const abbreviations = new Map<string, AbbreviationEntry>();
+	const abbreviationsByFirstChar = new Map<string, AbbreviationEntry[]>();
+	const addAbbreviation = (key: string, entry: AbbreviationEntry) => {
+		if (!abbreviations.has(key)) abbreviations.set(key, entry);
+	};
+	const addBucket = (firstChar: string, entry: AbbreviationEntry) => {
+		const bucket = abbreviationsByFirstChar.get(firstChar);
+		if (bucket) bucket.push(entry);
+		else abbreviationsByFirstChar.set(firstChar, [entry]);
+	};
+	const anyCase = table.abbreviationCase === "Any";
+	for (const entry of table.abbreviations) {
+		if (anyCase) {
+			const folded = entry.text.toLocaleLowerCase(table.language);
+			addAbbreviation(folded, entry);
+			if (entry.dotOptional === true)
+				addAbbreviation(
+					entry.text.slice(0, -1).toLocaleLowerCase(table.language),
+					entry,
+				);
+			addBucket(folded.charAt(0), entry);
+			continue;
+		}
+		const upper = capitalizedFirst(table, entry.text);
+		addAbbreviation(entry.text, entry);
+		addAbbreviation(upper, entry);
+		if (entry.dotOptional === true) {
+			const undotted = entry.text.slice(0, -1);
+			addAbbreviation(undotted, entry);
+			addAbbreviation(capitalizedFirst(table, undotted), entry);
+		}
+		const first = entry.text.charAt(0);
+		addBucket(first, entry);
+		const upperFirst = upper.charAt(0);
+		if (upperFirst !== first) addBucket(upperFirst, entry);
+	}
+	return { abbreviations, abbreviationsByFirstChar };
+}
+
+function indexOf(table: FusionTable): FusionIndex {
+	const cached = fusionIndexCache.get(table);
+	if (cached !== undefined) return cached;
+	const fusions = new Map<string, FusionEntry>();
+	for (const entry of table.fusions)
+		if (!fusions.has(entry.form)) fusions.set(entry.form, entry);
+	const clitics = new Map<string, CliticEntry>();
+	for (const entry of table.clitics)
+		if (!clitics.has(entry.clitic)) clitics.set(entry.clitic, entry);
+	const index: FusionIndex = {
+		fusions,
+		clitics,
+		...indexAbbreviations(table),
+	};
+	fusionIndexCache.set(table, index);
+	return index;
+}
+
 /** Case-insensitive lookup of a fusion by its spelling; typographic apostrophes are normalized (`can’t`). */
 function fusionEntry(
 	table: FusionTable,
 	form: string,
 ): FusionEntry | undefined {
-	const normalized = fold(table, form);
-	return table.fusions.find((entry) => entry.form === normalized);
+	return indexOf(table).fusions.get(fold(table, form));
 }
 
 /**
@@ -245,12 +323,11 @@ export function abbreviationEntry(
 	table: FusionTable,
 	text: string,
 ): AbbreviationEntry | undefined {
-	return table.abbreviations.find(
-		(entry) =>
-			spells(table, entry.text, text) ||
-			(entry.dotOptional === true &&
-				spells(table, entry.text.slice(0, -1), text)),
-	);
+	const key =
+		table.abbreviationCase === "Any"
+			? text.toLocaleLowerCase(table.language)
+			: text;
+	return indexOf(table).abbreviations.get(key);
 }
 
 /**
@@ -262,8 +339,14 @@ export function leadingAbbreviation(
 	table: FusionTable,
 	text: string,
 ): string | undefined {
+	const firstChar =
+		table.abbreviationCase === "Any"
+			? text.charAt(0).toLocaleLowerCase(table.language).charAt(0)
+			: text.charAt(0);
+	const candidates = indexOf(table).abbreviationsByFirstChar.get(firstChar);
+	if (candidates === undefined) return undefined;
 	let longest: string | undefined;
-	for (const entry of table.abbreviations) {
+	for (const entry of candidates) {
 		const written = text.slice(0, entry.text.length);
 		if (
 			spells(table, entry.text, written) &&
@@ -281,8 +364,7 @@ export function cliticEntry(
 	table: FusionTable,
 	text: string,
 ): CliticEntry | undefined {
-	const normalized = foldApostrophes(text);
-	return table.clitics.find((entry) => entry.clitic === normalized);
+	return indexOf(table).clitics.get(foldApostrophes(text));
 }
 
 /** A clitic the text starts with that stands free before the next word ('s Wetter, 'ne Frage). */
@@ -396,21 +478,6 @@ export function fusedPieceAt(
 		component: index - run.start,
 		...(role ? { role } : {}),
 	};
-}
-
-/**
- * The Segment indices of the table fusion whose first piece is at `index`
- * (`i` + `m` of `im`); undefined anywhere else, a clitic's host included.
- */
-export function fusedWordAt(
-	table: FusionTable,
-	segments: readonly SegmentText[],
-	index: number,
-): readonly number[] | undefined {
-	const run = fusedRunAt(table, segments, index);
-	return run?.fusion && run.start === index
-		? run.spans.map((_, position) => index + position)
-		: undefined;
 }
 
 /**

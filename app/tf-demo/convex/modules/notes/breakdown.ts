@@ -152,14 +152,18 @@ async function loadPartSources(
 		.query("readings")
 		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 		.take(MAX_PART_READINGS);
+	const rows = await Promise.all(
+		readings.map((reading) =>
+			ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", reading.readingKey),
+				)
+				.unique(),
+		),
+	);
 	const found: Dumrel.MorphemeSources[] = [];
-	for (const reading of readings) {
-		const row = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", reading.readingKey),
-			)
-			.unique();
+	for (const row of rows) {
 		const knowledge = asKnowledge(row?.knowledge);
 		if (knowledge.breakdown || knowledge.source)
 			found.push({
@@ -256,25 +260,48 @@ async function loadFormationsOfShadow(
 		else if (aspect === "source" && !owners.has(ownerReadingKey))
 			owners.set(ownerReadingKey, "Source");
 	}
+	const ownerEntries = [...owners];
+	const loadedOwners = await Promise.all(
+		ownerEntries.map(async ([ownerReadingKey, via]) => {
+			const [reading, row] = await Promise.all([
+				ctx.db
+					.query("readings")
+					.withIndex("by_reading_key", (q) =>
+						q.eq("readingKey", ownerReadingKey),
+					)
+					.unique(),
+				ctx.db
+					.query("accumulatedKnowledge")
+					.withIndex("by_owner_reading_key", (q) =>
+						q.eq("ownerReadingKey", ownerReadingKey),
+					)
+					.unique(),
+			]);
+			return { via, reading, row };
+		}),
+	);
+	const uniqueLemmaIds = [
+		...new Set(
+			loadedOwners.flatMap(({ reading }) =>
+				reading ? [reading.lemmaId] : [],
+			),
+		),
+	];
+	const lemmasById = new Map(
+		await Promise.all(
+			uniqueLemmaIds.map(
+				async (lemmaId) =>
+					[lemmaId, await ctx.db.get(lemmaId)] as const,
+			),
+		),
+	);
 	const groups = new Map<
 		FormationsView[number]["group"],
 		FormationsView[number]["formations"]
 	>();
-	for (const [ownerReadingKey, via] of owners) {
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", ownerReadingKey),
-			)
-			.unique();
-		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
+	for (const { via, reading, row } of loadedOwners) {
+		const lemma = reading ? lemmasById.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
-		const row = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", ownerReadingKey),
-			)
-			.unique();
 		let group: FormationsView[number]["group"] = "Sourced";
 		if (via === "Constituents") {
 			const constituents = asKnowledge(row?.knowledge).breakdown

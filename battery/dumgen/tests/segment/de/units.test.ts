@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { testEffect } from "common-utils/effect-test";
 import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
@@ -44,57 +45,66 @@ test("the judge's pieces are numbered from 1; a fused piece keeps its written wo
 	expect(partitionOf([1, 2, 3, 4], [[4, 2]])).toEqual([[1], [2, 4], [3]]);
 });
 
-test("satellites join their verb and fixed words make a Locution, the split article included", async () => {
-	const judge = fakeJudge({
-		s_reflexive_3: picked("p2"),
-		s_particle_4: picked("p2"),
-		f_5: noul(0.9),
-		f_6: noul(0.9),
-		f_7: noul(0.9),
-		e_5_6: noul(0.9),
-		e_5_7: noul(0.9),
-		e_6_7: noul(0.9),
-		r_1: picked("Lexeme/PRON"),
-		r_2_3_4: picked("Lexeme/VERB"),
-		r_5_6_7: picked("Locution/ADV"),
-	});
-	const units = await Effect.runPromise(
-		germanUnits({ segments: zumGlueck }, judge.ask),
-	);
-	expect(units).toEqual([
-		{
-			segments: [0],
-			route: route("Lexeme", "PRON"),
-			identity: { kind: "PRON", canonicalForm: "er", pronType: "Prs" },
-		},
-		{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
-		{ segments: [9, 10, 12], route: route("Locution", "ADV") },
-	]);
-	// candidates and final read only the Sentence and go out at once;
-	// closed asks nothing, since the zu of zum is a preposition whatever
-	// its spelling's uses; expressions reads candidates; route reads the
-	// nomination, and the member check beside it the Locution zum Glück.
-	// route2 has no group of its own here, and every unit was batched.
-	expect(judge.stages()).toEqual([
-		"candidates+final",
-		"expressions",
-		"route+locution",
-	]);
-	expect(Object.keys(judge.questionsOf("locution") ?? {})).toEqual([
-		"lm_5_6_7_m_5_6",
-		"lm_5_6_7_m_7",
-	]);
-});
+testEffect(
+	"satellites join their verb and fixed words make a Locution, the split article included",
+	() =>
+		Effect.gen(function* () {
+			const judge = fakeJudge({
+				s_reflexive_3: picked("p2"),
+				s_particle_4: picked("p2"),
+				f_5: noul(0.9),
+				f_6: noul(0.9),
+				f_7: noul(0.9),
+				e_5_6: noul(0.9),
+				e_5_7: noul(0.9),
+				e_6_7: noul(0.9),
+				r_1: picked("Lexeme/PRON"),
+				r_2_3_4: picked("Lexeme/VERB"),
+				r_5_6_7: picked("Locution/ADV"),
+			});
+			const units = yield* germanUnits(
+				{ segments: zumGlueck },
+				judge.ask,
+			);
+			expect(units).toEqual([
+				{
+					segments: [0],
+					route: route("Lexeme", "PRON"),
+					identity: {
+						kind: "PRON",
+						canonicalForm: "er",
+						pronType: "Prs",
+					},
+				},
+				{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
+				{ segments: [9, 10, 12], route: route("Locution", "ADV") },
+			]);
+			// candidates and final read only the Sentence and go out at once;
+			// closed asks nothing, since the zu of zum is a preposition whatever
+			// its spelling's uses; expressions reads candidates; route reads the
+			// nomination, and the member check beside it the Locution zum Glück.
+			// route2 has no group of its own here, and every unit was batched.
+			expect(judge.stages()).toEqual([
+				"candidates+final",
+				"expressions",
+				"route+locution",
+			]);
+			expect(Object.keys(judge.questionsOf("locution") ?? {})).toEqual([
+				"lm_5_6_7_m_5_6",
+				"lm_5_6_7_m_7",
+			]);
+		}),
+);
 
-test("a Sentence with nothing to click makes no call", async () => {
-	const judge = fakeJudge();
-	expect(
-		await Effect.runPromise(
-			germanUnits({ segments: segmentsOf("… !") }, judge.ask),
-		),
-	).toEqual([]);
-	expect(judge.requests).toEqual([]);
-});
+testEffect("a Sentence with nothing to click makes no call", () =>
+	Effect.gen(function* () {
+		const judge = fakeJudge();
+		expect(
+			yield* germanUnits({ segments: segmentsOf("… !") }, judge.ask),
+		).toEqual([]);
+		expect(judge.requests).toEqual([]);
+	}),
+);
 
 // Wer0 _1 rastet2 ,3 _4 der5 _6 rostet7 .8
 const maxim = segmentsOf("Wer rastet, der rostet.");
@@ -105,23 +115,36 @@ const reference: UnitSettings = {
 	rules: [],
 };
 
-test("the Saying assembly is a setting: production counts the maxim, the reference's adopted setting does not", async () => {
-	const answers = {
-		y4_1_2_3_4: picked("maxim", { maxim: 0.75, whole: 0.1, none: 0.15 }),
-	};
-	expect(
-		await Effect.runPromise(
-			germanUnits({ segments: maxim }, fakeJudge(answers).ask),
-		),
-	).toContainEqual({
-		segments: [0, 2, 5, 7],
-		route: route("Saying", "Saying"),
-	});
-	const units = await Effect.runPromise(
-		germanUnits({ segments: maxim }, fakeJudge(answers).ask, reference),
-	);
-	expect(units.map(({ segments }) => segments)).toEqual([[0], [2], [5], [7]]);
-});
+testEffect(
+	"the Saying assembly is a setting: production counts the maxim, the reference's adopted setting does not",
+	() =>
+		Effect.gen(function* () {
+			const answers = {
+				y4_1_2_3_4: picked("maxim", {
+					maxim: 0.75,
+					whole: 0.1,
+					none: 0.15,
+				}),
+			};
+			expect(
+				yield* germanUnits({ segments: maxim }, fakeJudge(answers).ask),
+			).toContainEqual({
+				segments: [0, 2, 5, 7],
+				route: route("Saying", "Saying"),
+			});
+			const units = yield* germanUnits(
+				{ segments: maxim },
+				fakeJudge(answers).ask,
+				reference,
+			);
+			expect(units.map(({ segments }) => segments)).toEqual([
+				[0],
+				[2],
+				[5],
+				[7],
+			]);
+		}),
+);
 
 // Er0 _1 schlief2 _3 tief4 _5 und6 _7 fest8 .9
 const tiefUndFest = segmentsOf("Er schlief tief und fest.");
@@ -132,215 +155,255 @@ const looselyFixed = {
 	r_3_5: picked("Locution/ADV"),
 };
 
-test("a floor that builds a group no batch asked about asks route-extra, or leaves it Unresolved", async () => {
-	const production = fakeJudge(looselyFixed);
-	expect(
-		(
-			await Effect.runPromise(
-				germanUnits({ segments: tiefUndFest }, production.ask),
-			)
-		).map(({ segments }) => segments),
-	).toEqual([[0], [2], [4], [6], [8]]);
-	expect(production.stages()).not.toContain("route-extra");
+testEffect(
+	"a floor that builds a group no batch asked about asks route-extra, or leaves it Unresolved",
+	() =>
+		Effect.gen(function* () {
+			const production = fakeJudge(looselyFixed);
+			expect(
+				(yield* germanUnits(
+					{ segments: tiefUndFest },
+					production.ask,
+				)).map(({ segments }) => segments),
+			).toEqual([[0], [2], [4], [6], [8]]);
+			expect(production.stages()).not.toContain("route-extra");
 
-	const asking = fakeJudge(looselyFixed);
-	expect(
-		await Effect.runPromise(
-			germanUnits({ segments: tiefUndFest }, asking.ask, reference),
-		),
-	).toContainEqual({ segments: [4, 8], route: route("Locution", "ADV") });
-	expect(asking.stages().at(-1)).toBe("route-extra");
-	expect(Object.keys(asking.requests.at(-1)?.questions ?? {})).toEqual([
-		"r_3_5",
-	]);
+			const asking = fakeJudge(looselyFixed);
+			expect(
+				yield* germanUnits(
+					{ segments: tiefUndFest },
+					asking.ask,
+					reference,
+				),
+			).toContainEqual({
+				segments: [4, 8],
+				route: route("Locution", "ADV"),
+			});
+			expect(asking.stages().at(-1)).toBe("route-extra");
+			expect(
+				Object.keys(asking.requests.at(-1)?.questions ?? {}),
+			).toEqual(["r_3_5"]);
 
-	const unasked = fakeJudge(looselyFixed);
-	expect(
-		await Effect.runPromise(
-			germanUnits({ segments: tiefUndFest }, unasked.ask, {
-				...reference,
-				unasked: "unresolved",
-			}),
-		),
-	).toContainEqual({ segments: [4, 8], route: "Unresolved" });
-	expect(unasked.stages()).not.toContain("route-extra");
-});
-
-test("a borderline unit carries route variants only under a variant margin", async () => {
-	const answers = {
-		r_3: picked("Lexeme/ADV", {
-			"Lexeme/ADV": 0.5,
-			"Lexeme/ADJ": 0.4,
-			"Lexeme/NOUN": 0.1,
+			const unasked = fakeJudge(looselyFixed);
+			expect(
+				yield* germanUnits({ segments: tiefUndFest }, unasked.ask, {
+					...reference,
+					unasked: "unresolved",
+				}),
+			).toContainEqual({ segments: [4, 8], route: "Unresolved" });
+			expect(unasked.stages()).not.toContain("route-extra");
 		}),
-	};
-	const tief = async (variantMargin?: number) =>
-		(
-			await Effect.runPromise(
+);
+
+testEffect(
+	"a borderline unit carries route variants only under a variant margin",
+	() =>
+		Effect.gen(function* () {
+			const answers = {
+				r_3: picked("Lexeme/ADV", {
+					"Lexeme/ADV": 0.5,
+					"Lexeme/ADJ": 0.4,
+					"Lexeme/NOUN": 0.1,
+				}),
+			};
+			const tief = (variantMargin?: number) =>
 				germanUnits({ segments: tiefUndFest }, fakeJudge(answers).ask, {
 					...productionUnitSettings,
 					...(variantMargin === undefined ? {} : { variantMargin }),
-				}),
-			)
-		).find(({ segments }) => segments[0] === 4);
-	expect(await tief()).toEqual({
-		segments: [4],
-		route: route("Lexeme", "ADV"),
-	});
-	expect(await tief(0.05)).not.toHaveProperty("variants");
-	expect((await tief(0.2))?.variants).toEqual([
-		route("Lexeme", "ADV"),
-		route("Lexeme", "ADJ"),
-	]);
-});
+				}).pipe(
+					Effect.map((units) =>
+						units.find(({ segments }) => segments[0] === 4),
+					),
+				);
+			expect(yield* tief()).toEqual({
+				segments: [4],
+				route: route("Lexeme", "ADV"),
+			});
+			expect(yield* tief(0.05)).not.toHaveProperty("variants");
+			expect((yield* tief(0.2))?.variants).toEqual([
+				route("Lexeme", "ADV"),
+				route("Lexeme", "ADJ"),
+			]);
+		}),
+);
 
-test("route variants span only the tolerated Kind pairs and never sit on a fused half (#827)", async () => {
-	const borderlineZu = picked("infinitive", {
-		infinitive: 0.5,
-		degree: 0.45,
-		preposition: 0.05,
-	});
-	const variantsAt = async (
-		segments: readonly Segment[],
-		answers: Readonly<Record<string, Answer>>,
-		segment: number,
-	) =>
-		(
-			await Effect.runPromise(
+testEffect(
+	"route variants span only the tolerated Kind pairs and never sit on a fused half (#827)",
+	() =>
+		Effect.gen(function* () {
+			const borderlineZu = picked("infinitive", {
+				infinitive: 0.5,
+				degree: 0.45,
+				preposition: 0.05,
+			});
+			const variantsAt = (
+				segments: readonly Segment[],
+				answers: Readonly<Record<string, Answer>>,
+				segment: number,
+			) =>
 				germanUnits({ segments }, fakeJudge(answers).ask, {
 					...productionUnitSettings,
 					variantMargin: 0.2,
-				}),
-			)
-		).find(({ segments: [first] }) => first === segment)?.variants;
-	// Er0 _1 kam2 _3 zu4 _5 spät6 .7: PART|ADV is a tolerated pair.
-	expect(
-		await variantsAt(
-			segmentsOf("Er kam zu spät."),
-			{ cc_3: borderlineZu },
-			4,
-		),
-	).toEqual([route("Lexeme", "PART"), route("Lexeme", "ADV")]);
-	// The same zu as the first half of zum carries none.
-	expect(
-		await variantsAt(zumGlueck, { cc_5: borderlineZu }, 9),
-	).toBeUndefined();
-	// NOUN|ADP is not a tolerated pair.
-	expect(
-		await variantsAt(
-			zumGlueck,
-			{
-				r_7: picked("Lexeme/NOUN", {
-					"Lexeme/NOUN": 0.5,
-					"Lexeme/ADP": 0.45,
-				}),
-			},
-			12,
-		),
-	).toBeUndefined();
-});
+				}).pipe(
+					Effect.map(
+						(units) =>
+							units.find(
+								({ segments: [first] }) => first === segment,
+							)?.variants,
+					),
+				);
+			// Er0 _1 kam2 _3 zu4 _5 spät6 .7: PART|ADV is a tolerated pair.
+			expect(
+				yield* variantsAt(
+					segmentsOf("Er kam zu spät."),
+					{ cc_3: borderlineZu },
+					4,
+				),
+			).toEqual([route("Lexeme", "PART"), route("Lexeme", "ADV")]);
+			// The same zu as the first half of zum carries none.
+			expect(
+				yield* variantsAt(zumGlueck, { cc_5: borderlineZu }, 9),
+			).toBeUndefined();
+			// NOUN|ADP is not a tolerated pair.
+			expect(
+				yield* variantsAt(
+					zumGlueck,
+					{
+						r_7: picked("Lexeme/NOUN", {
+							"Lexeme/NOUN": 0.5,
+							"Lexeme/ADP": 0.45,
+						}),
+					},
+					12,
+				),
+			).toBeUndefined();
+		}),
+);
 
-test("closed-class identity routes a covered spelling by its use, and a one-use spelling with no question", async () => {
-	// Das0 _1 ist2 _3 eben4 _5 nicht6 _7 so8 .9
-	const judge = fakeJudge({
-		r_3: picked("Lexeme/ADV"),
-		r_4: picked("Lexeme/ADV"),
-		cc_3: picked("modal"),
-	});
-	const units = await Effect.runPromise(
-		germanUnits(
-			{ segments: segmentsOf("Das ist eben nicht so.") },
-			judge.ask,
-		),
-	);
-	expect(units).toContainEqual({
-		segments: [4],
-		route: route("Lexeme", "PART"),
-	});
-	expect(units).toContainEqual({
-		segments: [6],
-		route: route("Lexeme", "PART"),
-	});
-	const closed = judge.questionsOf("closed");
-	expect(Object.keys(closed ?? {})).toEqual(["cc_3"]);
-});
-
-test("interjections merge by the route each piece takes alone, closed-class identity first (#1331)", async () => {
-	const unitsOf = async (sentence: string, answers: Record<string, Answer>) =>
-		await Effect.runPromise(
-			germanUnits(
-				{ segments: segmentsOf(sentence) },
-				fakeJudge(answers).ask,
-			),
-		);
-	// Du0 _1 weißt2 _3 es4 _5 ja6 _7 ja8 .9: the route Choice hears INTJ, the
-	// closed request modal particles, so each ja routes PART and none merge.
-	const modal = await unitsOf("Du weißt es ja ja.", {
-		r_4: picked("Lexeme/INTJ"),
-		r_5: picked("Lexeme/INTJ"),
-		cc_4: picked("modal"),
-		cc_5: picked("modal"),
-	});
-	expect(modal).toContainEqual({
-		segments: [6],
-		route: route("Lexeme", "PART"),
-	});
-	expect(modal).toContainEqual({
-		segments: [8],
-		route: route("Lexeme", "PART"),
-	});
-	// Nein0 _1 nein2 ,3 _4 sagte5 _6 er7 .8: nein is INTJ by the ruling,
-	// whatever the route Choice says, so the two merge.
-	const answers = await unitsOf("Nein nein, sagte er.", {
-		r_1: picked("Lexeme/ADV"),
-		r_2: picked("Lexeme/ADV"),
-	});
-	expect(answers).toContainEqual({
-		segments: [0, 2],
-		route: route("Locution", "INTJ"),
-	});
-});
-
-test("the inventory is a setting: pinning the AUX Lemmas drops causative lassen's slot", async () => {
-	const pinned = germanInventory({
-		auxiliaryLemmas: new Set(["sein", "haben", "werden", "bekommen"]),
-	});
-	expect(authoredInventory.isAuxiliary("Ließ")).toBe(true);
-	expect(pinned.isAuxiliary("ließ")).toBe(false);
-	expect(pinned.isAuxiliary("hat")).toBe(true);
-	const slots = async (inventory = authoredInventory) => {
-		const judge = fakeJudge();
-		await Effect.runPromise(
-			germanUnits(
-				{ segments: segmentsOf("Er ließ das Auto reparieren.") },
+testEffect(
+	"closed-class identity routes a covered spelling by its use, and a one-use spelling with no question",
+	() =>
+		Effect.gen(function* () {
+			// Das0 _1 ist2 _3 eben4 _5 nicht6 _7 so8 .9
+			const judge = fakeJudge({
+				r_3: picked("Lexeme/ADV"),
+				r_4: picked("Lexeme/ADV"),
+				cc_3: picked("modal"),
+			});
+			const units = yield* germanUnits(
+				{ segments: segmentsOf("Das ist eben nicht so.") },
 				judge.ask,
-				{ ...productionUnitSettings, inventory },
-			),
-		);
-		return Object.keys(judge.requests[0]?.questions ?? {});
-	};
-	expect(await slots()).toContain("s_auxiliary_2");
-	expect(await slots(pinned)).not.toContain("s_auxiliary_2");
-});
+			);
+			expect(units).toContainEqual({
+				segments: [4],
+				route: route("Lexeme", "PART"),
+			});
+			expect(units).toContainEqual({
+				segments: [6],
+				route: route("Lexeme", "PART"),
+			});
+			const closed = judge.questionsOf("closed");
+			expect(Object.keys(closed ?? {})).toEqual(["cc_3"]);
+		}),
+);
 
-test("a hyphenated nickname is one piece with no identity Choice, and the route Choice offers it PROPN (de/coined-name-substitute-is-propn)", async () => {
-	// Freuen0 _1 wir2 _3 uns4 ,5 _6 denn7 _8 Du-weißt-schon-wer9 _10 ist11 _12 endlich13 _14 fort15 !16
-	const segments: Segment[] = [
-		...segmentsOf("Freuen wir uns, denn "),
-		{ kind: "ResolvableText", text: "Du-weißt-schon-wer" },
-		...segmentsOf(" ist endlich fort!"),
-	];
-	const judge = fakeJudge({ r_5: picked("Lexeme/PROPN") });
-	const units = await Effect.runPromise(germanUnits({ segments }, judge.ask));
-	expect(units).toContainEqual({
-		segments: [9],
-		route: route("Lexeme", "PROPN"),
-	});
-	const questions = judge.questionsOf("route");
-	// No authored DET or PRON spells it, so no identity Choice is asked.
-	expect(questions).not.toHaveProperty("i_5");
-	const choice = questions?.r_5;
-	expect(
-		choice?.type === "choice" && choice.criteria["Lexeme/PROPN"],
-	).toContain("nickname coined for one referent");
-});
+testEffect(
+	"interjections merge by the route each piece takes alone, closed-class identity first (#1331)",
+	() =>
+		Effect.gen(function* () {
+			const unitsOf = (
+				sentence: string,
+				answers: Record<string, Answer>,
+			) =>
+				germanUnits(
+					{ segments: segmentsOf(sentence) },
+					fakeJudge(answers).ask,
+				);
+			// Du0 _1 weißt2 _3 es4 _5 ja6 _7 ja8 .9: the route Choice hears INTJ, the
+			// closed request modal particles, so each ja routes PART and none merge.
+			const modal = yield* unitsOf("Du weißt es ja ja.", {
+				r_4: picked("Lexeme/INTJ"),
+				r_5: picked("Lexeme/INTJ"),
+				cc_4: picked("modal"),
+				cc_5: picked("modal"),
+			});
+			expect(modal).toContainEqual({
+				segments: [6],
+				route: route("Lexeme", "PART"),
+			});
+			expect(modal).toContainEqual({
+				segments: [8],
+				route: route("Lexeme", "PART"),
+			});
+			// Nein0 _1 nein2 ,3 _4 sagte5 _6 er7 .8: nein is INTJ by the ruling,
+			// whatever the route Choice says, so the two merge.
+			const answers = yield* unitsOf("Nein nein, sagte er.", {
+				r_1: picked("Lexeme/ADV"),
+				r_2: picked("Lexeme/ADV"),
+			});
+			expect(answers).toContainEqual({
+				segments: [0, 2],
+				route: route("Locution", "INTJ"),
+			});
+		}),
+);
+
+testEffect(
+	"the inventory is a setting: pinning the AUX Lemmas drops causative lassen's slot",
+	() =>
+		Effect.gen(function* () {
+			const pinned = germanInventory({
+				auxiliaryLemmas: new Set([
+					"sein",
+					"haben",
+					"werden",
+					"bekommen",
+				]),
+			});
+			expect(authoredInventory.isAuxiliary("Ließ")).toBe(true);
+			expect(pinned.isAuxiliary("ließ")).toBe(false);
+			expect(pinned.isAuxiliary("hat")).toBe(true);
+			const slots = (inventory = authoredInventory) =>
+				Effect.gen(function* () {
+					const judge = fakeJudge();
+					yield* germanUnits(
+						{
+							segments: segmentsOf(
+								"Er ließ das Auto reparieren.",
+							),
+						},
+						judge.ask,
+						{ ...productionUnitSettings, inventory },
+					);
+					return Object.keys(judge.requests[0]?.questions ?? {});
+				});
+			expect(yield* slots()).toContain("s_auxiliary_2");
+			expect(yield* slots(pinned)).not.toContain("s_auxiliary_2");
+		}),
+);
+
+testEffect(
+	"a hyphenated nickname is one piece with no identity Choice, and the route Choice offers it PROPN (de/coined-name-substitute-is-propn)",
+	() =>
+		Effect.gen(function* () {
+			// Freuen0 _1 wir2 _3 uns4 ,5 _6 denn7 _8 Du-weißt-schon-wer9 _10 ist11 _12 endlich13 _14 fort15 !16
+			const segments: Segment[] = [
+				...segmentsOf("Freuen wir uns, denn "),
+				{ kind: "ResolvableText", text: "Du-weißt-schon-wer" },
+				...segmentsOf(" ist endlich fort!"),
+			];
+			const judge = fakeJudge({ r_5: picked("Lexeme/PROPN") });
+			const units = yield* germanUnits({ segments }, judge.ask);
+			expect(units).toContainEqual({
+				segments: [9],
+				route: route("Lexeme", "PROPN"),
+			});
+			const questions = judge.questionsOf("route");
+			// No authored DET or PRON spells it, so no identity Choice is asked.
+			expect(questions).not.toHaveProperty("i_5");
+			const choice = questions?.r_5;
+			expect(
+				choice?.type === "choice" && choice.criteria["Lexeme/PROPN"],
+			).toContain("nickname coined for one referent");
+		}),
+);

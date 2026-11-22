@@ -2,7 +2,7 @@ import { type Scroll, splitScroll } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
-import { inspectionStep } from "./inspectionCapture";
+import { annotateInspectionStep } from "./inspectionCapture";
 import {
 	type AnalyzedSentence,
 	analyzeParagraphs,
@@ -109,6 +109,15 @@ function submittedSentences(
 	);
 }
 
+const splitExtractedScroll = Effect.fn("Split text into sentences")(function* (
+	extractedText: Scroll,
+) {
+	yield* annotateInspectionStep("battery/dumgen · splitScroll", {
+		extractedText,
+	});
+	return splitScroll(extractedText);
+});
+
 export function createIntake(options: {
 	/** Dumgen's `language.detect` and `segment.inUnits`: `operations`. */
 	readonly dumgen: IntakeDumgen;
@@ -119,51 +128,44 @@ export function createIntake(options: {
 	 */
 	readonly observer?: IntakeObserver;
 }) {
-	function submitText(input: SubmitTextInput) {
-		return Effect.gen(function* () {
-			assertNonEmpty(input.submissionKey, "submissionKey");
-			assertNonEmpty(input.sourceText, "sourceText");
-			const rejection = unsupportedLanguageMessage(input.language);
-			if (rejection !== undefined) throw new Error(rejection);
-
-			const { paragraphs } = yield* Effect.sync(() =>
-				splitScroll(input.extractedText),
-			).pipe(
-				Effect.withSpan(
-					"Split text into sentences",
-					inspectionStep("battery/dumgen · splitScroll", {
-						extractedText: input.extractedText,
-					}),
-				),
-			);
-			const sentences = paragraphs.flatMap(({ sentences }) => sentences);
-			assertTextSubmissionWithinLimits(input.sourceText, sentences);
-			if (sentences.length === 0)
-				throw new Error("Text submission contains no sentences.");
-
-			const analyzed = yield* analyzeParagraphs(
-				options.dumgen,
-				paragraphs,
-				input.language,
-				options.observer,
-			);
-			const submission: SubmittedScroll = {
-				submissionKey: input.submissionKey,
-				sourceText: input.sourceText,
-				extractedText: input.extractedText,
-				sentences: submittedSentences(input.submissionKey, analyzed),
-			};
-			const persisted = yield* Effect.tryPromise(() =>
+	const persistSubmittedScroll = Effect.fn("Persist submitted text")(
+		function* (submission: SubmittedScroll) {
+			yield* annotateInspectionStep("app/tf-demo", submission);
+			return yield* Effect.tryPromise(() =>
 				options.persistence.persistSubmittedScroll(submission),
-			).pipe(
-				Effect.withSpan(
-					"Persist submitted text",
-					inspectionStep("app/tf-demo", submission),
-				),
 			);
-			return { submission, persisted };
-		});
-	}
+		},
+	);
+
+	const submitText = Effect.fn("Intake.submitText")(function* (
+		input: SubmitTextInput,
+	) {
+		assertNonEmpty(input.submissionKey, "submissionKey");
+		assertNonEmpty(input.sourceText, "sourceText");
+		const rejection = unsupportedLanguageMessage(input.language);
+		if (rejection !== undefined) throw new Error(rejection);
+
+		const { paragraphs } = yield* splitExtractedScroll(input.extractedText);
+		const sentences = paragraphs.flatMap(({ sentences }) => sentences);
+		assertTextSubmissionWithinLimits(input.sourceText, sentences);
+		if (sentences.length === 0)
+			throw new Error("Text submission contains no sentences.");
+
+		const analyzed = yield* analyzeParagraphs(
+			options.dumgen,
+			paragraphs,
+			input.language,
+			options.observer,
+		);
+		const submission: SubmittedScroll = {
+			submissionKey: input.submissionKey,
+			sourceText: input.sourceText,
+			extractedText: input.extractedText,
+			sentences: submittedSentences(input.submissionKey, analyzed),
+		};
+		const persisted = yield* persistSubmittedScroll(submission);
+		return { submission, persisted };
+	});
 
 	return Object.freeze({ submitText });
 }

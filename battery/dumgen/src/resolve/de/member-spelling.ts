@@ -15,7 +15,6 @@ import { germanFusionTable } from "../../segment/de/fusion-entries.js";
 import {
 	type FusedPiece,
 	fusedPieceAt,
-	fusedWordAt,
 	shorthandSurfaces,
 } from "../../segment/fusion-table.js";
 import type { Segment } from "../../segment/segmented-sentence.js";
@@ -82,19 +81,6 @@ function piecesAt(
 	};
 }
 
-/** The Segment indices of the written word a Segment is a piece of. */
-function fusedWordIndices(
-	segments: readonly Segment[],
-	index: number,
-): number[] {
-	const found = piecesAt(segments, index);
-	return found
-		? found.piece.pieces.map(
-				(_, position) => index - found.piece.component + position,
-			)
-		: [];
-}
-
 /** dumcorpus's shorthands of one series, each with the words it may stand for. */
 const shorthandsOf = (
 	series: GermanAdverbShorthandSeries,
@@ -132,11 +118,13 @@ export function tableSpelling(
 	const found = piecesAt(segments, index);
 	if (found) {
 		const { piece } = found;
-		const indices = fusedWordIndices(segments, index);
+		const start = index - piece.component;
 		const whole =
-			fusedWordAt(germanFusionTable, segments, indices[0] ?? -1) !==
-				undefined &&
-			indices.every((position) => members.includes(position));
+			found.table &&
+			piece.role !== undefined &&
+			piece.pieces.every((_, position) =>
+				members.includes(start + position),
+			);
 		return {
 			orthography: "Fused",
 			piece,

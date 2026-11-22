@@ -6,14 +6,17 @@ import { operations } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import {
-	dumgenTraced,
-	inspected,
-	inspectionStep,
+	annotateInspectionStep,
 	markSpanFailed,
 } from "../server/inspectionCapture";
-import { logged } from "../server/logging";
 import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import { internalAction } from "./_generated/server";
+import {
+	inspectedMutation,
+	inspectedQuery,
+	runConvexEffect,
+} from "./model/convexEffect";
 import {
 	clickCallDeadlineMs,
 	deploymentDumgen,
@@ -21,6 +24,63 @@ import {
 import { inspectionFor } from "./model/inspectionAction";
 
 const OWNER = "app/tf-demo · pronounExplanationActions";
+
+const explainPronoun = Effect.fn("Explain pronoun", { root: true })(function* ({
+	explanationId,
+	run,
+	inspectRequestId,
+}: {
+	readonly explanationId: Id<"pronounExplanations">;
+	readonly run: number;
+	readonly inspectRequestId: string | undefined;
+}) {
+	yield* annotateInspectionStep(OWNER, { explanationId, run });
+	const request = yield* inspectedQuery(
+		"Load pronoun passage",
+		OWNER,
+		{ explanationId, run },
+		internal.pronounExplanations.loadRequest,
+		{ explanationId, run },
+	);
+	if (!request) return;
+	const outcome = yield* operations.explain.pronoun(request.input).pipe(
+		Effect.provide(
+			deploymentDumgen({
+				timeoutMs: clickCallDeadlineMs(),
+				promptCaching: true,
+			}),
+		),
+		Effect.map((antecedents) => ({
+			kind: "Resolved" as const,
+			antecedents: antecedents.flatMap(({ sentence, segments }) => {
+				const sentenceId = request.sentenceIds[sentence];
+				return sentenceId
+					? [{ sentenceId, segments: [...segments] }]
+					: [];
+			}),
+		})),
+		Effect.catchCause((cause) => {
+			if (Cause.hasInterruptsOnly(cause)) return Effect.interrupt;
+			const message = messageOf(Cause.squash(cause));
+			console.warn(`The pronoun was not explained: ${message}`);
+			return markSpanFailed.pipe(
+				Effect.as({ kind: "Failed" as const, message }),
+			);
+		}),
+	);
+	yield* inspectedMutation(
+		"Settle pronoun explanation",
+		OWNER,
+		{ explanationId, run, outcome },
+		internal.pronounExplanations.settle,
+		{
+			explanationId,
+			run,
+			outcome,
+			...(inspectRequestId ? { inspectRequestId } : {}),
+		},
+	);
+});
 
 /**
  * Runs one Pronoun Explanation: Dumgen's `explain.pronoun` over the
@@ -40,77 +100,11 @@ export const explain = internalAction({
 		const inspection = inspectRequestId
 			? inspectionFor(ctx, inspectRequestId, true)
 			: undefined;
-		const program = Effect.gen(function* () {
-			const request = yield* Effect.tryPromise(() =>
-				ctx.runQuery(internal.pronounExplanations.loadRequest, {
-					explanationId,
-					run,
-				}),
-			).pipe(
-				Effect.withSpan(
-					"Load pronoun passage",
-					inspectionStep(OWNER, { explanationId, run }),
-				),
-			);
-			if (!request) return;
-			const outcome = yield* operations.explain
-				.pronoun(request.input)
-				.pipe(
-					dumgenTraced(inspection),
-					Effect.provide(
-						deploymentDumgen({
-							timeoutMs: clickCallDeadlineMs(),
-							promptCaching: true,
-						}),
-					),
-					Effect.map((antecedents) => ({
-						kind: "Resolved" as const,
-						antecedents: antecedents.flatMap(
-							({ sentence, segments }) => {
-								const sentenceId =
-									request.sentenceIds[sentence];
-								return sentenceId
-									? [{ sentenceId, segments: [...segments] }]
-									: [];
-							},
-						),
-					})),
-					Effect.catchCause((cause) => {
-						if (Cause.hasInterruptsOnly(cause))
-							return Effect.interrupt;
-						const message = messageOf(Cause.squash(cause));
-						console.warn(
-							`The pronoun was not explained: ${message}`,
-						);
-						return markSpanFailed.pipe(
-							Effect.as({ kind: "Failed" as const, message }),
-						);
-					}),
-				);
-			yield* Effect.tryPromise(() =>
-				ctx.runMutation(internal.pronounExplanations.settle, {
-					explanationId,
-					run,
-					outcome,
-					...(inspectRequestId ? { inspectRequestId } : {}),
-				}),
-			).pipe(
-				Effect.withSpan(
-					"Settle pronoun explanation",
-					inspectionStep(OWNER, { explanationId, run, outcome }),
-				),
-			);
-		}).pipe(
-			Effect.withSpan("Explain pronoun", {
-				...inspectionStep(OWNER, { explanationId, run }),
-				root: true,
-			}),
+		await runConvexEffect(
+			ctx,
+			explainPronoun({ explanationId, run, inspectRequestId }),
+			{ inspection },
 		);
-		try {
-			await Effect.runPromise(inspected(logged(program), inspection));
-		} finally {
-			await inspection?.flush();
-		}
 		return null;
 	},
 });

@@ -52,29 +52,39 @@ function lemmaHint(attestation: unknown): string | undefined {
 
 const issueView = ({ record: _, ...issue }: SpecIssue): IssueView => issue;
 
-function approveAction(row: BatchRow, record: ReadableRecord): ActionView {
+function approvePreconditionProblem(
+	row: BatchRow,
+	record: ReadableRecord,
+): string | undefined {
 	const blocked = blockedReason(row);
-	if (blocked) return { allowed: false, reason: blocked };
+	if (blocked) return blocked;
 	const { reviewDepth } = record.check;
 	if (reviewDepth !== undefined)
-		return {
-			allowed: false,
-			reason: `Already reviewed through ${reviewDepth}`,
-		};
-	const problem = depthChangeProblem(record, "Segmentation");
+		return `Already reviewed through ${reviewDepth}`;
+	return undefined;
+}
+
+function takeBackPreconditionProblem(
+	record: ReadableRecord,
+): string | undefined {
+	const { reviewDepth } = record.check;
+	if (reviewDepth === undefined) return "The record is a Draft";
+	if (reviewDepth !== "Segmentation")
+		return `Reviewed through ${reviewDepth}; only a Segmentation approval can be taken back here`;
+	return undefined;
+}
+
+function approveAction(row: BatchRow, record: ReadableRecord): ActionView {
+	const problem =
+		approvePreconditionProblem(row, record) ??
+		depthChangeProblem(record, "Segmentation");
 	return problem ? { allowed: false, reason: problem } : { allowed: true };
 }
 
 function takeBackAction(record: ReadableRecord): ActionView {
-	const { reviewDepth } = record.check;
-	if (reviewDepth === undefined)
-		return { allowed: false, reason: "The record is a Draft" };
-	if (reviewDepth !== "Segmentation")
-		return {
-			allowed: false,
-			reason: `Reviewed through ${reviewDepth}; only a Segmentation approval can be taken back here`,
-		};
-	const problem = depthChangeProblem(record, undefined);
+	const problem =
+		takeBackPreconditionProblem(record) ??
+		depthChangeProblem(record, undefined);
 	return problem ? { allowed: false, reason: problem } : { allowed: true };
 }
 
@@ -208,38 +218,22 @@ export function createReview(options: {
 					error: `${request.id} is not in the batch`,
 				},
 			};
-		const current = await store.read(row.record);
-		if (current.sha256 !== request.sha256)
-			return {
-				status: 409,
-				body: {
-					outcome: "conflict",
-					error: "The file changed since it was loaded",
-					record: await view(row),
-				},
-			};
-		if (isReadable(current)) {
-			const verdict =
-				action === "approve"
-					? approveAction(row, current)
-					: takeBackAction(current);
-			if (!verdict.allowed)
-				return {
-					status: 422,
-					body: { outcome: "refused", error: verdict.reason ?? "" },
-				};
-		}
 		const result = await store.setReviewDepth(
 			row.record,
 			request.sha256,
 			action === "approve" ? "Segmentation" : undefined,
+			(current) =>
+				action === "approve"
+					? approvePreconditionProblem(row, current)
+					: takeBackPreconditionProblem(current),
 		);
 		if (result.outcome === "refused")
 			return {
 				status: 422,
 				body: { outcome: "refused", error: result.reason },
 			};
-		const body = { record: await view(row) };
+		const changed = await changedRecordIds(options.recordsDirectory);
+		const body = { record: recordView(row, result.record, changed) };
 		return result.outcome === "conflict"
 			? {
 					status: 409,

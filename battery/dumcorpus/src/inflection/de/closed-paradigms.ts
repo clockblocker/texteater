@@ -1,4 +1,4 @@
-import { cellKeyOf } from "dumling";
+import { cellKeyOf, lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 
 import {
@@ -11,11 +11,9 @@ import {
 	type AuthoredRealization,
 	authoredRealizations,
 } from "../../inventories/de/realizations.js";
-import { authoredFor } from "../../inventories/selection.js";
 import { Cells, type PackDerivedTable } from "../types.js";
 import { CASES } from "./articles.js";
 import type { GermanForm } from "./forms.js";
-import { distinct } from "./orthography.js";
 import { PERSON_ROWS, STEM_COLUMNS } from "./schemas.js";
 import { PERSONS } from "./verb-stem.js";
 
@@ -101,10 +99,44 @@ function isStandard(realization: AuthoredRealization): boolean {
 	);
 }
 
-const stemTables = new WeakMap<
-	Dumling.Lemma<"de">,
-	ReadonlyMap<string, readonly string[]> | null
->();
+let stemTablesByIdentity:
+	| ReadonlyMap<string, ReadonlyMap<string, readonly string[]>>
+	| undefined;
+
+function allStemTables(): ReadonlyMap<
+	string,
+	ReadonlyMap<string, readonly string[]>
+> {
+	if (stemTablesByIdentity !== undefined) return stemTablesByIdentity;
+	const tables = new Map<string, Map<string, string[]>>();
+	for (const realization of authoredRealizations) {
+		const { lemma } = realization.member;
+		if (
+			(lemma.kind !== "DET" && lemma.kind !== "PRON") ||
+			realization.inflection?.case === undefined ||
+			!isStandard(realization)
+		)
+			continue;
+		const id = lemmaIdentityKey(lemma);
+		let table = tables.get(id);
+		if (table === undefined) {
+			table = new Map<string, string[]>();
+			tables.set(id, table);
+		}
+		const { inflection, spelled } = realization;
+		const column =
+			inflection.number === "Plur" ? "Plur" : (inflection.gender ?? "");
+		const at = `${inflection.case}|${column}`;
+		let words = table.get(at);
+		if (words === undefined) {
+			words = [];
+			table.set(at, words);
+		}
+		if (!words.includes(spelled)) words.push(spelled);
+	}
+	stemTablesByIdentity = tables;
+	return tables;
+}
 
 /**
  * The cells of a declining DET or PRON stem (dieser, welcher): the plain
@@ -115,25 +147,7 @@ function stemTableOf(
 	lemma: Dumling.Lemma<"de">,
 ): ReadonlyMap<string, readonly string[]> | undefined {
 	if (lemma.kind !== "DET" && lemma.kind !== "PRON") return undefined;
-	const known = stemTables.get(lemma);
-	if (known !== undefined) return known ?? undefined;
-	const members = authoredFor(lemma);
-	const celled = authoredRealizations.filter(
-		(realization) =>
-			members.includes(realization.member) &&
-			realization.inflection?.case !== undefined &&
-			isStandard(realization),
-	);
-	const table = new Map<string, string[]>();
-	for (const { inflection, spelled } of celled) {
-		const column =
-			inflection?.number === "Plur" ? "Plur" : (inflection?.gender ?? "");
-		const at = `${inflection?.case}|${column}`;
-		table.set(at, distinct([...(table.get(at) ?? []), spelled]));
-	}
-	const result = table.size === 0 ? undefined : table;
-	stemTables.set(lemma, result ?? null);
-	return result;
+	return allStemTables().get(lemmaIdentityKey(lemma));
 }
 
 /** Whether the Lemma is a closed DET or PRON stem with a table of its own. */

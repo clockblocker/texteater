@@ -61,13 +61,23 @@ const tagStyles: Readonly<Record<string, InlineStyle>> = {
 	strong: "Bold",
 };
 
-const plain = /^[^\\`![<*_]+/u;
-const image = /^!\[[^\]]*\]\([^)]*\)/u;
-const footnoteReference = /^\[\^[^\]\s]+\]/u;
-const link = /^\[([^\]]*)\]\([^)]*\)/u;
-const styleTag = /^<(\/?)(b|em|i|q|strong)>/iu;
-const breakTag = /^<br\s*\/?>/iu;
-const delimiterRun = /^(?:\*+|_+)/u;
+const plain = /[^\\`![<*_]+/uy;
+const backticks = /`+/uy;
+const image = /!\[[^\]]*\]\([^)]*\)/uy;
+const footnoteReference = /\[\^[^\]\s]+\]/uy;
+const link = /\[([^\]]*)\]\([^)]*\)/uy;
+const styleTag = /<(\/?)(b|em|i|q|strong)>/iuy;
+const breakTag = /<br\s*\/?>/iuy;
+const delimiterRun = /\*+|_+/uy;
+
+function execAt(
+	pattern: RegExp,
+	text: string,
+	index: number,
+): RegExpExecArray | null {
+	pattern.lastIndex = index;
+	return pattern.exec(text);
+}
 
 /** The index where a run of exactly `length` backticks starts, or -1. */
 function backtickRun(line: string, from: number, length: number): number {
@@ -112,84 +122,47 @@ function delimiter(
 /** What one inline reader took: its tokens and how many characters. */
 type Taken = { readonly tokens: readonly Token[]; readonly length: number };
 
-/**
- * One reader per inline construct, in precedence order. Each reads the
- * construct opening `line` at `index`, or returns undefined.
- */
-const inlineReaders: readonly ((
-	traced: Traced,
-	index: number,
-) => Taken | undefined)[] = [
-	(traced, index) => {
-		const text = plain.exec(traced.text.slice(index))?.[0];
-		return text === undefined
-			? undefined
-			: {
-					tokens: [
-						textToken(sliced(traced, index, index + text.length)),
-					],
-					length: text.length,
-				};
-	},
-	({ text: line, at }, index) => {
-		const next = line[index + 1] ?? "";
-		return line[index] === "\\" && asciiPunctuation.test(next)
-			? {
-					tokens: [
-						{ type: "text", text: next, at: [at[index + 1] ?? -1] },
-					],
-					length: 2,
-				}
-			: undefined;
-	},
-	(traced, index) => {
-		const line = traced.text;
-		const open = /^`+/u.exec(line.slice(index))?.[0];
-		if (open === undefined) return undefined;
-		const close = backtickRun(line, index + open.length, open.length);
-		if (close === -1)
-			return {
-				tokens: [textToken(sliced(traced, index, index + open.length))],
-				length: open.length,
-			};
-		const code = sliced(traced, index + open.length, close);
-		const stripped =
-			code.text.length > 2 &&
-			code.text.startsWith(" ") &&
-			code.text.endsWith(" ");
+function readCodeSpan(traced: Traced, index: number): Taken | undefined {
+	const line = traced.text;
+	const open = execAt(backticks, line, index)?.[0];
+	if (open === undefined) return undefined;
+	const close = backtickRun(line, index + open.length, open.length);
+	if (close === -1)
 		return {
-			tokens: [
-				textToken(
-					stripped ? sliced(code, 1, code.text.length - 1) : code,
-				),
-			],
-			length: close + open.length - index,
+			tokens: [textToken(sliced(traced, index, index + open.length))],
+			length: open.length,
 		};
-	},
-	({ text: line }, index) => {
-		const rest = line.slice(index);
-		const skipped =
-			image.exec(rest)?.[0] ?? footnoteReference.exec(rest)?.[0];
-		return skipped === undefined
-			? undefined
-			: { tokens: [], length: skipped.length };
-	},
-	(traced, index) => {
-		const linked = link.exec(traced.text.slice(index));
-		const label = linked?.[1] ?? "";
-		return linked === null
-			? undefined
-			: {
-					tokens: tokenizeLine(
-						sliced(traced, index + 1, index + 1 + label.length),
-					),
-					length: linked[0].length,
-				};
-	},
-	(traced, index) => {
-		const tag = styleTag.exec(traced.text.slice(index));
-		const style = tagStyles[tag?.[2]?.toLowerCase() ?? ""];
-		if (tag === null || style === undefined) return undefined;
+	const code = sliced(traced, index + open.length, close);
+	const stripped =
+		code.text.length > 2 &&
+		code.text.startsWith(" ") &&
+		code.text.endsWith(" ");
+	return {
+		tokens: [
+			textToken(stripped ? sliced(code, 1, code.text.length - 1) : code),
+		],
+		length: close + open.length - index,
+	};
+}
+
+function readBracket(traced: Traced, index: number): Taken | undefined {
+	const skipped = execAt(footnoteReference, traced.text, index)?.[0];
+	if (skipped !== undefined) return { tokens: [], length: skipped.length };
+	const linked = execAt(link, traced.text, index);
+	if (linked === null) return undefined;
+	const label = linked[1] ?? "";
+	return {
+		tokens: tokenizeLine(
+			sliced(traced, index + 1, index + 1 + label.length),
+		),
+		length: linked[0].length,
+	};
+}
+
+function readAngle(traced: Traced, index: number): Taken | undefined {
+	const tag = execAt(styleTag, traced.text, index);
+	const style = tagStyles[tag?.[2]?.toLowerCase() ?? ""];
+	if (tag !== null && style !== undefined) {
 		const token: Tag = {
 			type: "tag",
 			style,
@@ -198,25 +171,75 @@ const inlineReaders: readonly ((
 			matched: false,
 		};
 		return { tokens: [token], length: tag[0].length };
-	},
-	({ text: line }, index) => {
-		const lineBreak = breakTag.exec(line.slice(index))?.[0];
-		return lineBreak === undefined
-			? undefined
-			: { tokens: [{ type: "break" }], length: lineBreak.length };
-	},
-	({ text: line, at }, index) => {
-		const run = delimiterRun.exec(line.slice(index))?.[0];
-		if (run === undefined) return undefined;
-		const before = line[index - 1] ?? " ";
-		const after = line[index + run.length] ?? " ";
-		const source = at.slice(index, index + run.length);
-		return {
-			tokens: [delimiter(run, before, after, source)],
-			length: run.length,
-		};
-	},
-];
+	}
+	const lineBreak = execAt(breakTag, traced.text, index)?.[0];
+	return lineBreak === undefined
+		? undefined
+		: { tokens: [{ type: "break" }], length: lineBreak.length };
+}
+
+function readDelimiter(traced: Traced, index: number): Taken | undefined {
+	const { text: line, at } = traced;
+	const run = execAt(delimiterRun, line, index)?.[0];
+	if (run === undefined) return undefined;
+	const before = line[index - 1] ?? " ";
+	const after = line[index + run.length] ?? " ";
+	const source = at.slice(index, index + run.length);
+	return {
+		tokens: [delimiter(run, before, after, source)],
+		length: run.length,
+	};
+}
+
+/** Dispatches inline reading at `index` by its opening character. */
+function readInline(traced: Traced, index: number): Taken | undefined {
+	const line = traced.text;
+	switch (line[index]) {
+		case "\\": {
+			const next = line[index + 1] ?? "";
+			return asciiPunctuation.test(next)
+				? {
+						tokens: [
+							{
+								type: "text",
+								text: next,
+								at: [traced.at[index + 1] ?? -1],
+							},
+						],
+						length: 2,
+					}
+				: undefined;
+		}
+		case "`":
+			return readCodeSpan(traced, index);
+		case "!": {
+			const skipped = execAt(image, line, index)?.[0];
+			return skipped === undefined
+				? undefined
+				: { tokens: [], length: skipped.length };
+		}
+		case "[":
+			return readBracket(traced, index);
+		case "<":
+			return readAngle(traced, index);
+		case "*":
+		case "_":
+			return readDelimiter(traced, index);
+		default: {
+			const text = execAt(plain, line, index)?.[0];
+			return text === undefined
+				? undefined
+				: {
+						tokens: [
+							textToken(
+								sliced(traced, index, index + text.length),
+							),
+						],
+						length: text.length,
+					};
+		}
+	}
+}
 
 const textToken = ({ text, at }: Traced): Token => ({
 	type: "text",
@@ -233,12 +256,7 @@ export function tokenizeLine(line: Traced | string): Token[] {
 	const tokens: Token[] = [];
 	let index = 0;
 	while (index < traced.text.length) {
-		let taken: Taken | undefined;
-		for (const read of inlineReaders) {
-			taken = read(traced, index);
-			if (taken !== undefined) break;
-		}
-		taken ??= {
+		const taken = readInline(traced, index) ?? {
 			tokens: [textToken(sliced(traced, index, index + 1))],
 			length: 1,
 		};
@@ -246,7 +264,7 @@ export function tokenizeLine(line: Traced | string): Token[] {
 			const last = tokens.at(-1);
 			if (token.type === "text" && last?.type === "text") {
 				last.text += token.text;
-				last.at.push(...token.at);
+				for (const offset of token.at) last.at.push(offset);
 			} else
 				tokens.push(
 					token.type === "text"
@@ -358,43 +376,65 @@ export function canonical(inlines: readonly Inline[]): Inline[] {
 		]);
 }
 
-export function trimLine(runs: readonly Run[]): Run[] {
-	const merged: Run[] = [];
+type MutableRun = {
+	readonly base: Run;
+	text: string;
+	at: number[] | undefined;
+};
+
+function mergeAdjacentRuns(runs: readonly Run[]): MutableRun[] {
+	const merged: MutableRun[] = [];
 	for (const next of runs) {
 		const last = merged.at(-1);
 		if (
 			last !== undefined &&
-			last.locations === undefined &&
+			last.base.locations === undefined &&
 			next.locations === undefined &&
-			sameStyles(last, next)
-		)
-			merged[merged.length - 1] = traceRun(
-				{ ...last, text: last.text + next.text },
-				joinedSources(last, next),
-			);
-		else merged.push(next);
+			sameStyles(last.base, next)
+		) {
+			last.text += next.text;
+			const nextAt = runSources.get(next);
+			if (last.at !== undefined && nextAt !== undefined) {
+				for (const offset of nextAt) last.at.push(offset);
+			} else {
+				last.at = undefined;
+			}
+		} else {
+			const at = runSources.get(next);
+			merged.push({
+				base: next,
+				text: next.text,
+				at: at === undefined ? undefined : [...at],
+			});
+		}
 	}
+	return merged;
+}
+
+function trimLine(runs: readonly Run[]): Run[] {
+	const merged = mergeAdjacentRuns(runs);
 	let start = 0;
 	while ((merged[start]?.text.trimStart() ?? "x") === "") start += 1;
 	let end = merged.length;
 	while ((merged[end - 1]?.text.trimEnd() ?? "x") === "") end -= 1;
-	return merged.slice(start, end).flatMap((current, index, kept) => {
-		const at = runSources.get(current);
+	const kept = merged.slice(start, end);
+	const out: Run[] = [];
+	for (let index = 0; index < kept.length; index += 1) {
+		const current = kept[index] as MutableRun;
 		let from = 0;
 		let to = current.text.length;
 		if (index === 0) from = to - current.text.trimStart().length;
 		if (index === kept.length - 1) to = current.text.trimEnd().length;
 		const text = current.text.slice(from, Math.max(from, to));
-		return text.length > 0
-			? [traceRun({ ...current, text }, at?.slice(from, to))]
-			: [];
-	});
-}
-
-function joinedSources(left: Run, right: Run): readonly number[] | undefined {
-	const leftAt = runSources.get(left);
-	const rightAt = runSources.get(right);
-	return leftAt && rightAt ? [...leftAt, ...rightAt] : undefined;
+		if (text.length > 0)
+			out.push(
+				traceRun(
+					{ ...current.base, text },
+					current.at?.slice(from, to),
+				),
+			);
+	}
+	return out;
 }
 
 /** The inlines a Paragraph's matched tokens stand for. */

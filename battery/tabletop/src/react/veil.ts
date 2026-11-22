@@ -1,4 +1,4 @@
-import { done, overAt, sumAt } from "../core/move";
+import { done, overAt, sampleMoves } from "../core/move";
 import type { Engine } from "./engine";
 import type { BodyState } from "./state";
 import { setWritten } from "./write";
@@ -43,15 +43,16 @@ function geometryOf(
 	}
 	if (!rect) return null;
 	const stance = engine.stance(body);
-	const w = rect.width + sumAt(body.moves, "width", now);
-	const h = rect.height + sumAt(body.moves, "height", now);
+	const sample = sampleMoves(body.moves, now);
+	const w = rect.width + (sample.width ?? 0);
+	const h = rect.height + (sample.height ?? 0);
 	return {
-		cx: rect.left + sumAt(body.moves, "x", now) + w / 2,
-		cy: rect.top + sumAt(body.moves, "y", now) + h / 2,
+		cx: rect.left + (sample.x ?? 0) + w / 2,
+		cy: rect.top + (sample.y ?? 0) + h / 2,
 		w,
 		h,
-		s: stance.scale * (1 + sumAt(body.moves, "lift", now)),
-		rotate: stance.rotate + sumAt(body.moves, "rotate", now),
+		s: stance.scale * (1 + (sample.lift ?? 0)),
+		rotate: stance.rotate + (sample.rotate ?? 0),
 	};
 }
 
@@ -147,7 +148,7 @@ export class Veils {
 		const rects = new Map<string, DOMRect | null>();
 		const cuts = new Map<string, Cut[]>();
 		const sizes = new Map<string, Geometry>();
-		for (const body of engine.bodies.values()) {
+		for (const body of engine.active) {
 			const move = body.moves.findLast((it) => it.crossing);
 			if (
 				!body.el ||
@@ -158,24 +159,26 @@ export class Veils {
 				continue;
 			const mover = geometryOf(engine, body, now, rects);
 			if (!mover) continue;
+			let list: Cut[] | undefined;
 			for (const [id, shows] of overAt(move, now)) {
 				const other = shows > 0.001 ? engine.bodies.get(id) : undefined;
 				const over = other?.el
 					? geometryOf(engine, other, now, rects)
 					: null;
 				if (!other || !over || apart(mover, over)) continue;
-				sizes.set(body.id, mover);
-				cuts.set(body.id, [
-					...(cuts.get(body.id) ?? []),
-					{
-						over: id,
-						w: over.w,
-						h: over.h,
-						rx: radiusOf(other),
-						matrix: matrixOf(over, mover),
-						shows,
-					},
-				]);
+				if (!list) {
+					list = [];
+					cuts.set(body.id, list);
+					sizes.set(body.id, mover);
+				}
+				list.push({
+					over: id,
+					w: over.w,
+					h: over.h,
+					rx: radiusOf(other),
+					matrix: matrixOf(over, mover),
+					shows,
+				});
 			}
 		}
 		return { cuts, sizes };

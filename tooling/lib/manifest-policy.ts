@@ -41,7 +41,7 @@ const requiredWorkspaceScripts = [
  * run the repository's default per-test timeout (#997). Arguments, such as a
  * test directory, may follow it.
  */
-const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
+export const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
 
 /**
  * Repository-wide checks, by script name and the tooling command behind it.
@@ -65,7 +65,7 @@ const turboEntryScripts = {
 	build: "turbo run build:package",
 	dev: "turbo run dev:package",
 } as const;
-const dependencyFields = [
+export const dependencyFields = [
 	"dependencies",
 	"devDependencies",
 	"optionalDependencies",

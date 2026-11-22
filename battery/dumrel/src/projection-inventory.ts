@@ -1,7 +1,7 @@
 import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import { contextualizeKnowledge } from "./context.js";
-import { issue } from "./issue.js";
+import { issue, prefixIssues } from "./issue.js";
 import type { ReadingWithKnowledge } from "./types.js";
 import { parseProjectionShape } from "./validation.js";
 
@@ -35,15 +35,15 @@ export function parseProjectionInventory(
 			entry.knowledge,
 		);
 		if (knowledge instanceof ParsingError)
-			return new ParsingError(
-				knowledge.issues.map((found) => ({
-					...found,
-					path: [index, ...found.path],
-				})),
-			);
+			return prefixIssues(knowledge, [index]);
 		inventory.set(identity, { reading: entry.reading, knowledge });
 		const lemma = key(entry.reading.lemma);
-		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
+		let bucket = byLemma.get(lemma);
+		if (bucket === undefined) {
+			bucket = [];
+			byLemma.set(lemma, bucket);
+		}
+		bucket.push(entry.reading);
 	}
 	return { inventory, byLemma };
 }

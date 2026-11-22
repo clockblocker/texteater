@@ -31,6 +31,7 @@
 import { join } from "node:path";
 import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson, messageOf } from "common-utils";
+import { type KeyedLock, makeKeyedLock } from "common-utils/effect";
 import * as Effect from "effect/Effect";
 import { RequestBudget, withPermit } from "../../../src/call.js";
 import { InvalidModelOutput, ProviderFailure } from "../../../src/errors.js";
@@ -101,7 +102,9 @@ export class JevCache {
 	readonly projection: Projection = { samples: [], requests: [] };
 	readonly #options: JevCacheOptions;
 	readonly #requests = new Map<string, Set<string>>();
-	readonly #locks = new Map<string, Promise<void>>();
+	readonly #locks: KeyedLock<string> = Effect.runSync(
+		makeKeyedLock<string>(),
+	);
 	readonly #transport: TransportTally = {
 		requests: 0,
 		retries: 0,
@@ -327,25 +330,21 @@ export class JevCache {
 	}
 
 	/** Runs `change` on the bucket at `path` alone; it returns the new bucket, or nothing to keep it. */
-	async #update(
+	#update(
 		path: string,
 		change: (bucket: Bucket) => Bucket | undefined,
-	) {
-		const previous = this.#locks.get(path) ?? Promise.resolve();
-		let release = () => {};
-		const held = new Promise<void>((resolve) => {
-			release = resolve;
-		});
-		const queued = previous.then(() => held);
-		this.#locks.set(path, queued);
-		await previous;
-		try {
-			const next = change((await readBucket(path)) ?? emptyBucket);
-			if (next) await writeJson(path, next);
-		} finally {
-			release();
-			if (this.#locks.get(path) === queued) this.#locks.delete(path);
-		}
+	): Promise<void> {
+		return Effect.runPromise(
+			this.#locks.withLock(
+				path,
+				Effect.promise(async () => {
+					const next = change(
+						(await readBucket(path)) ?? emptyBucket,
+					);
+					if (next) await writeJson(path, next);
+				}),
+			),
+		);
 	}
 
 	/** Adds a request's answers to the bucket, keeping any already there. */

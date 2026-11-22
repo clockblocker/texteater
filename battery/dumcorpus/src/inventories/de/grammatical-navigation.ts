@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
-import { sameValue } from "../../same-value.js";
+import { sameValue, sameValueKey } from "../../same-value.js";
+import type { AuthoredMember } from "../member.js";
 import { authoredMembers } from "./inventory.js";
 
 type NavigableLemma =
@@ -8,6 +9,53 @@ type NavigableLemma =
 type NavigableFeature = NavigableLemma extends infer Lemma extends Dumling.Lemma
 	? keyof Lemma["coreFeatures"]
 	: never;
+
+type NavigationIndex = {
+	readonly byLemmaKey: ReadonlyMap<string, readonly AuthoredMember[]>;
+	readonly pillarCellsByKind: ReadonlyMap<string, readonly AuthoredMember[]>;
+	readonly coreKeysByKind: ReadonlyMap<string, ReadonlySet<string>>;
+};
+
+let cachedIndex: NavigationIndex | undefined;
+
+function navigationIndex(): NavigationIndex {
+	if (cachedIndex !== undefined) return cachedIndex;
+	const byLemmaKey = new Map<string, AuthoredMember[]>();
+	const pillarCellsByKind = new Map<string, AuthoredMember[]>();
+	const coreKeysByKind = new Map<string, Set<string>>();
+	for (const member of authoredMembers) {
+		const lemmaKey = sameValueKey(member.lemma);
+		if (lemmaKey !== undefined) {
+			let bucket = byLemmaKey.get(lemmaKey);
+			if (bucket === undefined) {
+				bucket = [];
+				byLemmaKey.set(lemmaKey, bucket);
+			}
+			bucket.push(member);
+		}
+		const { kind } = member.lemma;
+		if (kind !== "PRON" && kind !== "DET") continue;
+		const coreKey = sameValueKey(member.lemma.coreFeatures);
+		if (coreKey !== undefined) {
+			let keys = coreKeysByKind.get(kind);
+			if (keys === undefined) {
+				keys = new Set<string>();
+				coreKeysByKind.set(kind, keys);
+			}
+			keys.add(coreKey);
+		}
+		if (isParadigmCell(member.lemma)) {
+			let cells = pillarCellsByKind.get(kind);
+			if (cells === undefined) {
+				cells = [];
+				pillarCellsByKind.set(kind, cells);
+			}
+			cells.push(member);
+		}
+	}
+	cachedIndex = { byLemmaKey, pillarCellsByKind, coreKeysByKind };
+	return cachedIndex;
+}
 
 /** Whether a PRON or DET Lemma is a pillar's Paradigm Cell: it marks its cell in Core. */
 function isParadigmCell(lemma: Dumling.Lemma): boolean {
@@ -37,16 +85,13 @@ function marks(core: Readonly<Record<string, unknown>>, key: string): boolean {
 function servesGender(
 	source: Readonly<Record<string, unknown>>,
 	candidate: Dumling.Lemma,
+	coreKeys: ReadonlySet<string>,
 ): boolean {
 	const core: Readonly<Record<string, unknown>> = candidate.coreFeatures;
 	if ((core.gender ?? null) !== null || core.number !== "Sing") return false;
 	if ((source.gender ?? null) === null) return false;
-	const own = { ...core, gender: source.gender };
-	return !authoredMembers.some(
-		(member) =>
-			member.lemma.kind === candidate.kind &&
-			sameValue(member.lemma.coreFeatures, own),
-	);
+	const ownKey = sameValueKey({ ...core, gender: source.gender });
+	return ownKey === undefined || !coreKeys.has(ownKey);
 }
 
 /**
@@ -63,8 +108,16 @@ export function selectGrammaticalAlternatives(input: {
 	readonly source: NavigableLemma;
 	readonly vary: readonly NavigableFeature[];
 }): readonly Dumling.Reading<"de">[] {
+	const index = navigationIndex();
+	const sourceKey = sameValueKey(input.source);
 	if (
-		!authoredMembers.some((member) => sameValue(member.lemma, input.source))
+		sourceKey === undefined ||
+		!(
+			index.byLemmaKey
+				.get(sourceKey)
+				?.some((member) => sameValue(member.lemma, input.source)) ??
+			false
+		)
 	)
 		return [];
 	if (
@@ -79,21 +132,23 @@ export function selectGrammaticalAlternatives(input: {
 	)
 		return [];
 	const varied = new Set<string>(input.vary);
-	return authoredMembers
+	const cells = index.pillarCellsByKind.get(input.source.kind) ?? [];
+	const coreKeys =
+		index.coreKeysByKind.get(input.source.kind) ?? new Set<string>();
+	const sourceEntries = Object.entries(sourceCore);
+	return cells
 		.filter((member) => {
 			const core: Readonly<Record<string, unknown>> =
 				member.lemma.coreFeatures;
 			return (
-				member.lemma.kind === input.source.kind &&
-				isParadigmCell(member.lemma) &&
 				!sameValue(member.lemma, input.source) &&
 				input.vary.every((key) => marks(core, key)) &&
-				Object.entries(sourceCore).every(
+				sourceEntries.every(
 					([key, value]) =>
 						varied.has(key) ||
 						sameValue(value, core[key]) ||
 						(key === "gender" &&
-							servesGender(sourceCore, member.lemma)),
+							servesGender(sourceCore, member.lemma, coreKeys)),
 				)
 			);
 		})

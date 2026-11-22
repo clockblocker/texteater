@@ -19,7 +19,7 @@
 		"generate:docs": "bun run scripts/generate-docs.ts",
 		"generate:docs:check": "bun run scripts/generate-docs.ts --check",
 		"lint": "bun run --silent biome check --error-on-warnings .",
-		"prebuild:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:content",
+		"prebuild:package": "bun run generate:content",
 		"preview": "astro preview",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",

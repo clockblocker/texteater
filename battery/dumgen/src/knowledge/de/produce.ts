@@ -56,6 +56,7 @@ import {
 	type AspectError,
 	aspectContext,
 	type StoredParadigm,
+	validateOccurrenceTarget,
 } from "./context.js";
 import { paradigmJobsOf } from "./paradigm.js";
 import { produceRelations } from "./relations.js";
@@ -242,27 +243,11 @@ const failureOf = (
 
 /** Why the input is bad, if it is: a Defect, raised before anything is asked. */
 function badInput<E>(input: ProduceKnowledgeInput<E>): string | undefined {
-	const { reading, attestation, sentence, request } = input;
-	if (
-		lemmaIdentityKey(attestation.surface.lemma) !==
-		lemmaIdentityKey(reading.lemma)
-	)
-		return "The Attestation is of another Lemma than the Reading";
+	const occurrenceError = validateOccurrenceTarget(input);
+	if (occurrenceError !== undefined) return occurrenceError;
 	if (input.origin !== "New" && input.origin !== "TopUp")
 		return `origin is New or TopUp, not ${JSON.stringify(input.origin)}`;
-	const { segments, target } = sentence;
-	if (
-		target.length === 0 ||
-		target.some(
-			(index, at) =>
-				!Number.isInteger(index) ||
-				index < 0 ||
-				index >= segments.length ||
-				(at > 0 && index <= (target[at - 1] ?? -1)),
-		)
-	)
-		return "The target is no ascending run of the Sentence's Segments";
-	for (const aspect of Object.keys(request))
+	for (const aspect of Object.keys(input.request))
 		if (!requestAspects.has(aspect))
 			return `The request names no Knowledge aspect ${aspect}`;
 	for (const dimension of input.paradigm?.dimensions ?? [])

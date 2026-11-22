@@ -166,10 +166,16 @@ async function itemAfter(
 export async function scrollLabel(
 	ctx: QueryCtx,
 	scroll: Doc<"scrolls">,
+	nextSibling?: CodexItem | null,
 ): Promise<string> {
 	if (scroll.title || !scroll.placement) return scrollTitle(scroll);
 	const { sectionId, order } = scroll.placement;
-	const after = order === 0 ? await itemAfter(ctx, sectionId, order) : null;
+	const after =
+		order === 0
+			? nextSibling !== undefined
+				? nextSibling
+				: await itemAfter(ctx, sectionId, order)
+			: null;
 	const frontMatter =
 		after !== null &&
 		(after.kind === "Section" || Boolean(after.doc.title));
@@ -240,18 +246,40 @@ export async function scrollStatus(
 }
 
 /** Done when every Scroll under it is; in progress once one was opened. */
-export async function sectionStatus(
-	ctx: QueryCtx,
-	visitorId: string,
-	section: Doc<"sections">,
-): Promise<ReadingStatus> {
-	const progress = await findSectionProgress(ctx, visitorId, section._id);
+export function sectionStatusFromProgress(
+	section: Pick<Doc<"sections">, "scrollCount">,
+	progress: Pick<Doc<"sectionProgress">, "doneScrolls"> | null,
+): ReadingStatus {
 	if (!progress) return "NotStarted";
 	return section.scrollCount > 0 &&
 		progress.doneScrolls >= section.scrollCount
 		? "Done"
 		: "InProgress";
 }
+
+/** Done when every Scroll under it is; in progress once one was opened. */
+export async function sectionStatus(
+	ctx: QueryCtx,
+	visitorId: string,
+	section: Doc<"sections">,
+): Promise<ReadingStatus> {
+	return sectionStatusFromProgress(
+		section,
+		await findSectionProgress(ctx, visitorId, section._id),
+	);
+}
+
+type OpenedProgress = {
+	readonly scrollProgress: {
+		readonly _id: Id<"scrollProgress">;
+		readonly status: "InProgress" | "Done";
+		readonly position: number;
+	};
+	readonly ancestorProgress: readonly {
+		readonly _id: Id<"sectionProgress">;
+		readonly doneScrolls: number;
+	}[];
+};
 
 /**
  * A Visitor opened a Scroll: it is in progress unless already done, and
@@ -261,26 +289,50 @@ export async function recordOpened(
 	ctx: MutationCtx,
 	visitorId: string,
 	scroll: Doc<"scrolls">,
-): Promise<void> {
-	if (!(await findScrollProgress(ctx, visitorId, scroll._id)))
-		await ctx.db.insert("scrollProgress", {
-			visitorId,
-			scrollId: scroll._id,
-			status: "InProgress",
-			position: 0,
-		});
-	for (const section of await sectionsAbove(ctx, scroll.placement)) {
-		const progress = await findSectionProgress(ctx, visitorId, section._id);
-		if (!progress)
-			await ctx.db.insert("sectionProgress", {
-				visitorId,
-				sectionId: section._id,
-				lastScrollId: scroll._id,
-				doneScrolls: 0,
-			});
-		else if (progress.lastScrollId !== scroll._id)
-			await ctx.db.patch(progress._id, { lastScrollId: scroll._id });
-	}
+): Promise<OpenedProgress> {
+	const [existingScroll, ancestors] = await Promise.all([
+		findScrollProgress(ctx, visitorId, scroll._id),
+		sectionsAbove(ctx, scroll.placement),
+	]);
+	const [scrollProgress, existingAncestors] = await Promise.all([
+		existingScroll
+			? Promise.resolve(existingScroll)
+			: ctx.db
+					.insert("scrollProgress", {
+						visitorId,
+						scrollId: scroll._id,
+						status: "InProgress",
+						position: 0,
+					})
+					.then((_id) => ({
+						_id,
+						status: "InProgress" as const,
+						position: 0,
+					})),
+		Promise.all(
+			ancestors.map((section) =>
+				findSectionProgress(ctx, visitorId, section._id),
+			),
+		),
+	]);
+	const ancestorProgress = await Promise.all(
+		ancestors.map(async (section, index) => {
+			const progress = existingAncestors[index];
+			if (!progress) {
+				const _id = await ctx.db.insert("sectionProgress", {
+					visitorId,
+					sectionId: section._id,
+					lastScrollId: scroll._id,
+					doneScrolls: 0,
+				});
+				return { _id, doneScrolls: 0 };
+			}
+			if (progress.lastScrollId !== scroll._id)
+				await ctx.db.patch(progress._id, { lastScrollId: scroll._id });
+			return { _id: progress._id, doneScrolls: progress.doneScrolls };
+		}),
+	);
+	return { scrollProgress, ancestorProgress };
 }
 
 /** Marks a Scroll done or back in progress; the Sections above count it. */
@@ -290,24 +342,25 @@ export async function recordDone(
 	scroll: Doc<"scrolls">,
 	done: boolean,
 ): Promise<void> {
-	await recordOpened(ctx, visitorId, scroll);
-	const progress = await findScrollProgress(ctx, visitorId, scroll._id);
-	if (!progress || (progress.status === "Done") === done) return;
-	await ctx.db.patch(progress._id, { status: done ? "Done" : "InProgress" });
-	for (const section of await sectionsAbove(ctx, scroll.placement)) {
-		const sectionProgress = await findSectionProgress(
-			ctx,
-			visitorId,
-			section._id,
-		);
-		if (sectionProgress)
-			await ctx.db.patch(sectionProgress._id, {
+	const { scrollProgress, ancestorProgress } = await recordOpened(
+		ctx,
+		visitorId,
+		scroll,
+	);
+	if ((scrollProgress.status === "Done") === done) return;
+	await Promise.all([
+		ctx.db.patch(scrollProgress._id, {
+			status: done ? "Done" : "InProgress",
+		}),
+		...ancestorProgress.map((sectionProgress) =>
+			ctx.db.patch(sectionProgress._id, {
 				doneScrolls: Math.max(
 					0,
 					sectionProgress.doneScrolls + (done ? 1 : -1),
 				),
-			});
-	}
+			}),
+		),
+	]);
 }
 
 /** Where the reader was in a Scroll, by Sentence position. */
@@ -317,8 +370,7 @@ export async function recordPosition(
 	scroll: Doc<"scrolls">,
 	position: number,
 ): Promise<void> {
-	await recordOpened(ctx, visitorId, scroll);
-	const progress = await findScrollProgress(ctx, visitorId, scroll._id);
-	if (progress && progress.position !== position)
-		await ctx.db.patch(progress._id, { position });
+	const { scrollProgress } = await recordOpened(ctx, visitorId, scroll);
+	if (scrollProgress.position !== position)
+		await ctx.db.patch(scrollProgress._id, { position });
 }

@@ -79,6 +79,7 @@ export function checkReading(
 export function checkKnowledge(
 	authored: unknown,
 	reading: Dumling.Reading,
+	policy = selectKnowledge({ route: routeOf(reading.lemma) }),
 ): {
 	knowledge?: Dumrel.ReadingKnowledge;
 	issues: { path: string; message: string }[];
@@ -101,7 +102,6 @@ export function checkKnowledge(
 	const knowledge: Dumrel.ReadingKnowledge = parsed.value;
 	const issues: { path: string; message: string }[] = [];
 	const { language, family, kind } = reading.lemma;
-	const policy = selectKnowledge({ route: routeOf(reading.lemma) });
 	const requested = policy.success
 		? (policy.value.semanticRelations ?? {})
 		: undefined;

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { testEffect } from "common-utils/effect-test";
 import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
@@ -13,20 +14,20 @@ import { fakeJudge, germanUnits, noul, picked } from "./fake-judge.js";
 const withLocution = { ...productionUnitSettings, locution: locutionSettings };
 
 /** The units' Segment groups and the requests' stages, with the Locution Choice on. */
-async function run(sentence: string, answers: Record<string, Answer>) {
-	const judge = fakeJudge(answers);
-	const units = await Effect.runPromise(
-		germanUnits(
+function run(sentence: string, answers: Record<string, Answer>) {
+	return Effect.gen(function* () {
+		const judge = fakeJudge(answers);
+		const units = yield* germanUnits(
 			{ segments: segmentsOf(sentence) },
 			judge.ask,
 			withLocution,
-		),
-	);
-	return {
-		groups: units.map((unit) => unit.segments),
-		units,
-		judge,
-	};
+		);
+		return {
+			groups: units.map((unit) => unit.segments),
+			units,
+			judge,
+		};
+	});
 }
 
 // Sie0 _1 nahm2 _3 das4 _5 Risiko6 _7 in8 _9 Kauf10 .11
@@ -38,70 +39,93 @@ const idiomUnderFloor = {
 
 const fixedSide = picked("fixed", { fixed: 0.8, free: 0.2 });
 
-test("an idiom host share under the floor asks the Locution Choice; both units fixed merge, with the opening preposition", async () => {
-	const { groups, units, judge } = await run(kauf, {
-		...idiomUnderFloor,
-		lc_2_x_6_l: fixedSide,
-		lc_2_x_6_r: fixedSide,
-		r_2_5_6: picked("Locution/VERB", {
-			"Locution/VERB": 0.6,
-			"Lexeme/VERB": 0.4,
+testEffect(
+	"an idiom host share under the floor asks the Locution Choice; both units fixed merge, with the opening preposition",
+	() =>
+		Effect.gen(function* () {
+			const { groups, units, judge } = yield* run(kauf, {
+				...idiomUnderFloor,
+				lc_2_x_6_l: fixedSide,
+				lc_2_x_6_r: fixedSide,
+				r_2_5_6: picked("Locution/VERB", {
+					"Locution/VERB": 0.6,
+					"Lexeme/VERB": 0.4,
+				}),
+			});
+			const locution = judge.questionsOf("locution");
+			expect(Object.keys(locution ?? {})).toEqual([
+				"lc_2_x_6_l",
+				"lc_2_x_6_r",
+			]);
+			// The judge sees the unit the merge would make, the opening in included.
+			expect(JSON.stringify(locution)).toContain(
+				'one established multiword expression, \\"nahm … in Kauf\\"',
+			);
+			expect(groups).toEqual([[0], [2, 8, 10], [4, 6]]);
+			expect(
+				units.find((unit) => unit.segments.length === 3)?.route,
+			).toEqual(
+				expect.objectContaining({ family: "Locution", kind: "VERB" }),
+			);
+			// The new group's route is asked after the batches.
+			expect(judge.stages().at(-1)).toBe("route-extra");
 		}),
-	});
-	const locution = judge.questionsOf("locution");
-	expect(Object.keys(locution ?? {})).toEqual(["lc_2_x_6_l", "lc_2_x_6_r"]);
-	// The judge sees the unit the merge would make, the opening in included.
-	expect(JSON.stringify(locution)).toContain(
-		'one established multiword expression, \\"nahm … in Kauf\\"',
-	);
-	expect(groups).toEqual([[0], [2, 8, 10], [4, 6]]);
-	expect(units.find((unit) => unit.segments.length === 3)?.route).toEqual(
-		expect.objectContaining({ family: "Locution", kind: "VERB" }),
-	);
-	// The new group's route is asked after the batches.
-	expect(judge.stages().at(-1)).toBe("route-extra");
-});
+);
 
-test("a merge needs both units fixed at the floor; a free unit keeps them apart", async () => {
-	const { groups } = await run(kauf, {
-		...idiomUnderFloor,
-		lc_2_x_6_l: fixedSide,
-		lc_2_x_6_r: picked("free", { fixed: 0.4, free: 0.6 }),
-	});
-	expect(groups).toEqual([[0], [2], [4, 6], [8], [10]]);
-});
+testEffect(
+	"a merge needs both units fixed at the floor; a free unit keeps them apart",
+	() =>
+		Effect.gen(function* () {
+			const { groups } = yield* run(kauf, {
+				...idiomUnderFloor,
+				lc_2_x_6_l: fixedSide,
+				lc_2_x_6_r: picked("free", { fixed: 0.4, free: 0.6 }),
+			});
+			expect(groups).toEqual([[0], [2], [4, 6], [8], [10]]);
+		}),
+);
 
-test("without the setting, or with no candidate, no locution request is sent", async () => {
-	const off = fakeJudge(idiomUnderFloor);
-	const { locution: _, ...without } = productionUnitSettings;
-	await Effect.runPromise(
-		germanUnits({ segments: segmentsOf(kauf) }, off.ask, without),
-	);
-	expect(off.questionsOf("locution")).toBeUndefined();
-	const { judge } = await run(kauf, {});
-	expect(judge.questionsOf("locution")).toBeUndefined();
-});
+testEffect(
+	"without the setting, or with no candidate, no locution request is sent",
+	() =>
+		Effect.gen(function* () {
+			const off = fakeJudge(idiomUnderFloor);
+			const { locution: _, ...without } = productionUnitSettings;
+			yield* germanUnits(
+				{ segments: segmentsOf(kauf) },
+				off.ask,
+				without,
+			);
+			expect(off.questionsOf("locution")).toBeUndefined();
+			const { judge } = yield* run(kauf, {});
+			expect(judge.questionsOf("locution")).toBeUndefined();
+		}),
+);
 
-test("no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht or a modal", async () => {
-	// Es0 _1 tut2 _3 uns4 _5 leid6 .7: Es and tut … leid heard as one expression.
-	const { judge } = await run("Es tut uns leid.", {
-		f_1: noul(0.6),
-		f_2: noul(0.9),
-		f_4: noul(0.9),
-		e_1_2: noul(0.65),
-		e_2_4: noul(0.95),
-	});
-	expect(judge.questionsOf("locution")).toBeUndefined();
-	// Er0 _1 kann2 _3 nicht4 _5 schwimmen6 .7
-	const modal = await run("Er kann nicht schwimmen.", {
-		f_2: noul(0.6),
-		f_3: noul(0.6),
-		f_4: noul(0.6),
-		e_2_4: noul(0.6),
-		e_3_4: noul(0.6),
-	});
-	expect(modal.judge.questionsOf("locution")).toBeUndefined();
-});
+testEffect(
+	"no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht or a modal",
+	() =>
+		Effect.gen(function* () {
+			// Es0 _1 tut2 _3 uns4 _5 leid6 .7: Es and tut … leid heard as one expression.
+			const { judge } = yield* run("Es tut uns leid.", {
+				f_1: noul(0.6),
+				f_2: noul(0.9),
+				f_4: noul(0.9),
+				e_1_2: noul(0.65),
+				e_2_4: noul(0.95),
+			});
+			expect(judge.questionsOf("locution")).toBeUndefined();
+			// Er0 _1 kann2 _3 nicht4 _5 schwimmen6 .7
+			const modal = yield* run("Er kann nicht schwimmen.", {
+				f_2: noul(0.6),
+				f_3: noul(0.6),
+				f_4: noul(0.6),
+				e_2_4: noul(0.6),
+				e_3_4: noul(0.6),
+			});
+			expect(modal.judge.questionsOf("locution")).toBeUndefined();
+		}),
+);
 
 test("the wording shows the pieces as written, with … for a gap", () => {
 	const sentence = sentenceOf({
@@ -140,119 +164,150 @@ const zumBeispielUnder: Record<string, Answer> = {
 	f_3: noul(0.65),
 };
 
-test("Zum Beispiel, capitalized and fused: Beispiel read fixed at the floor takes the fused word; under it, m still joins its noun; an accepted link keeps the fused halves together", async () => {
-	const segments = [...zumBeispiel];
-	const sentence = sentenceOf({ segments });
-	expect(sentence.pieces.slice(0, 2).map((piece) => piece.fusedWord)).toEqual(
-		["Zum", "Zum"],
-	);
-	const production = await Effect.runPromise(
-		germanUnits({ segments }, fakeJudge(zumBeispielHeard).ask),
-	);
-	expect(production.map((unit) => unit.segments)).toEqual([
-		[0, 1, 3],
-		[5, 13],
-		[7, 9],
-		[11],
-	]);
-	// Under the floor no link holds Zum Beispiel, and the fused article
-	// still never stands alone (#1334).
-	const under = await Effect.runPromise(
-		germanUnits({ segments }, fakeJudge(zumBeispielUnder).ask),
-	);
-	expect(under.map((unit) => unit.segments)).toEqual([
-		[0],
-		[1, 3],
-		[5, 13],
-		[7, 9],
-		[11],
-	]);
-	// One expression link over the floors, and the fused halves follow it.
-	const linked = await Effect.runPromise(
-		germanUnits(
-			{ segments },
-			fakeJudge({
+testEffect(
+	"Zum Beispiel, capitalized and fused: Beispiel read fixed at the floor takes the fused word; under it, m still joins its noun; an accepted link keeps the fused halves together",
+	() =>
+		Effect.gen(function* () {
+			const segments = [...zumBeispiel];
+			const sentence = sentenceOf({ segments });
+			expect(
+				sentence.pieces.slice(0, 2).map((piece) => piece.fusedWord),
+			).toEqual(["Zum", "Zum"]);
+			const production = yield* germanUnits(
+				{ segments },
+				fakeJudge(zumBeispielHeard).ask,
+			);
+			expect(production.map((unit) => unit.segments)).toEqual([
+				[0, 1, 3],
+				[5, 13],
+				[7, 9],
+				[11],
+			]);
+			// Under the floor no link holds Zum Beispiel, and the fused article
+			// still never stands alone (#1334).
+			const under = yield* germanUnits(
+				{ segments },
+				fakeJudge(zumBeispielUnder).ask,
+			);
+			expect(under.map((unit) => unit.segments)).toEqual([
+				[0],
+				[1, 3],
+				[5, 13],
+				[7, 9],
+				[11],
+			]);
+			// One expression link over the floors, and the fused halves follow it.
+			const linked = yield* germanUnits(
+				{ segments },
+				fakeJudge({
+					...zumBeispielUnder,
+					f_2: noul(0.6),
+					e_2_3: noul(0.75),
+				}).ask,
+			);
+			expect(linked.map((unit) => unit.segments)).toContainEqual([
+				0, 1, 3,
+			]);
+		}),
+);
+
+testEffect(
+	"Zum Beispiel: the Locution Choice asks about the heard links and, both units fixed, makes [Zu, m, Beispiel] one Locution",
+	() =>
+		Effect.gen(function* () {
+			const judge = fakeJudge({
 				...zumBeispielUnder,
-				f_2: noul(0.6),
-				e_2_3: noul(0.75),
-			}).ask,
-		),
-	);
-	expect(linked.map((unit) => unit.segments)).toContainEqual([0, 1, 3]);
-});
+				// m joined Beispiel (#1334), so one link is left between the units.
+				lc_1_x_2_3_l: fixedSide,
+				lc_1_x_2_3_r: fixedSide,
+				r_1_2_3: picked("Locution/ADV"),
+			});
+			const units = yield* germanUnits(
+				{ segments: [...zumBeispiel] },
+				judge.ask,
+				withLocution,
+			);
+			const locution = judge.questionsOf("locution");
+			expect(JSON.stringify(locution)).toContain(
+				'expression, \\"Zum Beispiel\\"',
+			);
+			expect(units[0]).toEqual({
+				segments: [0, 1, 3],
+				route: expect.objectContaining({
+					family: "Locution",
+					kind: "ADV",
+				}),
+			});
+		}),
+);
 
-test("Zum Beispiel: the Locution Choice asks about the heard links and, both units fixed, makes [Zu, m, Beispiel] one Locution", async () => {
-	const judge = fakeJudge({
-		...zumBeispielUnder,
-		// m joined Beispiel (#1334), so one link is left between the units.
-		lc_1_x_2_3_l: fixedSide,
-		lc_1_x_2_3_r: fixedSide,
-		r_1_2_3: picked("Locution/ADV"),
-	});
-	const units = await Effect.runPromise(
-		germanUnits({ segments: [...zumBeispiel] }, judge.ask, withLocution),
-	);
-	const locution = judge.questionsOf("locution");
-	expect(JSON.stringify(locution)).toContain(
-		'expression, \\"Zum Beispiel\\"',
-	);
-	expect(units[0]).toEqual({
-		segments: [0, 1, 3],
-		route: expect.objectContaining({ family: "Locution", kind: "ADV" }),
-	});
-});
+testEffect(
+	"a fused word split between units is a candidate when the other unit holds a possibly fixed word: Im Allgemeinen",
+	() =>
+		Effect.gen(function* () {
+			// I0 m1 _2 Allgemeinen3 _4 ist5 _6 er7 _8 pünktlich9 .10
+			const segments = [
+				{ kind: "ResolvableText", text: "I", surface: "in" },
+				{ kind: "ResolvableText", text: "m", surface: "dem" },
+				...segmentsOf(" Allgemeinen ist er pünktlich."),
+			] as const;
+			const judge = fakeJudge({
+				f_3: noul(0.7),
+				s_article_2: picked("p3", { p3: 0.6, none: 0.4 }),
+				lc_1_x_2_3_l: fixedSide,
+				lc_1_x_2_3_r: fixedSide,
+			});
+			const units = yield* germanUnits(
+				{ segments: [...segments] },
+				judge.ask,
+				withLocution,
+			);
+			expect(units.map((unit) => unit.segments)).toEqual([
+				[0, 1, 3],
+				[5],
+				[7],
+				[9],
+			]);
+			// Without a possibly fixed word beside it, the fused piece asks nothing.
+			const plain = fakeJudge({ s_article_2: picked("p3") });
+			yield* germanUnits(
+				{ segments: [...segments] },
+				plain.ask,
+				withLocution,
+			);
+			expect(plain.questionsOf("locution")).toBeUndefined();
+		}),
+);
 
-test("a fused word split between units is a candidate when the other unit holds a possibly fixed word: Im Allgemeinen", async () => {
-	// I0 m1 _2 Allgemeinen3 _4 ist5 _6 er7 _8 pünktlich9 .10
-	const segments = [
-		{ kind: "ResolvableText", text: "I", surface: "in" },
-		{ kind: "ResolvableText", text: "m", surface: "dem" },
-		...segmentsOf(" Allgemeinen ist er pünktlich."),
-	] as const;
-	const judge = fakeJudge({
-		f_3: noul(0.7),
-		s_article_2: picked("p3", { p3: 0.6, none: 0.4 }),
-		lc_1_x_2_3_l: fixedSide,
-		lc_1_x_2_3_r: fixedSide,
-	});
-	const units = await Effect.runPromise(
-		germanUnits({ segments: [...segments] }, judge.ask, withLocution),
-	);
-	expect(units.map((unit) => unit.segments)).toEqual([
-		[0, 1, 3],
-		[5],
-		[7],
-		[9],
-	]);
-	// Without a possibly fixed word beside it, the fused piece asks nothing.
-	const plain = fakeJudge({ s_article_2: picked("p3") });
-	await Effect.runPromise(
-		germanUnits({ segments: [...segments] }, plain.ask, withLocution),
-	);
-	expect(plain.questionsOf("locution")).toBeUndefined();
-});
-
-test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async () => {
-	expect(productionUnitSettings.locution).toEqual({
-		floor: 0.6,
-		absorb: true,
-		members: 0.7,
-	});
-	const at = (share: number) =>
-		run(kauf, {
-			...idiomUnderFloor,
-			lc_2_x_6_l: fixedSide,
-			lc_2_x_6_r: picked("fixed", { fixed: share, free: 1 - share }),
-		}).then(({ groups }) => groups);
-	const judge = fakeJudge({
-		...idiomUnderFloor,
-		lc_2_x_6_l: fixedSide,
-		lc_2_x_6_r: picked("fixed", { fixed: 0.55, free: 0.45 }),
-	});
-	const units = await Effect.runPromise(
-		germanUnits({ segments: segmentsOf(kauf) }, judge.ask),
-	);
-	expect(judge.questionsOf("locution")).toBeDefined();
-	expect(units.map((unit) => unit.segments)).toEqual(await at(0.4));
-	expect(await at(0.55)).toContainEqual([2, 8, 10]);
-});
+testEffect(
+	"production asks the Locution Choice and merges at 0.6 (#851, X5)",
+	() =>
+		Effect.gen(function* () {
+			expect(productionUnitSettings.locution).toEqual({
+				floor: 0.6,
+				absorb: true,
+				members: 0.7,
+			});
+			const at = (share: number) =>
+				run(kauf, {
+					...idiomUnderFloor,
+					lc_2_x_6_l: fixedSide,
+					lc_2_x_6_r: picked("fixed", {
+						fixed: share,
+						free: 1 - share,
+					}),
+				}).pipe(Effect.map(({ groups }) => groups));
+			const judge = fakeJudge({
+				...idiomUnderFloor,
+				lc_2_x_6_l: fixedSide,
+				lc_2_x_6_r: picked("fixed", { fixed: 0.55, free: 0.45 }),
+			});
+			const units = yield* germanUnits(
+				{ segments: segmentsOf(kauf) },
+				judge.ask,
+			);
+			expect(judge.questionsOf("locution")).toBeDefined();
+			expect(units.map((unit) => unit.segments)).toEqual(yield* at(0.4));
+			expect(yield* at(0.55)).toContainEqual([2, 8, 10]);
+		}),
+);

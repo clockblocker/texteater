@@ -4,6 +4,7 @@ import {
 	identityKeyOf,
 	type LemmaIdentity,
 	lemmaIdentityKey,
+	sortedNonNullEntries,
 } from "../identity.js";
 import type { Language, Lemma, Surface } from "../types.js";
 
@@ -26,27 +27,75 @@ function isAscending(values: readonly string[]): boolean {
 }
 
 /**
- * The Core of a Syncretism (system ADR 0046): each feature keeps the value
- * its units agree on and is null where they disagree.
+ * Projects a Syncretism's feature bags in one pass (system ADR 0046): each
+ * feature keeps the value its units agree on and is null where they disagree,
+ * and `disagreements` lists the disagreed feature names in alphabetical order.
  */
-function syncretizedFeatures(bags: readonly Bag[]): Record<string, unknown> {
-	return Object.fromEntries(
-		[...featureNames(bags)].map((name) => [
-			name,
-			new Set(bags.map((bag) => valueKey(bag[name]))).size === 1
-				? (bags[0]?.[name] ?? null)
-				: null,
-		]),
-	);
+function projectFeatureBags(bags: readonly Bag[]): {
+	projection: Record<string, unknown>;
+	disagreements: string[];
+} {
+	const projection: Record<string, unknown> = {};
+	const disagreements: string[] = [];
+	for (const name of featureNames(bags)) {
+		const first = bags[0]?.[name] ?? null;
+		const firstKey = valueKey(first);
+		let agrees = true;
+		for (let index = 1; index < bags.length; index += 1) {
+			if (valueKey(bags[index]?.[name]) !== firstKey) {
+				agrees = false;
+				break;
+			}
+		}
+		if (agrees) {
+			projection[name] = first;
+		} else {
+			projection[name] = null;
+			disagreements.push(name);
+		}
+	}
+	disagreements.sort();
+	return { projection, disagreements };
 }
 
-/** The features a Syncretism's units disagree on, in alphabetical order. */
-function syncreticFeatures(bags: readonly Bag[]): string[] {
-	return [...featureNames(bags)]
-		.filter(
-			(name) => new Set(bags.map((bag) => valueKey(bag[name]))).size > 1,
-		)
-		.toSorted();
+/**
+ * Shared Syncretism check for both Lemmas and Surfaces (system ADR 0046):
+ * units are in strictly ascending key order, satisfy the route's shared
+ * invariants, include the Syncretism's exact spelling, and project to the
+ * Syncretism's feature bag and `syncretic` list.
+ */
+function isUnitSyncretism<
+	T extends {
+		readonly syncretic?: readonly string[];
+		readonly syncretized?: readonly T[];
+	},
+>(
+	unit: T,
+	spec: {
+		readonly keyOf: (item: T) => string;
+		readonly formOf: (item: T) => string;
+		readonly bagOf: (item: T) => Bag;
+		readonly compatible: (member: T) => boolean;
+	},
+): boolean {
+	const units = unit.syncretized;
+	if (units === undefined) return true;
+	if (unit.syncretic === undefined) return false;
+	const { projection, disagreements } = projectFeatureBags(
+		units.map(spec.bagOf),
+	);
+	const own = spec.bagOf(unit);
+	const ownForm = spec.formOf(unit);
+	return (
+		isAscending(units.map(spec.keyOf)) &&
+		units.every(spec.compatible) &&
+		units.some((member) => spec.formOf(member) === ownForm) &&
+		[...featureNames([own, projection])].every(
+			(name) => valueKey(own[name]) === valueKey(projection[name]),
+		) &&
+		unit.syncretic.length === disagreements.length &&
+		unit.syncretic.every((name, index) => name === disagreements[index])
+	);
 }
 
 /**
@@ -76,27 +125,14 @@ export function syncretismViewError(): string {
  * that holds no units passes.
  */
 export function isLemmaSyncretism(lemma: LemmaFields): boolean {
-	const units = lemma.syncretized;
-	if (units === undefined) return true;
-	if (lemma.syncretic === undefined) return false;
 	const form = foldCase(lemma.canonicalForm, lemma.language);
-	const cores = units.map((unit) => unit.coreFeatures);
-	const projection = syncretizedFeatures(cores);
-	const disagreements = syncreticFeatures(cores);
-	return (
-		isAscending(units.map((unit) => identityKeyOf(unit))) &&
-		units.every(
-			(unit) => foldCase(unit.canonicalForm, lemma.language) === form,
-		) &&
-		units.some((unit) => unit.canonicalForm === lemma.canonicalForm) &&
-		[...featureNames([lemma.coreFeatures, projection])].every(
-			(name) =>
-				valueKey(lemma.coreFeatures[name]) ===
-				valueKey(projection[name]),
-		) &&
-		lemma.syncretic.length === disagreements.length &&
-		lemma.syncretic.every((name, index) => name === disagreements[index])
-	);
+	return isUnitSyncretism(lemma, {
+		keyOf: identityKeyOf,
+		formOf: (unit) => unit.canonicalForm,
+		bagOf: (unit) => unit.coreFeatures,
+		compatible: (unit) =>
+			foldCase(unit.canonicalForm, lemma.language) === form,
+	});
 }
 export function lemmaSyncretismError(): string {
 	return "A Syncretism holds two or more distinct units in identity order with one Canonical Form; its Core is their projection and its syncretic list the features they disagree on";
@@ -121,11 +157,7 @@ function surfaceKey(surface: SurfaceFields): string {
 	return JSON.stringify([
 		identityKeyOf(surface.lemma),
 		foldCase(surface.normalizedSurface, surface.language),
-		Object.entries(surface.inflectionalFeatures ?? {})
-			.filter(([, value]) => value !== null && value !== undefined)
-			.toSorted(([left], [right]) =>
-				left < right ? -1 : left > right ? 1 : 0,
-			),
+		sortedNonNullEntries(surface.inflectionalFeatures ?? {}),
 	]);
 }
 
@@ -159,37 +191,61 @@ export function surfaceSyncretismViewError(): string {
  * Surface that holds no units passes.
  */
 export function isSurfaceSyncretism(surface: SurfaceFields): boolean {
-	const units = surface.syncretized;
-	if (units === undefined) return true;
-	if (surface.syncretic === undefined) return false;
+	if (surface.syncretized === undefined) return true;
 	const lemma = identityKeyOf(surface.lemma);
 	const form = foldCase(surface.normalizedSurface, surface.language);
-	const bags = units.map((unit) => unit.inflectionalFeatures ?? {});
-	const projection = syncretizedFeatures(bags);
-	const disagreements = syncreticFeatures(bags);
-	const own = surface.inflectionalFeatures ?? {};
-	return (
-		isAscending(units.map(surfaceKey)) &&
-		units.every(
-			(unit) =>
-				identityKeyOf(unit.lemma) === lemma &&
-				foldCase(unit.normalizedSurface, unit.language) === form &&
-				valueKey(unit.spelling) === valueKey(surface.spelling) &&
-				valueKey(unit.surfaceFeatures) ===
-					valueKey(surface.surfaceFeatures),
-		) &&
-		units.some(
-			(unit) => unit.normalizedSurface === surface.normalizedSurface,
-		) &&
-		[...featureNames([own, projection])].every(
-			(name) => valueKey(own[name]) === valueKey(projection[name]),
-		) &&
-		surface.syncretic.length === disagreements.length &&
-		surface.syncretic.every((name, index) => name === disagreements[index])
-	);
+	const spellingKey = valueKey(surface.spelling);
+	const surfaceFeaturesKey = valueKey(surface.surfaceFeatures);
+	return isUnitSyncretism(surface, {
+		keyOf: surfaceKey,
+		formOf: (unit) => unit.normalizedSurface,
+		bagOf: (unit) => unit.inflectionalFeatures ?? {},
+		compatible: (unit) =>
+			identityKeyOf(unit.lemma) === lemma &&
+			foldCase(unit.normalizedSurface, unit.language) === form &&
+			valueKey(unit.spelling) === spellingKey &&
+			valueKey(unit.surfaceFeatures) === surfaceFeaturesKey,
+	});
 }
 export function surfaceSyncretismError(): string {
 	return "A Surface Syncretism holds two or more distinct Surfaces of one Lemma in key order with one form and spelling; its inflectional features are their projection and its syncretic list the features they disagree on";
+}
+
+/**
+ * Shared Syncretism builder for Lemmas and Surfaces: precomputes sort keys
+ * once per unit, chooses the case-folded spelling when present, and projects
+ * feature bags in a single pass.
+ */
+function syncretizeUnits<T extends { readonly language: Language }>(
+	units: readonly T[],
+	spec: {
+		readonly keyOf: (unit: T) => string;
+		readonly formOf: (unit: T) => string;
+		readonly bagOf: (unit: T) => Bag;
+	},
+): {
+	spelled: T;
+	sorted: T[];
+	projection: Record<string, unknown>;
+	disagreements: string[];
+} {
+	if (units.length < 2)
+		throw new TypeError("A Syncretism holds two or more units");
+	const keyed = units.map((unit) => ({ unit, key: spec.keyOf(unit) }));
+	keyed.sort((left, right) =>
+		left.key < right.key ? -1 : left.key > right.key ? 1 : 0,
+	);
+	const sorted = keyed.map(({ unit }) => unit);
+	const first = sorted[0] as T;
+	const spelled =
+		sorted.find((unit) => {
+			const form = spec.formOf(unit);
+			return foldCase(form, unit.language) === form;
+		}) ?? first;
+	const { projection, disagreements } = projectFeatureBags(
+		sorted.map(spec.bagOf),
+	);
+	return { spelled, sorted, projection, disagreements };
 }
 
 /**
@@ -217,27 +273,20 @@ export function syncretize(
 		throw new TypeError(
 			"A Syncretism's units are all Lemmas or all Surfaces",
 		);
-	const sorted = units.toSorted((left, right) => {
-		const leftKey = lemmaIdentityKey(left),
-			rightKey = lemmaIdentityKey(right);
-		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
-	});
-	const first = sorted[0];
-	if (first === undefined || sorted.length < 2)
-		throw new TypeError("A Syncretism holds two or more units");
-	const spelled =
-		sorted.find(
-			(unit) =>
-				foldCase(unit.canonicalForm, unit.language) ===
-				unit.canonicalForm,
-		) ?? first;
-	const cores: Bag[] = sorted.map((unit) => unit.coreFeatures);
+	const { spelled, sorted, projection, disagreements } = syncretizeUnits(
+		units,
+		{
+			keyOf: lemmaIdentityKey,
+			formOf: (unit) => unit.canonicalForm,
+			bagOf: (unit) => unit.coreFeatures,
+		},
+	);
 	// TypeScript can't pair the projected Core and the open features with the
 	// route of the unit spelled; `parseUnit` checks the result.
 	return {
 		...spelled,
-		coreFeatures: syncretizedFeatures(cores),
-		syncretic: syncreticFeatures(cores),
+		coreFeatures: projection,
+		syncretic: disagreements,
 		syncretized: sorted,
 	} as unknown as Syncretism<"Lemma">;
 }
@@ -250,28 +299,20 @@ function isLemma(unit: Lemma | Surface): unit is Lemma {
 }
 
 function syncretizeSurfaces(units: readonly Surface[]): Syncretism<"Surface"> {
-	const fields: readonly SurfaceFields[] = units;
-	const sorted = fields.toSorted((left, right) => {
-		const leftKey = surfaceKey(left),
-			rightKey = surfaceKey(right);
-		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
-	});
-	const first = sorted[0];
-	if (first === undefined || sorted.length < 2)
-		throw new TypeError("A Syncretism holds two or more units");
-	const spelled =
-		sorted.find(
-			(unit) =>
-				foldCase(unit.normalizedSurface, unit.language) ===
-				unit.normalizedSurface,
-		) ?? first;
-	const bags = sorted.map((unit) => unit.inflectionalFeatures ?? {});
+	const { spelled, sorted, projection, disagreements } = syncretizeUnits(
+		units as readonly SurfaceFields[],
+		{
+			keyOf: surfaceKey,
+			formOf: (unit) => unit.normalizedSurface,
+			bagOf: (unit) => unit.inflectionalFeatures ?? {},
+		},
+	);
 	// TypeScript can't pair the projected features and the open features with
 	// the route of the unit spelled; `parseUnit` checks the result.
 	return {
 		...spelled,
-		inflectionalFeatures: syncretizedFeatures(bags),
-		syncretic: syncreticFeatures(bags),
+		inflectionalFeatures: projection,
+		syncretic: disagreements,
 		syncretized: sorted,
 	} as unknown as Syncretism<"Surface">;
 }

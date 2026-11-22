@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { calculateRegionConstraints } from "../../global/dom/calculateRegionConstraints";
 import { isRightToLeft } from "../../global/dom/isRightToLeft";
 import { mountSplit } from "../../global/mountSplit";
@@ -108,34 +108,27 @@ export function Split({
 	const mergedRef = useMergedRefs(elementRef, elementRefProp);
 
 	// TRICKY Don't read for state; it will always lag behind by one tick
-	const getRegionStyles = useStableCallback(
-		(splitId: string, regionId: string) => {
+	const getRegionStyleSnapshot = useStableCallback(
+		(splitId: string, regionId: string): string | undefined => {
 			const interactionState = getInteractionState();
 			const split = getRegisteredSplit(splitId);
 			const splitState = getMountedSplitState(splitId);
 			if (splitState) {
-				let dragActive = false;
-				switch (interactionState.state) {
-					case "active": {
-						dragActive = interactionState.hitAreas.some(
-							(current) => current.split === split,
-						);
-						break;
-					}
-				}
+				const dragActive =
+					interactionState.state === "active" &&
+					interactionState.hitAreas.some(
+						(current) => current.split === split,
+					);
 
-				return {
-					flexGrow: splitState.layout[regionId] ?? 1,
-					pointerEvents: dragActive ? "none" : undefined,
-				} satisfies CSSProperties;
+				return `${splitState.layout[regionId] ?? 1}|${dragActive ? 1 : 0}`;
 			}
 
 			// This is unexpected except for the initial mount (before the split has registered with the global store)
-			if (defaultLayout?.[regionId]) {
-				return {
-					flexGrow: defaultLayout?.[regionId],
-				} satisfies CSSProperties;
+			const initialSize = defaultLayout?.[regionId];
+			if (initialSize) {
+				return `${initialSize}|0`;
 			}
+			return undefined;
 		},
 	);
 
@@ -149,7 +142,7 @@ export function Split({
 			get disableCursor() {
 				return !!stableProps.disableCursor;
 			},
-			getRegionStyles,
+			getRegionStyleSnapshot,
 			id,
 			orientation,
 			registerRegion: (region: RegisteredRegion) => {
@@ -230,7 +223,7 @@ export function Split({
 				}
 			},
 		}),
-		[getRegionStyles, id, forceUpdate, orientation, stableProps],
+		[getRegionStyleSnapshot, id, forceUpdate, orientation, stableProps],
 	);
 
 	const registeredSplitRef = useRef<RegisteredSplit | null>(null);

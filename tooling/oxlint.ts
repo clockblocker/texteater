@@ -1,6 +1,7 @@
 /**
  * `bun run oxlint [oxlint options] [paths]`: Oxlint with the Effect
- * type-aware rules in the root `.oxlintrc.json`, outside CI for now.
+ * type-aware rules and local plugin in the root `.oxlintrc.json`. Runs in CI
+ * via the `oxlint` gate (`tooling/lib/ci-gates.ts`).
  *
  * Bun runs a package script in its package's directory: at the repository
  * root Oxlint lints the whole repository, and inside a workspace only that

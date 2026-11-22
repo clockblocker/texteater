@@ -11,6 +11,7 @@ import { lunaAheadBatchStates } from "./model/tables/lunaAheadBatches";
 import { literalUnion } from "./model/validators";
 import {
 	loadResolutionContext,
+	loadSentenceResolutionContexts,
 	resolutionContextValidator,
 } from "./resolutionContext";
 
@@ -132,23 +133,40 @@ export const unitContext = internalQuery({
 	handler: (ctx, args) => loadResolutionContext(ctx, args),
 });
 
+/** The Resolution Contexts for several units of one Sentence, loaded together. */
+export const sentenceUnitContexts = internalQuery({
+	args: {
+		sentenceId: v.id("sentences"),
+		clickedSegmentIndices: v.array(v.number()),
+	},
+	returns: v.array(
+		v.object({
+			clickedSegmentIndex: v.number(),
+			context: v.optional(resolutionContextValidator),
+			error: v.optional(v.string()),
+		}),
+	),
+	handler: (ctx, args) => loadSentenceResolutionContexts(ctx, args),
+});
+
 /** Of `requestKeys`, those that have a stored answer already. */
 export const answeredKeys = internalQuery({
 	args: { requestKeys: v.array(v.string()) },
 	returns: v.array(v.string()),
 	handler: async (ctx, { requestKeys }) => {
-		const answered: string[] = [];
-		for (const requestKey of requestKeys)
-			if (
-				await ctx.db
+		const found = await Promise.all(
+			requestKeys.map((requestKey) =>
+				ctx.db
 					.query("lunaAheadAnswers")
 					.withIndex("by_request_key", (q) =>
 						q.eq("requestKey", requestKey),
 					)
-					.first()
-			)
-				answered.push(requestKey);
-		return answered;
+					.first(),
+			),
+		);
+		return requestKeys.filter(
+			(_requestKey, index) => found[index] !== null,
+		);
 	},
 });
 
@@ -280,23 +298,37 @@ export const storeAnswers = internalMutation({
 	handler: async (ctx, { batchId, answers }) => {
 		const row = await ctx.db.get(batchId);
 		if (row?.state !== "Submitted") return null;
+		const unique = new Map<string, string>();
 		for (const { requestKey, body } of answers) {
-			const stored = await ctx.db
-				.query("lunaAheadAnswers")
-				.withIndex("by_request_key", (q) =>
-					q.eq("requestKey", requestKey),
-				)
-				.first();
-			if (!stored)
-				await ctx.db.insert("lunaAheadAnswers", {
-					requestKey,
-					batchId,
-					...(row.openAIBatchId === undefined
-						? {}
-						: { openAIBatchId: row.openAIBatchId }),
-					body,
-				});
+			if (!unique.has(requestKey)) unique.set(requestKey, body);
 		}
+		const entries = [...unique.entries()];
+		const existing = await Promise.all(
+			entries.map(([requestKey]) =>
+				ctx.db
+					.query("lunaAheadAnswers")
+					.withIndex("by_request_key", (q) =>
+						q.eq("requestKey", requestKey),
+					)
+					.first(),
+			),
+		);
+		await Promise.all(
+			entries.flatMap(([requestKey, body], index) =>
+				existing[index]
+					? []
+					: [
+							ctx.db.insert("lunaAheadAnswers", {
+								requestKey,
+								batchId,
+								...(row.openAIBatchId === undefined
+									? {}
+									: { openAIBatchId: row.openAIBatchId }),
+								body,
+							}),
+						],
+			),
+		);
 		return null;
 	},
 });

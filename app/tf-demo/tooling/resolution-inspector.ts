@@ -51,17 +51,18 @@ async function runReadonlyInspection(
 
 const literal = (value: string | number) => JSON.stringify(value);
 
-const payloadExpression = (stepVariable: string) => `
-	const payloadParts = await ctx.db
-		.query("inspectionPayloads")
-		.withIndex("by_step_id_and_part", (q) => q.eq("stepId", ${stepVariable}._id))
-		.collect();
-	const payloadJson = payloadParts
-		.sort((left, right) => left.part - right.part)
-		.map((part) => part.text)
-		.join("");
-	let payload = payloadJson;
-	try { payload = JSON.parse(payloadJson); } catch {}
+const loadPayloadHelper = `
+	const loadPayload = async (stepId) => {
+		const parts = await ctx.db
+			.query("inspectionPayloads")
+			.withIndex("by_step_id_and_part", (q) => q.eq("stepId", stepId))
+			.collect();
+		const text = parts
+			.sort((left, right) => left.part - right.part)
+			.map((part) => part.text)
+			.join("");
+		try { return JSON.parse(text); } catch { return text; }
+	};
 `;
 
 const requestContextExpression = (requestIdVariable: string) => `
@@ -95,7 +96,8 @@ export function inspectResolutionStep(
 		const step = await ctx.db.get(${literal(stepId)});
 		if (!step) throw new Error("Inspection step not found: " + ${literal(stepId)});
 		const requestId = step.requestId;
-		${payloadExpression("step")}
+		${loadPayloadHelper}
+		const payload = await loadPayload(step._id);
 		${requestContextExpression("requestId")}
 		const requestSteps = await ctx.db
 			.query("inspectionSteps")
@@ -108,14 +110,9 @@ export function inspectResolutionStep(
 			ancestors.push(ancestor);
 			ancestor = ancestor.parentId ? stepsByTraceId.get(ancestor.parentId) : null;
 		}
-		const ancestorPayloads = await Promise.all(ancestors.map(async (candidate) => {
-			const parts = await ctx.db
-				.query("inspectionPayloads")
-				.withIndex("by_step_id_and_part", (q) => q.eq("stepId", candidate._id))
-				.collect();
-			const text = parts.sort((left, right) => left.part - right.part).map((part) => part.text).join("");
-			try { return JSON.parse(text); } catch { return text; }
-		}));
+		const ancestorPayloads = await Promise.all(
+			ancestors.map((candidate) => loadPayload(candidate._id)),
+		);
 		const runToken = [payload, ...ancestorPayloads]
 			.map((candidate) => candidate && typeof candidate === "object" ? candidate.input?.runToken ?? candidate.runToken : null)
 			.find(Boolean);
@@ -143,7 +140,8 @@ export function inspectResolutionTrace(
 	const source = `
 		const step = await ctx.db.get(${literal(stepId)});
 		if (!step) throw new Error("Inspection step not found: " + ${literal(stepId)});
-		${payloadExpression("step")}
+		${loadPayloadHelper}
+		const payload = await loadPayload(step._id);
 		return { step, trace: payload };
 	`;
 	return runReadonlyInspection(source, options);
@@ -155,21 +153,18 @@ export function inspectResolutionRequest(
 ): Promise<void> {
 	const source = `
 		const requestId = ${literal(requestId)};
+		${loadPayloadHelper}
 		${requestContextExpression("requestId")}
 		const steps = await ctx.db
 			.query("inspectionSteps")
 			.withIndex("by_request_id_and_started_at", (q) => q.eq("requestId", requestId))
 			.collect();
-		const stepsWithPayloads = await Promise.all(steps.map(async (step) => {
-			const parts = await ctx.db
-				.query("inspectionPayloads")
-				.withIndex("by_step_id_and_part", (q) => q.eq("stepId", step._id))
-				.collect();
-			const text = parts.sort((left, right) => left.part - right.part).map((part) => part.text).join("");
-			let payload = text;
-			try { payload = JSON.parse(text); } catch {}
-			return { ...step, payload };
-		}));
+		const stepsWithPayloads = await Promise.all(
+			steps.map(async (step) => ({
+				...step,
+				payload: await loadPayload(step._id),
+			})),
+		);
 		return {
 			request: { click, session, visitorEncounter },
 			runs,
@@ -216,12 +211,13 @@ export function inspectSegment(
 		const sentence = await ctx.db.get(segment.sentenceId);
 		const sessions = await ctx.db
 			.query("resolutionSessions")
+			.withIndex("by_sentence_id", (q) => q.eq("sentenceId", segment.sentenceId))
 			.filter((q) => q.eq(q.field("segmentId"), segment._id))
 			.order("desc")
 			.take(50);
 		const visitorEncounters = await ctx.db
 			.query("visitorEncounters")
-			.withIndex("by_segment_id", (q) => q.eq("segmentId", segment._id))
+			.withIndex("by_segment_id_and_attestation_id", (q) => q.eq("segmentId", segment._id))
 			.order("desc")
 			.take(50);
 		const requestIds = [...new Set([...sessions.map((session) => session.requestId), ...visitorEncounters.map((encounter) => encounter.requestId)])];

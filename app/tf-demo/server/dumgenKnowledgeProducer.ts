@@ -22,14 +22,14 @@ const dumgenSegmenters: Segmenters<Jev> = {
  * `onContribution`'s. `ready` runs when a run first needs the model, and
  * throws when the deployment can't produce Knowledge.
  */
-export function dumgenKnowledgeProducer(
-	ready: () => void,
+export function dumgenKnowledgeProducer<E>(
+	ready: Effect.Effect<void, E>,
 ): KnowledgeProducer<Jev | Luna> {
-	return (input, options) =>
-		Effect.suspend(() => {
-			ready();
+	return Effect.fn("DumgenKnowledgeProducer.produce")(
+		function* (input, options) {
+			yield* Effect.orDie(ready);
 			const segments = input.encounter.sentence.segments;
-			return withBreakdown(
+			return yield* withBreakdown(
 				dumgenSegmenters,
 				operations.knowledge.produce({
 					language: "de",
@@ -55,5 +55,6 @@ export function dumgenKnowledgeProducer(
 				},
 				options.sourcePointsBack,
 			);
-		});
+		},
+	);
 }

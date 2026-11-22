@@ -1,34 +1,49 @@
-import { readdir, readFile, stat } from "node:fs/promises";
-import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { readdir } from "node:fs/promises";
+import { basename, join, relative, resolve } from "node:path";
 
+import {
+	adrAmendmentCitationIssues,
+	adrLogbookIssues,
+	adrStructureIssues,
+	auditAdrAmendmentCitations,
+	auditAdrs,
+	isAdrCitationScanPath,
+} from "./lib/documentation-adr-rules";
+import {
+	auditMarkdownLinks,
+	cleanLinkTarget,
+	markdownLinks,
+} from "./lib/documentation-markdown-links";
+import {
+	type DocumentationIssue,
+	type DocumentationRule,
+	fileReadConcurrency,
+	gitVisibleFiles,
+	isDeveloperDocumentationPath,
+	isProtectedDeveloperDocument,
+	mapWithConcurrency,
+	normalizeRepositoryPath,
+	pathExists,
+	readCachedText,
+	stripFrontmatter,
+	type TextReadCache,
+} from "./lib/documentation-shared";
 import { findRepositoryRoot } from "./lib/workspaces";
 
-export type DocumentationRule =
-	| "adr-amendment-citation"
-	| "adr-logbook"
-	| "adr-structure"
-	| "allowed-path"
-	| "broken-anchor"
-	| "broken-link"
-	| "glossary-map-structure"
-	| "glossary-structure"
-	| "coordination-file"
-	| "empty-scaffolding"
-	| "protected-file-change"
-	| "protected-reference-placement"
-	| "vision-placement";
-
-export type DocumentationIssue = {
-	detail: string;
-	file: string;
-	kind: DocumentationRule;
-	line?: number;
-	severity: "advisory" | "error";
-};
-
-type MarkdownLink = {
-	line: number;
-	target: string;
+export {
+	adrAmendmentCitationIssues,
+	adrLogbookIssues,
+	adrStructureIssues,
+	auditAdrAmendmentCitations,
+	auditAdrs,
+	auditMarkdownLinks,
+	type DocumentationIssue,
+	type DocumentationRule,
+	gitVisibleFiles,
+	isAdrCitationScanPath,
+	isDeveloperDocumentationPath,
+	isProtectedDeveloperDocument,
+	markdownLinks,
 };
 
 const coordinationTokens = new Set([
@@ -44,122 +59,11 @@ const coordinationTokens = new Set([
 	"wip",
 ]);
 
-function normalizeRepositoryPath(path: string): string {
-	return path.replaceAll("\\", "/").replace(/^\.\//u, "");
-}
-
-async function pathExists(path: string): Promise<boolean> {
-	try {
-		await stat(path);
-		return true;
-	} catch {
-		return false;
-	}
-}
-
-async function gitPaths(
-	repositoryRoot: string,
-	args: readonly string[],
-): Promise<string[]> {
-	const process = Bun.spawn(["git", "ls-files", "-z", ...args], {
-		cwd: repositoryRoot,
-		stderr: "pipe",
-		stdout: "pipe",
-	});
-	const [output, error] = await Promise.all([
-		new Response(process.stdout).text(),
-		new Response(process.stderr).text(),
-	]);
-	if ((await process.exited) !== 0) {
-		throw new Error(`git ls-files failed in ${repositoryRoot}: ${error}`);
-	}
-	return output.split("\0").filter((path) => path.length > 0);
-}
-
-/**
- * The files git would track: tracked files still present in the working tree
- * plus untracked files that no ignore rule covers, so gitignored local output
- * stays out and an uncommitted new document is still checked.
- */
-export async function gitVisibleFiles(
-	repositoryRoot: string,
-): Promise<string[]> {
-	const [listed, deleted] = await Promise.all([
-		gitPaths(repositoryRoot, [
-			"--cached",
-			"--others",
-			"--exclude-standard",
-		]),
-		gitPaths(repositoryRoot, ["--deleted"]),
-	]);
-	const deletedFiles = new Set(deleted);
-	return [...new Set(listed)]
-		.filter((path) => !deletedFiles.has(path))
-		.toSorted();
-}
-
-/** Visible files and every directory that contains one; "" is the root. */
-function gitVisiblePaths(files: readonly string[]): Set<string> {
-	const paths = new Set([""]);
-	for (const file of files) {
-		paths.add(file);
-		for (
-			let directory = dirname(file);
-			directory !== "." && !paths.has(directory);
-			directory = dirname(directory)
-		) {
-			paths.add(directory);
-		}
-	}
-	return paths;
-}
-
-function isPackageConsumerDocument(path: string): boolean {
-	return (
-		/^battery\/[^/]+\/README\.md$/u.test(path) ||
-		/^(?:app|battery)\/[^/]+\/generate-readme\//u.test(path)
-	);
-}
-
-function isProducedArtifact(path: string): boolean {
-	return (
-		path.startsWith("docs/benchmarks/") ||
-		path.startsWith("battery/dumling/resources/") ||
-		path.startsWith("battery/dumgen/docs/learning/") ||
-		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
-			path,
-		) ||
-		// Committed eval evidence: run reports, sweeps and review sheets.
-		path.startsWith("battery/dumgen/evidence/") ||
-		/^battery\/dumgen\/src\/promptsmith\/.*\/corpus\//u.test(path)
-	);
-}
-
-/** The path-only portion of the developer-documentation boundary accepted in #307. */
-export function isDeveloperDocumentationPath(candidate: string): boolean {
-	const path = normalizeRepositoryPath(candidate);
-	return (
-		path.endsWith(".md") &&
-		!isPackageConsumerDocument(path) &&
-		!isProducedArtifact(path)
-	);
-}
-
 export async function developerDocumentationFiles(
 	repositoryRoot: string,
 ): Promise<string[]> {
 	return (await gitVisibleFiles(repositoryRoot)).filter(
 		isDeveloperDocumentationPath,
-	);
-}
-
-export function isProtectedDeveloperDocument(candidate: string): boolean {
-	const path = normalizeRepositoryPath(candidate);
-	return (
-		basename(path) === "VISION.md" ||
-		/^(?:docs|(?:app|battery)\/[^/]+\/docs)\/reference\/human-owned\/.+\.md$/u.test(
-			path,
-		)
 	);
 }
 
@@ -206,200 +110,6 @@ function isAgentInstructionPath(candidate: string): boolean {
 			path,
 		)
 	);
-}
-
-/** Each Markdown line outside fenced code blocks, with its 1-based number. */
-function linesOutsideFences(text: string): { line: number; text: string }[] {
-	const lines: { line: number; text: string }[] = [];
-	let fence: "`" | "~" | undefined;
-	for (const [index, line] of text.split("\n").entries()) {
-		const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/u);
-		if (fenceMatch !== null) {
-			const marker = fenceMatch[1]?.[0];
-			if (marker === "`" || marker === "~") {
-				fence =
-					fence === undefined
-						? marker
-						: fence === marker
-							? undefined
-							: fence;
-			}
-			continue;
-		}
-		if (fence === undefined) lines.push({ line: index + 1, text: line });
-	}
-	return lines;
-}
-
-export function markdownLinks(text: string): MarkdownLink[] {
-	const links: MarkdownLink[] = [];
-	const inlineLink =
-		/!?\[[^\]]*\]\(\s*(<[^>]+>|[^)\s]+)(?:\s+["'][^)]*["'])?\s*\)/gu;
-	const referenceDefinition = /^\s{0,3}\[[^\]]+\]:\s*(<[^>]+>|\S+)/u;
-
-	for (const { line: number, text: originalLine } of linesOutsideFences(
-		text,
-	)) {
-		const line = originalLine.replaceAll(/`[^`]*`/gu, "");
-		for (const match of line.matchAll(inlineLink)) {
-			const target = match[1];
-			if (target !== undefined) links.push({ line: number, target });
-		}
-		const definition = line.match(referenceDefinition)?.[1];
-		if (definition !== undefined) {
-			links.push({ line: number, target: definition });
-		}
-	}
-
-	return links;
-}
-
-function cleanLinkTarget(target: string): string {
-	const unwrapped =
-		target.startsWith("<") && target.endsWith(">")
-			? target.slice(1, -1)
-			: target;
-	try {
-		return decodeURIComponent(unwrapped);
-	} catch {
-		return unwrapped;
-	}
-}
-
-function isExternalOrSiteLink(target: string): boolean {
-	return (
-		target.startsWith("/") ||
-		target.startsWith("//") ||
-		/^[a-z][a-z\d+.-]*:/iu.test(target)
-	);
-}
-
-function githubHeadingSlug(heading: string): string {
-	const plainHeading = heading
-		.toLowerCase()
-		.replaceAll(/!?\[([^\]]+)\]\([^)]*\)/gu, "$1")
-		.replaceAll(/<[^>]+>/gu, "")
-		.replaceAll(/[`*~]/gu, "");
-	return plainHeading
-		.replaceAll(/[\p{P}\p{S}]/gu, (character) =>
-			character === "-" || character === "_" ? character : "",
-		)
-		.trim()
-		.replaceAll(/\s/gu, "-");
-}
-
-function markdownAnchors(text: string): Set<string> {
-	const anchors = new Set<string>();
-	const counts = new Map<string, number>();
-
-	for (const { text: line } of linesOutsideFences(text)) {
-		const heading = line.match(/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/u)?.[1];
-		const explicitId = heading?.match(/\{:?\s*#([\w-]+)\s*\}$/u)?.[1];
-		if (explicitId !== undefined) {
-			anchors.add(explicitId);
-		} else if (heading !== undefined) {
-			const base = githubHeadingSlug(heading);
-			const count = counts.get(base) ?? 0;
-			anchors.add(count === 0 ? base : `${base}-${count}`);
-			counts.set(base, count + 1);
-		}
-		for (const match of line.matchAll(
-			/<(?:a|span)\s+(?:id|name)=["']([^"']+)["']/giu,
-		)) {
-			if (match[1] !== undefined) anchors.add(match[1]);
-		}
-	}
-
-	return anchors;
-}
-
-function splitTarget(target: string): { fragment?: string; path: string } {
-	const hashIndex = target.indexOf("#");
-	const pathAndQuery = hashIndex === -1 ? target : target.slice(0, hashIndex);
-	const queryIndex = pathAndQuery.indexOf("?");
-	return {
-		fragment: hashIndex === -1 ? undefined : target.slice(hashIndex + 1),
-		path:
-			queryIndex === -1
-				? pathAndQuery
-				: pathAndQuery.slice(0, queryIndex),
-	};
-}
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export async function auditMarkdownLinks(
-	repositoryRoot: string,
-	files?: readonly string[],
-): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	const anchorCache = new Map<string, Set<string>>();
-	const visibleFiles = await gitVisibleFiles(repositoryRoot);
-	const visiblePaths = gitVisiblePaths(visibleFiles);
-	const relativeFiles =
-		files ?? visibleFiles.filter(isDeveloperDocumentationPath);
-
-	for (const relativeSource of relativeFiles) {
-		const sourcePath = resolve(repositoryRoot, relativeSource);
-		const text = await readFile(sourcePath, "utf8");
-		const severity = isProtectedDeveloperDocument(relativeSource)
-			? "advisory"
-			: "error";
-		for (const link of markdownLinks(text)) {
-			const target = cleanLinkTarget(link.target);
-			if (isExternalOrSiteLink(target)) continue;
-			const parts = splitTarget(target);
-			const targetPath =
-				parts.path.length === 0
-					? sourcePath
-					: resolve(dirname(sourcePath), parts.path);
-			// A gitignored target exists only in this checkout, never on GitHub.
-			if (
-				!visiblePaths.has(
-					normalizeRepositoryPath(
-						relative(repositoryRoot, targetPath),
-					),
-				)
-			) {
-				issues.push({
-					detail: `${(await pathExists(targetPath)) ? "target is ignored by git" : "target does not exist"}: ${link.target}`,
-					file: normalizeRepositoryPath(relativeSource),
-					kind: "broken-link",
-					line: link.line,
-					severity,
-				});
-				continue;
-			}
-			if (
-				parts.fragment === undefined ||
-				parts.fragment.length === 0 ||
-				/^L\d+(?:-L?\d+)?$/u.test(parts.fragment) ||
-				extname(targetPath).toLowerCase() !== ".md"
-			) {
-				continue;
-			}
-
-			let anchors = anchorCache.get(targetPath);
-			if (anchors === undefined) {
-				anchors = markdownAnchors(await readFile(targetPath, "utf8"));
-				anchorCache.set(targetPath, anchors);
-			}
-			const fragment = cleanLinkTarget(parts.fragment).replace(
-				/^user-content-/u,
-				"",
-			);
-			if (!anchors.has(fragment)) {
-				issues.push({
-					detail: `anchor does not exist: #${parts.fragment}`,
-					file: normalizeRepositoryPath(relativeSource),
-					kind: "broken-anchor",
-					line: link.line,
-					severity,
-				});
-			}
-		}
-	}
-
-	return issues;
 }
 
 export function auditAllowedPaths(
@@ -573,17 +283,18 @@ function isGlossaryPath(path: string): boolean {
 async function auditGlossaries(
 	repositoryRoot: string,
 	files: readonly string[],
+	fileCache: TextReadCache = new Map(),
 ): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(isGlossaryPath)) {
-		issues.push(
-			...glossaryStructureIssues(
+	const perFileIssues = await mapWithConcurrency(
+		files.filter(isGlossaryPath),
+		fileReadConcurrency,
+		async (file) =>
+			glossaryStructureIssues(
 				file,
-				await readFile(join(repositoryRoot, file), "utf8"),
+				await readCachedText(resolve(repositoryRoot, file), fileCache),
 			),
-		);
-	}
-	return issues;
+	);
+	return perFileIssues.flat();
 }
 
 export function glossaryMapStructureIssues(text: string): DocumentationIssue[] {
@@ -609,6 +320,7 @@ export function glossaryMapStructureIssues(text: string): DocumentationIssue[] {
 async function auditGlossaryMap(
 	repositoryRoot: string,
 	files: readonly string[],
+	fileCache: TextReadCache = new Map(),
 ): Promise<DocumentationIssue[]> {
 	if (!files.includes("GLOSSARY-MAP.md")) {
 		return [
@@ -620,9 +332,9 @@ async function auditGlossaryMap(
 			},
 		];
 	}
-	const text = await readFile(
-		join(repositoryRoot, "GLOSSARY-MAP.md"),
-		"utf8",
+	const text = await readCachedText(
+		resolve(repositoryRoot, "GLOSSARY-MAP.md"),
+		fileCache,
 	);
 	const issues = glossaryMapStructureIssues(text);
 	const targets = new Set(
@@ -640,207 +352,6 @@ async function auditGlossaryMap(
 				severity: "error",
 			});
 		}
-	}
-	return issues;
-}
-
-function stripFrontmatter(text: string): {
-	body: string;
-	frontmatter?: string;
-} {
-	if (!text.startsWith("---\n")) return { body: text };
-	const end = text.indexOf("\n---\n", 4);
-	if (end === -1) return { body: text, frontmatter: "" };
-	return {
-		body: text.slice(end + 5),
-		frontmatter: text.slice(4, end),
-	};
-}
-
-export function adrStructureIssues(
-	file: string,
-	text: string,
-): DocumentationIssue[] {
-	const issues: DocumentationIssue[] = [];
-	const { body, frontmatter } = stripFrontmatter(text);
-	const status = frontmatter?.trim();
-	if (status !== "status: accepted") {
-		issues.push({
-			detail: "ADR must start with the frontmatter `status: accepted` (docs/reference/developer-documentation.md)",
-			file,
-			kind: "adr-structure",
-			line: 1,
-			severity: "error",
-		});
-	}
-	const lines = body.split("\n");
-	const firstContent = lines.findIndex((line) => line.trim().length > 0);
-	if (firstContent === -1 || !/^# [^#].+/u.test(lines[firstContent] ?? "")) {
-		issues.push({
-			detail: "ADR must start with one level-one decision title",
-			file,
-			kind: "adr-structure",
-			severity: "error",
-		});
-		return issues;
-	}
-	const headingIndexes = lines
-		.map((line, index) => ({ index, line }))
-		.filter(({ line }) => /^#{1,6}\s/u.test(line));
-	for (const heading of headingIndexes.slice(1)) {
-		if (
-			heading.line !== "## Considered Options" &&
-			heading.line !== "## Consequences"
-		) {
-			issues.push({
-				detail: "ADR optional sections are limited to ## Considered Options and ## Consequences",
-				file,
-				kind: "adr-structure",
-				line: heading.index + 1,
-				severity: "error",
-			});
-		}
-	}
-	const firstSection = headingIndexes[1]?.index ?? lines.length;
-	if (
-		lines
-			.slice(firstContent + 1, firstSection)
-			.join("\n")
-			.trim().length === 0
-	) {
-		issues.push({
-			detail: "ADR title must be followed by the decision and its reason",
-			file,
-			kind: "adr-structure",
-			severity: "error",
-		});
-	}
-	return issues;
-}
-
-/**
- * Dated amendment paragraphs, "Amended by" back-pointers and "the <date>
- * amendment" mentions turn an ADR into a logbook. The present-tense "Amends
- * ADR NNNN" that scopes a newer decision stays allowed.
- */
-export function adrLogbookIssues(
-	file: string,
-	text: string,
-): DocumentationIssue[] {
-	return linesOutsideFences(text)
-		.filter(({ text: line }) => /\bamend(?:ed|ments?)\b/iu.test(line))
-		.map(({ line }) => ({
-			detail: "An ADR states the current decision: fold the change into the text and leave its history to the issue and git (docs/reference/developer-documentation.md)",
-			file,
-			kind: "adr-logbook" as const,
-			line,
-			severity: "error" as const,
-		}));
-}
-
-function isAdrPath(path: string): boolean {
-	return path.includes("/docs/adr/") || path.startsWith("docs/adr/");
-}
-
-export async function auditAdrs(
-	repositoryRoot: string,
-	files: readonly string[],
-): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(isAdrPath)) {
-		const text = await readFile(join(repositoryRoot, file), "utf8");
-		issues.push(
-			...adrStructureIssues(file, text),
-			...adrLogbookIssues(file, text),
-		);
-	}
-	return issues;
-}
-
-/**
- * The rule's own source and tests name the amendment forms on purpose, so the
- * citation scan leaves them out.
- */
-const amendmentCitationRuleFiles = new Set([
-	"tooling/documentation-integrity.ts",
-	"tooling/tests/documentation-integrity.test.ts",
-]);
-
-/**
- * Code, tests and records (every non-Markdown file under app/, battery/ and
- * tooling/), plus the developer documents outside the ADRs, which the stricter
- * ADR logbook rule already covers.
- */
-export function isAdrCitationScanPath(candidate: string): boolean {
-	const path = normalizeRepositoryPath(candidate);
-	if (extname(path).toLowerCase() === ".md") {
-		return isDeveloperDocumentationPath(path) && !isAdrPath(path);
-	}
-	return (
-		/^(?:app|battery|tooling)\//u.test(path) &&
-		!amendmentCitationRuleFiles.has(path)
-	);
-}
-
-const amendmentCitationForms = [
-	// "ADR 0040, amended 2026-10-02", "ADR 0036 amended on #653", "(ADR 0037, amended)"
-	/\bADR[\s-]?\d{4},?\s+amended\b/iu,
-	// "(amended 2026-09-30)", "amended on #618", "amended for #767"
-	/\bamended\s+(?:(?:on|for|in)\s+)?(?:\d{4}-\d{2}-\d{2}|#\d+)/iu,
-	// "the 2026-10-02 amendment", "ADR 0040's amendment"
-	/(?:\b\d{4}-\d{2}-\d{2}|\bADR[\s-]?\d{4}(?:'s)?)\s+amendment\b/iu,
-];
-
-/**
- * An ADR citation in code, tests, a record or a document names the ADR alone;
- * an ADR states its current decision, so "amended <date>" points at history
- * that the issue and git keep. The present-tense "Amends ADR NNNN" and, in
- * Markdown, fenced examples stay allowed.
- */
-export function adrAmendmentCitationIssues(
-	file: string,
-	text: string,
-): DocumentationIssue[] {
-	const lines =
-		extname(file).toLowerCase() === ".md"
-			? linesOutsideFences(text)
-			: text
-					.split("\n")
-					.map((line, index) => ({ line: index + 1, text: line }));
-	return lines.flatMap(({ line, text: content }) =>
-		amendmentCitationForms.some((form) => form.test(content))
-			? [
-					{
-						detail: "Cite the ADR alone, as (ADR 0040) or (ADR 0040, #618); the ADR states its current decision",
-						file,
-						kind: "adr-amendment-citation" as const,
-						line,
-						severity: "error" as const,
-					},
-				]
-			: [],
-	);
-}
-
-/** Git's own heuristic: a NUL byte in the first 8000 bytes marks a binary file. */
-function isBinaryContent(bytes: Uint8Array): boolean {
-	return bytes.subarray(0, 8000).includes(0);
-}
-
-export async function auditAdrAmendmentCitations(
-	repositoryRoot: string,
-	files: readonly string[],
-): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(isAdrCitationScanPath)) {
-		const bytes = await readFile(join(repositoryRoot, file));
-		if (isBinaryContent(bytes)) continue;
-		issues.push(
-			...adrAmendmentCitationIssues(
-				normalizeRepositoryPath(file),
-				new TextDecoder().decode(bytes),
-			),
-		);
 	}
 	return issues;
 }
@@ -863,22 +374,26 @@ export function isEmptyScaffoldingContent(text: string): boolean {
 export async function auditEmptyScaffolding(
 	repositoryRoot: string,
 	files: readonly string[],
+	fileCache: TextReadCache = new Map(),
 ): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	for (const file of files) {
-		if (
-			isEmptyScaffoldingContent(
-				await readFile(join(repositoryRoot, file), "utf8"),
-			)
-		) {
-			issues.push({
-				detail: "developer document is empty or placeholder scaffolding",
-				file,
-				kind: "empty-scaffolding",
-				severity: "error",
-			});
-		}
-	}
+	const fileIssues = (
+		await mapWithConcurrency(files, fileReadConcurrency, async (file) => {
+			const text = await readCachedText(
+				resolve(repositoryRoot, file),
+				fileCache,
+			);
+			return isEmptyScaffoldingContent(text)
+				? [
+						{
+							detail: "developer document is empty or placeholder scaffolding",
+							file,
+							kind: "empty-scaffolding" as const,
+							severity: "error" as const,
+						},
+					]
+				: [];
+		})
+	).flat();
 	const scopes = new Set([
 		"docs",
 		...files.flatMap((file) => {
@@ -886,24 +401,33 @@ export async function auditEmptyScaffolding(
 			return match === undefined ? [] : [join(match, "docs")];
 		}),
 	]);
-	for (const scope of scopes) {
-		for (const category of ["adr", "reference", "runbooks"]) {
-			const directory = join(repositoryRoot, scope, category);
-			if (!(await pathExists(directory))) continue;
-			const entries = await readdir(directory);
-			if (entries.length === 0) {
-				issues.push({
-					detail: "documentation category directory is empty scaffolding",
-					file: normalizeRepositoryPath(
-						relative(repositoryRoot, directory),
-					),
-					kind: "empty-scaffolding",
-					severity: "error",
-				});
-			}
-		}
-	}
-	return issues;
+	const directories = [...scopes].flatMap((scope) =>
+		(["adr", "reference", "runbooks"] as const).map((category) =>
+			join(repositoryRoot, scope, category),
+		),
+	);
+	const directoryIssues = (
+		await mapWithConcurrency(
+			directories,
+			fileReadConcurrency,
+			async (directory) => {
+				if (!(await pathExists(directory))) return [];
+				const entries = await readdir(directory);
+				if (entries.length > 0) return [];
+				return [
+					{
+						detail: "documentation category directory is empty scaffolding",
+						file: normalizeRepositoryPath(
+							relative(repositoryRoot, directory),
+						),
+						kind: "empty-scaffolding" as const,
+						severity: "error" as const,
+					},
+				];
+			},
+		)
+	).flat();
+	return [...fileIssues, ...directoryIssues];
 }
 
 export function auditProtectedChanges(
@@ -973,19 +497,41 @@ async function changedRepositoryFiles(
 export async function auditDocumentationIntegrity(
 	repositoryRoot: string,
 ): Promise<DocumentationIssue[]> {
-	const visibleFiles = await gitVisibleFiles(repositoryRoot);
+	const [visibleFiles, changedFiles] = await Promise.all([
+		gitVisibleFiles(repositoryRoot),
+		changedRepositoryFiles(repositoryRoot),
+	]);
 	const files = visibleFiles.filter(isDeveloperDocumentationPath);
+	const fileCache: TextReadCache = new Map();
+	const [
+		glossaries,
+		glossaryMap,
+		adrs,
+		adrAmendmentCitations,
+		emptyScaffolding,
+		markdownLinkIssues,
+	] = await Promise.all([
+		auditGlossaries(repositoryRoot, files, fileCache),
+		auditGlossaryMap(repositoryRoot, files, fileCache),
+		auditAdrs(repositoryRoot, files, fileCache),
+		auditAdrAmendmentCitations(repositoryRoot, visibleFiles, fileCache),
+		auditEmptyScaffolding(repositoryRoot, files, fileCache),
+		auditMarkdownLinks(repositoryRoot, files, {
+			fileCache,
+			visibleFiles,
+		}),
+	]);
 	return [
 		...auditAllowedPaths(files),
 		...auditProtectedPlacement(files),
 		...auditCoordinationFiles(files),
-		...(await auditGlossaries(repositoryRoot, files)),
-		...(await auditGlossaryMap(repositoryRoot, files)),
-		...(await auditAdrs(repositoryRoot, files)),
-		...(await auditAdrAmendmentCitations(repositoryRoot, visibleFiles)),
-		...(await auditEmptyScaffolding(repositoryRoot, files)),
-		...(await auditMarkdownLinks(repositoryRoot, files)),
-		...auditProtectedChanges(await changedRepositoryFiles(repositoryRoot)),
+		...glossaries,
+		...glossaryMap,
+		...adrs,
+		...adrAmendmentCitations,
+		...emptyScaffolding,
+		...markdownLinkIssues,
+		...auditProtectedChanges(changedFiles),
 	];
 }
 

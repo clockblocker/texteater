@@ -1,6 +1,8 @@
 import { cellBundleOf, cellKeyOf } from "dumling";
 import type * as Dumling from "dumling/types";
 
+import { compareCodeUnits } from "../core/identity";
+
 /**
  * Where a Surface sits in a Table Schema (system ADR 0049). It is a pure
  * function of the schema and the Surface, and never stored.
@@ -89,7 +91,7 @@ type SurfaceShape = {
  */
 function bundlesOf(bag: Bag | null | undefined): Dumling.FeatureBundle[] {
 	let bundles: Record<string, string>[] = [{}];
-	for (const name of Object.keys(bag ?? {}).sort(compare)) {
+	for (const name of Object.keys(bag ?? {}).sort(compareCodeUnits)) {
 		const values = valuesOf(bag?.[name]);
 		if (values.length === 0) continue;
 		bundles = bundles.flatMap((bundle) =>
@@ -221,15 +223,10 @@ function unique(
 	for (const bundle of bundles) {
 		const key = JSON.stringify(
 			Object.entries(bundle).sort(([left], [right]) =>
-				compare(left, right),
+				compareCodeUnits(left, right),
 			),
 		);
 		if (!seen.has(key)) seen.set(key, bundle);
 	}
 	return [...seen.values()];
-}
-
-/** Code-point order, the same in every runtime, unlike `localeCompare`. */
-export function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
 }

@@ -11,7 +11,7 @@ import {
 } from "./authoring/golden-corpus.js";
 import { assertCaseSelectionsUncontaminated } from "./authoring/selection-contamination.js";
 import { fingerprint } from "./fingerprint.js";
-import { summarizeQuality } from "./quality.js";
+import { summarizeQuality, summarizeRunCounts } from "./quality.js";
 import {
 	type configurationSchema,
 	operationCaseRecordSchema,
@@ -233,28 +233,14 @@ export async function runOperationExperiment<
 			),
 		);
 	}
-	const succeeded = records.filter(
-		(record) => record.status === "Success",
-	).length;
-	const interrupted = records.filter(
-		(record) => record.status === "Interrupted",
-	).length;
-	const failed = records.length - succeeded - interrupted;
+	const counts = summarizeRunCounts(records);
 	return operationEvaluationRunSchema.parse({
 		manifest,
 		cases: records,
 		summary: {
 			quality: summarizeQuality(records),
-			status: interrupted
-				? "Interrupted"
-				: failed
-					? "Failed"
-					: "Completed",
+			...counts,
 			finishedAt: new Date().toISOString(),
-			total: records.length,
-			succeeded,
-			interrupted,
-			failed,
 			...(repetitions > 1
 				? { stability: summarizeRunStability(records, repetitions) }
 				: {}),

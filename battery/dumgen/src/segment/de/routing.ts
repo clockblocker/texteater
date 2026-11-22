@@ -52,6 +52,7 @@ import {
 	groupKey,
 	type Partition,
 	partitionOf,
+	pieceGroupMap,
 	unitsOf,
 } from "./partition.js";
 import {
@@ -182,9 +183,17 @@ function mergeInterjections(
 	readonly merged: ReadonlySet<string>;
 	readonly links: readonly (readonly [number, number])[];
 } {
+	const groupOf = pieceGroupMap(partition);
+	const cachedRoute = new Map<number, UnitRouteKey>();
 	const interjection = (id: number) => {
-		const group = partition.find((entry) => entry.includes(id));
-		return group?.length === 1 && route(group) === "Lexeme/INTJ";
+		const group = groupOf.get(id);
+		if (group?.length !== 1) return false;
+		let unitRoute = cachedRoute.get(id);
+		if (unitRoute === undefined) {
+			unitRoute = route(group);
+			cachedRoute.set(id, unitRoute);
+		}
+		return unitRoute === "Lexeme/INTJ";
 	};
 	const links: [number, number][] = [];
 	for (const piece of sentence.pieces.slice(1)) {
@@ -432,24 +441,28 @@ export function routeMembership(
 		openRoute,
 		route,
 		units(variantMargin, options) {
-			const units = unitsOf(sentence, merged.partition, route);
-			if (variantMargin === undefined && !options?.identity) return units;
+			if (variantMargin === undefined && !options?.identity)
+				return unitsOf(sentence, merged.partition, route);
+			const unitRoutes = merged.partition.map(route);
+			const units = unitsOf(
+				sentence,
+				merged.partition,
+				(_, index) => unitRoutes[index] ?? "Unresolved",
+			);
 			return units.map((unit, index) => {
 				const group = merged.partition[index] ?? [];
+				const unitRoute = unitRoutes[index] ?? "Unresolved";
 				const keys =
 					variantMargin === undefined
 						? undefined
 						: routeVariants(
-								route(group),
+								unitRoute,
 								decidingShares(group),
 								variantMargin,
 							);
 				const identity =
 					options?.identity && group.length === 1
-						? storedIdentity(
-								picks.get(groupKey(group)),
-								route(group),
-							)
+						? storedIdentity(picks.get(groupKey(group)), unitRoute)
 						: undefined;
 				return {
 					...unit,

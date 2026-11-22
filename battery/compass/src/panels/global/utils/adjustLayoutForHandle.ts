@@ -5,7 +5,6 @@ import {
 } from "../mutable-state/splits";
 import { adjustLayoutByDelta } from "./adjustLayoutByDelta";
 import { findHandleSplit } from "./findHandleSplit";
-import { getImperativeSplitMethods } from "./getImperativeSplitMethods";
 import { layoutsEqual } from "./layoutsEqual";
 import { validateSplitLayout } from "./validateSplitLayout";
 
@@ -26,8 +25,9 @@ export function adjustLayoutForHandle(
 
 	const pivotIndices = regions.map((region) => split.regions.indexOf(region));
 
-	const splitAPI = getImperativeSplitMethods({ splitId: split.id });
-	const prevLayout = splitAPI.getLayout();
+	const prevLayout = splitState.defaultLayoutDeferred
+		? {}
+		: splitState.layout;
 
 	const unsafeLayout = adjustLayoutByDelta({
 		delta,

@@ -1,4 +1,5 @@
 import { updateCursorStyle } from "../cursor/updateCursorStyle";
+import type { HitArea } from "../dom/calculateHitAreas";
 import {
 	getInteractionState,
 	updateInteractionState,
@@ -10,6 +11,23 @@ import {
 } from "../mutable-state/splits";
 import { findMatchingHitAreas } from "../utils/findMatchingHitAreas";
 import { updateActiveHitAreas } from "../utils/updateActiveHitArea";
+
+function sameHoverHitAreas(prev: HitArea[], next: HitArea[]): boolean {
+	if (prev.length !== next.length) {
+		return false;
+	}
+	for (let index = 0; index < prev.length; index++) {
+		const prevArea = prev[index];
+		const nextArea = next[index];
+		if (
+			prevArea?.handle !== nextArea?.handle ||
+			prevArea?.split !== nextArea?.split
+		) {
+			return false;
+		}
+	}
+	return true;
+}
 
 export function onDocumentPointerMove(event: PointerEvent) {
 	if (event.defaultPrevented) {
@@ -63,15 +81,17 @@ export function onDocumentPointerMove(event: PointerEvent) {
 				}
 			}
 
-			updateActiveHitAreas({
-				document: event.currentTarget as Document,
-				event,
-				hitAreas: interactionState.hitAreas,
-				initialLayoutMap: interactionState.initialLayoutMap,
-				mountedSplits,
-				pointerDownAtPoint: interactionState.pointerDownAtPoint,
-				prevCursorFlags: interactionState.cursorFlags,
-			});
+			if (interactionState.hitAreas.length > 0) {
+				updateActiveHitAreas({
+					document: event.currentTarget as Document,
+					event,
+					hitAreas: interactionState.hitAreas,
+					initialLayoutMap: interactionState.initialLayoutMap,
+					mountedSplits,
+					pointerDownAtPoint: interactionState.pointerDownAtPoint,
+					prevCursorFlags: interactionState.cursorFlags,
+				});
+			}
 			break;
 		}
 		default: {
@@ -85,7 +105,10 @@ export function onDocumentPointerMove(event: PointerEvent) {
 						state: "inactive",
 					});
 				}
-			} else {
+			} else if (
+				interactionState.state !== "hover" ||
+				!sameHoverHitAreas(interactionState.hitAreas, hitAreas)
+			) {
 				updateInteractionState({
 					cursorFlags: 0,
 					hitAreas,

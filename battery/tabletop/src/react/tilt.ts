@@ -30,7 +30,7 @@ function flatten(engine: Engine, body: BodyState) {
 }
 
 export function flattenAll(engine: Engine) {
-	for (const body of [...engine.tilting]) flatten(engine, body);
+	for (const body of engine.tilting) flatten(engine, body);
 }
 
 /** Heads `body`'s lean for `target` from where it shows, on the feel's spring. */

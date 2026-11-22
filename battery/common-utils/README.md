@@ -64,3 +64,27 @@ can't tell such a pipe from a transform or readonly stage, which Zod skips
 after any base issue, and it has no partial value for these bases.
 `tests/validation/check-continuation-differential.test.ts` pins the shorter
 issue lists.
+
+## Effect concurrency (`common-utils/effect`)
+
+Isolated subpath for Effect v4 concurrency primitives so non-Effect consumers
+(`common-utils`, `common-utils/validation`, `common-utils/validation-compiler`)
+never load `effect`:
+
+- `makeKeyedLock` (`KeyedLock<Key>`): per-key FIFO `Semaphore` with automatic
+  map cleanup via `Ref` + `Effect.acquireUseRelease`.
+- `makeKeyedRunner` (`KeyedRunner<Key>`): scoped `FiberSet`-backed runner that
+  forks each key's effects in submission order without delaying distinct keys.
+- `makeDrainableWorker` (`DrainableWorker<A>`): STM (`TxQueue` + `TxRef`)
+  background worker whose `drain` awaits both queued and in-flight items, with
+  scoped shutdown and per-item error isolation.
+
+## Effect test helpers (`common-utils/effect-test`)
+
+Test-only `bun:test` subpath (imports `bun:test`; never imported by production
+entrypoints):
+
+- `testEffect`: runs an Effect test with a fresh `TestClock` and automatic
+  `Scope` finalization (with `.only`, `.skip`, `.failing`, `.each`, `.layer`).
+- `testLive`: runs an Effect test with the real live `Clock` and automatic
+  `Scope` finalization for wall-clock, filesystem, or subprocess tests.

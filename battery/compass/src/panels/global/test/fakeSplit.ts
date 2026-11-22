@@ -245,7 +245,6 @@ export function fakeSplit({
 						idIsStable: true,
 						element,
 						mutableValues: {
-							expandToSize: undefined,
 							prevSize: undefined,
 						},
 						onResize: undefined,

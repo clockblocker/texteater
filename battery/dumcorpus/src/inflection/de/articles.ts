@@ -1,4 +1,4 @@
-import { authoredMembers } from "../../inventories/registry.js";
+import { germanArticles } from "../../inventories/de/determiner-paradigms.js";
 
 export type Case = "Nom" | "Acc" | "Gen" | "Dat";
 export type Gender = "Masc" | "Fem" | "Neut";
@@ -22,14 +22,9 @@ let definite: ReadonlyMap<string, string> | undefined;
 function definiteArticles(): ReadonlyMap<string, string> {
 	if (definite !== undefined) return definite;
 	const cells = new Map<string, string>();
-	for (const { lemma } of authoredMembers) {
+	for (const { lemma } of germanArticles) {
+		if (lemma.canonicalForm.startsWith("ein")) continue;
 		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
-		if (
-			lemma.kind !== "DET" ||
-			core.pronType !== "Art" ||
-			lemma.canonicalForm.startsWith("ein")
-		)
-			continue;
 		const gender = typeof core.gender === "string" ? core.gender : null;
 		cells.set(
 			key(String(core.case), String(core.number), gender),

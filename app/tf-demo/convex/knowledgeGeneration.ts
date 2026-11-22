@@ -32,7 +32,6 @@ import {
 	knowledgeCoverageOf,
 	missingKnowledge,
 	nothingMissing,
-	occurrenceGovernment,
 	recordCoverageEvidence,
 } from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
@@ -136,21 +135,9 @@ const generationInputValidator = v.union(
 		topUpOnly: v.boolean(),
 		/**
 		 * Whether this occurrence created the Reading (`New`, its first
-		 * Attestation) or reused it (`TopUp`): only a New occurrence's
-		 * attested government joins the proposed frame (#677).
+		 * Attestation) or reused it (`TopUp`).
 		 */
 		origin: v.union(v.literal("New"), v.literal("TopUp")),
-		/** Attested government the Reading's Valency Frame lacks. */
-		government: v.array(
-			v.object({
-				preposition: v.string(),
-				case: v.union(
-					v.literal("Acc"),
-					v.literal("Dat"),
-					v.literal("Gen"),
-				),
-			}),
-		),
 		authorization: publicationAuthorizationValidator,
 	}),
 );
@@ -186,7 +173,6 @@ export const begin = internalMutation({
 		}
 		const missing = missingKnowledge(accumulated, {
 			translationLanguages: attempt.translationLanguages ?? ["en"],
-			attestedGovernment: await occurrenceGovernment(ctx, occurrence),
 		});
 		if (nothingMissing(missing)) {
 			await endKnowledgeRun(ctx, attempt, null, { kind: "LostRace" });
@@ -215,7 +201,6 @@ export const begin = internalMutation({
 				first?._id === attempt.attestationId
 					? ("New" as const)
 					: ("TopUp" as const),
-			government: [...missing.government],
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
@@ -371,7 +356,6 @@ export const publish = internalMutation({
 					translationLanguages: attempt.translationLanguages ?? [
 						"en",
 					],
-					attestedGovernment: [],
 				}),
 			) &&
 			!args.changes.some(

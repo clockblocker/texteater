@@ -213,6 +213,18 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		rationale: "Build-time Zod compilation and rule linking.",
 	},
 	{
+		specifier: "common-utils/effect",
+		classification: "development-support",
+		rationale:
+			"Effect v4 concurrency primitives for Effect runtimes; never loaded by Dum operational entrypoints or the Convex isolate.",
+	},
+	{
+		specifier: "common-utils/effect-test",
+		classification: "development-support",
+		rationale:
+			"Effect test helpers for bun:test suites; imports bun:test and is never loaded at application runtime.",
+	},
+	{
 		specifier: "common-utils/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",

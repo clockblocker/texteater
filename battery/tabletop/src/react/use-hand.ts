@@ -1,6 +1,8 @@
 import {
 	type PointerEvent as ReactPointerEvent,
+	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useRef,
 } from "react";
 import { type Drag, SLOP_PX, trackPointer } from "./pointer";
@@ -48,37 +50,42 @@ export function useHand(
 	callbacks: HandCallbacks,
 ): (id: string, event: ReactPointerEvent<HTMLElement>) => void {
 	const latest = useRef(callbacks);
-	latest.current = callbacks;
+	useLayoutEffect(() => {
+		latest.current = callbacks;
+	});
 	const stop = useRef<(() => void) | null>(null);
 	useEffect(() => () => stop.current?.(), []);
-	return (id, event) => {
-		if (event.button !== 0 || stop.current) return;
-		const press = { x: event.clientX, y: event.clientY };
-		let held = table.moving(id);
-		if (held) {
-			table.hold(id, press);
-			latest.current.onLift?.(id);
-		}
-		stop.current = trackPointer(event, {
-			move: (drag) => {
-				if (!held && Math.hypot(drag.dx, drag.dy) > SLOP_PX) {
-					held = true;
-					table.hold(id, press);
-					latest.current.onLift?.(id);
-				}
-				if (!held) return;
-				table.carry(id, { x: drag.clientX, y: drag.clientY });
-				latest.current.onMove?.(letting(id, drag));
-			},
-			up: (drag) => {
-				stop.current = null;
-				if (held) latest.current.onRelease(letting(id, drag));
-				else latest.current.onTap?.(id);
-			},
-			cancel: () => {
-				stop.current = null;
-				if (held) table.release(id, { x: 0, y: 0 });
-			},
-		});
-	};
+	return useCallback(
+		(id: string, event: ReactPointerEvent<HTMLElement>) => {
+			if (event.button !== 0 || stop.current) return;
+			const press = { x: event.clientX, y: event.clientY };
+			let held = table.moving(id);
+			if (held) {
+				table.hold(id, press);
+				latest.current.onLift?.(id);
+			}
+			stop.current = trackPointer(event, {
+				move: (drag) => {
+					if (!held && Math.hypot(drag.dx, drag.dy) > SLOP_PX) {
+						held = true;
+						table.hold(id, press);
+						latest.current.onLift?.(id);
+					}
+					if (!held) return;
+					table.carry(id, { x: drag.clientX, y: drag.clientY });
+					latest.current.onMove?.(letting(id, drag));
+				},
+				up: (drag) => {
+					stop.current = null;
+					if (held) latest.current.onRelease(letting(id, drag));
+					else latest.current.onTap?.(id);
+				},
+				cancel: () => {
+					stop.current = null;
+					if (held) table.release(id, { x: 0, y: 0 });
+				},
+			});
+		},
+		[table],
+	);
 }

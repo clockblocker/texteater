@@ -3,6 +3,8 @@ import {
 	createContext,
 	type ReactNode,
 	use,
+	useCallback,
+	useEffect,
 	useId,
 	useLayoutEffect,
 	useState,
@@ -257,6 +259,19 @@ export function Table({
 	useLayoutEffect(() => {
 		if (!tilt || reduced) flattenAll(engine);
 	}, [engine, tilt, reduced]);
+	useEffect(() => () => engine.dispose(), [engine]);
+	const originRef = useCallback(
+		(el: HTMLDivElement | null) => {
+			engine.origin = el;
+		},
+		[engine],
+	);
+	const svgRef = useCallback(
+		(el: SVGSVGElement | null) => {
+			engine.veils.svg = el;
+		},
+		[engine],
+	);
 	return (
 		<div
 			data-tabletop=""
@@ -273,20 +288,8 @@ export function Table({
 			}
 		>
 			<style>{TABLE_CSS}</style>
-			<div
-				data-tabletop-origin=""
-				aria-hidden="true"
-				ref={(el) => {
-					engine.origin = el;
-				}}
-			/>
-			<svg
-				data-tabletop-veils=""
-				aria-hidden="true"
-				ref={(el) => {
-					engine.veils.svg = el;
-				}}
-			/>
+			<div data-tabletop-origin="" aria-hidden="true" ref={originRef} />
+			<svg data-tabletop-veils="" aria-hidden="true" ref={svgRef} />
 			<TableContext value={table}>{children}</TableContext>
 		</div>
 	);

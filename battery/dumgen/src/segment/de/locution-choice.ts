@@ -44,6 +44,7 @@ import {
 	articleHosts,
 	type Membership,
 	memberLinks,
+	openPiecePredicate,
 } from "./assembly.js";
 import { fusedSiblings } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
@@ -56,7 +57,12 @@ import {
 	withoutFreeMembers,
 } from "./member-check.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
-import { argmaxBesideNone, groupKey, partitionOf } from "./partition.js";
+import {
+	argmaxBesideNone,
+	groupKey,
+	partitionOf,
+	pieceGroupMap,
+} from "./partition.js";
 
 export { wordingOf } from "./fixed-member.js";
 
@@ -106,17 +112,10 @@ function mergeCandidates(
 	membership: Pick<Membership, "partition" | "edges">,
 	bound: ReadonlySet<number>,
 ): MergeCandidate[] {
-	const groupOf = new Map<number, readonly number[]>();
-	for (const group of membership.partition)
-		for (const id of group) groupOf.set(id, group);
-	const saying = new Set(
-		membership.edges
-			.filter((edge) => edge.source === "saying")
-			.flatMap((edge) => edge.pieces),
-	);
+	const groupOf = pieceGroupMap(membership.partition);
+	const openPiece = openPiecePredicate(membership.edges, bound);
 	const open = (group: readonly number[]) =>
-		group.every((id) => !bound.has(id) && !saying.has(id)) &&
-		!keptApart(nomination, group);
+		group.every(openPiece) && !keptApart(nomination, group);
 	const pairs = new Map<string, MergeCandidate>();
 	const flag = (a: number, b: number) => {
 		const left = groupOf.get(a);
@@ -130,13 +129,20 @@ function mergeCandidates(
 			right: second,
 		});
 	};
+	const idiomSlotByPiece = new Map<
+		number,
+		(typeof nomination.slots)[number]
+	>();
+	for (const candidate of nomination.slots)
+		if (
+			candidate.kind === "idiom" &&
+			!idiomSlotByPiece.has(candidate.piece.id)
+		)
+			idiomSlotByPiece.set(candidate.piece.id, candidate);
 	// A noun's idiom answers: its slot's, and its re-asked hosts', which a
 	// noun without a slot may have too.
 	for (const piece of nomination.sentence.pieces) {
-		const slot = nomination.slots.find(
-			(candidate) =>
-				candidate.kind === "idiom" && candidate.piece.id === piece.id,
-		);
+		const slot = idiomSlotByPiece.get(piece.id);
 		for (const answer of [
 			slot && nomination.first[slotId(slot)],
 			nomination.final[reaskedIdiomId(piece.id)],

@@ -35,6 +35,7 @@ import type * as lunaAheadBatches from "../lunaAheadBatches.js";
 import type * as model_breakdownParts from "../model/breakdownParts.js";
 import type * as model_clickOrchestrator from "../model/clickOrchestrator.js";
 import type * as model_codex from "../model/codex.js";
+import type * as model_convexEffect from "../model/convexEffect.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_deploymentDumgen from "../model/deploymentDumgen.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
@@ -159,6 +160,7 @@ declare const fullApi: ApiFromModules<{
   "model/breakdownParts": typeof model_breakdownParts;
   "model/clickOrchestrator": typeof model_clickOrchestrator;
   "model/codex": typeof model_codex;
+  "model/convexEffect": typeof model_convexEffect;
   "model/definitionTexts": typeof model_definitionTexts;
   "model/deploymentDumgen": typeof model_deploymentDumgen;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;

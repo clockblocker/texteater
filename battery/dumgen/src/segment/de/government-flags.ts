@@ -4,10 +4,10 @@
  * family (see that module for what each family means).
  */
 
-import type { Membership } from "./assembly.js";
+import { type Membership, openPiecePredicate } from "./assembly.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
-import { argmaxBesideNone } from "./partition.js";
+import { argmaxBesideNone, pieceGroupMap } from "./partition.js";
 import { governorShares, opensPhrase } from "./phrase.js";
 import type { Piece } from "./sentence.js";
 
@@ -126,16 +126,9 @@ export function flaggedPrepositions(
 	rules: readonly CodeRule[],
 ): GovernmentFlag[] {
 	const { pieces } = nomination.sentence;
-	const groupOf = new Map<number, readonly number[]>();
-	for (const group of membership.partition)
-		for (const id of group) groupOf.set(id, group);
-	const saying = new Set(
-		membership.edges
-			.filter((edge) => edge.source === "saying")
-			.flatMap((edge) => edge.pieces),
-	);
+	const groupOf = pieceGroupMap(membership.partition);
 	const bound = boundPieces(nomination, membership, rules);
-	const open = (id: number) => !saying.has(id) && !bound.has(id);
+	const open = openPiecePredicate(membership.edges, bound);
 	const together = (a: number, b: number) =>
 		groupOf.get(a) !== undefined && groupOf.get(a) === groupOf.get(b);
 	const satellite = new Set(

@@ -1,6 +1,7 @@
 import { dumlingRoutes } from "dumling/codegen";
 import { z } from "zod";
 import type { AdrId, RuleId, SpecRecord } from "../corpus-types.js";
+import { inflectionalBagOf } from "../inflectional-bag.js";
 import { isReviewed } from "../layers.js";
 
 /** Which bag of a Surface a value sits in: the Lemma's Core or the inflection. */
@@ -158,12 +159,7 @@ export function reviewedValueKeys(
 			const route = `${lemma.family}/${lemma.kind}`;
 			const bags: [FeatureBag, object | null | undefined][] = [
 				["Core", lemma.coreFeatures],
-				[
-					"Inflectional",
-					"inflectionalFeatures" in surface
-						? surface.inflectionalFeatures
-						: null,
-				],
+				["Inflectional", inflectionalBagOf(surface)],
 			];
 			for (const [bag, features] of bags)
 				for (const [feature, value] of Object.entries(features ?? {}))

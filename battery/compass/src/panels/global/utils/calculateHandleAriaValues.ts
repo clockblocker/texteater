@@ -7,12 +7,10 @@ export function calculateHandleAriaValues({
 	layout,
 	regionConstraints,
 	regionId,
-	regionIndex,
 }: {
 	layout: Layout;
 	regionConstraints: RegionConstraints[];
 	regionId: string;
-	regionIndex: number;
 }): {
 	valueControls: string | undefined;
 	valueMax: number | undefined;
@@ -24,9 +22,11 @@ export function calculateHandleAriaValues({
 
 	const regionSize = layout[regionId];
 
-	const constraints = regionConstraints.find(
+	const regionIndex = regionConstraints.findIndex(
 		(current) => current.regionId === regionId,
 	);
+	const constraints =
+		regionIndex >= 0 ? regionConstraints[regionIndex] : undefined;
 	if (constraints && regionSize !== undefined) {
 		const maxSize = constraints.maxSize;
 		const minSize = constraints.collapsible

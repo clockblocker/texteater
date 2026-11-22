@@ -97,10 +97,9 @@ export function acceptedNames(
  * 0.13 against none 0.37).
  */
 function pooledByName(
-	accepted: SlotReading["accepted"],
+	names: readonly (readonly number[])[],
 	probabilities: Readonly<Record<string, number>>,
 ): Readonly<Record<string, number>> {
-	const names = acceptedNames(accepted);
 	if (names.length === 0) return probabilities;
 	const pooled: Record<string, number> = { ...probabilities };
 	for (const name of names) {
@@ -131,10 +130,11 @@ export function slotLinks(
 	answers: Answers,
 	satelliteMargin = 0,
 ): SlotLink[] {
+	const names = acceptedNames(reading.accepted);
 	const best = new Map<number, SlotLink>();
 	for (const slot of slots) {
 		const probabilities = pooledByName(
-			reading.accepted,
+			names,
 			governorShares(
 				reading.sentence,
 				slot,

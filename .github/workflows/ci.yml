@@ -59,6 +59,10 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts validate
 
+      - name: oxlint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts oxlint
+
       - name: knip
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts knip

@@ -291,6 +291,17 @@ export const Shell = memo(function Shell({
 		},
 		[engine, id],
 	);
+	const frontRef = useCallback(
+		(el: HTMLDivElement | null) => {
+			if (!el) return;
+			const body = engine.body(id);
+			body.front = el;
+			return () => {
+				if (body.front === el) body.front = null;
+			};
+		},
+		[engine, id],
+	);
 	const down = side === "back";
 	return (
 		<div
@@ -308,6 +319,7 @@ export const Shell = memo(function Shell({
 				{back}
 			</div>
 			<div
+				ref={frontRef}
 				data-tabletop-face="front"
 				aria-hidden={down}
 				inert={down}

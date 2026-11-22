@@ -119,7 +119,6 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			kind: "Generate",
 			translationLanguages: ["ru"],
 			topUpOnly: true,
-			government: [],
 		}),
 	);
 

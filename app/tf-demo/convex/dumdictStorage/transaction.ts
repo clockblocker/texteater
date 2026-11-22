@@ -47,10 +47,11 @@ import {
 	findLemma,
 	findPending,
 	findReading,
-	findSurface,
 	MAX_PATCH_OPS,
 	MAX_PLANNED_CHANGES,
+	ownedSurfaceExists,
 	pendingLocatorKey,
+	readingEntryExists,
 	storedReadingEntry,
 	withoutSemanticRelationTargets,
 } from "./storage";
@@ -172,7 +173,7 @@ async function preconditionFails(
 			const exists = await cachedPresence(
 				shadow.readings,
 				readingIdentityKey(precondition.reading),
-				() => findReading(ctx, precondition.reading),
+				() => readingEntryExists(ctx, precondition.reading),
 			);
 			return precondition.kind === "readingExists" ? !exists : exists;
 		}
@@ -182,7 +183,7 @@ async function preconditionFails(
 			const exists = await cachedPresence(
 				shadow.surfaces,
 				surfaceId,
-				() => findSurface(ctx, surfaceId),
+				() => ownedSurfaceExists(ctx, surfaceId),
 			);
 			return precondition.kind === "surfaceExists" ? !exists : exists;
 		}
@@ -319,208 +320,254 @@ function readingEntryRecord(entry: GermanReadingEntry): AnyRecord {
 	return base === undefined ? content : { ...content, knowledge: base };
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+async function applyCreateLemma(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "createLemma" }>,
+): Promise<void> {
+	const { lemma } = change.record;
+	const canonical = await findCanonicalLemma(ctx, lemma);
+	if (canonical) {
+		const existing = await ctx.db
+			.query("dictionaryLemmas")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+			.unique();
+		if (existing) throw divergedFromPreflight();
+	}
+	const lemmaId =
+		canonical?._id ??
+		(await ctx.db.insert("lemmas", {
+			lemmaKey: lemmaIdentityKey(lemma),
+			language: lemma.language,
+			family: lemma.family,
+			kind: lemma.kind,
+			canonicalForm: lemma.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(lemma),
+			coreFeatures: lemma.coreFeatures,
+		}));
+	await ctx.db.insert("dictionaryLemmas", { lemmaId });
+	await moveLinksToStoredLemma(ctx, lemma);
+}
+
+async function applyCreateReading(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "createReading" }>,
+): Promise<void> {
+	const entry = withAuthoredArticleKnowledge(change.entry);
+	// Stored and compared as Dumling parses it (ADR 0031).
+	const reading = parseUnitAs(entry.reading, "Reading", "de");
+	const emojiDescription = emojiDescriptionOf(reading);
+	const [storedLemma, canonical] = await Promise.all([
+		findLemma(ctx, reading.lemma),
+		findCanonicalReading(ctx, reading),
+	]);
+	if (!storedLemma) throw divergedFromPreflight();
+	if (canonical) {
+		const existingEntry = await ctx.db
+			.query("readingEntries")
+			.withIndex("by_reading_id", (q) => q.eq("readingId", canonical._id))
+			.unique();
+		if (
+			existingEntry &&
+			(canonical.lemmaId === storedLemma.canonical._id ||
+				(await ctx.db.get(canonical.lemmaId)))
+		) {
+			throw divergedFromPreflight();
+		}
+		if (
+			canonical.lemmaId !== storedLemma.canonical._id ||
+			canonical.emojiDescription !== emojiDescription
+		) {
+			throw new Error(
+				"Canonical Reading does not match its dictionary proposal.",
+			);
+		}
+	}
+	const readingKey = readingIdentityKey(reading);
+	const readingId =
+		canonical?._id ??
+		(await ctx.db.insert("readings", {
+			readingKey,
+			lemmaId: storedLemma.canonical._id,
+			...(emojiDescription === undefined ? {} : { emojiDescription }),
+		}));
+	await ctx.db.insert("readingEntries", {
+		readingId,
+		record: readingEntryRecord(entry),
+	});
+	const source = { readingId, lemmaId: storedLemma.canonical._id };
+	for (const edit of knowledgeRelationEdits(entry.knowledge))
+		await syncRelationEdges(ctx, source, edit);
+	const baseKnowledge = withoutSemanticRelationTargets(entry.knowledge);
+	if (baseKnowledge !== undefined) {
+		await replaceAccumulatedKnowledge(ctx, readingKey, baseKnowledge);
+	} else if (entry.knowledge !== undefined) {
+		await ensureAccumulatedKnowledgeStatus(ctx, readingKey);
+	}
+}
+
+async function applyCreateOwnedSurface(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "createOwnedSurface" }>,
+): Promise<void> {
+	const { entry } = change;
+	const [storedLemma, canonical] = await Promise.all([
+		findLemma(ctx, entry.ownerLemma),
+		findCanonicalSurface(ctx, entry.id),
+	]);
+	if (!storedLemma) throw divergedFromPreflight();
+	if (canonical) {
+		const existingOwned = await ctx.db
+			.query("ownedSurfaces")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", canonical._id))
+			.unique();
+		if (
+			existingOwned &&
+			(canonical.lemmaId === storedLemma.canonical._id ||
+				(await ctx.db.get(canonical.lemmaId)))
+		) {
+			throw divergedFromPreflight();
+		}
+	}
+	const surface = parseUnitAs(entry.surface, "Surface", "de");
+	if (entry.id !== makeSurfaceId(surface.language, surface))
+		throw new Error("Surface Entry key does not match its current value");
+	const reference = deriveGrammaticalComponent(surface);
+	if (reference) await materializeGrammaticalComponent(ctx, reference);
+	if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
+		throw new Error(
+			"Canonical Surface does not match its dictionary proposal.",
+		);
+	}
+	const surfaceId =
+		canonical?._id ??
+		(await ctx.db.insert("surfaces", {
+			surfaceKey: entry.id,
+			lemmaId: storedLemma.canonical._id,
+			language: surface.language,
+			normalizedSurface: surface.normalizedSurface,
+			spelling: surface.spelling,
+			surfaceFeatures: surface.surfaceFeatures,
+			...("inflectionalFeatures" in surface &&
+			surface.inflectionalFeatures !== undefined
+				? { inflectionalFeatures: surface.inflectionalFeatures }
+				: {}),
+		}));
+	const {
+		id: _id,
+		ownerLemma: _ownerLemma,
+		surface: _surface,
+		attestations: _attestations,
+		...record
+	} = entry;
+	await ctx.db.insert("ownedSurfaces", { surfaceId, record });
+}
+
+async function applyPatchReading(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "patchReading" }>,
+	preflight?: PreflightState,
+): Promise<void> {
+	const stored = await findReading(ctx, change.reading);
+	if (!stored) throw divergedFromPreflight();
+	const source = { readingId: stored._id, lemmaId: stored.lemmaId };
+	const knowledgeChanges = change.ops.flatMap((operation) =>
+		operation.kind === "applyKnowledgeChange"
+			? [operation.envelope.change]
+			: [],
+	);
+	for (const knowledgeChange of knowledgeChanges)
+		if (knowledgeChange.aspect === "semanticRelations")
+			await syncRelationEdges(
+				ctx,
+				source,
+				relationEdgeEdit(knowledgeChange),
+			);
+	const entry = patchedEntry(
+		storedReadingEntry(stored),
+		change,
+		preflight?.patchedEntries.get(change),
+	);
+	await ctx.db.patch(stored.entryId, {
+		record: readingEntryRecord(entry),
+	});
+	const baseKnowledge = withoutSemanticRelationTargets(entry.knowledge);
+	if (baseKnowledge !== undefined) {
+		await replaceAccumulatedKnowledge(
+			ctx,
+			stored.readingKey,
+			baseKnowledge,
+		);
+	} else if (
+		knowledgeChanges.some(
+			(knowledgeChange) => knowledgeChange.aspect !== "semanticRelations",
+		)
+	) {
+		const replaced = await replaceAccumulatedKnowledge(
+			ctx,
+			stored.readingKey,
+			undefined,
+		);
+		if (!replaced) {
+			await ensureAccumulatedKnowledgeStatus(ctx, stored.readingKey);
+		}
+	} else if (knowledgeChanges.length > 0) {
+		await ensureAccumulatedKnowledgeStatus(ctx, stored.readingKey);
+	}
+}
+
+async function applyCreatePendingSemanticRelation(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "createPendingSemanticRelation" }>,
+): Promise<void> {
+	const { record } = change;
+	const [existingPending, hasSourceReading] = await Promise.all([
+		findPending(ctx, record),
+		readingEntryExists(ctx, record.sourceReading),
+	]);
+	if (existingPending || !hasSourceReading) throw divergedFromPreflight();
+	const shadowId = await attachPendingShadowReference(ctx, record);
+	await ctx.db.insert("pendingSemanticRelations", {
+		locatorKey: pendingLocatorKey(record),
+		sourceReadingKey: record.locator.sourceReadingKey,
+		targetFoldedCanonicalForm: foldedCanonicalForm(
+			pendingShadowDescriptor(record),
+		),
+		shadowId,
+		record,
+	});
+	await ensureAccumulatedKnowledgeStatus(
+		ctx,
+		record.locator.sourceReadingKey,
+	);
+}
+
+async function applyDeletePendingSemanticRelation(
+	ctx: MutationCtx,
+	change: Extract<PlannedChange, { type: "deletePendingSemanticRelation" }>,
+): Promise<void> {
+	const stored = await findPending(ctx, change.record);
+	if (!stored) throw divergedFromPreflight();
+	await ctx.db.delete(stored._id);
+}
+
 async function applyChange(
 	ctx: MutationCtx,
 	change: PlannedChange,
 	preflight?: PreflightState,
 ): Promise<void> {
 	switch (change.type) {
-		case "createLemma": {
-			const { lemma } = change.record;
-			if (await findLemma(ctx, lemma)) throw divergedFromPreflight();
-			const canonical = await findCanonicalLemma(ctx, lemma);
-			const lemmaId =
-				canonical?._id ??
-				(await ctx.db.insert("lemmas", {
-					lemmaKey: lemmaIdentityKey(lemma),
-					language: lemma.language,
-					family: lemma.family,
-					kind: lemma.kind,
-					canonicalForm: lemma.canonicalForm,
-					foldedCanonicalForm: foldedCanonicalForm(lemma),
-					coreFeatures: lemma.coreFeatures,
-				}));
-			await ctx.db.insert("dictionaryLemmas", { lemmaId });
-			await moveLinksToStoredLemma(ctx, lemma);
-			return;
-		}
-		case "createReading": {
-			const entry = withAuthoredArticleKnowledge(change.entry);
-			// Stored and compared as Dumling parses it (ADR 0031).
-			const reading = parseUnitAs(entry.reading, "Reading", "de");
-			const emojiDescription = emojiDescriptionOf(reading);
-			const storedLemma = await findLemma(ctx, reading.lemma);
-			if (!storedLemma || (await findReading(ctx, reading)))
-				throw divergedFromPreflight();
-			const readingKey = readingIdentityKey(reading);
-			const canonical = await findCanonicalReading(ctx, reading);
-			if (
-				canonical &&
-				(canonical.lemmaId !== storedLemma.canonical._id ||
-					canonical.emojiDescription !== emojiDescription)
-			) {
-				throw new Error(
-					"Canonical Reading does not match its dictionary proposal.",
-				);
-			}
-			const readingId =
-				canonical?._id ??
-				(await ctx.db.insert("readings", {
-					readingKey,
-					lemmaId: storedLemma.canonical._id,
-					...(emojiDescription === undefined
-						? {}
-						: { emojiDescription }),
-				}));
-			await ctx.db.insert("readingEntries", {
-				readingId,
-				record: readingEntryRecord(entry),
-			});
-			const source = { readingId, lemmaId: storedLemma.canonical._id };
-			for (const edit of knowledgeRelationEdits(entry.knowledge))
-				await syncRelationEdges(ctx, source, edit);
-			const baseKnowledge = withoutSemanticRelationTargets(
-				entry.knowledge,
-			);
-			if (baseKnowledge !== undefined) {
-				await replaceAccumulatedKnowledge(
-					ctx,
-					readingKey,
-					baseKnowledge,
-				);
-			} else if (entry.knowledge !== undefined) {
-				await ensureAccumulatedKnowledgeStatus(ctx, readingKey);
-			}
-			return;
-		}
-		case "createOwnedSurface": {
-			const { entry } = change;
-			const storedLemma = await findLemma(ctx, entry.ownerLemma);
-			if (!storedLemma || (await findSurface(ctx, entry.id)))
-				throw divergedFromPreflight();
-			const surface = parseUnitAs(entry.surface, "Surface", "de");
-			if (entry.id !== makeSurfaceId(surface.language, surface))
-				throw new Error(
-					"Surface Entry key does not match its current value",
-				);
-			const reference = deriveGrammaticalComponent(surface);
-			if (reference)
-				await materializeGrammaticalComponent(ctx, reference);
-			const canonical = await findCanonicalSurface(ctx, entry.id);
-			if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
-				throw new Error(
-					"Canonical Surface does not match its dictionary proposal.",
-				);
-			}
-			const surfaceId =
-				canonical?._id ??
-				(await ctx.db.insert("surfaces", {
-					surfaceKey: entry.id,
-					lemmaId: storedLemma.canonical._id,
-					language: surface.language,
-					normalizedSurface: surface.normalizedSurface,
-					spelling: surface.spelling,
-					surfaceFeatures: surface.surfaceFeatures,
-					...("inflectionalFeatures" in surface &&
-					surface.inflectionalFeatures !== undefined
-						? { inflectionalFeatures: surface.inflectionalFeatures }
-						: {}),
-				}));
-			const {
-				id: _id,
-				ownerLemma: _ownerLemma,
-				surface: _surface,
-				attestations: _attestations,
-				...record
-			} = entry;
-			await ctx.db.insert("ownedSurfaces", { surfaceId, record });
-			return;
-		}
-		case "patchReading": {
-			const stored = await findReading(ctx, change.reading);
-			if (!stored) throw divergedFromPreflight();
-			const source = { readingId: stored._id, lemmaId: stored.lemmaId };
-			const knowledgeChanges = change.ops.flatMap((operation) =>
-				operation.kind === "applyKnowledgeChange"
-					? [operation.envelope.change]
-					: [],
-			);
-			for (const knowledgeChange of knowledgeChanges)
-				if (knowledgeChange.aspect === "semanticRelations")
-					await syncRelationEdges(
-						ctx,
-						source,
-						relationEdgeEdit(knowledgeChange),
-					);
-			const entry = patchedEntry(
-				storedReadingEntry(stored),
-				change,
-				preflight?.patchedEntries.get(change),
-			);
-			await ctx.db.patch(stored.entryId, {
-				record: readingEntryRecord(entry),
-			});
-			const baseKnowledge = withoutSemanticRelationTargets(
-				entry.knowledge,
-			);
-			if (baseKnowledge !== undefined) {
-				await replaceAccumulatedKnowledge(
-					ctx,
-					stored.readingKey,
-					baseKnowledge,
-				);
-			} else if (
-				knowledgeChanges.some(
-					(knowledgeChange) =>
-						knowledgeChange.aspect !== "semanticRelations",
-				)
-			) {
-				const replaced = await replaceAccumulatedKnowledge(
-					ctx,
-					stored.readingKey,
-					undefined,
-				);
-				if (!replaced) {
-					await ensureAccumulatedKnowledgeStatus(
-						ctx,
-						stored.readingKey,
-					);
-				}
-			} else if (knowledgeChanges.length > 0) {
-				await ensureAccumulatedKnowledgeStatus(ctx, stored.readingKey);
-			}
-			return;
-		}
-		case "createPendingSemanticRelation": {
-			const { record } = change;
-			if (
-				(await findPending(ctx, record)) ||
-				!(await findReading(ctx, record.sourceReading))
-			)
-				throw divergedFromPreflight();
-			const shadowId = await attachPendingShadowReference(ctx, record);
-			await ctx.db.insert("pendingSemanticRelations", {
-				locatorKey: pendingLocatorKey(record),
-				sourceReadingKey: record.locator.sourceReadingKey,
-				targetFoldedCanonicalForm: foldedCanonicalForm(
-					pendingShadowDescriptor(record),
-				),
-				shadowId,
-				record,
-			});
-			await ensureAccumulatedKnowledgeStatus(
-				ctx,
-				record.locator.sourceReadingKey,
-			);
-			return;
-		}
-		case "deletePendingSemanticRelation": {
-			const stored = await findPending(ctx, change.record);
-			if (!stored) throw divergedFromPreflight();
-			await ctx.db.delete(stored._id);
-			return;
-		}
+		case "createLemma":
+			return applyCreateLemma(ctx, change);
+		case "createReading":
+			return applyCreateReading(ctx, change);
+		case "createOwnedSurface":
+			return applyCreateOwnedSurface(ctx, change);
+		case "patchReading":
+			return applyPatchReading(ctx, change, preflight);
+		case "createPendingSemanticRelation":
+			return applyCreatePendingSemanticRelation(ctx, change);
+		case "deletePendingSemanticRelation":
+			return applyDeletePendingSemanticRelation(ctx, change);
 		case "setLemmaParadigm":
 			throw storesNoParadigms();
 		case "deleteReading":
@@ -579,7 +626,7 @@ export async function materializeGrammaticalComponent(
 			record: { lemma: reading.lemma },
 			preconditions: [],
 		});
-	if (!(await findReading(ctx, reading)))
+	if (!(await readingEntryExists(ctx, reading)))
 		await applyChange(ctx, {
 			type: "createReading",
 			entry: { reading, ...note, attestationLinks: [] },
@@ -587,7 +634,7 @@ export async function materializeGrammaticalComponent(
 		});
 	await completeAuthoredComponentKnowledge(ctx, reading);
 	const id = makeSurfaceId("de", surface);
-	if (!(await findSurface(ctx, id)))
+	if (!(await ownedSurfaceExists(ctx, id)))
 		await applyChange(ctx, {
 			type: "createOwnedSurface",
 			entry: {

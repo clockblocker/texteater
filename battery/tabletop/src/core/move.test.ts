@@ -6,6 +6,7 @@ import {
 	NO_PARTS,
 	overAt,
 	partSumAt,
+	sampleMoves,
 	startMoves,
 	sumAt,
 	UNSTARTED,
@@ -67,6 +68,31 @@ describe("a Move's one progress", () => {
 		}
 		expect(done(started, 2000)).toBe(true);
 		expect(sumAt([started], "x", 2000)).toBe(0);
+	});
+
+	test("sampleMoves matches sumAt across multiple moves and distinguishes absent channels", () => {
+		const m1 = move({
+			terms: [
+				{ channel: "x", delta: 100, shape: FOLLOW },
+				{ channel: "rotate", delta: 30, shape: FOLLOW },
+				{ channel: "tiltX", delta: 10, shape: FOLLOW },
+			],
+		});
+		const m2 = move({
+			bornAt: 20,
+			terms: [
+				{ channel: "x", delta: -40, shape: FOLLOW },
+				{ channel: "turn", delta: 180, shape: FOLLOW },
+			],
+		});
+		const sample = sampleMoves([m1, m2], 80);
+		expect(sample.x).toBeCloseTo(sumAt([m1, m2], "x", 80), 10);
+		expect(sample.rotate).toBeCloseTo(sumAt([m1, m2], "rotate", 80), 10);
+		expect(sample.tiltX).toBeCloseTo(sumAt([m1, m2], "tiltX", 80), 10);
+		expect(sample.turn).toBeCloseTo(sumAt([m1, m2], "turn", 80), 10);
+		expect(sample.y).toBeUndefined();
+		expect(sample.opacity).toBeUndefined();
+		expect(sampleMoves([], 80)).toEqual({});
 	});
 });
 

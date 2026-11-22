@@ -36,24 +36,24 @@ type SidebarContextProps = {
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 
+const MOBILE_MEDIA_QUERY = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`;
+
+function subscribeIsMobile(onChange: () => void) {
+	const mql = window.matchMedia(MOBILE_MEDIA_QUERY);
+	mql.addEventListener("change", onChange);
+	return () => mql.removeEventListener("change", onChange);
+}
+
+function getIsMobileSnapshot() {
+	return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+}
+
 function useIsMobile() {
-	const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-		undefined,
+	return React.useSyncExternalStore(
+		subscribeIsMobile,
+		getIsMobileSnapshot,
+		() => false,
 	);
-
-	React.useEffect(() => {
-		const mql = window.matchMedia(
-			`(max-width: ${MOBILE_BREAKPOINT - 1}px)`,
-		);
-		const onChange = () => {
-			setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-		};
-		mql.addEventListener("change", onChange);
-		setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-		return () => mql.removeEventListener("change", onChange);
-	}, []);
-
-	return !!isMobile;
 }
 
 function useSidebar() {
@@ -85,12 +85,18 @@ function SidebarProvider({
 	// We use openProp and setOpenProp for control from outside the component.
 	const [_open, _setOpen] = React.useState(defaultOpen);
 	const open = openProp ?? _open;
+	const openRef = React.useRef(open);
+	React.useEffect(() => {
+		openRef.current = open;
+	}, [open]);
 	const setOpen = React.useCallback(
 		(value: boolean | ((value: boolean) => boolean)) => {
-			const openState = typeof value === "function" ? value(open) : value;
+			const openState =
+				typeof value === "function" ? value(openRef.current) : value;
 			if (setOpenProp) {
 				setOpenProp(openState);
 			} else {
+				openRef.current = openState;
 				_setOpen(openState);
 			}
 
@@ -98,7 +104,7 @@ function SidebarProvider({
 			// biome-ignore lint/suspicious/noDocumentCookie: This mirrors shadcn's cross-browser sidebar persistence.
 			document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
 		},
-		[setOpenProp, open],
+		[setOpenProp],
 	);
 
 	// Helper to toggle the sidebar.

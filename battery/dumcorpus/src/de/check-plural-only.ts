@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "../inflectional-bag.js";
 import { isGermanPluralOnlyNoun } from "../inventories/de/plural-only-nouns.js";
 
 /** A plural-only noun given a gender, at a path inside the checked Attestation. */
@@ -24,8 +25,7 @@ export function attestationPluralOnlyIssues(
 	)
 		return [];
 	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
-	const inflection: Readonly<Record<string, unknown>> | null =
-		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
+	const inflection = inflectionalBagOf(surface);
 	const issues: PluralOnlyIssue[] = [];
 	if ((core.gender ?? null) !== null)
 		issues.push({

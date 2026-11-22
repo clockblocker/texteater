@@ -12,6 +12,7 @@ import type { LemmaSlice } from "../../dto";
 import type { SurfaceId } from "../../dumling-id";
 import type { AffectedDictionaryEntities } from "../../public";
 import type { OccurrenceSlice } from "../../storage";
+import { compareCodeUnits } from "../identity";
 import { paradigmChange, prunedParadigm } from "../occurrence/paradigm";
 import { planRemovedTargetClaims } from "./removed-claim-changes";
 import type { PlanMutationResult } from "./result";
@@ -27,9 +28,6 @@ export function holdsUserText(entry: {
 }): boolean {
 	return entry.notes.length > 0 || entry.attestedTranslations.length > 0;
 }
-
-const compare = (left: string, right: string) =>
-	left < right ? -1 : left > right ? 1 : 0;
 
 type Removal<L extends Dumling.Language> = {
 	changes: PlannedChangeOp<L>[];
@@ -98,7 +96,7 @@ function planLemmaRemoval<L extends Dumling.Language>(
 	const deletions: PlannedChangeOp<L>[] = [];
 	let touched = false;
 	const readings = [...slice.readingEntries].sort((left, right) =>
-		compare(
+		compareCodeUnits(
 			readingIdentityKey(left.reading),
 			readingIdentityKey(right.reading),
 		),
@@ -158,7 +156,7 @@ function planLemmaRemoval<L extends Dumling.Language>(
 			if (!request.dropped(link) && link.surfaceId)
 				lost.delete(link.surfaceId);
 	const surfaces = [...slice.ownedSurfaceEntries].sort((left, right) =>
-		compare(left.id, right.id),
+		compareCodeUnits(left.id, right.id),
 	);
 	const forgotten = (entry: SurfaceEntry<L>) =>
 		lost.has(entry.id) && !holdsUserText(entry);
@@ -229,7 +227,7 @@ export function planLinkRemoval<L extends Dumling.Language>(
 		pendingIds: [],
 	};
 	const lemmas = [...slice.lemmas].sort((left, right) =>
-		compare(
+		compareCodeUnits(
 			lemmaIdentityKey(left.lemmaRecord.lemma),
 			lemmaIdentityKey(right.lemmaRecord.lemma),
 		),

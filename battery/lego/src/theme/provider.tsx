@@ -34,13 +34,31 @@ function disableTransitionsTemporarily() {
 	);
 	document.head.appendChild(style);
 
-	return () => {
-		window.getComputedStyle(document.body);
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
-				style.remove();
+	let frame1: number | null = null;
+	let frame2: number | null = null;
+
+	return {
+		restore: () => {
+			window.getComputedStyle(document.body);
+			frame1 = requestAnimationFrame(() => {
+				frame1 = null;
+				frame2 = requestAnimationFrame(() => {
+					frame2 = null;
+					style.remove();
+				});
 			});
-		});
+		},
+		cancel: () => {
+			if (frame1 !== null) {
+				cancelAnimationFrame(frame1);
+				frame1 = null;
+			}
+			if (frame2 !== null) {
+				cancelAnimationFrame(frame2);
+				frame2 = null;
+			}
+			style.remove();
+		},
 	};
 }
 
@@ -74,18 +92,32 @@ export function ThemeProvider({
 		[storageKey],
 	);
 
-	React.useEffect(() => {
-		const restoreTransitions = disableTransitionsTemporarily();
-		applyTheme(theme);
-		restoreTransitions();
+	const didMountRef = React.useRef(false);
 
-		if (theme !== "system") return undefined;
+	React.useEffect(() => {
+		let cancelTransitionDisable: (() => void) | undefined;
+		if (didMountRef.current) {
+			const transitionGuard = disableTransitionsTemporarily();
+			applyTheme(theme);
+			transitionGuard.restore();
+			cancelTransitionDisable = transitionGuard.cancel;
+		} else {
+			didMountRef.current = true;
+			applyTheme(theme);
+		}
+
+		if (theme !== "system") {
+			return cancelTransitionDisable;
+		}
 		const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
 		const handleChange = () => {
 			applyTheme("system");
 		};
 		mediaQuery.addEventListener("change", handleChange);
-		return () => mediaQuery.removeEventListener("change", handleChange);
+		return () => {
+			cancelTransitionDisable?.();
+			mediaQuery.removeEventListener("change", handleChange);
+		};
 	}, [theme]);
 
 	React.useEffect(() => {

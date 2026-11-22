@@ -1,5 +1,6 @@
 import { isSyncreticUnit, isSyncretism } from "dumling";
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "./inflectional-bag.js";
 import {
 	referentCanLeaveOpen,
 	stemSyncretismFor,
@@ -49,9 +50,7 @@ export function attestationSyncretismIssues(
 
 type Bag = Readonly<Record<string, unknown>>;
 function bagOf(surface: Dumling.Surface): Bag {
-	const bag: Bag | null =
-		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
-	return bag ?? {};
+	return inflectionalBagOf(surface) ?? {};
 }
 
 /**

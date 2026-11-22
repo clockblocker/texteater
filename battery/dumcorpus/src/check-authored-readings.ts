@@ -17,7 +17,12 @@ function authoredMembersOf(lemma: Dumling.Lemma): readonly AuthoredMember[] {
 		const index = new Map<string, AuthoredMember[]>();
 		for (const member of authoredMembers) {
 			const key = lemmaIdentityKey(member.lemma);
-			index.set(key, [...(index.get(key) ?? []), member]);
+			let bucket = index.get(key);
+			if (bucket === undefined) {
+				bucket = [];
+				index.set(key, bucket);
+			}
+			bucket.push(member);
 		}
 		byLemma = index;
 	}

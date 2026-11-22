@@ -1,6 +1,6 @@
 import { getMountedSplits } from "../mutable-state/splits";
 import { findMatchingHitAreas } from "../utils/findMatchingHitAreas";
-import { getImperativeRegionMethods } from "../utils/getImperativeRegionMethods";
+import { resizeRegion } from "../utils/resizeRegion";
 
 export function onDocumentDoubleClick(event: MouseEvent) {
 	if (event.defaultPrevented) {
@@ -17,12 +17,12 @@ export function onDocumentDoubleClick(event: MouseEvent) {
 			if (regionWithDefaultSize) {
 				const defaultSize =
 					regionWithDefaultSize.regionConstraints.defaultSize;
-				const api = getImperativeRegionMethods({
-					splitId: current.split.id,
-					regionId: regionWithDefaultSize.id,
-				});
 				if (defaultSize !== undefined) {
-					api.resize(defaultSize);
+					resizeRegion(
+						current.split.id,
+						regionWithDefaultSize.id,
+						defaultSize,
+					);
 
 					event.preventDefault();
 				}

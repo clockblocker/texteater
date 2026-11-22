@@ -56,7 +56,7 @@ export function baseHeadwords(
 	const shown = capitalized(letters);
 	const forms = [
 		shown,
-		/e$/u.test(shown)
+		shown.endsWith("e")
 			? shown.length >= 4
 				? shown.slice(0, -1)
 				: shown

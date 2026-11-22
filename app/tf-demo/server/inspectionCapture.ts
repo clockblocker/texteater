@@ -1,6 +1,5 @@
 import { type OperationTrace, TracePayloads, TraceSink } from "dumgen";
 import * as Cause from "effect/Cause";
-import type * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
@@ -28,50 +27,39 @@ export function inspectionStep(
 	return { attributes: { [OWNER]: owner, [INPUT]: input } };
 }
 
+/**
+ * Marks the current `Effect.fn` span as an inspection step with its owner and
+ * input. Call at the start of an `Effect.fn("Step name")` body so the span's
+ * attributes are set before any fallible work runs.
+ */
+export const annotateInspectionStep = (
+	owner: string,
+	input?: unknown,
+): Effect.Effect<void> =>
+	Effect.annotateCurrentSpan({ [OWNER]: owner, [INPUT]: input });
+
 /** Fails the enclosing inspection step although its Effect returns normally. */
 export const markSpanFailed = Effect.annotateCurrentSpan(FAILED, true);
 
 /**
- * Runs promise work as spans under the span current where `services` were
- * taken, for callers outside a fiber. A hop rethrows its own error.
+ * Records a handled failure inside the current fiber tree: marks the enclosing
+ * inspection step failed and emits a failed child step carrying `error`,
+ * without leaving Effect or failing the caller.
  */
-export function spanHops(services: Context.Context<never>) {
-	const markFailed = () => Effect.runSyncWith(services)(markSpanFailed);
-	return {
-		run: Effect.runPromiseWith(services),
-		async hop<T>(
-			name: string,
-			owner: string,
-			input: unknown,
-			run: () => Promise<T>,
-		): Promise<T> {
-			const exit = await Effect.runPromiseExitWith(services)(
-				Effect.tryPromise(run).pipe(
-					Effect.withSpan(name, inspectionStep(owner, input)),
-				),
-			);
-			if (Exit.isSuccess(exit)) return exit.value;
-			// The rejection only marks the span failed, then is rethrown as
-			// is, unwrapped from the UnknownError that carried it.
-			throw Option.match(Cause.findErrorOption(exit.cause), {
-				onNone: () => Cause.squash(exit.cause),
-				onSome: (rejection) => rejection.cause,
-			});
-		},
-		/** Fails the enclosing step although its work returns normally. */
-		markFailed,
-		/** A handled failure: a failed step of its own that fails the enclosing step. */
-		failure<E>(name: string, owner: string, input: unknown, error: E) {
-			markFailed();
-			Effect.runSyncExitWith(services)(
-				Effect.fail(error).pipe(
-					Effect.withSpan(name, inspectionStep(owner, input)),
-				),
-			);
-		},
-	};
-}
-export type SpanHops = ReturnType<typeof spanHops>;
+export const recordFailedStep = <E>(
+	name: string,
+	owner: string,
+	input: unknown,
+	error: E,
+): Effect.Effect<void> =>
+	markSpanFailed.pipe(
+		Effect.andThen(
+			Effect.fail(error).pipe(
+				Effect.withSpan(name, inspectionStep(owner, input)),
+				Effect.ignore,
+			),
+		),
+	);
 
 /**
  * Runs `effect` under the inspection Tracer when inspection is on. Without it

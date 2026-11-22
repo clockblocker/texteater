@@ -75,10 +75,8 @@ const sorted = (requests: readonly GoldenRequest[]) =>
  * fails its call. Out come the requests, sorted, and the result, or the
  * failure's message.
  */
-export async function recorded(
-	operation: (
-		dumgen: typeof operations,
-	) => Effect.Effect<unknown, unknown, Jev | Luna>,
+export async function recorded<A, E>(
+	operation: (dumgen: typeof operations) => Effect.Effect<A, E, Jev | Luna>,
 	answer: { readonly jev?: JevAnswerer; readonly luna?: LunaAnswerer },
 ) {
 	const requests: GoldenRequest[] = [];

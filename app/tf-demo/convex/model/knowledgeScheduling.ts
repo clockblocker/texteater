@@ -10,7 +10,6 @@ import {
 	findAccumulatedKnowledge,
 	missingKnowledge,
 	nothingMissing,
-	occurrenceGovernment,
 } from "./knowledgeCoverage";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
 
@@ -53,16 +52,7 @@ export async function scheduleKnowledgeGeneration(
 	const translationLanguages = translationLanguageValues.filter(
 		(language) => settings.translations[language],
 	);
-	const missing = missingKnowledge(accumulated, {
-		translationLanguages,
-		// Government can only be all that is missing once the base is covered.
-		// An attested plural never is: a later occurrence never changes a
-		// stored aspect (#883 point 5), so it schedules no run.
-		attestedGovernment:
-			accumulated?.status === "Full"
-				? await occurrenceGovernment(ctx, occurrence)
-				: [],
-	});
+	const missing = missingKnowledge(accumulated, { translationLanguages });
 	if (nothingMissing(missing)) return;
 	await demandKnowledgeAttempt(ctx, {
 		...input,

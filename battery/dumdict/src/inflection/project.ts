@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { isFree, licenceGroups } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
+import { compareCodeUnits } from "../core/identity";
 import type { SurfaceId } from "../dumling-id";
 import {
 	type Attested,
@@ -13,7 +14,6 @@ import {
 } from "./cells";
 import type { InflectionPack, ParadigmSelection } from "./pack";
 import {
-	compare,
 	type Placement,
 	type SurfaceAxes,
 	schemaIndex,
@@ -75,7 +75,7 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 	const readings = new Map<Dumrel.ReadingKey, Dumling.Reading<L>>();
 	for (const entry of slice.readingEntries)
 		readings.set(readingIdentityKey(entry.reading), entry.reading);
-	const readingKeys = [...readings.keys()].sort(compare);
+	const readingKeys = [...readings.keys()].sort(compareCodeUnits);
 	const groups = licenceGroups(paradigm, readingKeys).map(
 		(group): Group<F> => {
 			const derived =
@@ -105,7 +105,9 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 		},
 	);
 	const links = linksOf(slice);
-	const met = metSurfaces(pack, schema, slice, links);
+	const refsBySurfaceId = groupRefsBySurfaceId(links);
+	const met = metSurfaces(pack, schema, slice, refsBySurfaceId);
+	const metByCell = groupMetByCell(met);
 	const core = new Set(
 		schema === undefined
 			? []
@@ -158,25 +160,31 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 	const groupOf = new Map<Dumrel.ReadingKey, Group<F>>();
 	for (const group of groups)
 		for (const reading of group.group.readings) groupOf.set(reading, group);
-	const metById = new Map(
-		met.map((surface) => [surface.id as string, surface]),
-	);
-	const lineById = new Map(
-		lines.map((line) => [line.surfaceId as string, line]),
+	const lineFitById = new Map(
+		lines.map((line) => [
+			line.surfaceId as string,
+			{
+				surfaceId: line.surfaceId,
+				groups: line.groups,
+				groupSet: new Set(line.groups),
+			},
+		]),
 	);
 	const conflicts: LicenceConflict<L>[] = [];
 	for (const link of links) {
-		const surface = metById.get(link.surfaceId);
+		const fit = lineFitById.get(link.surfaceId);
 		const own = groupOf.get(link.reading);
-		const fitsGroups = surface
-			? (lineById.get(surface.id)?.groups ?? [])
-			: [];
-		if (surface && own && fitsGroups.length > 0 && !fitsIn(surface, own))
+		if (
+			fit &&
+			own &&
+			fit.groups.length > 0 &&
+			!fit.groupSet.has(own.group.key)
+		)
 			conflicts.push({
 				ref: link.ref,
 				reading: link.reading,
-				surfaceId: surface.id,
-				fitsGroups,
+				surfaceId: fit.surfaceId,
+				fitsGroups: fit.groups,
 			});
 	}
 
@@ -190,7 +198,7 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 			groupView(group, readings, schema, (key) => ({
 				state: group.state(key),
 				undescribed: undescribed.has(key),
-				attested: attestedIn(met, group, key),
+				attested: attestedIn(metByCell, group, key),
 			})),
 		),
 		surfaces: lines,
@@ -207,12 +215,12 @@ function selectionOf<P>(
 		Record<Dumrel.DimensionId, Dumrel.ParadigmVariant<P>[]>
 	> = {};
 	for (const dimension of Object.keys(group.selection).sort(
-		compare,
+		compareCodeUnits,
 	) as Dumrel.DimensionId[]) {
 		const taken = new Set(group.selection[dimension]);
 		selection[dimension] = (paradigm.dimensions[dimension]?.variants ?? [])
 			.filter((variant) => taken.has(variant.id))
-			.sort((left, right) => compare(left.id, right.id));
+			.sort((left, right) => compareCodeUnits(left.id, right.id));
 	}
 	return selection;
 }
@@ -239,10 +247,40 @@ function linksOf<L extends Dumling.Language, P>(
 		}
 	return [...links.values()].sort(
 		(left, right) =>
-			compare(left.ref, right.ref) ||
-			compare(left.reading, right.reading) ||
-			compare(left.surfaceId ?? "", right.surfaceId ?? ""),
+			compareCodeUnits(left.ref, right.ref) ||
+			compareCodeUnits(left.reading, right.reading) ||
+			compareCodeUnits(left.surfaceId ?? "", right.surfaceId ?? ""),
 	);
+}
+
+function groupRefsBySurfaceId(
+	links: readonly Link[],
+): Map<string, Set<string>> {
+	const refsBySurfaceId = new Map<string, Set<string>>();
+	for (const link of links) {
+		let refs = refsBySurfaceId.get(link.surfaceId);
+		if (refs === undefined) {
+			refs = new Set();
+			refsBySurfaceId.set(link.surfaceId, refs);
+		}
+		refs.add(link.ref);
+	}
+	return refsBySurfaceId;
+}
+
+function groupMetByCell<L extends Dumling.Language, F>(
+	met: readonly Met<L, F>[],
+): Map<Dumling.CellKey, Met<L, F>[]> {
+	const metByCell = new Map<Dumling.CellKey, Met<L, F>[]>();
+	for (const surface of met) {
+		if (surface.placement.kind === "Unplaced") continue;
+		for (const key of surface.placement.cells) {
+			const bucket = metByCell.get(key);
+			if (bucket) bucket.push(surface);
+			else metByCell.set(key, [surface]);
+		}
+	}
+	return metByCell;
 }
 
 /** The Lemma's Surface Entries once each, ordered by form key, then id. */
@@ -250,7 +288,7 @@ function metSurfaces<L extends Dumling.Language, F, P>(
 	pack: InflectionPack<L, F, P>,
 	schema: Dumling.TableSchema | undefined,
 	slice: LemmaTablesSlice<L, P>,
-	links: readonly Link[],
+	refsBySurfaceId: ReadonlyMap<string, ReadonlySet<string>>,
 ): Met<L, F>[] {
 	const entries = new Map<string, Met<L, F>>();
 	for (const entry of slice.ownedSurfaceEntries) {
@@ -264,34 +302,29 @@ function metSurfaces<L extends Dumling.Language, F, P>(
 			key: pack.codec.key(form),
 			axes,
 			placement: axes.placement,
-			refs: [
-				...new Set(
-					links
-						.filter((link) => link.surfaceId === entry.id)
-						.map((link) => link.ref),
-				),
-			].sort(compare),
+			refs: [...(refsBySurfaceId.get(entry.id) ?? [])].sort(
+				compareCodeUnits,
+			),
 		});
 	}
 	return [...entries.values()].sort(
 		(left, right) =>
-			compare(left.key, right.key) || compare(left.id, right.id),
+			compareCodeUnits(left.key, right.key) ||
+			compareCodeUnits(left.id, right.id),
 	);
 }
 
 /** The met Surfaces a group writes into one cell. */
 function attestedIn<L extends Dumling.Language, F>(
-	met: readonly Met<L, F>[],
+	metByCell: ReadonlyMap<Dumling.CellKey, readonly Met<L, F>[]>,
 	group: Group<F>,
 	key: Dumling.CellKey,
 ): Attested<L, F>[] {
-	return met
-		.filter(
-			(surface) =>
-				surface.placement.kind !== "Unplaced" &&
-				surface.placement.cells.includes(key) &&
-				fits(group.state(key), surface.key),
-		)
+	const candidates = metByCell.get(key);
+	if (!candidates) return [];
+	const state = group.state(key);
+	return candidates
+		.filter((surface) => fits(state, surface.key))
 		.map((surface) => ({
 			form: surface.form,
 			key: surface.key,

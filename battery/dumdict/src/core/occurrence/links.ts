@@ -2,6 +2,7 @@ import { lemmaIdentityKey, readingIdentityKey, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 
 import type { AttestationLink } from "../../domain-types";
+import { compareCodeUnits } from "../identity";
 
 type LinkLike = {
 	readonly ref: string;
@@ -54,20 +55,16 @@ export function sameAttestationLink(left: LinkLike, right: LinkLike): boolean {
 	);
 }
 
-function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
-
 /**
  * Orders the links of one ref: the code-unit-smaller `readingIdentityKey`
  * first, then the smaller Surface ID.
  */
 function compareLinks(left: LinkLike, right: LinkLike): number {
 	return (
-		compare(
+		compareCodeUnits(
 			readingIdentityKey(left.reading),
 			readingIdentityKey(right.reading),
-		) || compare(left.surfaceId, right.surfaceId)
+		) || compareCodeUnits(left.surfaceId, right.surfaceId)
 	);
 }
 
@@ -95,7 +92,7 @@ export function reconcileAttestationLinks<L extends Dumling.Language>(
 	}
 	const kept: AttestationLink<L>[] = [];
 	const dropped: AttestationLink<L>[] = [];
-	for (const ref of [...byRef.keys()].sort(compare)) {
+	for (const ref of [...byRef.keys()].sort(compareCodeUnits)) {
 		const [winner, ...others] = (byRef.get(ref) ?? []).sort(compareLinks);
 		if (winner) kept.push(winner);
 		dropped.push(...others);

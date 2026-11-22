@@ -1,10 +1,9 @@
 import {
-	type Channel,
 	done,
-	moves as movesOn,
+	type MoveSample,
 	movesPart,
 	partSumAt,
-	sumAt,
+	sampleMoves,
 	zAt,
 } from "../core/move";
 import {
@@ -30,15 +29,19 @@ import { setWritten, snapped, writtenOn } from "./write";
  */
 
 /** The lean a Body shows: its follow toward the pointer plus whatever its Moves still let go of. */
-export function leanOf(body: BodyState, now: number): Lean {
+export function leanOf(
+	body: BodyState,
+	now: number,
+	sample: MoveSample = sampleMoves(body.moves, now),
+): Lean {
 	const own = body.lean
 		? shownLean(body.lean.target, body.lean.terms, now)
 		: FLAT;
 	return {
-		tiltX: own.tiltX + sumAt(body.moves, "tiltX", now),
-		tiltY: own.tiltY + sumAt(body.moves, "tiltY", now),
-		tiltLift: own.tiltLift + sumAt(body.moves, "tiltLift", now),
-		glare: own.glare + sumAt(body.moves, "glare", now),
+		tiltX: own.tiltX + (sample.tiltX ?? 0),
+		tiltY: own.tiltY + (sample.tiltY ?? 0),
+		tiltLift: own.tiltLift + (sample.tiltLift ?? 0),
+		glare: own.glare + (sample.glare ?? 0),
 	};
 }
 
@@ -117,11 +120,17 @@ function paintPart(
 	} else if (!pin && written.delete("inert")) el.removeAttribute("inert");
 }
 
-function paintLean(engine: Engine, body: BodyState, now: number) {
+function paintLean(
+	engine: Engine,
+	body: BodyState,
+	now: number,
+	sample: MoveSample,
+) {
 	const el = body.el;
 	if (!el) return false;
 	const feel = engine.tilt;
-	const lean = feel && !engine.policy.reduced ? leanOf(body, now) : FLAT;
+	const lean =
+		feel && !engine.policy.reduced ? leanOf(body, now, sample) : FLAT;
 	const flat = isFlat(lean) || !feel;
 	setWritten(
 		el.style,
@@ -162,16 +171,13 @@ function paintLean(engine: Engine, body: BodyState, now: number) {
 	return false;
 }
 
-function paintTurn(engine: Engine, body: BodyState, now: number) {
+function paintTurn(engine: Engine, body: BodyState, sample: MoveSample) {
 	const shell = body.shell;
 	if (!shell) return;
-	const turning = movesOn(body.moves, "turn");
-	const angle =
-		restAngle(body.place?.side ?? "front") + sumAt(body.moves, "turn", now);
+	const turning = sample.turn !== undefined;
+	const angle = restAngle(body.place?.side ?? "front") + (sample.turn ?? 0);
 	const reduced = engine.policy.reduced;
-	const front = shell.querySelector<HTMLElement>(
-		':scope > [data-tabletop-face="front"]',
-	);
+	const front = body.front;
 	setWritten(
 		shell.style,
 		writtenOn(shell),
@@ -213,16 +219,13 @@ export function paintBody(
 		engine.settleForms(body);
 	const held = body.mode !== "rest";
 	const stance = engine.stance(body);
-	const on = (channel: Channel) => movesOn(body.moves, channel);
-	const box = (channel: "x" | "y" | "width" | "height") =>
-		on(channel)
-			? snapped(
-					channel,
-					sumAt(body.moves, channel, now),
-					body.spans,
-					engine.dpr,
-				)
+	const sample = sampleMoves(body.moves, now);
+	const box = (channel: "x" | "y" | "width" | "height") => {
+		const value = sample[channel];
+		return value !== undefined
+			? snapped(channel, value, body.spans, engine.dpr)
 			: null;
+	};
 	const x = box("x");
 	const y = box("y");
 	const width = box("width");
@@ -237,20 +240,20 @@ export function paintBody(
 	);
 	set(
 		"rotate",
-		held || on("rotate")
-			? `${stance.rotate + sumAt(body.moves, "rotate", now)}deg`
+		held || sample.rotate !== undefined
+			? `${stance.rotate + (sample.rotate ?? 0)}deg`
 			: null,
 	);
 	set(
 		"scale",
-		held || on("lift")
-			? String(stance.scale * (1 + sumAt(body.moves, "lift", now)))
+		held || sample.lift !== undefined
+			? String(stance.scale * (1 + (sample.lift ?? 0)))
 			: null,
 	);
 	set(
 		"opacity",
-		held || on("opacity")
-			? String(stance.opacity + sumAt(body.moves, "opacity", now))
+		held || sample.opacity !== undefined
+			? String(stance.opacity + (sample.opacity ?? 0))
 			: null,
 	);
 	set("width", width === null ? null : `calc(100% + ${width}px)`);
@@ -265,8 +268,8 @@ export function paintBody(
 			z === null ? null : String(z),
 		);
 	}
-	paintTurn(engine, body, now);
+	paintTurn(engine, body, sample);
 	paintParts(engine, body, now);
-	const leaning = paintLean(engine, body, now);
+	const leaning = paintLean(engine, body, now, sample);
 	return body.moves.length > 0 || leaning;
 }

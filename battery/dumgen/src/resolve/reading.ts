@@ -41,234 +41,39 @@ import {
 	closedRoute,
 	reflexiveMarker,
 } from "dumcorpus/inventories";
-import { parseUnit, readingIdentityKey } from "dumling";
+import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { CallLog } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
 import { type Jev, stageAsk } from "../jev-call.js";
-import type { LunaDraft } from "../luna.js";
 import { askLuna, type Luna } from "../luna-call.js";
 import { type Ask, choice, choiceOf } from "../segment/ask.js";
-import { germanFusionTable } from "../segment/de/fusion-entries.js";
-import { fusedPieceAt, fusedWordAt } from "../segment/fusion-table.js";
-import type { Route, Segment } from "../segment/segmented-sentence.js";
-import {
-	generation,
-	judgePolicy,
-	judgeQuestion,
-	readingDemonstrations,
-} from "./de/reading-prompts.js";
+import type { Route } from "../segment/segmented-sentence.js";
+import { judgeQuestion } from "./de/reading-prompts.js";
 import { targetOf } from "./de/target.js";
+import {
+	emojiDescriptionRequest,
+	emojiDescriptionStage,
+	holdsReflexive,
+	markedSentence,
+	parsedDescription,
+	policyBlock,
+	withReflexiveMarker,
+} from "./reading-helpers.js";
 import type { ReadingResolution, ResolveReadingInput } from "./types.js";
 
-/**
- * The word a Segment stands for when it is a piece of a table fusion the
- * unit holds only part of, in the casing its letters show: `a` of `am` is
- * `an`, `A` of `Am` is `An`. Undefined for any other Segment.
- */
-function spelledOutPiece(
-	segments: readonly Segment[],
-	marked: ReadonlySet<number>,
-	index: number,
-): string | undefined {
-	const piece = fusedPieceAt(germanFusionTable, segments, index);
-	if (!piece) return undefined;
-	const word = fusedWordAt(
-		germanFusionTable,
-		segments,
-		index - piece.component,
-	);
-	const held = word?.filter((position) => marked.has(position)).length ?? 0;
-	if (!word || held === 0 || held === word.length) return undefined;
-	const surfaces = piece.pieces[piece.component]?.surfaces ?? [];
-	const [surface] = surfaces;
-	const span = segments[index]?.text ?? "";
-	if (surface === undefined || surfaces.length !== 1) return undefined;
-	const capital = span !== span.toLocaleLowerCase("de");
-	return capital
-		? surface.charAt(0).toLocaleUpperCase("de") + surface.slice(1)
-		: surface;
-}
-
-/**
- * The Sentence with each run of the unit's Segments marked
- * `<TARGET>…</TARGET>`. A preposition-article fusion the unit holds only
- * part of is written out as its words, `<TARGET>an</TARGET> dem Feuer` for
- * the `a` of `am Feuer`: a bare piece names nothing, so the models labelled
- * the noun beside it instead (🔥 for `an`). Segments without kinds, as the
- * frozen Knowledge evaluation sets hold them, are marked as written.
- */
-export function markedSentence(
-	segments: readonly {
-		readonly kind?: Segment["kind"];
-		readonly text: string;
-	}[],
-	unitSegments: readonly number[],
-): string {
-	const marked = new Set(unitSegments);
-	const kinded = segments.flatMap(({ kind, text }) =>
-		kind === undefined ? [] : [{ kind, text }],
-	);
-	const words = segments.map((_, index) =>
-		kinded.length === segments.length
-			? spelledOutPiece(kinded, marked, index)
-			: undefined,
-	);
-	return segments
-		.map(({ text }, index) => {
-			const word = words[index];
-			// A written-out piece after the first follows a space. The unit
-			// holds one piece of such a word, so no run of marks spans two.
-			const space =
-				word !== undefined && words[index - 1] !== undefined ? " " : "";
-			const shown = word ?? text;
-			if (!marked.has(index)) return `${space}${shown}`;
-			const opens = marked.has(index - 1) ? "" : "<TARGET>";
-			const closes = marked.has(index + 1) ? "" : "</TARGET>";
-			return `${space}${opens}${shown}${closes}`;
-		})
-		.join("");
-}
-
-/** The judge's policy block, the same for every click. */
-const policyBlock = {
-	task: judgePolicy.task,
-	meaning: judgePolicy.meaning,
-	label: judgePolicy.label,
-	distinct: judgePolicy.distinct,
-	noMatch: judgePolicy.noMatch,
-	copula: judgePolicy.copula,
-	multiword: judgePolicy.multiword,
-};
-
-/** Luna's system prompt, the same for every click so the provider can cache it. */
-export const generationPrompt = [
-	generation.task,
-	generation.meaning,
-	generation.distinct,
-	generation.copula,
-	generation.polarity,
-	generation.modal,
-	generation.existential,
-	generation.multiword,
-	generation.json,
-	generation.examples,
-	...readingDemonstrations.map(({ text }) => text),
-].join("\n");
-
-/**
- * What Luna's Canonical Form call adds to its system prompt to draft the
- * Emoji Description after the headword (ADR 0031): the generation prompt,
- * with its task and output lines naming the draft's fields, a line that
- * confines the draft to the marked Sentence and the written Canonical
- * Form, and the same demonstrations.
- */
-export const draftPrompt = [
-	generation.draft,
-	generation.draftScope,
-	generation.meaning,
-	generation.distinct,
-	generation.copula,
-	generation.polarity,
-	generation.modal,
-	generation.existential,
-	generation.multiword,
-	generation.draftJson,
-	generation.examples,
-	...readingDemonstrations.map(({ text }) => text),
-].join("\n");
-
-/**
- * Whether `resolve.reading` may ask Luna for a unit's Emoji Description,
- * so its Canonical Form call drafts one: an Open Route, but not Foreign
- * material, whose one Reading has none (ADR 0045).
- */
-export function draftsEmojiDescription(route: Route): boolean {
-	return !closedRoute(route) && route.family !== "Foreign";
-}
-
-/**
- * The string schema Luna answers under. Strict mode stays off, E10's arm RS
- * (#526, ruled 2026-10-03), so the provider enforces none of it: the schema
- * states the constraint, and Dumling's emoji-grapheme parse enforces it.
- */
-export const emojiDescriptionSchema = {
-	type: "string",
-	minLength: 1,
-	description: generation.schema,
-} as const;
-
-/** The stage of Luna's Emoji Description call, as its trace and a host's stored answers name it. */
-export const emojiDescriptionStage = "emojiDescription";
-
-/**
- * The most tokens the Emoji Description call may write: at most 25 over
- * 9,113 cached answers, and four emoji in ZWJ sequences stay well under.
- */
-const emojiDescriptionOutputLimit = 128;
-
-/**
- * The Emoji Description request Luna gets, without its configuration. Luna
- * answers JSON under a string schema with strict mode off, E10's arm RS
- * (#526, ruled 2026-10-03): fewer lost clicks than free text. An answer
- * that is no Emoji Description is still refused, never salvaged.
- */
-export function emojiDescriptionRequest(input: {
-	readonly markedSentence: string;
-	readonly lemma: string;
-}): LunaDraft {
-	return {
-		systemPrompt: generationPrompt,
-		input,
-		maxOutputTokens: emojiDescriptionOutputLimit,
-		outputFormat: "json",
-		outputSchema: emojiDescriptionSchema,
-	};
-}
-
-/** An Emoji Description as Dumling parses it, or undefined when it is none. */
-export function parsedDescription(
-	lemma: Dumling.Lemma<"de">,
-	value: unknown,
-): string | undefined {
-	if (typeof value !== "string") return undefined;
-	const parsed = parseUnit({
-		unitKind: "Reading",
-		lemma,
-		emojiDescription: value.trim(),
-	});
-	if (!parsed.success || parsed.chain.unitKind !== "Reading")
-		return undefined;
-	const reading = parsed.chain.value;
-	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
-}
-
-/**
- * Whether an Attestation's members hold a lexical reflexive: its valency
- * evidence names a Reflexive (ADR 0052).
- */
-const holdsReflexive = (attestation: Dumling.Attestation<"de">) =>
-	"valencyEvidence" in attestation &&
-	attestation.valencyEvidence.some(
-		({ complement }) => complement.kind === "Reflexive",
-	);
-
-/**
- * A description with the 🪞 marker grammar gives it (ADR 0052): before it
- * when the click holds a lexical reflexive, never otherwise, whatever the
- * model wrote.
- */
-export function withReflexiveMarker(
-	description: string,
-	reflexive: boolean,
-): string {
-	const trimmed = description.trim();
-	const bare = trimmed.startsWith(reflexiveMarker)
-		? trimmed.slice(reflexiveMarker.length)
-		: trimmed;
-	return reflexive ? `${reflexiveMarker}${bare}` : bare;
-}
+export {
+	draftPrompt,
+	draftsEmojiDescription,
+	emojiDescriptionRequest,
+	emojiDescriptionSchema,
+	emojiDescriptionStage,
+	generationPrompt,
+	markedSentence,
+	parsedDescription,
+	withReflexiveMarker,
+} from "./reading-helpers.js";
 
 /** One option the judge sees: an Emoji Description, and whether dumcorpus authors it. */
 type Option = { readonly description: string; readonly authored: boolean };
@@ -322,26 +127,25 @@ const pick = Effect.fnUntraced(function* (
 	return index;
 });
 
-/**
- * Resolves one click's Reading. A Sentence whose segmentation failed, a
- * unit intake left Unresolved or that is no unit of its Sentence, an
- * Attestation off the unit's route or in another language than German,
- * a Foreign Attestation, whose one Reading has no Emoji Description (ADR
- * 0045), and a candidate that is no Emoji Description are bad input, a
- * Defect raised before anything is asked.
- */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export const resolveReading = Effect.fnUntraced(function* (
+type ValidatedReadingInput = {
+	readonly route: Route;
+	readonly lemma: Dumling.Lemma<"de">;
+	readonly keyOf: (emojiDescription: string) => string;
+	readonly candidates: readonly string[];
+	readonly candidateByKey: ReadonlyMap<string, string>;
+	readonly reflexive: boolean;
+	readonly optional: ReadonlySet<string>;
+	readonly state: { readonly markedSentence: string; readonly lemma: string };
+};
+
+const defect = (message: string) => Effect.die(Error(message));
+
+/** Validates the click input and indexes its deduplicated stored candidates. */
+const validateReadingInput = Effect.fnUntraced(function* (
 	input: ResolveReadingInput,
-): Effect.fn.Return<
-	ReadingResolution,
-	ProviderFailure | InvalidModelOutput,
-	Jev | Luna | CallLog
-> {
+): Effect.fn.Return<ValidatedReadingInput> {
 	const { attestation, sentence, unit } = input;
-	const log = yield* CallLog;
 	const { lemma } = attestation.surface;
-	const defect = (message: string) => Effect.die(Error(message));
 	if (lemma.language !== "de")
 		return yield* defect(
 			`resolve.reading resolves German ("de") only, not ${JSON.stringify(lemma.language)}`,
@@ -369,127 +173,189 @@ export const resolveReading = Effect.fnUntraced(function* (
 			emojiDescription,
 		} as Dumling.Reading<"de">);
 	const candidates: string[] = [];
-	const seen = new Set<string>();
+	const candidateByKey = new Map<string, string>();
 	for (const candidate of input.candidates) {
 		if (parsedDescription(lemma, candidate) === undefined)
 			return yield* defect(
 				`The candidate ${JSON.stringify(candidate)} is no Emoji Description`,
 			);
 		const key = keyOf(candidate);
-		if (seen.has(key)) continue;
-		seen.add(key);
+		if (candidateByKey.has(key)) continue;
+		candidateByKey.set(key, candidate);
 		candidates.push(candidate);
 	}
-	const reflexive = holdsReflexive(attestation);
-	const optional = new Set((input.optionallyReflexive ?? []).map(keyOf));
-	/**
-	 * The stored candidate a description is: itself, or for a 🪞 one on a
-	 * reflexive click the optionally reflexive Reading with its bare emoji,
-	 * since a Lemma never has both (ADR 0052).
-	 */
-	const storedAs = (emojiDescription: string) => {
-		const key = keyOf(emojiDescription);
-		const bare = keyOf(withReflexiveMarker(emojiDescription, false));
-		return (
-			candidates.find((candidate) => keyOf(candidate) === key) ??
-			(reflexive && optional.has(bare)
-				? candidates.find((candidate) => keyOf(candidate) === bare)
-				: undefined)
-		);
+	return {
+		route,
+		lemma,
+		keyOf,
+		candidates,
+		candidateByKey,
+		reflexive: holdsReflexive(attestation),
+		optional: new Set((input.optionallyReflexive ?? []).map(keyOf)),
+		state: {
+			markedSentence: markedSentence(sentence.segments, unit.segments),
+			lemma: lemma.canonicalForm,
+		},
 	};
-	/** A stored candidate the description is, as stored, or the description as New. */
-	const answer = (
-		emojiDescription: string,
-		reason: string,
-	): ReadingResolution => {
-		const stored = storedAs(emojiDescription);
-		log.resolution({ outcome: stored ? "Reuse" : "New", reason });
-		return stored
-			? { _tag: "Reuse", emojiDescription: stored }
-			: { _tag: "New", emojiDescription };
-	};
-	const state = {
-		markedSentence: markedSentence(sentence.segments, unit.segments),
-		lemma: lemma.canonicalForm,
-	};
-	const ask = yield* stageAsk;
+});
 
-	const authored = authoredFor(lemma).map(
-		({ reading }) => reading.emojiDescription,
-	);
-	// A Closed Route: its authored Reading, or jev's pick of them.
-	if (closedRoute(route)) {
-		const [only] = authored;
-		if (only !== undefined && authored.length === 1)
-			return answer(only, "Authored");
-		if (authored.length > 1) {
-			const index = yield* pick(
-				ask,
-				"authoredReading",
-				state,
-				authored.map((description) => ({
-					description,
-					authored: true,
-				})),
-			);
-			const chosen = index === undefined ? undefined : authored[index];
-			if (chosen === undefined)
-				throw Error("An authored pick names an option");
-			return answer(chosen, "AuthoredJudged");
-		}
-		const message = `No authored Reading of ${route.kind} ${lemma.canonicalForm}`;
-		log.resolution({ outcome: "CatalogMiss", reason: message });
-		return { _tag: "CatalogMiss", route, message };
+type AnswerReading = (
+	emojiDescription: string,
+	reason: string,
+) => ReadingResolution;
+
+/** Resolves a Closed Route click from its authored Readings, or reports a Catalog Miss. */
+const resolveClosedRouteReading = Effect.fnUntraced(function* (
+	ask: Ask,
+	log: CallLog["Service"],
+	route: Route,
+	lemma: Dumling.Lemma<"de">,
+	state: { readonly markedSentence: string; readonly lemma: string },
+	authored: readonly string[],
+	answer: AnswerReading,
+): Effect.fn.Return<ReadingResolution, ProviderFailure | InvalidModelOutput> {
+	const [only] = authored;
+	if (only !== undefined && authored.length === 1)
+		return answer(only, "Authored");
+	if (authored.length > 1) {
+		const index = yield* pick(
+			ask,
+			"authoredReading",
+			state,
+			authored.map((description) => ({
+				description,
+				authored: true,
+			})),
+		);
+		const chosen = index === undefined ? undefined : authored[index];
+		if (chosen === undefined)
+			throw Error("An authored pick names an option");
+		return answer(chosen, "AuthoredJudged");
 	}
+	const message = `No authored Reading of ${route.kind} ${lemma.canonicalForm}`;
+	log.resolution({ outcome: "CatalogMiss", reason: message });
+	return { _tag: "CatalogMiss", route, message };
+});
 
-	// An Open Route: the judge over the authored and stored descriptions
-	// whose 🪞 agrees with the click's reflexive, or whose Reflexive Slot
-	// is Optional, then Luna.
+/** Deduplicated options the Open Route judge sees, plus their identity keys. */
+function openRouteOptions(
+	authored: readonly string[],
+	candidates: readonly string[],
+	keyOf: (emojiDescription: string) => string,
+	reflexive: boolean,
+	optional: ReadonlySet<string>,
+): {
+	readonly options: readonly Option[];
+	readonly offered: ReadonlySet<string>;
+} {
 	const authoredKeys = new Set(authored.map(keyOf));
-	const options = [...authored, ...candidates]
-		.filter(
-			(option, index, all) =>
-				all.findIndex((other) => keyOf(other) === keyOf(option)) ===
-					index &&
-				(option.startsWith(reflexiveMarker) === reflexive ||
-					optional.has(keyOf(option))),
+	const options: Option[] = [];
+	const seenKeys = new Set<string>();
+	const offered = new Set<string>();
+	for (const description of [...authored, ...candidates]) {
+		const key = keyOf(description);
+		if (seenKeys.has(key)) continue;
+		seenKeys.add(key);
+		if (
+			description.startsWith(reflexiveMarker) !== reflexive &&
+			!optional.has(key)
 		)
-		.map((description) => ({
-			description,
-			authored: authoredKeys.has(keyOf(description)),
-		}));
-	const offered = new Set(
-		options.map(({ description }) => keyOf(description)),
-	);
-	const written =
-		input.written === undefined
-			? undefined
-			: parsedDescription(
-					lemma,
-					withReflexiveMarker(input.written, reflexive),
-				);
-	if (input.written !== undefined && written === undefined)
-		return yield* defect(
-			`The written ${JSON.stringify(input.written)} is no Emoji Description`,
+			continue;
+		offered.add(key);
+		options.push({ description, authored: authoredKeys.has(key) });
+	}
+	return { options, offered };
+}
+
+/** Parses optional `written` and `drafted` descriptions for an Open Route click. */
+const parseOpenDescriptions = Effect.fnUntraced(function* (
+	input: ResolveReadingInput,
+	lemma: Dumling.Lemma<"de">,
+	reflexive: boolean,
+): Effect.fn.Return<{
+	readonly written: string | undefined;
+	readonly markedDraft: string | undefined;
+}> {
+	let written: string | undefined;
+	if (input.written !== undefined) {
+		written = parsedDescription(
+			lemma,
+			withReflexiveMarker(input.written, reflexive),
 		);
+		if (written === undefined)
+			return yield* defect(
+				`The written ${JSON.stringify(input.written)} is no Emoji Description`,
+			);
+	}
+	let markedDraft: string | undefined;
+	if (input.drafted !== undefined) {
+		const drafted = parsedDescription(lemma, input.drafted);
+		if (drafted === undefined)
+			return yield* defect(
+				`The drafted ${JSON.stringify(input.drafted)} is no Emoji Description`,
+			);
+		// A draft the marker leaves no Emoji Description, as a bare 🪞, is no draft.
+		markedDraft = parsedDescription(
+			lemma,
+			withReflexiveMarker(drafted, reflexive),
+		);
+	}
+	return { written, markedDraft };
+});
+
+/** Asks Luna to write an Open Route Emoji Description with the grammar's 🪞 marker. */
+const askOpenEmojiDescription = (
+	lemma: Dumling.Lemma<"de">,
+	state: { readonly markedSentence: string; readonly lemma: string },
+	reflexive: boolean,
+) =>
+	askLuna(
+		emojiDescriptionStage,
+		emojiDescriptionRequest(state),
+		(output) =>
+			parsedDescription(
+				lemma,
+				typeof output === "string"
+					? withReflexiveMarker(output, reflexive)
+					: output,
+			) ??
+			new InvalidModelOutput({
+				stage: emojiDescriptionStage,
+				message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
+			}),
+	);
+
+/** Resolves an Open Route click via offered options, draft/written shortcuts, jev, and Luna. */
+const resolveOpenRouteReading = Effect.fnUntraced(function* (
+	input: ResolveReadingInput,
+	validated: ValidatedReadingInput,
+	ask: Ask,
+	authored: readonly string[],
+	storedAs: (emojiDescription: string) => string | undefined,
+	answer: AnswerReading,
+): Effect.fn.Return<
+	ReadingResolution,
+	ProviderFailure | InvalidModelOutput,
+	Luna | CallLog
+> {
+	const { lemma, keyOf, candidates, reflexive, optional, state } = validated;
+	const { options, offered } = openRouteOptions(
+		authored,
+		candidates,
+		keyOf,
+		reflexive,
+		optional,
+	);
+	const { written, markedDraft } = yield* parseOpenDescriptions(
+		input,
+		lemma,
+		reflexive,
+	);
 	/** Whether a description is, or stands for, one the judge is offered. */
 	const isOffered = (description: string) =>
 		offered.has(keyOf(storedAs(description) ?? description));
 	if (written !== undefined && isOffered(written))
 		return answer(written, "WrittenStored");
-	const drafted =
-		input.drafted === undefined
-			? undefined
-			: parsedDescription(lemma, input.drafted);
-	if (input.drafted !== undefined && drafted === undefined)
-		return yield* defect(
-			`The drafted ${JSON.stringify(input.drafted)} is no Emoji Description`,
-		);
-	// A draft the marker leaves no Emoji Description, as a bare 🪞, is no draft.
-	const markedDraft =
-		drafted === undefined
-			? undefined
-			: parsedDescription(lemma, withReflexiveMarker(drafted, reflexive));
 	// An offered draft settles the Reuse before the judge: on the stored dev
 	// runs it was right on 1,474 of 1,474, 1,466 of 1,468 and 1,417 of
 	// 1,424 attempts, more precise than the judge (ADR 0031).
@@ -503,27 +369,74 @@ export const resolveReading = Effect.fnUntraced(function* (
 	if (written !== undefined) return answer(written, "Rejudged");
 	const emojiDescription =
 		markedDraft ??
-		(yield* askLuna(
-			emojiDescriptionStage,
-			emojiDescriptionRequest(state),
-			(output) =>
-				parsedDescription(
-					lemma,
-					typeof output === "string"
-						? withReflexiveMarker(output, reflexive)
-						: output,
-				) ??
-				new InvalidModelOutput({
-					stage: emojiDescriptionStage,
-					message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
-				}),
-		));
-	return answer(
-		emojiDescription,
-		isOffered(emojiDescription)
-			? "Collision"
-			: markedDraft === undefined
-				? "Written"
-				: "Drafted",
+		(yield* askOpenEmojiDescription(lemma, state, reflexive));
+	const reason = isOffered(emojiDescription)
+		? "Collision"
+		: markedDraft === undefined
+			? "Written"
+			: "Drafted";
+	return answer(emojiDescription, reason);
+});
+
+/**
+ * Resolves one click's Reading. A Sentence whose segmentation failed, a
+ * unit intake left Unresolved or that is no unit of its Sentence, an
+ * Attestation off the unit's route or in another language than German,
+ * a Foreign Attestation, whose one Reading has no Emoji Description (ADR
+ * 0045), and a candidate that is no Emoji Description are bad input, a
+ * Defect raised before anything is asked.
+ */
+export const resolveReading = Effect.fnUntraced(function* (
+	input: ResolveReadingInput,
+): Effect.fn.Return<
+	ReadingResolution,
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
+> {
+	const log = yield* CallLog;
+	const validated = yield* validateReadingInput(input);
+	const { route, lemma, keyOf, candidateByKey, reflexive, optional, state } =
+		validated;
+	/**
+	 * The stored candidate a description is: itself, or for a 🪞 one on a
+	 * reflexive click the optionally reflexive Reading with its bare emoji,
+	 * since a Lemma never has both (ADR 0052).
+	 */
+	const storedAs = (emojiDescription: string) => {
+		const exact = candidateByKey.get(keyOf(emojiDescription));
+		if (exact !== undefined) return exact;
+		if (!reflexive) return undefined;
+		const bare = keyOf(withReflexiveMarker(emojiDescription, false));
+		return optional.has(bare) ? candidateByKey.get(bare) : undefined;
+	};
+	/** A stored candidate the description is, as stored, or the description as New. */
+	const answer: AnswerReading = (emojiDescription, reason) => {
+		const stored = storedAs(emojiDescription);
+		log.resolution({ outcome: stored ? "Reuse" : "New", reason });
+		return stored
+			? { _tag: "Reuse", emojiDescription: stored }
+			: { _tag: "New", emojiDescription };
+	};
+	const ask = yield* stageAsk;
+	const authored = authoredFor(lemma).map(
+		({ reading }) => reading.emojiDescription,
+	);
+	if (closedRoute(route))
+		return yield* resolveClosedRouteReading(
+			ask,
+			log,
+			route,
+			lemma,
+			state,
+			authored,
+			answer,
+		);
+	return yield* resolveOpenRouteReading(
+		input,
+		validated,
+		ask,
+		authored,
+		storedAs,
+		answer,
 	);
 });

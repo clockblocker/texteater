@@ -120,6 +120,31 @@ export function sumAt(
 	return sum;
 }
 
+/**
+ * Summed offsets for every channel present in at least one Move's terms.
+ * A channel absent from all Moves is `undefined`; a channel present in any
+ * Move is a `number` (even when its value at `now` is `0`).
+ */
+export type MoveSample = Partial<Record<Channel, number>>;
+
+const EMPTY_SAMPLE: MoveSample = Object.freeze({});
+
+/** Evaluates `progressAt(move, now)` once per Move and sums every active channel in a single pass. */
+export function sampleMoves(moves: readonly Move[], now: number): MoveSample {
+	if (moves.length === 0) return EMPTY_SAMPLE;
+	const sample: Partial<Record<Channel, number>> = {};
+	for (const move of moves) {
+		if (move.terms.length === 0) continue;
+		const progress = progressAt(move, now);
+		for (const term of move.terms) {
+			const share = shareAt(term.shape, progress);
+			const value = share === 0 ? 0 : term.delta * share;
+			sample[term.channel] = (sample[term.channel] ?? 0) + value;
+		}
+	}
+	return sample;
+}
+
 /** The sum of every live offset of Part `id` on `channel` at `now`. */
 export function partSumAt(
 	moves: readonly Move[],

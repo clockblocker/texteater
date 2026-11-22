@@ -44,7 +44,6 @@ export {
 	type GermanAdpositionCases,
 	type GermanAdpositionPosition,
 	germanAdpositionAllowedCases,
-	germanAdpositionAllows,
 	germanAdpositionEntry,
 	germanCircumpositions,
 	germanGovernablePrepositions,

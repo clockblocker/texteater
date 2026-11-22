@@ -1,6 +1,8 @@
 import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
 
+import { inflectionalBagOf } from "../../inflectional-bag.js";
+import { germanFiniteAuxiliaries } from "../../inventories/de/closed-verb-tables.js";
 import { CASES, type Case, definiteArticle } from "./articles.js";
 import { gendersOf } from "./noun-declension.js";
 
@@ -104,16 +106,10 @@ export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 	return runs;
 }
 
-/** The finite words of haben, sein and werden a periphrasis opens with. */
-const AUXILIARY =
-	/^(?:hab(?:e|en|est|et|t)?|hast|hat|hatte(?:st|n|t)?|hätte(?:st|n|t)?|bin|bist|ist|sind|seid|sei(?:en|st|est|et)?|war(?:st|en|t)?|wär(?:e|st|est|en|t|et)?|werde(?:n|t|st)?|wirst|wird|wurde(?:st|n|t)?|würde(?:st|n|t)?)$/u;
-
 type Bag = Readonly<Record<string, unknown>>;
 
 const bagOf = (surface: Dumling.Surface<"de">): Bag =>
-	("inflectionalFeatures" in surface
-		? (surface.inflectionalFeatures as Bag | null)
-		: null) ?? {};
+	inflectionalBagOf(surface) ?? {};
 
 /**
  * The form a met verb Surface spells. A Surface is its base-order form
@@ -187,7 +183,8 @@ function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
  */
 function lastAuxiliaryOf(words: readonly string[]): number {
 	for (let index = words.length - 1; index >= 0; index--)
-		if (AUXILIARY.test(foldCase(words[index] ?? "", "de"))) return index;
+		if (germanFiniteAuxiliaries.has(foldCase(words[index] ?? "", "de")))
+			return index;
 	return words.length - 1;
 }
 

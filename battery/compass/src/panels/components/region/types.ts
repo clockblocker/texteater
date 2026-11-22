@@ -29,66 +29,11 @@ export type RegisteredRegion = {
 	idIsStable: boolean;
 	element: HTMLDivElement;
 	mutableValues: {
-		expandToSize: number | undefined;
 		prevSize: RegionSize | undefined;
 	};
 	onResize: OnRegionResize | undefined;
 	regionConstraints: RegionConstraintProps;
 };
-
-/**
- * Reads and resizes a Region from outside React.
- */
-export interface RegionImperativeHandle {
-	/**
-	 * Collapse the Region to it's `collapsedSize`.
-	 *
-	 * ⚠️ This method will do nothing if the Region is not `collapsible` or if it is already collapsed.
-	 */
-	collapse: () => void;
-
-	/**
-	 * Expand a collapsed Region to its most recent size.
-	 *
-	 * ⚠️ This method will do nothing if the Region is not currently collapsed.
-	 */
-	expand: () => void;
-
-	/**
-	 * Get the current size of the Region in pixels as well as a percentage of the parent split (0..100).
-	 *
-	 * @return Region size (in pixels and as a percentage of the parent split)
-	 */
-	getSize: () => {
-		asPercentage: number;
-		inPixels: number;
-	};
-
-	/**
-	 * The Region is currently collapsed.
-	 */
-	isCollapsed: () => boolean;
-
-	/**
-	 * Update the Region's size.
-	 *
-	 * Size can be in the following formats:
-	 * - Percentage of the parent Split (0..100)
-	 * - Pixels
-	 * - Relative font units (em, rem)
-	 * - Viewport relative units (vh, vw)
-	 *
-	 * ℹ️ Numeric values are assumed to be pixels.
-	 * Strings without explicit units are assumed to be percentages (0%..100%).
-	 * Percentages may also be specified as strings ending with "%" (e.g. "33%")
-	 * Pixels may also be specified as strings ending with the unit "px".
-	 * Other units should be specified as strings ending with their CSS property units (e.g. 1rem, 50vh)
-	 *
-	 * @param size New region size
-	 * @return Applied size (after validation)
-	 */
-	resize: (size: number | string) => void;
-}
 
 type BaseRegionAttributes = Omit<HTMLAttributes<HTMLDivElement>, "onResize">;
 

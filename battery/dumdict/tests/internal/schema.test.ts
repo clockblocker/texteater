@@ -4,9 +4,9 @@ import { makeSurfaceId, type StoreRevision } from "../../src";
 import {
 	commitChangesResultSchema,
 	dumdictPlanSchema,
-	getDumdictSchemasFor,
 	lemmaRecordSchema,
-} from "../../src/schema";
+} from "../../src/public-schema";
+import { getDumdictSchemasFor } from "../../src/schema";
 import { germanHausLemma } from "../attested-entities/de/lemmas";
 import { germanHausCitationSurface } from "../attested-entities/de/surfaces";
 import { germanGehenLemma, germanGehenReading } from "../fixtures/de-notes";

@@ -9,6 +9,7 @@ import {
 import type * as Dumrel from "dumrel/types";
 
 import type { PlannedChangeOp, StoreRevision } from "../../domain-types";
+import { compareCodeUnits } from "../identity";
 
 type Paradigm = Dumrel.LemmaParadigm;
 
@@ -105,10 +106,6 @@ export function prunedParadigm<L extends Dumling.Language>(
 			);
 }
 
-function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
-
 /**
  * Merges concurrent writers' copies of one Lemma's Paradigm (system ADR
  * 0048): variants by content id, and each Reading's Licence as the union of
@@ -143,7 +140,10 @@ export function reconcileLemmaParadigms(input: {
 				const stored = merged.variants.get(variant.id);
 				if (
 					stored === undefined ||
-					compare(canonicalJson(variant), canonicalJson(stored)) < 0
+					compareCodeUnits(
+						canonicalJson(variant),
+						canonicalJson(stored),
+					) < 0
 				)
 					merged.variants.set(variant.id, variant);
 			}

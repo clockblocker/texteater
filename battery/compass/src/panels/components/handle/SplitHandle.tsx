@@ -102,14 +102,12 @@ export function SplitHandle({
 					const regions = handleToRegions.get(handle);
 					if (regions) {
 						const primaryRegion = regions[0];
-						const regionIndex = regions.indexOf(primaryRegion);
 
 						setAria(
 							calculateHandleAriaValues({
 								layout,
 								regionConstraints: derivedRegionConstraints,
 								regionId: primaryRegion.id,
-								regionIndex,
 							}),
 						);
 					}

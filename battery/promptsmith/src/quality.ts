@@ -39,3 +39,31 @@ export function summarizeQuality(
 	}
 	return counts;
 }
+
+export type RunStatus = "Completed" | "Failed" | "Interrupted";
+
+/** Counts case outcomes in one pass and derives the overall run status. */
+export function summarizeRunCounts(
+	records: readonly { readonly status: string }[],
+): {
+	readonly total: number;
+	readonly succeeded: number;
+	readonly interrupted: number;
+	readonly failed: number;
+	readonly status: RunStatus;
+} {
+	let succeeded = 0;
+	let interrupted = 0;
+	for (const record of records) {
+		if (record.status === "Success") succeeded++;
+		else if (record.status === "Interrupted") interrupted++;
+	}
+	const total = records.length;
+	const failed = total - succeeded - interrupted;
+	const status: RunStatus = interrupted
+		? "Interrupted"
+		: failed
+			? "Failed"
+			: "Completed";
+	return { total, succeeded, interrupted, failed, status };
+}

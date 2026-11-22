@@ -4,23 +4,19 @@ import { type Infer, v } from "convex/values";
 import { parseScroll, type Scroll } from "dumgen";
 import * as Effect from "effect/Effect";
 import { extractPaste } from "../server/extraction";
-import {
-	dumgenTraced,
-	inspected,
-	inspectionStep,
-} from "../server/inspectionCapture";
+import { inspectionStep } from "../server/inspectionCapture";
 import { unsupportedLanguageMessage } from "../server/intake";
 import {
 	fetchPage,
 	LINK_REJECTED_MESSAGE,
 	readPage,
 } from "../server/linkIntake";
-import { logged } from "../server/logging";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { submittedLink } from "../shared/submitted-link";
 import { internal } from "./_generated/api";
 import { action, internalAction } from "./_generated/server";
 import { orchestratorFor } from "./model/clickOrchestrator";
+import { runConvexEffect } from "./model/convexEffect";
 import { clickDumgen } from "./model/deploymentDumgen";
 import { inspectionFor } from "./model/inspectionAction";
 import { createResolutionSessionLifecycle } from "./model/resolutionSessionLifecycle";
@@ -190,7 +186,6 @@ export const runResolutionSession = internalAction({
 								{ selection, checkpoints },
 							),
 						),
-						dumgenTraced(inspection),
 						Effect.provide(
 							clickDumgen(async (requestKey) => {
 								const answer = await ctx.runQuery(
@@ -210,11 +205,7 @@ export const runResolutionSession = internalAction({
 				root: true,
 			}),
 		);
-		try {
-			await Effect.runPromise(inspected(logged(session), inspection));
-		} finally {
-			await inspection?.flush();
-		}
+		await runConvexEffect(ctx, session, { inspection });
 		return null;
 	},
 });

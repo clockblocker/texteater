@@ -159,16 +159,18 @@ const isSingleWordLexeme = (lemma: Dumling.Lemma<"de">) =>
  * finds no Source for it. A failed call is a failure of its part, never the
  * run's error.
  */
-export function produceBreakdown<R>(
+export const produceBreakdown = Effect.fn(
+	"KnowledgeBreakdown.produceBreakdown",
+)(function* <R>(
 	segmenters: Segmenters<R>,
 	input: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly sentence?: string;
 	},
-): Effect.Effect<Produced, never, R> {
+): Effect.fn.Return<Produced, never, R> {
 	const asFailure = (part: BreakdownPart) => (error: ModelFailure) =>
 		Effect.succeed(failed(part, error._tag, error.message));
-	return segmenters.inConstituents(input).pipe(
+	return yield* segmenters.inConstituents(input).pipe(
 		Effect.flatMap(
 			(constituents): Effect.Effect<Produced, ModelFailure, R> => {
 				if (constituents.kind === "Constituents")
@@ -191,7 +193,7 @@ export function produceBreakdown<R>(
 		),
 		Effect.catch(asFailure("constituents")),
 	);
-}
+});
 
 /**
  * `produce`'s production with its Breakdown added, when the run asks for
@@ -202,20 +204,20 @@ export function produceBreakdown<R>(
  * never publish and its failures are no run's. `produce`'s error, or
  * `pointsBack`'s, interrupts the segmenters too.
  */
-export function withBreakdown<E, R, RS>(
-	segmenters: Segmenters<RS>,
-	produce: Effect.Effect<KnowledgeProduction, E, R>,
-	input: {
-		readonly reading: Dumling.Reading<"de">;
-		readonly breakdown: boolean;
-		readonly sentence?: string;
-	},
-	pointsBack: (
-		change: KnowledgeProduction["changes"][number],
-	) => Effect.Effect<boolean, E, R>,
-): Effect.Effect<KnowledgeProduction, E, R | RS> {
-	if (!input.breakdown) return produce;
-	return Effect.gen(function* () {
+export const withBreakdown = Effect.fn("KnowledgeBreakdown.withBreakdown")(
+	function* <E, R, RS>(
+		segmenters: Segmenters<RS>,
+		produce: Effect.Effect<KnowledgeProduction, E, R>,
+		input: {
+			readonly reading: Dumling.Reading<"de">;
+			readonly breakdown: boolean;
+			readonly sentence?: string;
+		},
+		pointsBack: (
+			change: KnowledgeProduction["changes"][number],
+		) => Effect.Effect<boolean, E, R>,
+	): Effect.fn.Return<KnowledgeProduction, E, R | RS> {
+		if (!input.breakdown) return yield* produce;
 		// A child fiber: it ends with this one, however this one ends.
 		const breakdown = yield* Effect.forkChild(
 			produceBreakdown(segmenters, {
@@ -236,5 +238,5 @@ export function withBreakdown<E, R, RS>(
 			changes: [...produced.changes, ...changes],
 			failures: [...produced.failures, ...failures],
 		};
-	});
-}
+	},
+);

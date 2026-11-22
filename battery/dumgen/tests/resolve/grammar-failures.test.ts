@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test";
+import { testEffect } from "common-utils/effect-test";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
 import { operations } from "../../src/operations.js";
@@ -35,123 +38,154 @@ test("a unit intake left Unresolved stays Unresolved and asks nothing", async ()
 	});
 });
 
-test("another language, a failed Sentence or a unit outside its Sentence is a Defect before anything is asked", async () => {
-	const jev = fakeJev();
-	const live = liveOver({ jev: jev.ask, luna: fakeLuna().ask });
-	const sentence = sentenceOf("Er kommt.");
-	const input = {
-		language: "de" as const,
-		sentence,
-		unit: unitOf([2], "Lexeme/VERB"),
-		neighbours: {},
-		lemmaCandidates: [],
-	};
-	await expect(
-		Effect.runPromise(
-			operations.resolve
-				.grammar({ ...input, language: "en" as "de" })
-				.pipe(Effect.provide(live)),
-		),
-	).rejects.toThrow('German ("de") only');
-	await expect(
-		Effect.runPromise(
-			operations.resolve
-				.grammar({
-					...input,
-					sentence: { ...sentence, units: [], failed: true },
-				})
-				.pipe(Effect.provide(live)),
-		),
-	).rejects.toThrow("segment it again");
-	await expect(
-		Effect.runPromise(
-			operations.resolve
-				.grammar({
-					...input,
-					unit: unitOf([1], "Lexeme/VERB"),
-				})
-				.pipe(Effect.provide(live)),
-		),
-	).rejects.toThrow("ResolvableText");
-	expect(jev.sent).toEqual([]);
-});
+testEffect(
+	"another language, a failed Sentence or a unit outside its Sentence is a Defect before anything is asked",
+	() =>
+		Effect.gen(function* () {
+			const jev = fakeJev();
+			const live = liveOver({ jev: jev.ask, luna: fakeLuna().ask });
+			const sentence = sentenceOf("Er kommt.");
+			const input = {
+				language: "de" as const,
+				sentence,
+				unit: unitOf([2], "Lexeme/VERB"),
+				neighbours: {},
+				lemmaCandidates: [],
+			};
+			const expectDefect = <A, E>(
+				effect: Effect.Effect<A, E>,
+				expectedMessage: string,
+			) =>
+				Effect.gen(function* () {
+					const exit = yield* Effect.exit(effect);
+					expect(Exit.isFailure(exit)).toBe(true);
+					if (Exit.isFailure(exit)) {
+						const err = Cause.squash(exit.cause);
+						expect(
+							err instanceof Error ? err.message : String(err),
+						).toContain(expectedMessage);
+					}
+				});
+
+			yield* expectDefect(
+				operations.resolve
+					.grammar({ ...input, language: "en" as "de" })
+					.pipe(Effect.provide(live)),
+				'German ("de") only',
+			);
+			yield* expectDefect(
+				operations.resolve
+					.grammar({
+						...input,
+						sentence: { ...sentence, units: [], failed: true },
+					})
+					.pipe(Effect.provide(live)),
+				"segment it again",
+			);
+			yield* expectDefect(
+				operations.resolve
+					.grammar({
+						...input,
+						unit: unitOf([1], "Lexeme/VERB"),
+					})
+					.pipe(Effect.provide(live)),
+				"ResolvableText",
+			);
+			expect(jev.sent).toEqual([]);
+		}),
+);
 
 // The click API's error channel (#859, #858).
 
-test("a transport failure is a ProviderFailure and an unusable answer an InvalidModelOutput; nothing is retried", async () => {
-	const sentence = sentenceOf("Er kommt.");
-	const unit = unitOf([2], "Lexeme/VERB");
-	const down = fakeJev({}, { fail: () => true });
-	const failure = await Effect.runPromise(
-		Effect.flip(
-			operations.resolve
-				.grammar({
-					language: "de",
-					sentence,
-					unit,
-					neighbours: {},
-					lemmaCandidates: [],
-				})
-				.pipe(
-					Effect.provide(
-						liveOver({
-							jev: down.ask,
-							luna: fakeLuna().ask,
-						}),
+testEffect(
+	"a transport failure is a ProviderFailure and an unusable answer an InvalidModelOutput; nothing is retried",
+	() =>
+		Effect.gen(function* () {
+			const sentence = sentenceOf("Er kommt.");
+			const unit = unitOf([2], "Lexeme/VERB");
+			const down = fakeJev({}, { fail: () => true });
+			const failure = yield* Effect.flip(
+				operations.resolve
+					.grammar({
+						language: "de",
+						sentence,
+						unit,
+						neighbours: {},
+						lemmaCandidates: [],
+					})
+					.pipe(
+						Effect.provide(
+							liveOver({
+								jev: down.ask,
+								luna: fakeLuna().ask,
+							}),
+						),
 					),
-				),
-		),
-	);
-	expect(failure).toBeInstanceOf(ProviderFailure);
-	expect(down.sent).toHaveLength(1);
-	const garbled = fakeLuna(() => ({ canonicalForm: "kommen" }));
-	const unusable = await Effect.runPromise(
-		Effect.flip(
-			operations.resolve
-				.grammar({
-					language: "de",
-					sentence,
-					unit,
-					neighbours: {},
-					lemmaCandidates: [],
-				})
-				.pipe(
-					Effect.provide(
-						liveOver({
-							jev: fakeJev().ask,
-							luna: garbled.ask,
-						}),
+			);
+			expect(failure).toBeInstanceOf(ProviderFailure);
+			expect(down.sent).toHaveLength(1);
+			const garbled = fakeLuna(() => ({ canonicalForm: "kommen" }));
+			const unusable = yield* Effect.flip(
+				operations.resolve
+					.grammar({
+						language: "de",
+						sentence,
+						unit,
+						neighbours: {},
+						lemmaCandidates: [],
+					})
+					.pipe(
+						Effect.provide(
+							liveOver({
+								jev: fakeJev().ask,
+								luna: garbled.ask,
+							}),
+						),
 					),
-				),
-		),
-	);
-	expect(unusable).toBeInstanceOf(InvalidModelOutput);
-	expect(unusable).toMatchObject({ stage: "canonical" });
-	expect(garbled.sent).toHaveLength(1);
-});
+			);
+			expect(unusable).toBeInstanceOf(InvalidModelOutput);
+			expect(unusable).toMatchObject({ stage: "canonical" });
+			expect(garbled.sent).toHaveLength(1);
+		}),
+);
 
-test("a click is all-or-nothing: a failed grammar request interrupts the description drafted beside it", async () => {
-	// Aber0 _1 es2 _3 regnet4 .5 (code writes the conjunction's headword)
-	const jev = fakeJev({}, { fail: (stage) => stage === "grammar" });
-	const luna = fakeLuna(() => "➕", { delayMs: 50 });
-	const failure = await Effect.runPromise(
-		Effect.flip(
-			operations.resolve
-				.grammar({
-					language: "de",
-					sentence: sentenceOf("Aber es regnet."),
-					unit: unitOf([0], "Lexeme/CCONJ"),
-					neighbours: {},
-					lemmaCandidates: [],
-				})
-				.pipe(
-					Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask })),
-				),
-		),
-	);
-	expect(failure).toBeInstanceOf(ProviderFailure);
-	expect(luna.aborted).toEqual(["emojiDescription"]);
-});
+testEffect(
+	"a click is all-or-nothing: a failed grammar request interrupts the description drafted beside it",
+	() =>
+		Effect.gen(function* () {
+			// Aber0 _1 es2 _3 regnet4 .5 (code writes the conjunction's headword)
+			const descriptionStarted = Promise.withResolvers<void>();
+			const aborted: string[] = [];
+			const jev = fakeJev({}, { fail: (stage) => stage === "grammar" });
+			const grammarAsk: typeof jev.ask = async (request, context) => {
+				if (context.stage === "grammar")
+					await descriptionStarted.promise;
+				return jev.ask(request, context);
+			};
+			const luna: LunaAsk = (_request, { stage, signal }) => {
+				descriptionStarted.resolve();
+				return new Promise((_, reject) =>
+					signal.addEventListener("abort", () => {
+						aborted.push(stage);
+						reject(Error("aborted"));
+					}),
+				);
+			};
+			const failure = yield* Effect.flip(
+				operations.resolve
+					.grammar({
+						language: "de",
+						sentence: sentenceOf("Aber es regnet."),
+						unit: unitOf([0], "Lexeme/CCONJ"),
+						neighbours: {},
+						lemmaCandidates: [],
+					})
+					.pipe(Effect.provide(liveOver({ jev: grammarAsk, luna }))),
+			);
+			expect(failure).toBeInstanceOf(ProviderFailure);
+			expect(aborted).toEqual(["emojiDescription"]);
+		}),
+);
 
 // The trace (#858).
 
@@ -177,24 +211,28 @@ test("the trace names the operation, its calls by executor and how the click cam
 	expect(trace?.resolution).toEqual({ outcome: "Resolved" });
 });
 
-test("a Luna answer the transport kept no output for is refused with the transport's reason", async () => {
-	const luna: LunaAsk = async () => ({
-		output: undefined,
-		metadata: { problem: "Luna refused: no" },
-	});
-	const failure = await Effect.runPromise(
-		Effect.flip(
-			operations.resolve
-				.grammar({
-					language: "de",
-					sentence: sentenceOf("Er kommt."),
-					unit: unitOf([2], "Lexeme/VERB"),
-					neighbours: {},
-					lemmaCandidates: [],
-				})
-				.pipe(Effect.provide(liveOver({ jev: fakeJev().ask, luna }))),
-		),
-	);
-	expect(failure).toBeInstanceOf(InvalidModelOutput);
-	expect(String(failure.message)).toContain("Luna refused: no");
-});
+testEffect(
+	"a Luna answer the transport kept no output for is refused with the transport's reason",
+	() =>
+		Effect.gen(function* () {
+			const luna: LunaAsk = async () => ({
+				output: undefined,
+				metadata: { problem: "Luna refused: no" },
+			});
+			const failure = yield* Effect.flip(
+				operations.resolve
+					.grammar({
+						language: "de",
+						sentence: sentenceOf("Er kommt."),
+						unit: unitOf([2], "Lexeme/VERB"),
+						neighbours: {},
+						lemmaCandidates: [],
+					})
+					.pipe(
+						Effect.provide(liveOver({ jev: fakeJev().ask, luna })),
+					),
+			);
+			expect(failure).toBeInstanceOf(InvalidModelOutput);
+			expect(String(failure.message)).toContain("Luna refused: no");
+		}),
+);

@@ -1,6 +1,7 @@
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "../../inflectional-bag.js";
 import type { AuthoredMember } from "../member.js";
-import { authoredMembers } from "./inventory.js";
+import { germanArticles } from "./determiner-paradigms.js";
 import { member as subjectExpletiveEs } from "./members/lexeme/pronoun/personal/es-subject-expletive.js";
 
 type ComponentKind = "DET" | "PRON";
@@ -24,23 +25,41 @@ const definiteArticleForms = new Set([
 	"des",
 ]);
 
+const cellKey = (
+	grammaticalCase: string,
+	number: string,
+	gender: string | null,
+): string => `${grammaticalCase}|${number}|${gender ?? ""}`;
+
+let definiteArticleIndex: ReadonlyMap<string, AuthoredMember> | undefined;
+
+function definiteArticlesByCell(): ReadonlyMap<string, AuthoredMember> {
+	if (definiteArticleIndex !== undefined) return definiteArticleIndex;
+	const index = new Map<string, AuthoredMember>();
+	for (const member of germanArticles) {
+		const { lemma } = member;
+		if (!definiteArticleForms.has(lemma.canonicalForm)) continue;
+		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+		const key = cellKey(
+			String(core.case),
+			String(core.number),
+			typeof core.gender === "string" ? core.gender : null,
+		);
+		if (!index.has(key)) index.set(key, member);
+	}
+	definiteArticleIndex = index;
+	return index;
+}
+
 /** The reviewed definite article cell for a name's case, number and gender. */
 function definiteArticleCell(cell: {
 	readonly case: string;
 	readonly number: string;
 	readonly gender: string | null;
 }) {
-	return authoredMembers.find(({ lemma }) => {
-		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
-		return (
-			lemma.kind === "DET" &&
-			core.pronType === "Art" &&
-			definiteArticleForms.has(lemma.canonicalForm) &&
-			core.case === cell.case &&
-			core.number === cell.number &&
-			(core.gender ?? null) === cell.gender
-		);
-	});
+	return definiteArticlesByCell().get(
+		cellKey(cell.case, cell.number, cell.gender),
+	);
 }
 
 /** The Canonical Surface fields every component shares; its Lemma spells the rest. */
@@ -97,8 +116,7 @@ export function deriveGrammaticalComponent(
 ): GrammaticalComponent | null {
 	if (surface.language !== "de" || surface.lemma.family !== "Lexeme")
 		return null;
-	const bag: Readonly<Record<string, unknown>> | null =
-		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
+	const bag = inflectionalBagOf(surface);
 	if (surface.lemma.kind === "PROPN") {
 		const core: Readonly<Record<string, unknown>> =
 			surface.lemma.coreFeatures;

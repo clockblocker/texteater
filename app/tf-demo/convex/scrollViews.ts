@@ -5,7 +5,7 @@ import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
 import { loadCompleteOccurrenceMembers } from "./model/occurrenceAttestations";
 import {
-	projectSentenceView,
+	projectSentenceViews,
 	sentenceViewValidator,
 } from "./modules/scroll/sentenceView";
 
@@ -107,10 +107,10 @@ export const get = query({
 							q.eq("scrollId", scroll._id),
 						)
 						.take(MAX_SENTENCES_PER_SCROLL);
-		const sentenceViews = await Promise.all(
-			sentences.map((sentence) =>
-				projectSentenceView(ctx, sentence, visitorId),
-			),
+		const sentenceViews = await projectSentenceViews(
+			ctx,
+			sentences,
+			visitorId,
 		);
 
 		return {
@@ -175,11 +175,7 @@ export const page = query({
 					.lt("position", end),
 			)
 			.take(PAGE_SENTENCES);
-		return Promise.all(
-			sentences.map((sentence) =>
-				projectSentenceView(ctx, sentence, visitorId),
-			),
-		);
+		return projectSentenceViews(ctx, sentences, visitorId);
 	},
 });
 

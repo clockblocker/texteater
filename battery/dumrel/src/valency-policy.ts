@@ -3,6 +3,7 @@ import type {
 	EnglishValencyComplement,
 	HebrewValencyComplement,
 } from "./generated/types.js";
+import { lookupRoute, type RoutePolicy } from "./route-policy.js";
 import type { GermanValencyComplement, ValencyComplement } from "./types.js";
 
 type ComplementKind = ValencyComplement["kind"];
@@ -12,23 +13,13 @@ type ComplementsByLanguage = {
 	he: HebrewValencyComplement;
 	en: EnglishValencyComplement;
 };
-/** One language's table, keyed by its Families and Kinds, so a key that names no route fails to type-check. */
-type RoutePolicy<L extends Dumling.Language, Kind extends ComplementKind> = {
-	readonly [F in Dumling.Family<L>]?: {
-		readonly [K in Dumling.Kind<L, F>]?: readonly Kind[];
-	};
-};
 /** Every language's table, each keyed by that language's routes and holding its own complement kinds. */
 export type ValencyPolicy = {
 	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
 		L,
-		ComplementsByLanguage[L]["kind"]
+		readonly ComplementsByLanguage[L]["kind"][]
 	>;
 };
-/** The table as `allowedComplementKinds` reads it at runtime. */
-type RouteLookup = Readonly<
-	Record<string, Readonly<Record<string, readonly ComplementKind[]>>>
->;
 
 const germanVerbComplements = [
 	"Case",
@@ -109,7 +100,5 @@ const valencyPolicy = {
 export function allowedComplementKinds(
 	lemma: Dumling.LemmaRoute,
 ): readonly ComplementKind[] {
-	const policy: Partial<Record<Dumling.Language, RouteLookup>> =
-		valencyPolicy;
-	return policy[lemma.language]?.[lemma.family]?.[lemma.kind] ?? [];
+	return lookupRoute<readonly ComplementKind[]>(valencyPolicy, lemma) ?? [];
 }

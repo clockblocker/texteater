@@ -25,7 +25,7 @@ import { INTAKE_NOT_CONFIGURED_MESSAGE } from "../../server/intake";
 import { joinedSentence, sentenceParts } from "../../server/longSentences";
 import { storedUnitOf } from "../../server/storedSegments";
 import { env } from "../_generated/server";
-import { visitorError } from "./validators";
+import { VisitorActionError } from "./convexEffect";
 
 /*
  * The deployment's Dumgen (Dumgen ADR 0009): its model transports, and the
@@ -189,14 +189,21 @@ export function deploymentDumgen(
 }
 
 /**
- * Fails with the coded intake error that tells the Visitor how to fix it
- * when the deployment has no TypeSafe key: intake checks it before it
- * runs, and a click's operations when they run.
+ * Fails with a typed `VisitorActionError` (`NotConfigured`) when the deployment
+ * has no TypeSafe key. Translated to a coded `ConvexError` once at the Convex
+ * action boundary (`runConvexEffect`).
  */
-export function requireJev(): void {
-	if (!modelTransports().jev)
-		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
-}
+export const requireJev: Effect.Effect<void, VisitorActionError> =
+	Effect.suspend(() =>
+		modelTransports().jev
+			? Effect.void
+			: Effect.fail(
+					new VisitorActionError({
+						code: "NotConfigured",
+						visitorMessage: INTAKE_NOT_CONFIGURED_MESSAGE,
+					}),
+				),
+	);
 
 /**
  * Each model call's deadline on a click when `CLICK_CALL_DEADLINE_MS`
@@ -252,46 +259,43 @@ export const knowledgeDumgen: Layer.Layer<Jev | Luna> = Layer.suspend(() =>
  * trace says, read through the action's `TraceSink`: a ProviderFailure or
  * an InvalidModelOutput.
  */
-export const resegment = (stitchedText: string) =>
-	Effect.gen(function* () {
-		requireJev();
-		const sink = yield* TraceSink;
-		let failure: OperationTrace["sentences"][number] | undefined;
-		// A long Sentence is read in parts, as intake read it.
-		const parts = sentenceParts(stitchedText);
-		const text = yield* operations.segment
-			.inUnits({
-				language: "de",
-				paragraphs: [{ sentences: [...parts.parts] }],
-			})
-			.pipe(
-				Effect.provideService(TraceSink, (trace) => {
-					sink?.(trace);
-					failure = trace.sentences.find(
-						({ outcome }) => outcome === "Failed",
-					);
-				}),
-			);
-		const sentence = joinedSentence(
-			text.paragraphs[0]?.sentences ?? [],
-			parts,
+export const resegment = Effect.fn("DeploymentDumgen.resegment")(function* (
+	stitchedText: string,
+) {
+	yield* Effect.orDie(requireJev);
+	const sink = yield* TraceSink;
+	let failure: OperationTrace["sentences"][number] | undefined;
+	// A long Sentence is read in parts, as intake read it.
+	const parts = sentenceParts(stitchedText);
+	const text = yield* operations.segment
+		.inUnits({
+			language: "de",
+			paragraphs: [{ sentences: [...parts.parts] }],
+		})
+		.pipe(
+			Effect.provideService(TraceSink, (trace) => {
+				sink?.(trace);
+				failure = trace.sentences.find(
+					({ outcome }) => outcome === "Failed",
+				);
+			}),
 		);
-		if (!sentence.failed)
-			return {
-				segments: sentence.segments.map(({ kind, text, surface }) =>
-					surface === undefined
-						? { kind, text }
-						: { kind, text, surface },
-				),
-				units: sentence.units.map(storedUnitOf),
-			};
-		const reason =
-			failure?.outcome === "Failed" ? failure.failure : undefined;
-		const fields = {
-			stage: "segment.inUnits",
-			message: reason?.message ?? "The Sentence was not segmented",
+	const sentence = joinedSentence(text.paragraphs[0]?.sentences ?? [], parts);
+	if (!sentence.failed)
+		return {
+			segments: sentence.segments.map(({ kind, text, surface }) =>
+				surface === undefined
+					? { kind, text }
+					: { kind, text, surface },
+			),
+			units: sentence.units.map(storedUnitOf),
 		};
-		return yield* reason?.tag === "InvalidModelOutput"
-			? new InvalidModelOutput(fields)
-			: new ProviderFailure(fields);
-	});
+	const reason = failure?.outcome === "Failed" ? failure.failure : undefined;
+	const fields = {
+		stage: "segment.inUnits",
+		message: reason?.message ?? "The Sentence was not segmented",
+	};
+	return yield* reason?.tag === "InvalidModelOutput"
+		? new InvalidModelOutput(fields)
+		: new ProviderFailure(fields);
+});

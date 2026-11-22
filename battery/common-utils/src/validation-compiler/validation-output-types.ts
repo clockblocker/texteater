@@ -187,7 +187,38 @@ function structuralEmitter(
 		outermost = Math.min(enclosing, outermost);
 		return text;
 	};
-	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+	const emitPipe = (
+		node: Extract<Constraint, readonly ["pipe", unknown, unknown]>,
+	): string => {
+		for (const effect of node[2])
+			if (effect[0] === "operation" && !operations.has(effect[1]))
+				throw Error(`No output-type contract for ${effect[1]}`);
+		return emit(node[1]);
+	};
+	const emitTuple = (
+		node: Extract<Constraint, readonly ["tuple", ...unknown[]]>,
+	): string => {
+		const fixed = node[1].map(emit);
+		if (node[2]) fixed.push(`...Array<${emit(node[2])}>`);
+		return `[${fixed.join(", ")}]`;
+	};
+	const emitObject = (
+		node: Extract<Constraint, readonly ["object", unknown, unknown]>,
+	): string => {
+		const entries = Object.entries(node[1]);
+		if (entries.length === 0 && node[2] === "strict")
+			return "Record<string, never>";
+		if (node[2] === "passthrough")
+			throw Error(
+				"Structural output emission requires known object keys",
+			);
+		return `{${entries
+			.map(
+				([key, value]) =>
+					`${JSON.stringify(key)}${optional(value) ? "?" : ""}: ${emit(value)};`,
+			)
+			.join(" ")}}`;
+	};
 	const emit = (node: Constraint): string => {
 		switch (node[0]) {
 			case "ref":
@@ -195,10 +226,7 @@ function structuralEmitter(
 					? reference(node[1], () => emitDefinition(node[1]))
 					: inline(node[1]);
 			case "pipe":
-				for (const effect of node[2])
-					if (effect[0] === "operation" && !operations.has(effect[1]))
-						throw Error(`No output-type contract for ${effect[1]}`);
-				return emit(node[1]);
+				return emitPipe(node);
 			case "literal":
 				return JSON.stringify(node[1]);
 			case "enum":
@@ -224,20 +252,9 @@ function structuralEmitter(
 					"never"
 				);
 			case "tuple":
-				return `[${node[1].map(emit).join(", ")}${node[2] ? `${node[1].length ? ", " : ""}...Array<${emit(node[2])}>` : ""}]`;
+				return emitTuple(node);
 			case "object":
-				if (Object.keys(node[1]).length === 0 && node[2] === "strict")
-					return "Record<string, never>";
-				if (node[2] === "passthrough")
-					throw Error(
-						"Structural output emission requires known object keys",
-					);
-				return `{${Object.entries(node[1])
-					.map(
-						([key, value]) =>
-							`${JSON.stringify(key)}${optional(value) ? "?" : ""}: ${emit(value)};`,
-					)
-					.join(" ")}}`;
+				return emitObject(node);
 			default:
 				throw Error(`No output-type contract for ${node[0]}`);
 		}

@@ -181,12 +181,16 @@ export function createRecordStore(recordsDirectory: string) {
 		id: Dumcorpus.SpecRecordId,
 		expectedSha256: string,
 		depth: Dumcorpus.AnnotationLayer | undefined,
+		canChange?: (current: ReadableRecord) => string | undefined,
 	): Promise<SaveResult> {
 		const current = await read(id);
 		if (current.sha256 !== expectedSha256)
 			return { outcome: "conflict", record: current };
 		if (!isReadable(current))
 			return { outcome: "refused", reason: current.problem ?? "" };
+		const preconditionProblem = canChange?.(current);
+		if (preconditionProblem)
+			return { outcome: "refused", reason: preconditionProblem };
 		const problem = depthChangeProblem(current, depth);
 		if (problem) return { outcome: "refused", reason: problem };
 
@@ -204,9 +208,14 @@ export function createRecordStore(recordsDirectory: string) {
 		await writeFile(temporary, next);
 		try {
 			// Another session may have written since this save read the file.
-			const latest = await read(id);
-			if (latest.sha256 !== expectedSha256)
-				return { outcome: "conflict", record: latest };
+			let latestSha256: string | undefined;
+			try {
+				latestSha256 = sha256(await readFile(path, "utf8"));
+			} catch {
+				latestSha256 = undefined;
+			}
+			if (latestSha256 !== expectedSha256)
+				return { outcome: "conflict", record: await read(id) };
 			await rename(temporary, path);
 		} finally {
 			await unlink(temporary).catch(() => undefined);
@@ -220,14 +229,18 @@ export function createRecordStore(recordsDirectory: string) {
 		 * Sets the record's Review Depth, or makes it a Draft for
 		 * `undefined`. Writes nothing and answers `conflict` with the record
 		 * as it is now when the file's hash is not `expectedSha256`, and
-		 * `refused` when the result would fail dumcorpus's checks.
+		 * `refused` when `canChange` rejects it or the result would fail
+		 * dumcorpus's checks.
 		 */
 		setReviewDepth(
 			id: Dumcorpus.SpecRecordId,
 			expectedSha256: string,
 			depth: Dumcorpus.AnnotationLayer | undefined,
+			canChange?: (current: ReadableRecord) => string | undefined,
 		): Promise<SaveResult> {
-			const result = saving.then(() => save(id, expectedSha256, depth));
+			const result = saving.then(() =>
+				save(id, expectedSha256, depth, canChange),
+			);
 			saving = result.catch(() => undefined);
 			return result;
 		},

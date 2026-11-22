@@ -2,6 +2,11 @@ import { canonicalFormKey, lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 
+/** Code-unit order, the same in every runtime, unlike `localeCompare`. */
+export function compareCodeUnits(left: string, right: string): number {
+	return left < right ? -1 : left > right ? 1 : 0;
+}
+
 /**
  * Orders Lemmas by Dumling's case-folded identity key (system ADR 0002), so
  * the planner walks stored Lemmas in one deterministic order. Dumling compares
@@ -11,9 +16,7 @@ export function compareLemmas(
 	left: Dumling.Lemma,
 	right: Dumling.Lemma,
 ): number {
-	const a = lemmaIdentityKey(left),
-		b = lemmaIdentityKey(right);
-	return a < b ? -1 : a > b ? 1 : 0;
+	return compareCodeUnits(lemmaIdentityKey(left), lemmaIdentityKey(right));
 }
 /**
  * Whether a Unit Shadow describes this Lemma: the same language, Family and

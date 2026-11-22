@@ -9,12 +9,9 @@ import type {
 import { makeSurfaceId, type SurfaceId } from "../../dumling-id";
 import type { RekeySurfacesRequest } from "../../public";
 import type { RekeySurfacesSlice } from "../../storage";
-import { lemmaLanguage } from "../identity";
+import { compareCodeUnits, lemmaLanguage } from "../identity";
 import { holdsUserText } from "./remove-links";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
-
-const compare = (left: string, right: string) =>
-	left < right ? -1 : left > right ? 1 : 0;
 
 /**
  * Plans re-keying Surface Entries after a Dumling Surface DTO change (system
@@ -37,7 +34,7 @@ export function planRekeySurfaces<L extends Dumling.Language>(
 	const deleted: PlannedChangeOp<L>[] = [];
 	const moved = new Map<string, SurfaceId<L>>();
 	const rekeys = [...request.rekeys].sort((left, right) =>
-		compare(left.from, right.from),
+		compareCodeUnits(left.from, right.from),
 	);
 	for (const { from, to } of rekeys) {
 		const entry = stored.get(from);

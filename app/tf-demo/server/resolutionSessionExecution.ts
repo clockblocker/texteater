@@ -116,19 +116,28 @@ function recordedByCommit(result: ResolveSegmentResult): boolean {
 
 const LIFECYCLE_OWNER = "app/tf-demo · resolutionSessions";
 
-function lifecycleHop<T>(name: string, input: unknown, run: () => Promise<T>) {
-	return Effect.tryPromise(run).pipe(
+// Shares the caller's enclosing span; lifecycleHop creates its own dynamic inspection span.
+const lifecycleHop = Effect.fnUntraced(function* <T>(
+	name: string,
+	input: unknown,
+	run: () => Promise<T>,
+) {
+	return yield* Effect.tryPromise(run).pipe(
 		Effect.withSpan(name, inspectionStep(LIFECYCLE_OWNER, input)),
 	);
-}
+});
 
 /**
  * Executes one guarded Resolution Session run. Callers cross one seam; this
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
  * and success/failure recording. Diagnostics are Effect logs, which the
  * caller's logger writes (`logged`).
+ *
+ * Uses `Effect.fnUntraced` deliberately so diagnostics inherit the enclosing
+ * caller span directly (e.g. `"Resolution session"` in production, or no span
+ * in isolated unit tests).
  */
-export function executeResolutionSession({
+export const executeResolutionSession = Effect.fnUntraced(function* ({
 	identity,
 	lifecycle,
 	resolve,
@@ -136,7 +145,7 @@ export function executeResolutionSession({
 }: ResolutionSessionExecution) {
 	let phase: ResolutionPhase = "Route";
 	const generationEvents: ResolutionGenerationEvent[] = [];
-	return Effect.gen(function* () {
+	yield* Effect.gen(function* () {
 		// A generation event arrives through a plain callback; it is logged
 		// under the session's span.
 		const log = Effect.runSyncWith(yield* Effect.context<never>());
@@ -279,7 +288,7 @@ export function executeResolutionSession({
 			);
 		}),
 	);
-}
+});
 
 /**
  * A failed run by its first typed error, so a model failure stays a

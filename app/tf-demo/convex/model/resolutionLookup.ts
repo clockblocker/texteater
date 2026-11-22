@@ -1,8 +1,7 @@
 import { assertIdentifier } from "../../server/identifiers";
-import type { Id } from "../_generated/dataModel";
+import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
-import { loadStoredSegments } from "./storedSegments";
 
 export function assertIndex(value: number, name: string): void {
 	if (!Number.isSafeInteger(value) || value < 0) {
@@ -21,14 +20,16 @@ export async function requireClickableSegment(
 	clickedSegmentIndex: number,
 ) {
 	assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
-	const sentence = await ctx.db.get(sentenceId);
+	const [sentence, segment] = await Promise.all([
+		ctx.db.get(sentenceId),
+		ctx.db
+			.query("segments")
+			.withIndex("by_sentence_id_and_index", (q) =>
+				q.eq("sentenceId", sentenceId).eq("index", clickedSegmentIndex),
+			)
+			.unique(),
+	]);
 	if (!sentence) throw new Error("Sentence does not exist.");
-	const segment = await ctx.db
-		.query("segments")
-		.withIndex("by_sentence_id_and_index", (q) =>
-			q.eq("sentenceId", sentenceId).eq("index", clickedSegmentIndex),
-		)
-		.unique();
 	if (segment?.kind !== "ResolvableText") {
 		throw new Error("Only a ResolvableText Segment can be clicked.");
 	}
@@ -77,18 +78,13 @@ export function assertMatchingRetry(
 	}
 }
 
-export async function loadSentenceForResolution(
-	ctx: QueryCtx,
-	{ sentenceId }: { sentenceId: Id<"sentences"> },
+export function projectSentenceForResolution(
+	sentence: Doc<"sentences">,
+	segments: readonly Doc<"segments">[],
+	scroll: Doc<"scrolls"> | null,
 ) {
-	const sentence = await ctx.db.get(sentenceId);
-	if (!sentence) return null;
-	const [segments, text] = await Promise.all([
-		loadStoredSegments(ctx, sentenceId),
-		ctx.db.get(sentence.scrollId),
-	]);
 	return {
-		sentenceId,
+		sentenceId: sentence._id,
 		scrollId: sentence.scrollId,
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
@@ -99,7 +95,7 @@ export async function loadSentenceForResolution(
 			...(surface === undefined ? {} : { surface }),
 		})),
 		...(sentence.units ? { units: sentence.units } : {}),
-		definitionText: text?.origin?.kind === "Definition",
+		definitionText: scroll?.origin?.kind === "Definition",
 		...(sentence.segmentationFailed
 			? { segmentationFailed: true as const }
 			: {}),
@@ -109,10 +105,8 @@ export async function loadSentenceForResolution(
 /** The Sentences just before and after this one in its Scroll, as far as they exist. */
 export async function loadNeighbourSentences(
 	ctx: QueryCtx,
-	sentenceId: Id<"sentences">,
+	sentence: Doc<"sentences">,
 ): Promise<{ before?: string; after?: string }> {
-	const sentence = await ctx.db.get(sentenceId);
-	if (!sentence) return {};
 	const [before, after] = await Promise.all([
 		ctx.db
 			.query("sentences")
@@ -136,23 +130,4 @@ export async function loadNeighbourSentences(
 		...(before ? { before: before.stitchedText } : {}),
 		...(after ? { after: after.stitchedText } : {}),
 	};
-}
-
-export async function findAttestationForSegmentValue(
-	ctx: QueryCtx,
-	{
-		sentenceId,
-		clickedSegmentIndex,
-	}: { sentenceId: Id<"sentences">; clickedSegmentIndex: number },
-) {
-	assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
-	const { segment } = await requireClickableSegment(
-		ctx,
-		sentenceId,
-		clickedSegmentIndex,
-	);
-	const attestationId = segment.attestationMembership?.attestationId;
-	if (!attestationId) return null;
-	const reusable = await reconstructReusableAttestation(ctx, attestationId);
-	return reusable.sentenceId === sentenceId ? reusable.value : null;
 }

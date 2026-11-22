@@ -262,3 +262,83 @@ test("the reading position is remembered per Scroll, and reseeding changes nothi
 		await t.run(async (ctx) => (await ctx.db.get(bookId))?.scrollCount),
 	).toBe(5);
 });
+
+test("library.title returns Section and Scroll labels while respecting Scroll ownership", async () => {
+	const t = createTestConvex();
+	const { bookId, scrolls } = await seededBook(t);
+	const loose = await submitText(t, [["Hallo", " ", "Welt", "."]], {
+		submissionKey: "text:v1:Hallo Welt.",
+	});
+	const privateScrollId = await t.run((ctx) =>
+		ctx.db.insert("scrolls", {
+			submissionKey: "link:v1:private",
+			sourceText: "Geheim.",
+			title: "Geheimnis",
+			owner: VISITOR,
+		}),
+	);
+	const frontMatterScroll = await submitText(t, [["Vorwort", "."]], {
+		submissionKey: "text:v1:Vorwort.",
+	});
+	await t.run(async (ctx) => {
+		const untitledSection = await insertSection(ctx, { title: "Band" });
+		await placeScroll(ctx, frontMatterScroll.scrollId, {
+			sectionId: untitledSection,
+			order: 0,
+		});
+		await insertSection(ctx, {
+			title: "Kapitel 1",
+			placement: { sectionId: untitledSection, order: 1 },
+		});
+	});
+
+	expect(
+		await t.query(api.library.title, {
+			kind: "Section",
+			id: bookId,
+			visitorId: VISITOR,
+		}),
+	).toBe("Die lange Reise");
+	expect(
+		await t.query(api.library.title, {
+			kind: "Scroll",
+			id: scrolls.chapter1,
+			visitorId: VISITOR,
+		}),
+	).toBe("Kapitel 1");
+	expect(
+		await t.query(api.library.title, {
+			kind: "Scroll",
+			id: loose.scrollId,
+			visitorId: VISITOR,
+		}),
+	).toBe("Hallo Welt.");
+	expect(
+		await t.query(api.library.title, {
+			kind: "Scroll",
+			id: frontMatterScroll.scrollId,
+			visitorId: VISITOR,
+		}),
+	).toBe("Front matter");
+	expect(
+		await t.query(api.library.title, {
+			kind: "Scroll",
+			id: privateScrollId,
+			visitorId: VISITOR,
+		}),
+	).toBe("Geheimnis");
+	expect(
+		await t.query(api.library.title, {
+			kind: "Scroll",
+			id: privateScrollId,
+			visitorId: "other-visitor",
+		}),
+	).toBeNull();
+	expect(
+		await t.query(api.library.title, {
+			kind: "Section",
+			id: "not-a-valid-id",
+			visitorId: VISITOR,
+		}),
+	).toBeNull();
+});

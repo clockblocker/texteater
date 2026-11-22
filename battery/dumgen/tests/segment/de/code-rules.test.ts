@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { testEffect } from "common-utils/effect-test";
 import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
@@ -93,11 +94,12 @@ test("anchors: um … zu is anchored as the zu-infinitive conjunction, other cir
 	expect(vorbei.with).toContainEqual([2, 4, 10]);
 });
 
-test("anchors: a unit of an accepted circumposition's two pieces routes Locution ADP, whatever Kind the route Choice hears (#1162)", async () => {
-	// Von0 _1 diesem2 _3 Tag4 _5 an6 _7 führte8 _9 sie10 _11 das12 _13 Protokoll14 .15
-	const routed = async (rules: readonly CodeRule[]) =>
-		(
-			await Effect.runPromise(
+testEffect(
+	"anchors: a unit of an accepted circumposition's two pieces routes Locution ADP, whatever Kind the route Choice hears (#1162)",
+	() =>
+		Effect.gen(function* () {
+			// Von0 _1 diesem2 _3 Tag4 _5 an6 _7 führte8 _9 sie10 _11 das12 _13 Protokoll14 .15
+			const routed = (rules: readonly CodeRule[]) =>
 				germanUnits(
 					{
 						segments: segmentsOf(
@@ -113,12 +115,19 @@ test("anchors: a unit of an accepted circumposition's two pieces routes Locution
 						}),
 					}).ask,
 					{ ...productionUnitSettings, rules },
-				),
-			)
-		).find((unit) => unit.segments.length === 2)?.route;
-	expect(await routed([])).toEqual(route("Locution", "ADV"));
-	expect(await routed(["anchors"])).toEqual(route("Locution", "ADP"));
-});
+				).pipe(
+					Effect.map(
+						(units) =>
+							units.find((unit) => unit.segments.length === 2)
+								?.route,
+					),
+				);
+			expect(yield* routed([])).toEqual(route("Locution", "ADV"));
+			expect(yield* routed(["anchors"])).toEqual(
+				route("Locution", "ADP"),
+			);
+		}),
+);
 
 test("quantifier: ein bisschen is one unit, and the noun it quantifies its own", async () => {
 	// Gib0 _1 mir2 _3 ein4 _5 bisschen6 _7 Milch8 .9
@@ -150,28 +159,30 @@ test("quantifier: ein paar is one unit and its noun its own, but ein Paar is the
 	expect(noun.with).toContainEqual([4, 6]);
 });
 
-test("quantifier: its unit routes Lexeme PRON, though the route Choice hears a noun", async () => {
-	// Nach0 _1 ein2 _3 paar4 _5 Sekunden6 _7 ging8 _9 er10 .11
-	const units = await Effect.runPromise(
-		germanUnits(
-			{ segments: segmentsOf("Nach ein paar Sekunden ging er.") },
-			fakeJudge({
-				s_article_2: picked("p4"),
-				r_2_3: picked("Lexeme/NOUN"),
-				r_4: picked("Lexeme/NOUN"),
-			}).ask,
-			{ ...productionUnitSettings, rules: ["quantifier"] },
-		),
-	);
-	expect(units).toContainEqual({
-		segments: [2, 4],
-		route: route("Lexeme", "PRON"),
-	});
-	expect(units).toContainEqual({
-		segments: [6],
-		route: route("Lexeme", "NOUN"),
-	});
-});
+testEffect(
+	"quantifier: its unit routes Lexeme PRON, though the route Choice hears a noun",
+	() =>
+		Effect.gen(function* () {
+			// Nach0 _1 ein2 _3 paar4 _5 Sekunden6 _7 ging8 _9 er10 .11
+			const units = yield* germanUnits(
+				{ segments: segmentsOf("Nach ein paar Sekunden ging er.") },
+				fakeJudge({
+					s_article_2: picked("p4"),
+					r_2_3: picked("Lexeme/NOUN"),
+					r_4: picked("Lexeme/NOUN"),
+				}).ask,
+				{ ...productionUnitSettings, rules: ["quantifier"] },
+			);
+			expect(units).toContainEqual({
+				segments: [2, 4],
+				route: route("Lexeme", "PRON"),
+			});
+			expect(units).toContainEqual({
+				segments: [6],
+				route: route("Lexeme", "NOUN"),
+			});
+		}),
+);
 
 /** The units of `sentence` from `answers`, with the `quantifier` rule or none. */
 const quantifierUnits = (
@@ -179,13 +190,10 @@ const quantifierUnits = (
 	answers: Readonly<Record<string, Answer>>,
 	rules: readonly CodeRule[] = ["quantifier"],
 ) =>
-	Effect.runPromise(
-		germanUnits(
-			{ segments: segmentsOf(sentence) },
-			fakeJudge(answers).ask,
-			{ ...productionUnitSettings, rules },
-		),
-	);
+	germanUnits({ segments: segmentsOf(sentence) }, fakeJudge(answers).ask, {
+		...productionUnitSettings,
+		rules,
+	});
 
 const bisschenIdentity = {
 	kind: "PRON",
@@ -193,61 +201,80 @@ const bisschenIdentity = {
 	pronType: "Ind",
 } as const;
 
-test("quantifier: a lone bisschen after kein routes Lexeme PRON with its identity, though the judge heard ADV and Other", async () => {
-	// Er0 _1 hat2 _3 kein4 _5 bisschen6 _7 Geld8 .9
-	const answers = {
-		r_3: picked("Lexeme/DET"),
-		r_4: picked("Lexeme/ADV"),
-		i_4: picked("Other"),
-	};
-	const units = await quantifierUnits("Er hat kein bisschen Geld.", answers);
-	expect(units).toContainEqual({
-		segments: [6],
-		route: route("Lexeme", "PRON"),
-		identity: bisschenIdentity,
-	});
-	expect(units).toContainEqual(
-		expect.objectContaining({
-			segments: [4],
-			route: route("Lexeme", "DET"),
+testEffect(
+	"quantifier: a lone bisschen after kein routes Lexeme PRON with its identity, though the judge heard ADV and Other",
+	() =>
+		Effect.gen(function* () {
+			// Er0 _1 hat2 _3 kein4 _5 bisschen6 _7 Geld8 .9
+			const answers = {
+				r_3: picked("Lexeme/DET"),
+				r_4: picked("Lexeme/ADV"),
+				i_4: picked("Other"),
+			};
+			const units = yield* quantifierUnits(
+				"Er hat kein bisschen Geld.",
+				answers,
+			);
+			expect(units).toContainEqual({
+				segments: [6],
+				route: route("Lexeme", "PRON"),
+				identity: bisschenIdentity,
+			});
+			expect(units).toContainEqual(
+				expect.objectContaining({
+					segments: [4],
+					route: route("Lexeme", "DET"),
+				}),
+			);
+			// Without the rule, the judge's ADV stands.
+			expect(
+				yield* quantifierUnits(
+					"Er hat kein bisschen Geld.",
+					answers,
+					[],
+				),
+			).toContainEqual({ segments: [6], route: route("Lexeme", "ADV") });
 		}),
-	);
-	// Without the rule, the judge's ADV stands.
-	expect(
-		await quantifierUnits("Er hat kein bisschen Geld.", answers, []),
-	).toContainEqual({ segments: [6], route: route("Lexeme", "ADV") });
-});
+);
 
-test("quantifier: bare degree bisschen and its Historical spelling bißchen route Lexeme PRON", async () => {
-	for (const spelling of ["bisschen", "bißchen"]) {
-		// Das0 _1 klingt2 _3 bisschen4 _5 förmlich6 .7
-		const units = await quantifierUnits(
-			`Das klingt ${spelling} förmlich.`,
-			{
-				r_3: picked("Lexeme/ADV"),
-				i_3: picked("Other"),
-				r_4: picked("Lexeme/ADJ"),
-			},
-		);
-		expect(units).toContainEqual({
-			segments: [4],
-			route: route("Lexeme", "PRON"),
-			identity: bisschenIdentity,
-		});
-	}
-});
+testEffect(
+	"quantifier: bare degree bisschen and its Historical spelling bißchen route Lexeme PRON",
+	() =>
+		Effect.gen(function* () {
+			for (const spelling of ["bisschen", "bißchen"]) {
+				// Das0 _1 klingt2 _3 bisschen4 _5 förmlich6 .7
+				const units = yield* quantifierUnits(
+					`Das klingt ${spelling} förmlich.`,
+					{
+						r_3: picked("Lexeme/ADV"),
+						i_3: picked("Other"),
+						r_4: picked("Lexeme/ADJ"),
+					},
+				);
+				expect(units).toContainEqual({
+					segments: [4],
+					route: route("Lexeme", "PRON"),
+					identity: bisschenIdentity,
+				});
+			}
+		}),
+);
 
-test("quantifier: capitalized Bisschen keeps the judge's route, as it may be the noun", async () => {
-	// Er0 _1 gab2 _3 ihm4 _5 kein6 _7 Bisschen8 .9
-	const units = await quantifierUnits("Er gab ihm kein Bisschen.", {
-		r_4: picked("Lexeme/DET"),
-		r_5: picked("Lexeme/NOUN"),
-	});
-	expect(units).toContainEqual({
-		segments: [8],
-		route: route("Lexeme", "NOUN"),
-	});
-});
+testEffect(
+	"quantifier: capitalized Bisschen keeps the judge's route, as it may be the noun",
+	() =>
+		Effect.gen(function* () {
+			// Er0 _1 gab2 _3 ihm4 _5 kein6 _7 Bisschen8 .9
+			const units = yield* quantifierUnits("Er gab ihm kein Bisschen.", {
+				r_4: picked("Lexeme/DET"),
+				r_5: picked("Lexeme/NOUN"),
+			});
+			expect(units).toContainEqual({
+				segments: [8],
+				route: route("Lexeme", "NOUN"),
+			});
+		}),
+);
 
 test("pronoun: mir stays out of tut … leid, but a reflexive coreferent with ich keeps its links", async () => {
 	// Tut0 _1 mir2 _3 leid4 .5
@@ -316,64 +343,68 @@ test("sein-chain: worden joins its participle and the sein of its clause", async
 	expect(gewesen.with).toEqual([[0], [2, 6], [4]]);
 });
 
-test("was-fuer: final asks whether was … für is was für, and the judge's yes makes one Locution while ein stays with its noun", async () => {
-	// Was0 _1 ist2 _3 das4 _5 für6 _7 ein8 _9 Buch10 ?11
-	const segments = segmentsOf("Was ist das für ein Buch?");
-	const answers = {
-		s_article_5: picked("p6"),
-		w4_1_4: noul(0.9),
-		r_1_4: picked("Locution/DET"),
-	};
-	const result = await groups(segments, answers, "was-fuer");
-	expect(result.without).toContainEqual([8, 10]);
-	expect(result.with).toEqual([[0, 6], [2], [4], [8, 10]]);
-	const judge = fakeJudge(answers);
-	const units = await Effect.runPromise(
-		germanUnits({ segments }, judge.ask, {
-			...productionUnitSettings,
-			rules: ["was-fuer"],
+testEffect(
+	"was-fuer: final asks whether was … für is was für, and the judge's yes makes one Locution while ein stays with its noun",
+	() =>
+		Effect.gen(function* () {
+			// Was0 _1 ist2 _3 das4 _5 für6 _7 ein8 _9 Buch10 ?11
+			const segments = segmentsOf("Was ist das für ein Buch?");
+			const answers = {
+				s_article_5: picked("p6"),
+				w4_1_4: noul(0.9),
+				r_1_4: picked("Locution/DET"),
+			};
+			const result = yield* Effect.promise(() =>
+				groups(segments, answers, "was-fuer"),
+			);
+			expect(result.without).toContainEqual([8, 10]);
+			expect(result.with).toEqual([[0, 6], [2], [4], [8, 10]]);
+			const judge = fakeJudge(answers);
+			const units = yield* germanUnits({ segments }, judge.ask, {
+				...productionUnitSettings,
+				rules: ["was-fuer"],
+			});
+			const final = judge.questionsOf("final");
+			expect(Object.keys(final ?? {})).toContain("w4_1_4");
+			expect(units).toContainEqual({
+				segments: [0, 6],
+				route: route("Locution", "DET"),
+			});
+			// Without the rule, final asks nothing about was … für.
+			const plain = fakeJudge(answers);
+			yield* germanUnits({ segments }, plain.ask, {
+				...productionUnitSettings,
+				rules: [],
+			});
+			expect(Object.keys(plain.questionsOf("final") ?? {})).not.toContain(
+				"w4_1_4",
+			);
 		}),
-	);
-	const final = judge.questionsOf("final");
-	expect(Object.keys(final ?? {})).toContain("w4_1_4");
-	expect(units).toContainEqual({
-		segments: [0, 6],
-		route: route("Locution", "DET"),
-	});
-	// Without the rule, final asks nothing about was … für.
-	const plain = fakeJudge(answers);
-	await Effect.runPromise(
-		germanUnits({ segments }, plain.ask, {
-			...productionUnitSettings,
-			rules: [],
-		}),
-	);
-	expect(Object.keys(plain.questionsOf("final") ?? {})).not.toContain(
-		"w4_1_4",
-	);
-});
+);
 
-test("was-fuer: a standalone einer or welche right after für is a Lexeme PRON of its own", async () => {
-	// Aber0 _1 was2 _3 für4 _5 einen6 ?7
-	const segments = segmentsOf("Aber was für einen?");
-	const judge = fakeJudge({ w4_2_3: noul(0.9) });
-	const units = await Effect.runPromise(
-		germanUnits({ segments }, judge.ask, {
-			...productionUnitSettings,
-			rules: ["was-fuer"],
+testEffect(
+	"was-fuer: a standalone einer or welche right after für is a Lexeme PRON of its own",
+	() =>
+		Effect.gen(function* () {
+			// Aber0 _1 was2 _3 für4 _5 einen6 ?7
+			const segments = segmentsOf("Aber was für einen?");
+			const judge = fakeJudge({ w4_2_3: noul(0.9) });
+			const units = yield* germanUnits({ segments }, judge.ask, {
+				...productionUnitSettings,
+				rules: ["was-fuer"],
+			});
+			expect(units).toContainEqual({
+				segments: [2, 4],
+				route: route("Locution", "DET"),
+			});
+			expect(units).toContainEqual(
+				expect.objectContaining({
+					segments: [6],
+					route: route("Lexeme", "PRON"),
+				}),
+			);
 		}),
-	);
-	expect(units).toContainEqual({
-		segments: [2, 4],
-		route: route("Locution", "DET"),
-	});
-	expect(units).toContainEqual(
-		expect.objectContaining({
-			segments: [6],
-			route: route("Lexeme", "PRON"),
-		}),
-	);
-});
+);
 
 test("infixed-zu: the particle and stem around an infixed zu are one verb, and zu stays apart", async () => {
 	// Er0 _1 fing2 _3 an4 ,5 _6 ab7 zu8 spannen9 .10

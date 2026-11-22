@@ -4,7 +4,10 @@ import type { SourceProjection } from "./generated/types.js";
 import { parseProjectionInventory } from "./projection-inventory.js";
 import type { ReadingWithKnowledge } from "./types.js";
 
-const relationOrder = ["source", "participialAdjective"];
+const relationRank: Readonly<Record<SourceProjection["relation"], number>> = {
+	source: 0,
+	participialAdjective: 1,
+};
 
 /**
  * Projects Sources over a finite dictionary inventory. Each stored Source
@@ -57,8 +60,7 @@ export function projectSources(
 		value: edges.sort(
 			(left, right) =>
 				compare(key(left.source), key(right.source)) ||
-				relationOrder.indexOf(left.relation) -
-					relationOrder.indexOf(right.relation) ||
+				relationRank[left.relation] - relationRank[right.relation] ||
 				compare(key(left.target), key(right.target)),
 		),
 	};

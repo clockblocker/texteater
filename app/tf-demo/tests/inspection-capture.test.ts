@@ -4,13 +4,14 @@ import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
+	annotateInspectionStep,
 	createInspectionCapture,
 	dumgenTraced,
 	type InspectionCapture,
 	inspected,
 	inspectionStep,
 	operationSteps,
-	spanHops,
+	recordFailedStep,
 	withoutPayloads,
 } from "../server/inspectionCapture";
 import { inspectionJson } from "../server/inspectionPayload";
@@ -192,15 +193,11 @@ test("handled pipeline failures stay visible even when the action returns normal
 	const capture = createInspectionCapture();
 	await Effect.runPromise(
 		inspected(
-			Effect.flatMap(Effect.context<never>(), (services) =>
-				Effect.sync(() =>
-					spanHops(services).failure(
-						"Publication failed",
-						"battery/dumdict",
-						{ reading: "Bank" },
-						new Error("Invalid plan"),
-					),
-				),
+			recordFailedStep(
+				"Publication failed",
+				"battery/dumdict",
+				{ reading: "Bank" },
+				new Error("Invalid plan"),
 			).pipe(
 				Effect.withSpan("Publish", {
 					...inspectionStep("app/tf-demo"),
@@ -221,20 +218,16 @@ test("handled pipeline failures stay visible even when the action returns normal
 	).toBe("Invalid plan");
 });
 
-test("a promise hop becomes a step under its services' span and rethrows its own error", async () => {
+test("Effect.fn spans annotated with annotateInspectionStep hang under their root and retain input and error", async () => {
 	const capture = createInspectionCapture();
 	const failure = new Error("Mutation failed");
-	const rejected = await Effect.runPromise(
+	const saveStep = Effect.fn("Save")(function* (step: number) {
+		yield* annotateInspectionStep("app/tf-demo", { step });
+		return yield* Effect.tryPromise(() => Promise.reject(failure));
+	});
+	const result = await Effect.runPromise(
 		inspected(
-			Effect.flatMap(Effect.context<never>(), (services) =>
-				Effect.promise(() =>
-					spanHops(services)
-						.hop("Save", "app/tf-demo", { step: 1 }, () =>
-							Promise.reject(failure),
-						)
-						.catch((error: unknown) => error),
-				),
-			).pipe(
+			Effect.result(saveStep(1)).pipe(
 				Effect.withSpan("Session", {
 					...inspectionStep("app/tf-demo"),
 					root: true,
@@ -243,13 +236,20 @@ test("a promise hop becomes a step under its services' span and rethrows its own
 			capture,
 		),
 	);
-	expect(rejected).toBe(failure);
+	expect(result).toMatchObject({
+		_tag: "Failure",
+		failure: { cause: failure },
+	});
 	expect(
 		capture.steps.map((step) => [step.name, step.status, step.parentId]),
 	).toEqual([
 		["Save", "Failure", capture.steps[1]?.id],
 		["Session", "Success", undefined],
 	]);
+	expect(JSON.parse(capture.steps[0]?.payloadJson ?? "null")).toEqual({
+		input: { step: 1 },
+		error: { name: "Error", message: "Mutation failed" },
+	});
 });
 
 test("an OperationTrace renders as its operation, its calls and its budget waits (#885)", () => {

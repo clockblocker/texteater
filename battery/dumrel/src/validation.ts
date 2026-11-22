@@ -7,9 +7,11 @@ import { validationOperations as dumlingValidationOperations } from "dumling/val
 import { validationRegistry } from "./generated/linked-validation.js";
 import type {
 	KnowledgeChange,
+	KnowledgeSelectionInput,
 	LemmaParadigm,
 	ParadigmChange,
 	ReadingKnowledge,
+	ReadingWithKnowledge,
 } from "./types.js";
 
 type Root =
@@ -38,16 +40,10 @@ export const parseChangeShape = (
 	parse<KnowledgeChange>("knowledgeChange", input);
 
 export const parseSelectionShape = (input: unknown) =>
-	parse<import("./types.js").KnowledgeSelectionInput>(
-		"knowledgeSelectionInput",
-		input,
-	);
+	parse<KnowledgeSelectionInput>("knowledgeSelectionInput", input);
 
 export const parseProjectionShape = (input: unknown) =>
-	parse<import("./types.js").ReadingWithKnowledge[]>(
-		"semanticProjectionInput",
-		input,
-	);
+	parse<ReadingWithKnowledge[]>("semanticProjectionInput", input);
 
 export const parseLemmaParadigmShape = (
 	input: unknown,

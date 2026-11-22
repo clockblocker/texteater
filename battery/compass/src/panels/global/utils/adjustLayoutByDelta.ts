@@ -305,13 +305,7 @@ function shrinkRegions(
 
 			nextLayout[index] = safeSize;
 
-			if (
-				deltaApplied
-					.toFixed(3)
-					.localeCompare(Math.abs(delta).toFixed(3), undefined, {
-						numeric: true,
-					}) >= 0
-			) {
+			if (compareLayoutNumbers(deltaApplied, Math.abs(delta)) >= 0) {
 				break;
 			}
 		}

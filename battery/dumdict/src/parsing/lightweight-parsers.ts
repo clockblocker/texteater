@@ -26,6 +26,8 @@ import type {
 	DumdictValidationRouteOutput,
 	InternalDumdictValidationRouteKey,
 	InternalDumdictValidationRouteOutput,
+	LanguageParserName,
+	LanguageParserOutput,
 } from "./validation-route-types.js";
 
 export { ParsingError };
@@ -107,53 +109,12 @@ export function parsePendingSemanticRelationInLanguage<
 		);
 	return pending;
 }
-export function parseReadingKnowledgeForDumdictRuntime(
-	input: unknown,
-): DumdictParse<
-	InternalDumdictValidationRouteOutput<"internal:reading-knowledge">
-> {
-	return parseRoute(input, "internal:reading-knowledge");
-}
 export function parseReadingForDumdictRuntime<L extends Dumling.Language>(
 	input: unknown,
 	language: L,
 ): DumdictParse<Dumling.Reading<L>> {
 	return parseRoute(input, `internal:reading:${language}`);
 }
-type LanguageParserName =
-	| "parseAsChangePrecondition"
-	| "parseAsCommitChangesRequest"
-	| "parseAsDumdictPlan"
-	| "parseAsLemmaRecord"
-	| "parseAsPendingSemanticRelationLocator"
-	| "parseAsPendingSemanticRelationRecord"
-	| "parseAsPlannedChangeOp"
-	| "parseAsReadingEntry"
-	| "parseAsReadingPatchOp"
-	| "parseAsSurfaceEntry";
-
-type LanguageParserOutput<
-	Name extends LanguageParserName,
-	Language extends Dumling.Language,
-> = Name extends "parseAsChangePrecondition"
-	? ChangePrecondition<Language>
-	: Name extends "parseAsCommitChangesRequest"
-		? CommitChangesRequest<Language>
-		: Name extends "parseAsDumdictPlan"
-			? DumdictPlan<Language>
-			: Name extends "parseAsLemmaRecord"
-				? LemmaRecord<Language>
-				: Name extends "parseAsPendingSemanticRelationLocator"
-					? PendingSemanticRelationLocator<Language>
-					: Name extends "parseAsPendingSemanticRelationRecord"
-						? PendingSemanticRelationRecord<Language>
-						: Name extends "parseAsPlannedChangeOp"
-							? PlannedChangeOp<Language>
-							: Name extends "parseAsReadingEntry"
-								? ReadingEntry<Language>
-								: Name extends "parseAsReadingPatchOp"
-									? ReadingPatchOp<Language>
-									: SurfaceEntry<Language>;
 
 function parseLanguageRoute<
 	Name extends LanguageParserName,

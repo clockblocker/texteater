@@ -1,0 +1,114 @@
+{
+	"compilerOptions": {
+		"plugins": [
+			{
+				"name": "@effect/language-service",
+				"namespaceImportPackages": ["effect"],
+				"allowedUnstableApis": [
+					"effect/reactivity",
+					"effect/persistence",
+					"effect/TxQueue",
+					"@effect/atom-react"
+				],
+				"diagnosticSeverity": {
+					"abortControllerInEffect": "error",
+					"acquireReleaseDisposable": "error",
+					"allOfMapToForEach": "error",
+					"anyUnknownInErrorContext": "error",
+					"catchAllTagDispatchToCatchTag": "error",
+					"catchAllToMapError": "error",
+					"catchChainToFirstSuccessOf": "error",
+					"catchConditionalRefailToCatchIf": "error",
+					"catchDieToOrDie": "error",
+					"catchIfTagToCatchTag": "error",
+					"catchRefailToTapError": "error",
+					"catchTagToCatchReason": "error",
+					"catchToIgnore": "error",
+					"catchToOrElseSucceed": "error",
+					"catchUnfailableEffect": "error",
+					"effectMapFlatten": "error",
+					"effectMapVoid": "error",
+					"effectSleepZeroToYieldNow": "error",
+					"effectSucceedWithUndefined": "error",
+					"effectSucceedWithVoid": "error",
+					"errorPayloadShadowsName": "error",
+					"failCauseToConstructor": "error",
+					"flatMapConditionalToFilterOrFail": "error",
+					"flatMapIdentityToFlatten": "error",
+					"flatMapIgnoredParamToAndThen": "error",
+					"flatMapToMap": "error",
+					"flatMapToTap": "error",
+					"globalErrorInEffectCatch": "error",
+					"globalErrorInEffectFailure": "error",
+					"instanceOfSchema": "error",
+					"lazyEffect": "off",
+					"leakingRequirements": "error",
+					"manualMetricTapToTrack": "error",
+					"mapConstToAs": "error",
+					"mapSomeCatchNoSuchElement": "error",
+					"mapSomeToAsSome": "error",
+					"matchBooleanToIsSuccess": "error",
+					"matchEffectToMapBoth": "error",
+					"matchEffectToMatch": "error",
+					"matchToResultOrOption": "error",
+					"missingEffectServiceDependency": "error",
+					"multipleCatchTag": "error",
+					"optionMatchToFromOption": "error",
+					"preferSucceedSomeOrNone": "error",
+					"preferTypedSchemaDecoder": "error",
+					"preferUnsafeConstructor": "error",
+					"provideLayerSucceedToProvideService": "error",
+					"raceFirstWithSleepToTimeout": "error",
+					"redundantMapError": "error",
+					"redundantOrDie": "error",
+					"redundantSchemaTagIdentifier": "error",
+					"resultMatchToFromResult": "error",
+					"returnEffectInGen": "off",
+					"runEffectInsideEffect": "error",
+					"runOfExitToRunExit": "error",
+					"schemaClassMissingBrand": "error",
+					"schemaNumber": "off",
+					"schemaStructWithTag": "error",
+					"strictBooleanExpressions": "off",
+					"strictEffectProvide": "off",
+					"suspendFailToFailSync": "error",
+					"syncToSucceed": "error",
+					"timeoutCatchTagToTimeoutOrElse": "error",
+					"tryCatchInEffectGen": "error",
+					"unknownInEffectCatch": "error",
+					"unnecessaryEffectGen": "error",
+					"unnecessaryFailYieldableError": "error",
+					"unnecessaryPipe": "error",
+					"unnecessaryPipeChain": "error",
+					"unnecessaryTypeofType": "error",
+					"unsafeEffectTypeAssertion": "error"
+				},
+				"overrides": [
+					{
+						"include": [
+							"**/*.test.ts",
+							"**/*.test.tsx",
+							"**/*.spec.ts",
+							"**/*.spec.tsx",
+							"tests/**/*",
+							"**/tests/**/*",
+							"test/**/*",
+							"**/test/**/*",
+							"testing/**/*",
+							"**/testing/**/*",
+							"e2e/**/*",
+							"**/e2e/**/*"
+						],
+						"options": {
+							"diagnosticSeverity": {
+								"anyUnknownInErrorContext": "off",
+								"effectFnOpportunity": "off",
+								"globalJsonInEffect": "off"
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+}

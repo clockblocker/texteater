@@ -1,6 +1,5 @@
-import { sameLemma, sameReading } from "dumling";
+import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
-import { directSemanticRelationValues } from "dumrel";
 
 import type {
 	LemmaRecord,
@@ -15,7 +14,6 @@ import {
 	parseAsReadingEntry,
 	parseAsSurfaceEntry,
 	parseReadingForDumdictRuntime,
-	parseReadingKnowledgeForDumdictRuntime,
 	unwrapDumdictParse,
 } from "../parsing/lightweight-parsers";
 import { assertPendingSemanticRelationRecordIdentity } from "./pending";
@@ -67,31 +65,21 @@ export function validateReadingEntry<L extends Dumling.Language>(
 	expected: L,
 	entry: ReadingEntry<L>,
 ) {
-	unwrapDumdictParse(parseAsReadingEntry(entry, expected));
-	validateReading(expected, entry.reading);
-	if (entry.knowledge !== undefined) {
-		unwrapDumdictParse(
-			parseReadingKnowledgeForDumdictRuntime(entry.knowledge),
-		);
-		const relations = entry.knowledge.semanticRelations;
-		if (relations?.targetKind === "reading") {
-			for (const target of relations.synonym ?? []) {
-				validateReading(expected, target);
-				if (sameReading(entry.reading, target))
-					throw new Error(
-						"Reading Knowledge contains a direct self relation.",
-					);
-			}
-		} else {
-			for (const relation of directSemanticRelationValues) {
-				for (const target of relations?.[relation] ?? []) {
-					validateLemmaRecord(expected, { lemma: target });
-					if (sameLemma(entry.reading.lemma, target))
-						throw new Error(
-							"Reading Knowledge contains a direct same-Lemma relation.",
-						);
-				}
-			}
+	const parsed = unwrapDumdictParse(parseAsReadingEntry(entry, expected));
+	assertEmojiDescriptionNormalized(entry.reading, parsed.reading);
+	const rawRelations = entry.knowledge?.semanticRelations;
+	const parsedRelations = parsed.knowledge?.semanticRelations;
+	if (
+		rawRelations?.targetKind === "reading" &&
+		parsedRelations?.targetKind === "reading"
+	) {
+		const rawSynonyms = rawRelations.synonym ?? [];
+		const parsedSynonyms = parsedRelations.synonym ?? [];
+		for (let index = 0; index < rawSynonyms.length; index += 1) {
+			const rawTarget = rawSynonyms[index];
+			const parsedTarget = parsedSynonyms[index];
+			if (rawTarget && parsedTarget)
+				assertEmojiDescriptionNormalized(rawTarget, parsedTarget);
 		}
 	}
 }

@@ -5,6 +5,7 @@ import { makeFunctionReference, type TransactionLimits } from "convex/server";
 import { convexTest, type TestConvex } from "convex-test";
 import { internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
+import type { ActionCtx } from "../../convex/_generated/server";
 import schema from "../../convex/schema";
 import {
 	type StoredSegment,
@@ -139,11 +140,13 @@ export const PLAYGROUND_FIXTURE_TIMEOUT_MS = 30_000;
  * mocks that dispatched hops by function-name string, so a renamed or removed
  * hop fails the test instead of passing silently.
  */
-export function actionContext(t: TestConvexDb) {
+export function actionContext(
+	t: TestConvexDb,
+): Pick<ActionCtx, "runQuery" | "runMutation" | "runAction"> {
 	return {
-		runQuery: t.query,
-		runMutation: t.mutation,
-		runAction: t.action,
+		runQuery: t.query as ActionCtx["runQuery"],
+		runMutation: t.mutation as ActionCtx["runMutation"],
+		runAction: t.action as ActionCtx["runAction"],
 	};
 }
 

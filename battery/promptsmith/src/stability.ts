@@ -71,6 +71,27 @@ function summarizeCaseStability(repetitions: readonly Repetition[]) {
 	};
 }
 
+function buildRunStability(
+	caseStabilities: readonly ReturnType<typeof summarizeCaseStability>[],
+	records: readonly { readonly repetitions?: readonly Repetition[] }[],
+	repetitions: number,
+) {
+	let flipped = 0;
+	let varyingOutputs = 0;
+	for (const stability of caseStabilities) {
+		if (stability.flipped) flipped++;
+		if (stability.distinctOutputs > 1) varyingOutputs++;
+	}
+	return {
+		repetitions,
+		flipped,
+		varyingOutputs,
+		quality: summarizeQuality(
+			records.flatMap((record) => record.repetitions ?? []),
+		),
+	};
+}
+
 export function summarizeRunStability(
 	records: readonly { readonly repetitions?: readonly Repetition[] }[],
 	repetitions: number,
@@ -78,16 +99,7 @@ export function summarizeRunStability(
 	const cases = records.map((record) =>
 		summarizeCaseStability(record.repetitions ?? []),
 	);
-	return {
-		repetitions,
-		flipped: cases.filter((stability) => stability.flipped).length,
-		varyingOutputs: cases.filter(
-			(stability) => stability.distinctOutputs > 1,
-		).length,
-		quality: summarizeQuality(
-			records.flatMap((record) => record.repetitions ?? []),
-		),
-	};
+	return buildRunStability(cases, records, repetitions);
 }
 
 /** True when stored repetition fields disagree with their manifest or with the repetitions they summarize. */
@@ -111,26 +123,30 @@ export function repetitionsMismatch(run: {
 					record.stability !== undefined,
 			)
 		);
+	const caseStabilities: ReturnType<typeof summarizeCaseStability>[] = [];
+	for (const record of run.cases) {
+		const {
+			caseId: _caseId,
+			input: _input,
+			idealOutput: _idealOutput,
+			repetitions,
+			stability,
+			...attempt
+		} = record;
+		if (repetitions?.length !== expected) return true;
+		const computedStability = summarizeCaseStability(repetitions);
+		if (
+			canonicalJson(stability ?? null) !==
+				canonicalJson(computedStability) ||
+			canonicalJson(attempt) !==
+				canonicalJson(representativeRepetition(repetitions))
+		)
+			return true;
+		caseStabilities.push(computedStability);
+	}
 	return (
 		canonicalJson(run.summary.stability ?? null) !==
-			canonicalJson(summarizeRunStability(run.cases, expected)) ||
-		run.cases.some((record) => {
-			const {
-				caseId: _caseId,
-				input: _input,
-				idealOutput: _idealOutput,
-				repetitions,
-				stability,
-				...attempt
-			} = record;
-			if (repetitions?.length !== expected) return true;
-			return (
-				canonicalJson(stability ?? null) !==
-					canonicalJson(summarizeCaseStability(repetitions)) ||
-				canonicalJson(attempt) !==
-					canonicalJson(representativeRepetition(repetitions))
-			);
-		})
+		canonicalJson(buildRunStability(caseStabilities, run.cases, expected))
 	);
 }
 

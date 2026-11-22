@@ -8,7 +8,7 @@ import type {
 	LinkTarget,
 	Source,
 } from "./generated/types.js";
-import { issue, type Path } from "./issue.js";
+import { issue, type Path, prefixIssues } from "./issue.js";
 
 /** A link target's route and Canonical Form, read alike from a Lemma or a Unit Shadow. */
 type LinkRoute = Pick<
@@ -29,13 +29,7 @@ function parseLinkTarget(
 	let target: LinkTarget = value;
 	if ("unitKind" in value) {
 		const parsed = parseUnit(value);
-		if (!parsed.success)
-			return new ParsingError(
-				parsed.error.issues.map((entry) => ({
-					...entry,
-					path: [...path, ...entry.path],
-				})),
-			);
+		if (!parsed.success) return prefixIssues(parsed.error, path);
 		if (parsed.chain.unitKind !== "Lemma")
 			return issue([...path, "unitKind"], "Expected a Dumling Lemma");
 		target = parsed.chain.value;

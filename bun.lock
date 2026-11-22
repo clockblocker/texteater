@@ -10,12 +10,12 @@
         "@babel/preset-typescript": "7.29.7",
         "@biomejs/biome": "2.5.13",
         "@clockblocker/ts7-plugin-sort-import-suggestions": "^2.0.0",
-        "@effect/tsgo": "0.67.0",
+        "@effect/tsgo": "0.67.1",
         "@swc/core": "1.16.1",
         "@types/node": "^24.13.3",
         "bun-types": "1.4.2",
         "dependency-cruiser": "^18.1.0",
-        "effect": "4.1.2",
+        "effect": "4.1.5",
         "knip": "^6.29.0",
         "node": "24.19.0",
         "oxc-parser": "^0.140.0",
@@ -86,7 +86,7 @@
       "dependencies": {
         "@convex-dev/rate-limiter": "^0.4.0",
         "@convex-dev/react-query": "^0.1.0",
-        "@effect/atom-react": "4.1.2",
+        "@effect/atom-react": "4.1.5",
         "@tailwindcss/vite": "^4",
         "@tanstack/react-query": "^5.101.4",
         "common-utils": "workspace:^",
@@ -98,7 +98,7 @@
         "dumgen": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
-        "effect": "4.1.2",
+        "effect": "4.1.5",
         "lego": "workspace:^",
         "linkedom": "0.18.13",
         "lucide-react": "^1.31.0",
@@ -138,6 +138,7 @@
       "name": "common-utils",
       "version": "0.1.0",
       "dependencies": {
+        "effect": "4.1.5",
         "zod": "4.4.3",
       },
       "devDependencies": {
@@ -220,7 +221,7 @@
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
         "dumtext": "workspace:^",
-        "effect": "4.1.2",
+        "effect": "4.1.5",
         "zod": "4.4.3",
       },
       "devDependencies": {
@@ -366,6 +367,10 @@
         "react-dom": "^19.2.6",
       },
     },
+  },
+  "overrides": {
+    "@effect/atom-react": "4.1.5",
+    "effect": "4.1.5",
   },
   "packages": {
     "@astrojs/compiler-binding": ["@astrojs/compiler-binding@0.3.1", "", { "optionalDependencies": { "@astrojs/compiler-binding-darwin-arm64": "0.3.1", "@astrojs/compiler-binding-darwin-x64": "0.3.1", "@astrojs/compiler-binding-linux-arm64-gnu": "0.3.1", "@astrojs/compiler-binding-linux-arm64-musl": "0.3.1", "@astrojs/compiler-binding-linux-x64-gnu": "0.3.1", "@astrojs/compiler-binding-linux-x64-musl": "0.3.1", "@astrojs/compiler-binding-wasm32-wasi": "0.3.1", "@astrojs/compiler-binding-win32-arm64-msvc": "0.3.1", "@astrojs/compiler-binding-win32-x64-msvc": "0.3.1" } }, "sha512-DaAUj29AIBU2XdJ8uwcab8lW5O2pk9pY8AXkcMw0sw77nVa3oeTYRcO+Dvbbpoexf6ThMc0FMWYCQ/wN1/T7oQ=="],
@@ -526,23 +531,23 @@
 
     "@dumling/docs-site": ["@dumling/docs-site@workspace:app/dumling-docs"],
 
-    "@effect/atom-react": ["@effect/atom-react@4.1.2", "", { "peerDependencies": { "effect": "^4.1.2", "react": ">=19.0.0 <20.0.0", "scheduler": ">=0.25.0 <0.29.0" } }, "sha512-XRAm4lks2kzNFQIz9QTGKR02CaDTR9VJNRXDjDAR8OzM15ybrK4YkB7OlFZ9U+hxXe3DXJZx7RU1/xI2Em2PGQ=="],
+    "@effect/atom-react": ["@effect/atom-react@4.1.5", "", { "peerDependencies": { "effect": "^4.1.5", "react": ">=19.0.0 <20.0.0", "scheduler": ">=0.25.0 <0.29.0" } }, "sha512-7bFJUOa4hatIE4LD4EmuOSS7+jNniZxaltX3TRExBCYAFqMd6vjZs9G/Ez3u24oUaJnkschmjfG3EwVzzebgig=="],
 
-    "@effect/tsgo": ["@effect/tsgo@0.67.0", "", { "optionalDependencies": { "@effect/tsgo-darwin-arm64": "0.67.0", "@effect/tsgo-darwin-x64": "0.67.0", "@effect/tsgo-linux-arm": "0.67.0", "@effect/tsgo-linux-arm64": "0.67.0", "@effect/tsgo-linux-x64": "0.67.0", "@effect/tsgo-win32-arm64": "0.67.0", "@effect/tsgo-win32-x64": "0.67.0" }, "bin": { "effect-tsgo": "dist/effect-tsgo.cjs" } }, "sha512-TzfqMT+pytcSvuXrABXAZQsuq9DfFFMUi+cRWWCObNXMq8/1ESi3QtGDsXBK+NddmLn5cyqnLBndNfQoORNzjg=="],
+    "@effect/tsgo": ["@effect/tsgo@0.67.1", "", { "optionalDependencies": { "@effect/tsgo-darwin-arm64": "0.67.1", "@effect/tsgo-darwin-x64": "0.67.1", "@effect/tsgo-linux-arm": "0.67.1", "@effect/tsgo-linux-arm64": "0.67.1", "@effect/tsgo-linux-x64": "0.67.1", "@effect/tsgo-win32-arm64": "0.67.1", "@effect/tsgo-win32-x64": "0.67.1" }, "bin": { "effect-tsgo": "dist/effect-tsgo.cjs" } }, "sha512-rQLQ3vAStYEPQX3+gCv4AM9ehhmJjWYwY9itqFKVs9NEtRQg6msKH6qo9VYebikDPUDiKOaJJwQAeRcYeybCug=="],
 
-    "@effect/tsgo-darwin-arm64": ["@effect/tsgo-darwin-arm64@0.67.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-9ohlEurSN7oKTFC33m+CllUsvPZJa6TxN0xaEebj/XvSxAsrEl96quMEFUwGnKfbIUuqq19Kax0aVqdzeJz4ng=="],
+    "@effect/tsgo-darwin-arm64": ["@effect/tsgo-darwin-arm64@0.67.1", "", { "os": "darwin", "cpu": "arm64" }, "sha512-q10xwD2s+KvZEwbY5OHGSmfAp9Is4e/a7PS4NiUVnvGnPOCbjOMEbVrYjOImy5uawPAa1CVA+55qxCv4ctaw4g=="],
 
-    "@effect/tsgo-darwin-x64": ["@effect/tsgo-darwin-x64@0.67.0", "", { "os": "darwin", "cpu": "x64" }, "sha512-6LWvJwRjJDVIM+D06iqNDc5tHftryS+BPf12AAEPaws2PmieoA/AEziHZGJGOPttKcvkJJpJMMCS6CX2TRbMzw=="],
+    "@effect/tsgo-darwin-x64": ["@effect/tsgo-darwin-x64@0.67.1", "", { "os": "darwin", "cpu": "x64" }, "sha512-6vHV1lqPTFT8mUkO6+x5qlKa7Cycs7QVR1JMLTTJdL2GeV2xrIQdj/U+JEmFH/pt0X9BJoFFYsy4tOQocF9HpQ=="],
 
-    "@effect/tsgo-linux-arm": ["@effect/tsgo-linux-arm@0.67.0", "", { "os": "linux", "cpu": "arm" }, "sha512-koxONObOQd6nlErV742Urqkr4Fixt1WdVdluFolusae2IQx/OGcnd1gL0gyJ8kHbV4J+lIvEjX/5nGGS+fJ7Vg=="],
+    "@effect/tsgo-linux-arm": ["@effect/tsgo-linux-arm@0.67.1", "", { "os": "linux", "cpu": "arm" }, "sha512-uAQXWk1j7ablFOIZrgA2zK8FfwGZC4jkDbSqqrWs+zn1XvaKjJ969oemZBm6XrDu/QEVl0+OgRMvNEfJNm5rTg=="],
 
-    "@effect/tsgo-linux-arm64": ["@effect/tsgo-linux-arm64@0.67.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-oisvlR/VLSUSEfNuXhaSvSCB0EJINR/Ab+DxtAPjUk2qA5rf/2DfA9ZQsZmb/JfufQDK5TWObmA6n8Ovu3qnPA=="],
+    "@effect/tsgo-linux-arm64": ["@effect/tsgo-linux-arm64@0.67.1", "", { "os": "linux", "cpu": "arm64" }, "sha512-T3Jr6KCgNazyH4D9mv4ppXNKi6omMxLrPd0TjoYpYWcR/22F2rsPNXRDNobtfviEhGXedYoaoV+emQA75mFLGA=="],
 
-    "@effect/tsgo-linux-x64": ["@effect/tsgo-linux-x64@0.67.0", "", { "os": "linux", "cpu": "x64" }, "sha512-MsvRjR6v+Oqh+huppL0khl/S4tVquOHEM/W7LhTTPdtnVJF3R/3Zr2VMJs+AeMoQ2ohA77W9z7F5v9fnI9uY3Q=="],
+    "@effect/tsgo-linux-x64": ["@effect/tsgo-linux-x64@0.67.1", "", { "os": "linux", "cpu": "x64" }, "sha512-oH4bOpPE6dFEtSmAHG/vH987Fnd+ToVc4KUFMeIhHQQKU6FPl+88Kb07v1oTAS9Ccrxx54JOQ3weyUK/ItwtdQ=="],
 
-    "@effect/tsgo-win32-arm64": ["@effect/tsgo-win32-arm64@0.67.0", "", { "os": "win32", "cpu": "arm64" }, "sha512-xMb/29dt+OH4HTZe+5Xb8GrKUwUfqGG23Co6v1A1Zu9FEt0xu2/8p4FVaHKlsOaogncQvDm4OPauFKvCliKLIA=="],
+    "@effect/tsgo-win32-arm64": ["@effect/tsgo-win32-arm64@0.67.1", "", { "os": "win32", "cpu": "arm64" }, "sha512-UnCxYSV3lucGadi5lp2L/ToO23UOibL1fus9QAw04EQKGRa6OZh14MwAQZA5QFXbusFqz6KzlRsKVgdHkWMI/w=="],
 
-    "@effect/tsgo-win32-x64": ["@effect/tsgo-win32-x64@0.67.0", "", { "os": "win32", "cpu": "x64" }, "sha512-OJO1hO3h9c99PGJiih/B9FakRTtm37WcVv5S1iKuZep7O9O2ldxZpjZ/SCxDRB9ylhJqBlCz2A32hpBva/tUaQ=="],
+    "@effect/tsgo-win32-x64": ["@effect/tsgo-win32-x64@0.67.1", "", { "os": "win32", "cpu": "x64" }, "sha512-tVRKDyrVCVpCARN/6YSBY8QAykU8VArgS854N3O/Y5Ukl9VWnatPH9r8laEHxmgEl+xHcc/tNz8VtaCzolcVJA=="],
 
     "@emnapi/core": ["@emnapi/core@1.11.2", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.2", "tslib": "^2.4.0" } }, "sha512-TC8MkTuZUtcTSiFeuC0ksCh9QIJ5+F21MvZ4Wn4ORfYaFJ/0dsiudv5tVkejgwZlwQ39jL9WWDe2lz8x0WglOA=="],
 
@@ -1262,7 +1267,7 @@
 
     "ee-first": ["ee-first@1.1.1", "", {}, "sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow=="],
 
-    "effect": ["effect@4.1.2", "", {}, "sha512-d3Oah1WyKxFLFh19yWheS5IXIVaITzxZ71JkE1rkUozq/6EcJSU5nPk5bF2QrSygZ3SQoiNQB8TsxFriyMeMaQ=="],
+    "effect": ["effect@4.1.5", "", {}, "sha512-xyR20KhQI0vg2gD8ILUSQRTTESEYJ0JKdP+QD8J37xbwPTqXRxFM/l0+vUVD9fuSvoYruoTqyt33C4FZv1s4TQ=="],
 
     "electron-to-chromium": ["electron-to-chromium@1.5.399", "", {}, "sha512-lEcqhErbHjXRvd41rnWLpzbyU/IXfIYo7QwaFWmxGeLiLyY2TBCdHnWY88vB+p3ubnihRypDm66panXl7TylLA=="],
 

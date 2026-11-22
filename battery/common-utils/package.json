@@ -30,6 +30,20 @@
 			"import": "./dist/validation-compiler.js",
 			"default": "./dist/validation-compiler.js"
 		},
+		"./effect": {
+			"bun": "./src/effect.ts",
+			"convex": "./src/effect.ts",
+			"types": "./dist/effect.d.ts",
+			"import": "./dist/effect.js",
+			"default": "./dist/effect.js"
+		},
+		"./effect-test": {
+			"bun": "./src/effect-test.ts",
+			"convex": "./src/effect-test.ts",
+			"types": "./dist/effect-test.d.ts",
+			"import": "./dist/effect-test.js",
+			"default": "./dist/effect-test.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -46,7 +60,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/validation.ts src/validation-compiler.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/validation.ts src/validation-compiler.ts src/effect.ts src/effect-test.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external --external:bun:test --minify-syntax --minify-whitespace",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
@@ -60,6 +74,7 @@
 		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
+		"effect": "4.1.5",
 		"zod": "4.4.3"
 	},
 	"devDependencies": {

@@ -15,9 +15,11 @@ import {
 	scrollLabel,
 	scrollStatus,
 	sectionStatus,
+	sectionStatusFromProgress,
 	sectionsAbove,
 } from "./model/codex";
 import { visitorError } from "./model/validators";
+import { readableScroll } from "./scrollViews";
 
 /**
  * The Library and the Codex of each Section, with a Visitor's status on every
@@ -83,7 +85,12 @@ function fixtureFlag(submissionKey: string | undefined) {
 		: {};
 }
 
-async function projectItem(ctx: QueryCtx, visitorId: string, item: CodexItem) {
+async function projectItem(
+	ctx: QueryCtx,
+	visitorId: string,
+	item: CodexItem,
+	nextSibling?: CodexItem | null,
+) {
 	if (item.kind === "Section")
 		return {
 			kind: "Section" as const,
@@ -93,7 +100,10 @@ async function projectItem(ctx: QueryCtx, visitorId: string, item: CodexItem) {
 			...fixtureFlag(item.doc.submissionKey),
 		};
 	const scroll = item.doc;
-	const title = await scrollLabel(ctx, scroll);
+	const [title, status] = await Promise.all([
+		scrollLabel(ctx, scroll, nextSibling),
+		scrollStatus(ctx, visitorId, scroll._id),
+	]);
 	return {
 		kind: "Scroll" as const,
 		scrollId: scroll._id,
@@ -103,7 +113,7 @@ async function projectItem(ctx: QueryCtx, visitorId: string, item: CodexItem) {
 				? title
 				: scroll.sourceText.slice(0, PREVIEW_LENGTH),
 		createdAt: scroll._creationTime,
-		status: await scrollStatus(ctx, visitorId, scroll._id),
+		status,
 		...fixtureFlag(scroll.submissionKey),
 	};
 }
@@ -179,6 +189,30 @@ export const list = query({
 });
 
 /**
+ * What a Section or Scroll is called in a heading or breadcrumb trail: reads
+ * only that single document (plus one `itemAfter` lookup for an untitled
+ * order-0 Scroll in a Codex).
+ */
+export const title = query({
+	args: {
+		kind: v.union(v.literal("Section"), v.literal("Scroll")),
+		id: v.string(),
+		visitorId: v.string(),
+	},
+	returns: v.union(v.null(), v.string()),
+	handler: async (ctx, { kind, id, visitorId }) => {
+		assertIdentifier(visitorId, "visitorId");
+		if (kind === "Section") {
+			const sectionId = ctx.db.normalizeId("sections", id);
+			const section = sectionId ? await ctx.db.get(sectionId) : null;
+			return section ? section.title : null;
+		}
+		const scroll = await readableScroll(ctx, id, visitorId);
+		return scroll ? scrollLabel(ctx, scroll) : null;
+	},
+});
+
+/**
  * A Section's Codex: its Sections and Scrolls in order, each with the
  * Visitor's status, and the last Scroll the Visitor read under it.
  */
@@ -199,23 +233,46 @@ export const codex = query({
 		const sectionId = ctx.db.normalizeId("sections", sectionIdValue);
 		const section = sectionId ? await ctx.db.get(sectionId) : null;
 		if (!section) return null;
-		const items = await codexItems(ctx, section._id, MAX_CODEX_ITEMS);
-		const progress = await findSectionProgress(ctx, visitorId, section._id);
-		const last = progress ? await ctx.db.get(progress.lastScrollId) : null;
+		const [items, progress] = await Promise.all([
+			codexItems(ctx, section._id, MAX_CODEX_ITEMS),
+			findSectionProgress(ctx, visitorId, section._id),
+		]);
+		const loadLastRead = async () => {
+			const last = progress
+				? await ctx.db.get(progress.lastScrollId)
+				: null;
+			if (!last) return null;
+			const [lastTitle, sections] = await Promise.all([
+				scrollLabel(ctx, last),
+				sectionsDownTo(ctx, last, section._id),
+			]);
+			return { scrollId: last._id, title: lastTitle, sections };
+		};
+		const [lastRead, entries] = await Promise.all([
+			loadLastRead(),
+			Promise.all(
+				items.map((item, index) => {
+					const nextSibling =
+						item.kind === "Scroll" &&
+						item.doc.placement?.order === 0
+							? (items
+									.slice(index + 1)
+									.find(
+										(candidate) =>
+											(candidate.doc.placement?.order ??
+												0) > 0,
+									) ?? null)
+							: undefined;
+					return projectItem(ctx, visitorId, item, nextSibling);
+				}),
+			),
+		]);
 		return {
 			sectionId: section._id,
 			title: section.title,
-			status: await sectionStatus(ctx, visitorId, section),
-			lastRead: last
-				? {
-						scrollId: last._id,
-						title: await scrollLabel(ctx, last),
-						sections: await sectionsDownTo(ctx, last, section._id),
-					}
-				: null,
-			entries: await Promise.all(
-				items.map((item) => projectItem(ctx, visitorId, item)),
-			),
+			status: sectionStatusFromProgress(section, progress),
+			lastRead,
+			entries,
 		};
 	},
 });
@@ -232,13 +289,16 @@ export const next = query({
 		const scroll = scrollId ? await ctx.db.get(scrollId) : null;
 		if (!scroll) return null;
 		const following = await nextScrollAfter(ctx, scroll);
-		return following
-			? {
-					scrollId: following._id,
-					title: await scrollLabel(ctx, following),
-					sections: await sectionsDownTo(ctx, following, null),
-				}
-			: null;
+		if (!following) return null;
+		const [followingTitle, sections] = await Promise.all([
+			scrollLabel(ctx, following),
+			sectionsDownTo(ctx, following, null),
+		]);
+		return {
+			scrollId: following._id,
+			title: followingTitle,
+			sections,
+		};
 	},
 });
 

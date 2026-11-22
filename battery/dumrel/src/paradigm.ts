@@ -2,6 +2,7 @@ import { ParsingError } from "common-utils/validation";
 import { parseUnit, readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { compare } from "./fingerprint.js";
+import { issue, type Path } from "./issue.js";
 import {
 	isMarker,
 	paradigmDimensions,
@@ -23,11 +24,6 @@ import {
 	parseLemmaParadigmShape,
 	parseParadigmChangeShape,
 } from "./validation.js";
-
-type Path = (number | string)[];
-
-export const issue = (path: Path, message: string) =>
-	new ParsingError([{ code: "custom", path, message }]);
 
 const dimensionsOf = <P>(paradigm: LemmaParadigm<P>) =>
 	Object.entries(paradigm.dimensions) as [
@@ -288,39 +284,17 @@ export function paradigmIssue(
 	return { dimensions };
 }
 
-function dimensionIssue(
-	lemma: Dumling.Lemma,
-	name: DimensionId,
-	dimension: ParadigmDimension,
+function checkLicences(
+	rawLicences: ParadigmDimension["licences"],
+	ids: ReadonlySet<VariantId>,
+	markerIds: ReadonlySet<VariantId>,
 	readings: readonly ReadingKey[] | undefined,
 	path: Path,
-): ParadigmDimension | ParsingError {
-	if (dimension.variants.length === 0)
-		return issue(
-			[...path, "variants"],
-			"A dimension holds at least one variant",
-		);
-	const ids = new Set<VariantId>();
-	for (const [index, variant] of dimension.variants.entries()) {
-		const at = [...path, "variants", index];
-		const problem = variantValueIssue(lemma, name, variant.value);
-		if (problem) return issue([...at, "value"], problem);
-		if (variant.id !== variantIdOf(lemma, name, variant.value))
-			return issue(
-				[...at, "id"],
-				`A variant's id is the content key of its value: ${JSON.stringify(variantIdOf(lemma, name, variant.value))}`,
-			);
-		if (ids.has(variant.id))
-			return issue(
-				[...at, "id"],
-				`The variant ${variant.id} is listed twice`,
-			);
-		ids.add(variant.id);
-	}
+): Record<ReadingKey, VariantId[]> | ParsingError {
 	const licences: Record<ReadingKey, VariantId[]> = {};
-	for (const reading of Object.keys(dimension.licences).sort(compare)) {
+	for (const reading of Object.keys(rawLicences).sort(compare)) {
 		const at = [...path, "licences", reading];
-		const licence = dimension.licences[reading] ?? [];
+		const licence = rawLicences[reading] ?? [];
 		if (readings !== undefined && !readings.includes(reading))
 			return issue(
 				at,
@@ -336,21 +310,57 @@ function dimensionIssue(
 				at,
 				`A Licence names existing variants, not ${JSON.stringify(unknown)}`,
 			);
-		const markers = licence.filter((id) =>
-			isMarker(
-				lemma,
-				name,
-				dimension.variants.find((variant) => variant.id === id)
-					?.value ?? "",
-			),
-		);
-		if (markers.length > 0 && licence.length > 1)
+		const marker = licence.find((id) => markerIds.has(id));
+		if (marker !== undefined && licence.length > 1)
 			return issue(
 				at,
-				`A Licence holding the marker ${markers[0]} holds nothing else`,
+				`A Licence holding the marker ${marker} holds nothing else`,
 			);
 		licences[reading] = [...licence].sort(compare);
 	}
+	return licences;
+}
+
+function dimensionIssue(
+	lemma: Dumling.Lemma,
+	name: DimensionId,
+	dimension: ParadigmDimension,
+	readings: readonly ReadingKey[] | undefined,
+	path: Path,
+): ParadigmDimension | ParsingError {
+	if (dimension.variants.length === 0)
+		return issue(
+			[...path, "variants"],
+			"A dimension holds at least one variant",
+		);
+	const ids = new Set<VariantId>();
+	const markerIds = new Set<VariantId>();
+	for (const [index, variant] of dimension.variants.entries()) {
+		const at = [...path, "variants", index];
+		const problem = variantValueIssue(lemma, name, variant.value);
+		if (problem) return issue([...at, "value"], problem);
+		const expectedId = variantIdOf(lemma, name, variant.value);
+		if (variant.id !== expectedId)
+			return issue(
+				[...at, "id"],
+				`A variant's id is the content key of its value: ${JSON.stringify(expectedId)}`,
+			);
+		if (ids.has(variant.id))
+			return issue(
+				[...at, "id"],
+				`The variant ${variant.id} is listed twice`,
+			);
+		ids.add(variant.id);
+		if (isMarker(lemma, name, variant.value)) markerIds.add(variant.id);
+	}
+	const licences = checkLicences(
+		dimension.licences,
+		ids,
+		markerIds,
+		readings,
+		path,
+	);
+	if (licences instanceof ParsingError) return licences;
 	if (readings !== undefined) {
 		const unstated = readings.some(
 			(reading) => !Object.hasOwn(licences, reading),

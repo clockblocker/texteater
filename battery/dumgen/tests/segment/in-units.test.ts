@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test";
+import { testEffect } from "common-utils/effect-test";
 import { splitText } from "dumtext";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 import { z } from "zod";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import { operations } from "../../src/operations.js";
@@ -284,87 +287,115 @@ test("with payloads asked for, each call's trace keeps its request and answer", 
 	expect(call?.payload?.response).toMatchObject({ model: pinnedJevModel });
 });
 
-test("another language or a blank Sentence is a Defect before anything is asked, and a floating model is refused", async () => {
-	const jev = fakeJev();
-	const traces: OperationTrace[] = [];
-	const live = liveOver({
-		jev: jev.ask,
-		luna: noLuna,
-		onOperation: (trace) => traces.push(trace),
-	});
-	await expect(
-		Effect.runPromise(
-			operations.segment
-				.inUnits({
-					language: "en" as "de",
-					paragraphs: [{ sentences: ["Hello."] }],
-				})
-				.pipe(Effect.provide(live)),
-		),
-	).rejects.toThrow('German ("de") only, not "en"');
-	await expect(
-		Effect.runPromise(
-			operations.segment
-				.inUnits({
-					language: "de",
-					paragraphs: [{ sentences: ["Gut.", " \t "] }],
-				})
-				.pipe(Effect.provide(live)),
-		),
-	).rejects.toThrow("Sentence 1 of paragraph 0 is blank");
-	expect(jev.sent).toEqual([]);
-	// Each failed operation still reports its (empty) trace.
-	expect(traces.map(({ calls }) => calls.length)).toEqual([0, 0]);
-	const once = operations.segment.inUnits({
-		language: "de",
-		paragraphs: [{ sentences: ["Er kam."] }],
-	});
-	await expect(
-		Effect.runPromise(
-			once.pipe(
-				Effect.provide(
-					liveOver({
-						jev: jev.ask,
-						luna: noLuna,
-						jevModel: "jev-latest",
-					}),
-				),
-			),
-		),
-	).rejects.toThrow("floats between jev versions");
-	await expect(
-		Effect.runPromise(
-			once.pipe(
-				Effect.provide(
-					liveOver({ jev: jev.ask, luna: noLuna, requestBudget: 0 }),
-				),
-			),
-		),
-	).rejects.toThrow("requestBudget");
-});
+testEffect(
+	"another language or a blank Sentence is a Defect before anything is asked, and a floating model is refused",
+	() =>
+		Effect.gen(function* () {
+			const jev = fakeJev();
+			const traces: OperationTrace[] = [];
+			const live = liveOver({
+				jev: jev.ask,
+				luna: noLuna,
+				onOperation: (trace) => traces.push(trace),
+			});
+			const expectDefect = <A, E>(
+				effect: Effect.Effect<A, E>,
+				expectedMessage: string,
+			) =>
+				Effect.gen(function* () {
+					const exit = yield* Effect.exit(effect);
+					expect(Exit.isFailure(exit)).toBe(true);
+					if (Exit.isFailure(exit)) {
+						const err = Cause.squash(exit.cause);
+						expect(
+							err instanceof Error ? err.message : String(err),
+						).toContain(expectedMessage);
+					}
+				});
 
-test("an exception from onOperation is the host's, and inUnits passes it on", async () => {
-	await expect(
-		Effect.runPromise(
-			operations.segment
-				.inUnits({
-					language: "de",
-					paragraphs: [{ sentences: ["Er kam."] }],
-				})
-				.pipe(
+			yield* expectDefect(
+				operations.segment
+					.inUnits({
+						language: "en" as "de",
+						paragraphs: [{ sentences: ["Hello."] }],
+					})
+					.pipe(Effect.provide(live)),
+				'German ("de") only, not "en"',
+			);
+			yield* expectDefect(
+				operations.segment
+					.inUnits({
+						language: "de",
+						paragraphs: [{ sentences: ["Gut.", " \t "] }],
+					})
+					.pipe(Effect.provide(live)),
+				"Sentence 1 of paragraph 0 is blank",
+			);
+			expect(jev.sent).toEqual([]);
+			// Each failed operation still reports its (empty) trace.
+			expect(traces.map(({ calls }) => calls.length)).toEqual([0, 0]);
+			const once = operations.segment.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: ["Er kam."] }],
+			});
+			yield* expectDefect(
+				once.pipe(
 					Effect.provide(
 						liveOver({
-							jev: fakeJev().ask,
+							jev: jev.ask,
 							luna: noLuna,
-							onOperation: () => {
-								throw Error("ledger is full");
-							},
+							jevModel: "jev-latest",
 						}),
 					),
 				),
-		),
-	).rejects.toThrow("ledger is full");
-});
+				"floats between jev versions",
+			);
+			yield* expectDefect(
+				once.pipe(
+					Effect.provide(
+						liveOver({
+							jev: jev.ask,
+							luna: noLuna,
+							requestBudget: 0,
+						}),
+					),
+				),
+				"requestBudget",
+			);
+		}),
+);
+
+testEffect(
+	"an exception from onOperation is the host's, and inUnits passes it on",
+	() =>
+		Effect.gen(function* () {
+			const exit = yield* Effect.exit(
+				operations.segment
+					.inUnits({
+						language: "de",
+						paragraphs: [{ sentences: ["Er kam."] }],
+					})
+					.pipe(
+						Effect.provide(
+							liveOver({
+								jev: fakeJev().ask,
+								luna: noLuna,
+								onOperation: () => {
+									throw Error("ledger is full");
+								},
+							}),
+						),
+					),
+			);
+			expect(Exit.isFailure(exit)).toBe(true);
+			if (Exit.isFailure(exit)) {
+				const err = Cause.squash(exit.cause);
+				expect(
+					err instanceof Error ? err.message : String(err),
+				).toContain("ledger is full");
+			}
+		}),
+);
 
 test("routes are Dumling's: a Kind belongs to its Family", () => {
 	const routes: Route[] = [

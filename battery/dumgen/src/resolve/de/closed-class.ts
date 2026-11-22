@@ -134,6 +134,26 @@ function referentDecides(options: readonly ClosedOption[]): boolean {
 	);
 }
 
+let authoredByKey: ReadonlyMap<string, AuthoredMember> | undefined;
+let authoredSyncretisms:
+	| readonly {
+			readonly member: AuthoredMember;
+			readonly unitKeys: readonly string[];
+	  }[]
+	| undefined;
+
+function authoredMemberByKey(key: string): AuthoredMember | undefined {
+	if (authoredByKey === undefined) {
+		const map = new Map<string, AuthoredMember>();
+		for (const member of authoredMembers) {
+			const memberKey = lemmaIdentityKey(member.lemma);
+			if (!map.has(memberKey)) map.set(memberKey, member);
+		}
+		authoredByKey = map;
+	}
+	return authoredByKey.get(key);
+}
+
 /**
  * The generated Syncretisms (ADR 0046) whose units are all among the
  * options' pillar cells: each is an answer that leaves the referent open.
@@ -146,13 +166,20 @@ function syncretismOptions(
 			.filter(({ cell }) => cell === undefined)
 			.map(({ member }) => lemmaIdentityKey(member.lemma)),
 	);
-	return authoredMembers.filter(
-		({ lemma }) =>
-			isSyncretism(lemma) &&
-			lemma.syncretized.every((unit) =>
-				cells.has(lemmaIdentityKey(unit)),
-			),
+	authoredSyncretisms ??= authoredMembers.flatMap((member) =>
+		isSyncretism(member.lemma)
+			? [
+					{
+						member,
+						unitKeys:
+							member.lemma.syncretized.map(lemmaIdentityKey),
+					},
+				]
+			: [],
 	);
+	return authoredSyncretisms
+		.filter(({ unitKeys }) => unitKeys.every((key) => cells.has(key)))
+		.map(({ member }) => member);
 }
 
 /** A stem's generated Surface Syncretism (ADR 0046) and the options that are its units. */
@@ -252,10 +279,8 @@ export function cellQuestion(
 						? syncretism.lemma.syncretized
 						: []
 					).map((unit) => {
-						const authored = authoredMembers.find(
-							(candidate) =>
-								lemmaIdentityKey(candidate.lemma) ===
-								lemmaIdentityKey(unit),
+						const authored = authoredMemberByKey(
+							lemmaIdentityKey(unit),
 						);
 						return authored
 							? describe(authored, undefined)

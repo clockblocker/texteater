@@ -58,6 +58,20 @@ export type LemmaIdentity = {
 	syncretic?: readonly string[];
 };
 
+/**
+ * The set entries of a feature bag, in feature-name order: missing and null
+ * features are omitted so key order and absent-vs-null compare equal.
+ */
+export function sortedNonNullEntries(
+	bag: Readonly<Record<string, unknown>>,
+): [string, unknown][] {
+	return Object.entries(bag)
+		.filter(([, value]) => value !== null && value !== undefined)
+		.toSorted(([left], [right]) =>
+			left < right ? -1 : left > right ? 1 : 0,
+		);
+}
+
 /** {@link lemmaIdentityKey} over the fields it reads. */
 export function identityKeyOf(lemma: LemmaIdentity): string {
 	const {
@@ -73,11 +87,7 @@ export function identityKeyOf(lemma: LemmaIdentity): string {
 		family,
 		kind,
 		canonicalFormKey(canonicalForm, language),
-		Object.entries(core)
-			.filter(([, value]) => value !== null && value !== undefined)
-			.toSorted(([left], [right]) =>
-				left < right ? -1 : left > right ? 1 : 0,
-			),
+		sortedNonNullEntries(core),
 		...(syncretic === undefined ? [] : [syncretic]),
 	]);
 }

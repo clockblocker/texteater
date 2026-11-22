@@ -366,7 +366,7 @@ const OPEN_SCALE = 1.05;
  * `openAt` is open: rising toward it from both sides, one step per slot,
  * the open Card over all of them.
  */
-export function zOf(index: number, openAt: number) {
+function zOf(index: number, openAt: number) {
 	return 10 + Math.max(0, 9 - Math.abs(index - openAt));
 }
 

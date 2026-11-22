@@ -1,17 +1,14 @@
 {
 	"$schema": "./node_modules/@effect/tsgo/oxlint-schema.json",
 	"extends": ["./node_modules/@effect/tsgo/oxlint-presets/recommended.json"],
+	"jsPlugins": ["./tooling/oxlint-plugin/index.ts"],
 	"ignorePatterns": [
 		"repos-for-refrence/**",
 		"backlog/**",
 		"**/dist/**",
 		"**/_generated/**",
-		"**/tests/**",
-		"**/test/**",
 		"**/e2e/**",
 		"**/testing/**",
-		"**/*.test.ts",
-		"**/*.test.tsx",
 		"tooling/dum-entrypoint-rss/empty-module.ts"
 	],
 	"rules": {
@@ -22,6 +19,76 @@
 				"varsIgnorePattern": "^_",
 				"argsIgnorePattern": "^_."
 			}
-		]
-	}
+		],
+		"textfresser/no-inline-schema-compile": "error",
+		"textfresser/prefer-catch-tags": "error",
+		"textfresser/no-unreasoned-state-sync": "warn",
+		"textfresser/no-polling-loop-in-tests": "error",
+		"textfresser/no-real-time-wait-in-tests": "error",
+		"textfresser/no-wall-clock-in-tests": "error"
+	},
+	"overrides": [
+		{
+			"files": ["app/tf-demo/src/hooks/**", "app/tf-demo/src/lib/**"],
+			"rules": {
+				"textfresser/no-unreasoned-state-sync": "error"
+			}
+		},
+		{
+			// Wayfinder #1352 excluded surfaces: keep custom rules warning-only so #1352 files stay untouched.
+			"files": [
+				"battery/lego/src/molecules/**",
+				"battery/compass/src/geometry*",
+				"app/tf-demo/src/notes/**",
+				"app/tf-demo/src/presentation/**",
+				"app/tf-demo/src/workspace/compass/**",
+				"app/tf-demo/src/playground/**",
+				"app/tf-demo/src/App.tsx",
+				"app/tf-demo/src/components/app-sidebar.tsx",
+				"app/tf-demo/src/views/codex-view.tsx",
+				"app/tf-demo/src/views/scroll-view.tsx"
+			],
+			"rules": {
+				"textfresser/no-unreasoned-state-sync": "warn",
+				"textfresser/no-real-time-wait-in-tests": "warn",
+				"textfresser/no-wall-clock-in-tests": "warn"
+			}
+		},
+		{
+			// Pre-existing DOM/live/convex-test suites with wall-clock fixtures or timer settles;
+			// new tests everywhere else enforce error severity.
+			"files": [
+				"app/tf-demo/src/hooks/anonymous-visitor-atoms.test.ts",
+				"app/tf-demo/src/lib/command-scheduler.test.ts",
+				"app/tf-demo/src/lib/motion-preference-atoms.dom.test.ts",
+				"app/tf-demo/src/views/pronoun-explainer-atoms.dom.test.ts",
+				"app/tf-demo/src/workspace/connect-workspace-history.dom.test.ts",
+				"app/tf-demo/src/workspace/workspace-atoms.dom.test.ts",
+				"app/tf-demo/tests/folio-processing.test.ts",
+				"app/tf-demo/tests/inspection-capture.test.ts",
+				"app/tf-demo/tests/intake-analysis.test.ts",
+				"app/tf-demo/tests/knowledge-generation-scheduling.test.ts",
+				"app/tf-demo/tests/linguistic-orchestration-judged.test.ts",
+				"app/tf-demo/tests/linguistic-orchestration.test.ts",
+				"app/tf-demo/tests/rate-limits.test.ts",
+				"app/tf-demo/tests/relation-publication.test.ts",
+				"app/tf-demo/tests/resolution-sessions-cleanup.test.ts",
+				"app/tf-demo/tests/resolution-sessions-commits.test.ts",
+				"app/tf-demo/tests/resolution-sessions-runs.test.ts",
+				"app/tf-demo/tests/resolution-sessions.test.ts",
+				"app/tf-demo/tests/segment-selection-deck.dom.test.tsx",
+				"battery/dumgen/tests/knowledge/produce.test.ts",
+				"battery/dumgen/tests/lab/evaluation/breakdown.test.ts",
+				"battery/dumgen/tests/lab/evaluation/lab-runtime.test.ts",
+				"battery/dumgen/tests/lab/segmentation/jev-cache.test.ts",
+				"battery/dumgen/tests/lab/segmentation/run-budget.test.ts",
+				"battery/dumgen/tests/resolve/judged-report.test.ts",
+				"battery/dumrel/tests/projection.test.ts"
+			],
+			"rules": {
+				"textfresser/no-real-time-wait-in-tests": "warn",
+				"textfresser/no-wall-clock-in-tests": "warn"
+			}
+		}
+	]
 }

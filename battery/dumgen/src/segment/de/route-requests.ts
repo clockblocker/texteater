@@ -359,18 +359,13 @@ export function routeBatchesOf(nomination: Nomination): RouteBatches {
 			assemble(nomination, articleOf, policyInput(nomination, policy))
 				.partition,
 	);
-	const v3Groups = new Set(
-		v3Partitions.flatMap((partition) => partition.map(groupKey)),
-	);
+	const v3ByKey = uniqueGroups(v3Partitions);
+	const fresh: (readonly number[])[] = [];
+	for (const [key, group] of uniqueGroups(candidates4Partitions(nomination)))
+		if (!v3ByKey.has(key)) fresh.push(group);
 	return {
-		v3: [...uniqueGroups(v3Partitions).values()],
-		fresh: [
-			...new Map(
-				[...uniqueGroups(candidates4Partitions(nomination))].filter(
-					([key]) => !v3Groups.has(key),
-				),
-			).values(),
-		],
+		v3: [...v3ByKey.values()],
+		fresh,
 	};
 }
 

@@ -222,8 +222,17 @@ type Walk = {
 const attribute = (node: HtmlNode, name: string) =>
 	node.getAttribute?.(name) ?? null;
 
-const tokens = (node: HtmlNode, ...names: readonly string[]) =>
-	names.flatMap((name) => (attribute(node, name) ?? "").split(/\s+/u));
+function tokens(node: HtmlNode, ...names: readonly string[]): string[] {
+	const out: string[] = [];
+	for (const name of names) {
+		const value = attribute(node, name);
+		if (value === null || value.length === 0) continue;
+		for (const token of value.split(/\s+/u)) {
+			if (token.length > 0) out.push(token);
+		}
+	}
+	return out;
+}
 
 const childrenOf = (node: HtmlNode): HtmlNode[] => Array.from(node.childNodes);
 
@@ -240,9 +249,12 @@ const inPageLink = (node: HtmlNode) =>
  * in-page link named or written as one, or a `sup` holding only in-page
  * links and brackets.
  */
-function isNoteReference(node: HtmlNode, tag: string): boolean {
-	if (tokens(node, "role", "epub:type").some((token) => noteLink.test(token)))
-		return true;
+function isNoteReference(
+	node: HtmlNode,
+	tag: string,
+	semanticTokens: readonly string[],
+): boolean {
+	if (semanticTokens.some((token) => noteLink.test(token))) return true;
 	if (tag === "a" && inPageLink(node))
 		return (
 			tokens(node, "class", "id").some((token) =>
@@ -263,18 +275,20 @@ function isNoteReference(node: HtmlNode, tag: string): boolean {
 }
 
 function isDropped(node: HtmlNode, tag: string): boolean {
-	return (
+	if (
 		droppedBlockTags.has(tag) ||
 		droppedInlineTags.has(tag) ||
 		attribute(node, "hidden") !== null ||
-		displayNone.test(attribute(node, "style") ?? "") ||
-		tokens(node, "role", "epub:type").some((token) =>
-			pageBreak.test(token),
+		displayNone.test(attribute(node, "style") ?? "")
+	)
+		return true;
+	const semanticTokens = tokens(node, "role", "epub:type");
+	return (
+		semanticTokens.some(
+			(token) => pageBreak.test(token) || noteBody.test(token),
 		) ||
-		tokens(node, "id", "class", "role", "epub:type").some((token) =>
-			noteBody.test(token),
-		) ||
-		isNoteReference(node, tag)
+		tokens(node, "id", "class").some((token) => noteBody.test(token)) ||
+		isNoteReference(node, tag, semanticTokens)
 	);
 }
 
@@ -502,12 +516,15 @@ function withoutPullQuotes(mapped: readonly Mapped[]): Block[] {
 		.join(" ")} `;
 	const pulled = new Set<number>();
 	const quotes = new Map<number, string[]>();
-	for (const { block, quote } of mapped)
-		if (quote !== undefined)
-			quotes.set(quote, [
-				...(quotes.get(quote) ?? []),
-				fold(textOf(block)),
-			]);
+	for (const { block, quote } of mapped) {
+		if (quote === undefined) continue;
+		let list = quotes.get(quote);
+		if (list === undefined) {
+			list = [];
+			quotes.set(quote, list);
+		}
+		list.push(fold(textOf(block)));
+	}
 	for (const [quote, texts] of quotes) {
 		const text = texts.join(" ");
 		if (text.split(" ").length >= pullQuoteWords && outside.includes(text))
@@ -564,9 +581,10 @@ export function scrollFromHtml(
 		.replace(/\s+/gu, " ")
 		.trim();
 	if (title.length === 0) return { kind: "Scroll", blocks: tidy(blocks) };
+	const foldedTitle = fold(title);
 	const index = blocks.findIndex(
 		(block) =>
-			block.kind === "Heading" && fold(textOf(block)) === fold(title),
+			block.kind === "Heading" && fold(textOf(block)) === foldedTitle,
 	);
 	const repeated = blocks[index];
 	if (repeated?.kind !== "Heading")

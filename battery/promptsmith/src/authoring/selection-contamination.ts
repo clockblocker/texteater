@@ -12,8 +12,9 @@ export function assertCaseSelectionsUncontaminated(args: {
 	readonly evaluation: CaseSelection;
 }): void {
 	const demonstrations = getSelectionState(args.demonstrations).entries;
-	const evaluation = getSelectionState(args.evaluation).entries;
-	const evaluationIds = new Set(evaluation.map((entry) => entry.id));
+	const evaluationState = getSelectionState(args.evaluation);
+	const evaluation = evaluationState.entries;
+	const evaluationIds = evaluationState.idSet;
 	for (const demonstration of demonstrations) {
 		if (evaluationIds.has(demonstration.id))
 			throw contamination(
@@ -23,16 +24,37 @@ export function assertCaseSelectionsUncontaminated(args: {
 				"case ID",
 			);
 	}
+	const evaluationByKey = new Map<
+		string,
+		{ readonly id: string; readonly index: number }
+	>();
+	for (const [index, evaluated] of evaluation.entries()) {
+		for (const key of evaluated.contaminationKeys) {
+			if (!evaluationByKey.has(key)) {
+				evaluationByKey.set(key, { id: evaluated.id, index });
+			}
+		}
+	}
 	for (const demonstration of demonstrations) {
-		const keys = new Set(demonstration.contaminationKeys);
-		for (const evaluated of evaluation) {
-			if (evaluated.contaminationKeys.some((key) => keys.has(key)))
-				throw contamination(
-					args.route,
-					demonstration.id,
-					evaluated.id,
-					"contamination key",
-				);
+		let earliest:
+			| { readonly id: string; readonly index: number }
+			| undefined;
+		for (const key of demonstration.contaminationKeys) {
+			const match = evaluationByKey.get(key);
+			if (
+				match !== undefined &&
+				(earliest === undefined || match.index < earliest.index)
+			) {
+				earliest = match;
+			}
+		}
+		if (earliest !== undefined) {
+			throw contamination(
+				args.route,
+				demonstration.id,
+				earliest.id,
+				"contamination key",
+			);
 		}
 	}
 }

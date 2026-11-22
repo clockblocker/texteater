@@ -46,19 +46,33 @@ export function partitionOf(
 
 export const groupKey = (group: readonly number[]) => group.join(",");
 
+/** Each piece id mapped to the group of `partition` that holds it. */
+export function pieceGroupMap(
+	partition: Partition,
+): Map<number, readonly number[]> {
+	const groupOf = new Map<number, readonly number[]>();
+	for (const group of partition)
+		for (const id of group) groupOf.set(id, group);
+	return groupOf;
+}
+
+/** Order-independent key for a pair of piece ids. */
+export const pairKey = (a: number, b: number) =>
+	`${Math.min(a, b)},${Math.max(a, b)}`;
+
 /** Each group's Segments with its route. */
 export function unitsOf(
 	sentence: Sentence,
 	partition: Partition,
-	routeFor: (group: readonly number[]) => UnitRouteKey,
+	routeFor: (group: readonly number[], index: number) => UnitRouteKey,
 ): Unit[] {
-	return partition.map((group) => ({
+	return partition.map((group, index) => ({
 		segments: group.map((id) => {
 			const piece = sentence.pieces[id - 1];
 			if (!piece) throw Error(`No piece p${id}`);
 			return piece.segment;
 		}),
-		route: routeForKey(routeFor(group)),
+		route: routeForKey(routeFor(group, index)),
 	}));
 }
 
@@ -78,11 +92,15 @@ export function argmax(
 }
 
 /** A Choice's most probable answer other than `none`; undefined when there is none. */
-export const argmaxBesideNone = (
+export function argmaxBesideNone(
 	distribution: Readonly<Record<string, number>>,
-): Top | undefined =>
-	argmax(
-		Object.fromEntries(
-			Object.entries(distribution).filter(([key]) => key !== "none"),
-		),
-	);
+): Top | undefined {
+	let best: Top | undefined;
+	for (const key in distribution) {
+		if (key === "none" || !Object.hasOwn(distribution, key)) continue;
+		const share = distribution[key];
+		if (share !== undefined && share > (best?.share ?? -1))
+			best = { key, share };
+	}
+	return best;
+}

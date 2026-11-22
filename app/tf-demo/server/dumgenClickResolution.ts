@@ -119,65 +119,57 @@ export function dumgenClickResolution<R>(
 	optionallyReflexive: (
 		lemma: Dumling.Lemma<"de">,
 	) => Promise<readonly string[]> = async () => [],
+	ensureReady?: Effect.Effect<void>,
 ): ClickResolution<R> {
-	return Object.freeze({
-		grammar: (input, onJudged) => {
-			// Dumgen answers a unit intake left Unresolved with no call (#861).
-			const grammar = dumgenGrammarInput(input);
-			if (!grammar)
-				return Effect.succeed({
-					decision: "Unresolved" as const,
-					language: "de" as const,
-				});
-			// Handed over when a click needs it, so a click that reuses a
-			// committed occurrence needs no model key.
-			return Effect.suspend(() =>
-				dumgen().resolve.grammar({
-					...grammar,
-					...(onJudged ? { onJudged } : {}),
-				}),
-			).pipe(
-				Effect.map((result) =>
-					clickGrammarOf(result, input, grammar.unit),
-				),
-			);
-		},
-		reading: (input) => {
-			const { encounter, attestation } = input.grammar;
-			const unit = {
-				segments: [...encounter.target.memberSegmentIndices],
-				route: {
-					language: "de",
-					family: encounter.target.family,
-					kind: encounter.target.kind,
-				},
-			} as Unit;
-			return (
-				holdsReflexive(attestation)
-					? Effect.promise(() => optionallyReflexive(input.lemma))
-					: Effect.succeed([])
-			).pipe(
-				Effect.flatMap((optional) =>
-					dumgen().resolve.reading({
-						attestation,
-						sentence: dumgenSentence(encounter.sentence, [unit]),
-						unit,
-						candidates: input.candidates,
-						...(optional.length > 0
-							? { optionallyReflexive: optional }
-							: {}),
-						...(input.written === undefined
-							? {}
-							: { written: input.written }),
-						...(input.drafted === undefined
-							? {}
-							: { drafted: input.drafted }),
-					}),
-				),
-				Effect.map((result) => clickReadingOf(result, input)),
-			);
-		},
+	const grammar: ClickResolution<R>["grammar"] = Effect.fn(
+		"DumgenClickResolution.grammar",
+	)(function* (input, onJudged) {
+		// Dumgen answers a unit intake left Unresolved with no call (#861).
+		const grammarInput = dumgenGrammarInput(input);
+		if (!grammarInput)
+			return {
+				decision: "Unresolved" as const,
+				language: "de" as const,
+			};
+		// Handed over when a click needs it, so a click that reuses a
+		// committed occurrence needs no model key.
+		if (ensureReady) yield* ensureReady;
+		const result = yield* dumgen().resolve.grammar({
+			...grammarInput,
+			...(onJudged ? { onJudged } : {}),
+		});
+		return clickGrammarOf(result, input, grammarInput.unit);
 	});
+
+	const reading: ClickResolution<R>["reading"] = Effect.fn(
+		"DumgenClickResolution.reading",
+	)(function* (input) {
+		const { encounter, attestation } = input.grammar;
+		const unit = {
+			segments: [...encounter.target.memberSegmentIndices],
+			route: {
+				language: "de",
+				family: encounter.target.family,
+				kind: encounter.target.kind,
+			},
+		} as Unit;
+		if (ensureReady) yield* ensureReady;
+		const optional = holdsReflexive(attestation)
+			? yield* Effect.promise(() => optionallyReflexive(input.lemma))
+			: [];
+		const result = yield* dumgen().resolve.reading({
+			attestation,
+			sentence: dumgenSentence(encounter.sentence, [unit]),
+			unit,
+			candidates: input.candidates,
+			...(optional.length > 0 ? { optionallyReflexive: optional } : {}),
+			...(input.written === undefined ? {} : { written: input.written }),
+			...(input.drafted === undefined ? {} : { drafted: input.drafted }),
+		});
+		return clickReadingOf(result, input);
+	});
+
+	return Object.freeze({ grammar, reading });
 }
 
 /** Whether an Attestation's valency evidence names a lexical reflexive (ADR 0052). */

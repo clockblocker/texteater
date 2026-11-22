@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "../inflectional-bag.js";
 import type { GrundformFeatureValue, GrundformIssue } from "./result.js";
 
 export type FeatureRequirements = Readonly<
@@ -12,9 +13,9 @@ export interface GrundformRule {
 export function inflectionalFeatures(
 	surface: Dumling.Surface,
 ): Readonly<Record<string, GrundformFeatureValue>> | null {
-	return "inflectionalFeatures" in surface
-		? surface.inflectionalFeatures
-		: null;
+	return inflectionalBagOf(surface) as Readonly<
+		Record<string, GrundformFeatureValue>
+	> | null;
 }
 
 /** A known counterexample decides false even if other coordinates are unknown. */

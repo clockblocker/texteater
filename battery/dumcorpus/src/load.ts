@@ -62,6 +62,60 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
 	return files;
 }
 
+function readTextRecord(
+	id: SpecRecordId,
+	input: unknown,
+	textRecords: TextRecord[],
+	issues: SpecIssue[],
+	worklist: WorklistEntry[],
+): void {
+	const file = textRecordFileSchema.safeParse(input);
+	if (!file.success) {
+		for (const error of file.error.issues)
+			issues.push({
+				record: id,
+				check: "Shape",
+				path: error.path.join("."),
+				message: error.message,
+			});
+		return;
+	}
+	const { sourceText, status, sources, legacy } = file.data;
+	const uncited = uncitedIssue(id, status === "Reviewed", sources);
+	if (uncited) {
+		issues.push(uncited);
+		return;
+	}
+	textRecords.push({
+		id,
+		sourceText,
+		status,
+		...(sources === undefined ? {} : { sources }),
+		...(legacy === undefined ? {} : { legacy }),
+	});
+	if (legacy?.length) worklist.push({ record: id, issues: [], legacy });
+}
+
+function recordWorklistEntry(
+	id: SpecRecordId,
+	checked: RecordCheck | BreakdownRecordCheck,
+	worklist: WorklistEntry[],
+): void {
+	const legacy = "legacy" in checked ? (checked.legacy ?? []) : [];
+	if (checked.issues.length === 0 && legacy.length === 0) return;
+	worklist.push({
+		record: id,
+		...(checked.reviewDepth === undefined
+			? {}
+			: { reviewDepth: checked.reviewDepth }),
+		...(checked.validThrough === undefined
+			? {}
+			: { validThrough: checked.validThrough }),
+		issues: checked.issues,
+		legacy,
+	});
+}
+
 /**
  * Reads and checks every record file under a directory, sorted by id. A
  * record fails when its id or shape is bad, when it is reviewed without citing
@@ -73,7 +127,6 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
  * checked for shape and a Reviewed one's Rule citation, and join the worklist
  * while they hold imported cases.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function readRecords(directory: string): {
 	segmentations: SpecSegmentation[];
 	records: SpecRecord[];
@@ -90,64 +143,27 @@ export function readRecords(directory: string): {
 	const worklist: WorklistEntry[] = [];
 	for (const { id, input } of readJsonFiles(directory, issues)) {
 		if (id.startsWith(textPrefix)) {
-			const file = textRecordFileSchema.safeParse(input);
-			if (!file.success) {
-				for (const error of file.error.issues)
-					issues.push({
-						record: id,
-						check: "Shape",
-						path: error.path.join("."),
-						message: error.message,
-					});
-				continue;
-			}
-			const { sourceText, status, sources, legacy } = file.data;
-			const uncited = uncitedIssue(id, status === "Reviewed", sources);
-			if (uncited) {
-				issues.push(uncited);
-				continue;
-			}
-			textRecords.push({
-				id,
-				sourceText,
-				status,
-				...(sources === undefined ? {} : { sources }),
-				...(legacy === undefined ? {} : { legacy }),
-			});
-			if (legacy?.length)
-				worklist.push({ record: id, issues: [], legacy });
+			readTextRecord(id, input, textRecords, issues, worklist);
 			continue;
 		}
-		let checked: RecordCheck | BreakdownRecordCheck;
-		if (id.startsWith(breakdownPrefix)) {
-			checked = checkBreakdownRecord(id, input);
-			if (checked.errors.length === 0 && checked.record)
-				breakdownRecords.push(checked.record);
-		} else {
-			checked = checkRecord(id, input);
-			if (checked.errors.length === 0) {
-				if (checked.segmentation)
-					segmentations.push(checked.segmentation);
-				if (checked.record) records.push(checked.record);
-			}
-		}
+		const checked: RecordCheck | BreakdownRecordCheck = id.startsWith(
+			breakdownPrefix,
+		)
+			? checkBreakdownRecord(id, input)
+			: checkRecord(id, input);
 		if (checked.errors.length > 0) {
 			issues.push(...checked.errors);
 			continue;
 		}
-		const legacy = "legacy" in checked ? (checked.legacy ?? []) : [];
-		if (checked.issues.length > 0 || legacy.length > 0)
-			worklist.push({
-				record: id,
-				...(checked.reviewDepth === undefined
-					? {}
-					: { reviewDepth: checked.reviewDepth }),
-				...(checked.validThrough === undefined
-					? {}
-					: { validThrough: checked.validThrough }),
-				issues: checked.issues,
-				legacy,
-			});
+		if (id.startsWith(breakdownPrefix)) {
+			const breakdown = checked as BreakdownRecordCheck;
+			if (breakdown.record) breakdownRecords.push(breakdown.record);
+		} else {
+			const spec = checked as RecordCheck;
+			if (spec.segmentation) segmentations.push(spec.segmentation);
+			if (spec.record) records.push(spec.record);
+		}
+		recordWorklistEntry(id, checked, worklist);
 	}
 	return {
 		segmentations,

@@ -1,10 +1,5 @@
 import { ParsingError } from "common-utils/validation";
-import {
-	foldCase,
-	lemmaIdentityKey,
-	parseUnit,
-	readingIdentityKey,
-} from "dumling";
+import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	parseBreakdown,
@@ -12,18 +7,18 @@ import {
 	parseSourceLink,
 	sourceAndConstituentsIssue,
 } from "./breakdown-context.js";
-import { structuralKeys } from "./fingerprint.js";
-import { issue, type Path } from "./issue.js";
+import { issue, type Path, prefixIssues } from "./issue.js";
 import type {
 	DirectSemanticRelation,
 	KnowledgeChange,
 	ReadingKnowledge,
 	SemanticRelations,
-	ValencyComplement,
-	ValencyFrame,
-	ValencySlot,
 } from "./types.js";
-import { allowedComplementKinds } from "./valency-policy.js";
+import {
+	checkValencyFrameInvariants,
+	parseValencyComplement,
+	parseValencyFrame,
+} from "./valency-context.js";
 import { directSemanticRelationValues } from "./vocabulary.js";
 
 export function parseSource<R extends Dumling.Reading>(
@@ -45,13 +40,7 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 	path: Path,
 ): Dumling.Lemma | Dumling.Reading | ParsingError {
 	const parsed = parseUnit(value);
-	if (!parsed.success)
-		return new ParsingError(
-			parsed.error.issues.map((entry) => ({
-				...entry,
-				path: [...path, ...entry.path],
-			})),
-		);
+	if (!parsed.success) return prefixIssues(parsed.error, path);
 	const { chain } = parsed;
 	const target =
 		unitKind === "Lemma"
@@ -201,228 +190,6 @@ function endonymIssue(
 }
 
 /**
- * A complement the source's route allows. A Preposition complement names an
- * ADP Lemma of the source Language. A German one names an oblique case, and
- * dumcorpus checks it against the ADP Case Table (ADR 0041). A Hebrew or
- * English one names no case (`סמך על`, `depend on`). A German Reflexive names
- * its case, another language's none. A Reflexive that is the object of a
- * fixed phrase's preposition names that ADP Lemma too, and the preposition is
- * a word of the source's Canonical Form, since the phrase holds it (`außer
- * sein` for `außer sich sein`); dumcorpus checks its case as a Preposition's
- * (ADR 0052).
- */
-function parseValencyComplement<R extends Dumling.Reading>(
-	source: R,
-	complement: ValencyComplement,
-	path: Path,
-): ValencyComplement | ParsingError {
-	const { family, kind, language } = source.lemma;
-	if (!allowedComplementKinds(source.lemma).includes(complement.kind))
-		return issue(
-			[...path, "kind"],
-			`${family} ${kind} Readings take no ${complement.kind} complement`,
-		);
-	if (
-		complement.kind === "Reflexive" &&
-		"governedCase" in complement !== (language === "de")
-	)
-		return issue(
-			path,
-			"A German Reflexive names its case; another language's names none",
-		);
-	if (!("preposition" in complement) || complement.preposition === undefined)
-		return complement;
-	const preposition = parsePreposition(source, complement.preposition, [
-		...path,
-		"preposition",
-	]);
-	if (preposition instanceof ParsingError) return preposition;
-	if (
-		complement.kind === "Reflexive" &&
-		!source.lemma.canonicalForm
-			.split(" ")
-			.some(
-				(word) =>
-					foldCase(word, language) ===
-					foldCase(preposition.canonicalForm, language),
-			)
-	)
-		return issue(
-			[...path, "preposition"],
-			"A Reflexive's preposition is a word of its Reading's Canonical Form",
-		);
-	// parseUnit keeps the input's Language, so the parsed ADP Lemma fits the
-	// variant complement came from; TypeScript can't correlate the two unions.
-	return { ...complement, preposition } as ValencyComplement;
-}
-
-/** A complement's preposition: an ADP Lemma of the source Language. */
-function parsePreposition<R extends Dumling.Reading>(
-	source: R,
-	value: unknown,
-	path: Path,
-): Dumling.Lemma | ParsingError {
-	const parsed = parseUnit(value);
-	if (!parsed.success)
-		return new ParsingError(
-			parsed.error.issues.map((entry) => ({
-				...entry,
-				path: [...path, ...entry.path],
-			})),
-		);
-	const { chain } = parsed;
-	if (
-		chain.unitKind !== "Lemma" ||
-		chain.family !== "Lexeme" ||
-		chain.kind !== "ADP"
-	)
-		return issue(path, "A governed preposition must be an ADP Lemma");
-	if (chain.value.language !== source.lemma.language)
-		return issue(
-			[...path, "language"],
-			"A governed preposition must use the source Language",
-		);
-	return chain.value;
-}
-
-/** A Reflexive alone in its Slot, at most one per frame (ADR 0052). */
-function reflexiveIssue(
-	frame: ValencyFrame,
-	path: Path,
-): ParsingError | undefined {
-	let seen = false;
-	for (const [index, { complements }] of frame.entries()) {
-		const at = complements.findIndex(({ kind }) => kind === "Reflexive");
-		if (at === -1) continue;
-		const complementPath = [...path, index, "complements", at];
-		if (complements.length > 1)
-			return issue(
-				complementPath,
-				"A Reflexive is the only complement of its Slot",
-			);
-		if (seen)
-			return issue(
-				complementPath,
-				"A Valency Frame has at most one Reflexive",
-			);
-		seen = true;
-	}
-	return undefined;
-}
-
-/** The complements a frame names at most once, across all its Slots (ADR 0057). */
-const onceInFrame: ReadonlySet<ValencyComplement["kind"]> = new Set([
-	"Preposition",
-	"Subject",
-	"DirectObject",
-	"IndirectObject",
-]);
-
-/**
- * Why a Slot's correlated Clause has no word to take, if it has none: its
- * word is `da(r)-` with the Slot's one Preposition, or else the pronoun of
- * its Case (ADR 0034).
- */
-function correlateIssue(
-	complements: readonly ValencyComplement[],
-	path: Path,
-): ParsingError | undefined {
-	const correlated = complements.findIndex(
-		(complement) =>
-			complement.kind === "Clause" && complement.correlate !== undefined,
-	);
-	if (correlated === -1) return undefined;
-	const correlatePath = [...path, "complements", correlated, "correlate"];
-	const prepositions = complements.filter(
-		({ kind }) => kind === "Preposition",
-	).length;
-	if (prepositions > 1)
-		return issue(
-			correlatePath,
-			"A Clause with a correlate in a Preposition Slot needs exactly one Preposition alternative there",
-		);
-	if (
-		!complements.some(
-			({ kind }) => kind === "Case" || kind === "Preposition",
-		)
-	)
-		return issue(
-			correlatePath,
-			"A Clause with a correlate shares its Slot with the Case or Preposition its correlate's word derives from",
-		);
-	return undefined;
-}
-
-/**
- * A frame whose complements the source's route allows. A Preposition
- * complement, and a Hebrew or English Subject or object, appears once in the
- * frame. A German Case complement, like an Adverbial, Predicative or Clause,
- * appears once per Slot but may recur in another: `jemanden etwas fragen` has
- * an Acc in two Slots, and `Dass er kommt, bedeutet, dass …` a Clause Dass in
- * its Nom Slot and in its Acc Slot. Which complements belong in one Slot is
- * the proposal's call; only the correlate is checked: a Clause with a
- * correlate takes its word from its Slot, `da(r)-` with the Slot's one
- * Preposition or else the pronoun of its Case, so a Slot that holds one has a
- * Case or Preposition and at most one Preposition (ADRs 0034, 0057). A German
- * Nom stands only in the first Slot, which makes that Slot the subject's. A
- * Reflexive is the only complement of its Slot, and a frame has at most one
- * (ADR 0052).
- */
-function parseValencyFrame<R extends Dumling.Reading>(
-	source: R,
-	frame: ValencyFrame,
-	path: Path,
-): ValencyFrame | ParsingError {
-	const key = structuralKeys();
-	const slots: ValencySlot[] = [];
-	const inFrame = new Set<string>();
-	const reflexive = reflexiveIssue(frame, path);
-	if (reflexive) return reflexive;
-	for (const [index, slot] of frame.entries()) {
-		const complements: ValencyComplement[] = [];
-		const inSlot = new Set<string>();
-		for (const [alternative, value] of slot.complements.entries()) {
-			const complementPath = [...path, index, "complements", alternative];
-			const complement = parseValencyComplement(
-				source,
-				value,
-				complementPath,
-			);
-			if (complement instanceof ParsingError) return complement;
-			const identity = key(complement);
-			if (inSlot.has(identity))
-				return issue(
-					complementPath,
-					"A Slot lists each complement once",
-				);
-			inSlot.add(identity);
-			if (onceInFrame.has(complement.kind)) {
-				if (inFrame.has(identity))
-					return issue(
-						complementPath,
-						"A Valency Frame lists each Preposition, Subject or object complement once, across all its Slots",
-					);
-				inFrame.add(identity);
-			}
-			if (
-				index > 0 &&
-				complement.kind === "Case" &&
-				complement.governedCase === "Nom"
-			)
-				return issue(
-					[...complementPath, "governedCase"],
-					"A Nom Case complement stands only in a frame's first Slot, the subject's",
-				);
-			complements.push(complement);
-		}
-		const correlate = correlateIssue(complements, [...path, index]);
-		if (correlate) return correlate;
-		slots.push({ status: slot.status, complements });
-	}
-	return slots;
-}
-
-/**
  * A Reading names each target once across all its Semantic Relations: twice
  * in one list says nothing more, and under two relations the claims contradict
  * each other (`synonym` and `nearSynonym`, `synonym` and `antonym`), as
@@ -465,27 +232,94 @@ function repeatedTargetIssue(
 	return undefined;
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export function contextualizeKnowledge<R extends Dumling.Reading>(
+/**
+ * Validates cross-aspect and cross-slot invariants on a Reading Knowledge
+ * whose individual aspects have already been checked against its source,
+ * without re-parsing unchanged Dumling units.
+ */
+export function checkKnowledgeInvariants(
+	knowledge: ReadingKnowledge,
+): ParsingError | undefined {
+	const both = sourceAndConstituentsIssue(knowledge, ["knowledge"]);
+	if (both) return both;
+	if (knowledge.valency) {
+		const valencyFailure = checkValencyFrameInvariants(knowledge.valency, [
+			"knowledge",
+			"valency",
+		]);
+		if (valencyFailure) return valencyFailure;
+	}
+	if (knowledge.semanticRelations) {
+		const repeated = repeatedTargetIssue(knowledge.semanticRelations, [
+			"knowledge",
+			"semanticRelations",
+		]);
+		if (repeated) return repeated;
+	}
+	return undefined;
+}
+
+function checkRouteAspects<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
-): ReadingKnowledge | ParsingError {
-	const result = structuredClone(knowledge);
-	for (const aspect of Object.keys(routeAspects))
-		if (isRouteAspect(aspect) && result[aspect] !== undefined) {
+): ParsingError | undefined {
+	for (const aspect of Object.keys(routeAspects)) {
+		if (isRouteAspect(aspect) && knowledge[aspect] !== undefined) {
 			const failure = routeAspectIssue(source, aspect, [
 				"knowledge",
 				aspect,
 			]);
 			if (failure) return failure;
 		}
-	if (result.locutionType) {
-		const failure = locutionTypeIssue(source, result.locutionType, [
-			"knowledge",
-			"locutionType",
-		]);
-		if (failure) return failure;
 	}
+	return knowledge.locutionType
+		? locutionTypeIssue(source, knowledge.locutionType, [
+				"knowledge",
+				"locutionType",
+			])
+		: undefined;
+}
+
+function contextualizeSemanticRelations<R extends Dumling.Reading>(
+	source: R,
+	relations: SemanticRelations,
+): ParsingError | undefined {
+	const targetKind = relations.targetKind === "reading" ? "Reading" : "Lemma";
+	for (const [relation, targets] of Object.entries(relations)) {
+		if (relation === "targetKind" || !Array.isArray(targets)) continue;
+		for (const [index, target] of targets.entries()) {
+			const parsed = parseRelatedUnit(source, target, targetKind, [
+				"knowledge",
+				"semanticRelations",
+				relation,
+				index,
+			]);
+			if (parsed instanceof ParsingError) return parsed;
+			targets[index] = parsed;
+		}
+	}
+	const repeated = repeatedTargetIssue(relations, [
+		"knowledge",
+		"semanticRelations",
+	]);
+	if (repeated) return repeated;
+	if (relations.targetKind !== "reading" && relations.endonym) {
+		const path = ["knowledge", "semanticRelations", "endonym"];
+		return endonymIssue(source, relations.endonym, {
+			source: path,
+			targets: path,
+		});
+	}
+	return undefined;
+}
+
+export function contextualizeKnowledge<R extends Dumling.Reading>(
+	source: R,
+	knowledge: ReadingKnowledge,
+): ReadingKnowledge | ParsingError {
+	const result = structuredClone(knowledge);
+	const routeFailure = checkRouteAspects(source, result);
+	if (routeFailure) return routeFailure;
 	if (result.source) {
 		const link = parseSourceLink(source, result.source, [
 			"knowledge",
@@ -512,89 +346,44 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		if (frame instanceof ParsingError) return frame;
 		result.valency = frame;
 	}
-	const relations = result.semanticRelations;
-	if (!relations) return result;
-	const targetKind = relations.targetKind === "reading" ? "Reading" : "Lemma";
-	for (const [relation, targets] of Object.entries(relations)) {
-		if (relation === "targetKind" || !Array.isArray(targets)) continue;
-		for (const [index, target] of targets.entries()) {
-			const parsed = parseRelatedUnit(source, target, targetKind, [
-				"knowledge",
-				"semanticRelations",
-				relation,
-				index,
-			]);
-			if (parsed instanceof ParsingError) return parsed;
-			targets[index] = parsed;
-		}
-	}
-	const repeated = repeatedTargetIssue(relations, [
-		"knowledge",
-		"semanticRelations",
-	]);
-	if (repeated) return repeated;
-	if (relations.targetKind !== "reading" && relations.endonym) {
-		const path = ["knowledge", "semanticRelations", "endonym"];
-		const failure = endonymIssue(source, relations.endonym, {
-			source: path,
-			targets: path,
-		});
-		if (failure) return failure;
+	if (result.semanticRelations) {
+		const relationsFailure = contextualizeSemanticRelations(
+			source,
+			result.semanticRelations,
+		);
+		if (relationsFailure) return relationsFailure;
 	}
 	return result;
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export function contextualizeChange<R extends Dumling.Reading>(
+function contextualizeValencyChange<R extends Dumling.Reading>(
 	source: R,
-	change: KnowledgeChange,
+	change: Extract<KnowledgeChange, { aspect: "valency" }>,
 ): KnowledgeChange | ParsingError {
-	if (isRouteAspect(change.aspect) && change.kind !== "Retract") {
-		const failure = routeAspectIssue(source, change.aspect, [
-			"change",
-			"aspect",
-		]);
-		if (failure) return failure;
-	}
-	if (change.aspect === "locutionType" && change.kind !== "Retract") {
-		const failure = locutionTypeIssue(source, change.value, [
+	if (change.kind !== "Retract") {
+		const frame = parseValencyFrame(source, change.value, [
 			"change",
 			"value",
 		]);
-		if (failure) return failure;
+		return frame instanceof ParsingError
+			? frame
+			: { ...change, value: frame };
 	}
-	if (change.aspect === "source" && change.kind !== "Retract") {
-		const link = parseSourceLink(source, change.value, ["change", "value"]);
-		if (link instanceof ParsingError) return link;
-		return { ...change, value: link };
-	}
-	if (change.aspect === "breakdown" && change.kind !== "Retract") {
-		const pieces = parseBreakdownPieces(source, change.part, change.value, [
-			"change",
-			"value",
-		]);
-		if (pieces instanceof ParsingError) return pieces;
-		return { ...change, value: pieces };
-	}
-	if (change.aspect === "valency") {
-		if (change.kind !== "Retract") {
-			const frame = parseValencyFrame(source, change.value, [
-				"change",
-				"value",
-			]);
-			if (frame instanceof ParsingError) return frame;
-			return { ...change, value: frame };
-		}
-		if (!change.complement) return change;
-		const complement = parseValencyComplement(source, change.complement, [
-			"change",
-			"complement",
-		]);
-		if (complement instanceof ParsingError) return complement;
-		return { ...change, complement };
-	}
-	if (change.aspect !== "semanticRelations" || change.kind === "Retract")
-		return change;
+	if (!change.complement) return change;
+	const complement = parseValencyComplement(source, change.complement, [
+		"change",
+		"complement",
+	]);
+	return complement instanceof ParsingError
+		? complement
+		: { ...change, complement };
+}
+
+function contextualizeRelationChange<R extends Dumling.Reading>(
+	source: R,
+	change: Extract<KnowledgeChange, { aspect: "semanticRelations" }>,
+): KnowledgeChange | ParsingError {
+	if (change.kind === "Retract") return change;
 	const path = ["change", "value"];
 	if (change.targetKind === "reading") {
 		const readings = parseRelatedUnits(
@@ -617,4 +406,58 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		if (failure) return failure;
 	}
 	return { ...change, value: values };
+}
+
+export function contextualizeChange<R extends Dumling.Reading>(
+	source: R,
+	change: KnowledgeChange,
+): KnowledgeChange | ParsingError {
+	switch (change.aspect) {
+		case "locutionType":
+		case "sayingType":
+		case "formulaRole": {
+			if (change.kind === "Retract") return change;
+			const failure = routeAspectIssue(source, change.aspect, [
+				"change",
+				"aspect",
+			]);
+			if (failure) return failure;
+			if (change.aspect === "locutionType") {
+				const typeFailure = locutionTypeIssue(source, change.value, [
+					"change",
+					"value",
+				]);
+				if (typeFailure) return typeFailure;
+			}
+			return change;
+		}
+		case "source": {
+			if (change.kind === "Retract") return change;
+			const link = parseSourceLink(source, change.value, [
+				"change",
+				"value",
+			]);
+			return link instanceof ParsingError
+				? link
+				: { ...change, value: link };
+		}
+		case "breakdown": {
+			if (change.kind === "Retract") return change;
+			const pieces = parseBreakdownPieces(
+				source,
+				change.part,
+				change.value,
+				["change", "value"],
+			);
+			return pieces instanceof ParsingError
+				? pieces
+				: { ...change, value: pieces };
+		}
+		case "valency":
+			return contextualizeValencyChange(source, change);
+		case "semanticRelations":
+			return contextualizeRelationChange(source, change);
+		default:
+			return change;
+	}
 }

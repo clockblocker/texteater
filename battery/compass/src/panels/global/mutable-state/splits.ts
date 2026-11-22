@@ -1,6 +1,5 @@
 import type { RegionConstraints } from "../../components/region/types";
 import type { Layout, RegisteredSplit } from "../../components/split/types";
-import { EventEmitter } from "../../utils/EventEmitter";
 import type { HandleToRegionsMap } from "./types";
 
 export type MountedSplitState = {
@@ -13,7 +12,8 @@ export type MountedSplitState = {
 
 export type MountedSplits = Map<RegisteredSplit, MountedSplitState>;
 
-let map: MountedSplits = new Map();
+const map: MountedSplits = new Map();
+const splitsById = new Map<string, RegisteredSplit>();
 
 type SplitChangeEvent = {
 	split: RegisteredSplit;
@@ -23,19 +23,21 @@ type SplitChangeEvent = {
 	next: MountedSplitState;
 	prev: MountedSplitState | undefined;
 };
-type SplitsChangeEvent = {
-	next: MountedSplits;
-	prev: MountedSplits;
-};
 
-const eventEmitter = new EventEmitter<{
-	splitChange: SplitChangeEvent;
-	splitsChange: SplitsChangeEvent;
-}>();
+type SplitChangeListener = (event: SplitChangeEvent) => void;
+const listenersBySplitId = new Map<string, Set<SplitChangeListener>>();
 
 export function deleteMutableSplit(split: RegisteredSplit) {
-	map = new Map(map);
 	map.delete(split);
+	if (splitsById.get(split.id) === split) {
+		splitsById.delete(split.id);
+		for (const [remaining] of map) {
+			if (remaining.id === split.id) {
+				splitsById.set(remaining.id, remaining);
+				break;
+			}
+		}
+	}
 }
 
 export function getRegisteredSplit(
@@ -46,10 +48,9 @@ export function getRegisteredSplit(
 	assert: true,
 ): RegisteredSplit;
 export function getRegisteredSplit(splitId: string, assert?: boolean) {
-	for (const [split] of map) {
-		if (split.id === splitId) {
-			return split;
-		}
+	const split = splitsById.get(splitId);
+	if (split) {
+		return split;
 	}
 
 	if (assert) {
@@ -67,8 +68,10 @@ export function getMountedSplitState(
 	assert: true,
 ): MountedSplitState;
 export function getMountedSplitState(splitId: string, assert?: boolean) {
-	for (const [split, mountedSplit] of map) {
-		if (split.id === splitId) {
+	const split = splitsById.get(splitId);
+	if (split) {
+		const mountedSplit = map.get(split);
+		if (mountedSplit) {
 			return mountedSplit;
 		}
 	}
@@ -86,13 +89,21 @@ export function getMountedSplits() {
 
 export function subscribeToMountedSplit(
 	splitId: string,
-	callback: (event: SplitChangeEvent) => void,
+	callback: SplitChangeListener,
 ) {
-	return eventEmitter.addListener("splitChange", (event) => {
-		if (event.split.id === splitId) {
-			callback(event);
+	let listeners = listenersBySplitId.get(splitId);
+	if (!listeners) {
+		listeners = new Set();
+		listenersBySplitId.set(splitId, listeners);
+	}
+	listeners.add(callback);
+
+	return () => {
+		listeners.delete(callback);
+		if (listeners.size === 0) {
+			listenersBySplitId.delete(splitId);
 		}
-	});
+	};
 }
 
 export function updateMountedSplit(
@@ -102,13 +113,34 @@ export function updateMountedSplit(
 ) {
 	const prev = map.get(split);
 
-	map = new Map(map);
 	map.set(split, next);
+	splitsById.set(split.id, split);
 
-	eventEmitter.emit("splitChange", {
+	const listeners = listenersBySplitId.get(split.id);
+	if (!listeners || listeners.size === 0) {
+		return;
+	}
+
+	const event: SplitChangeEvent = {
 		split,
 		isUserInteraction: meta?.isUserInteraction === true,
 		prev,
 		next,
-	});
+	};
+
+	let didThrow = false;
+	let caughtError: unknown = null;
+	for (const listener of Array.from(listeners)) {
+		try {
+			listener(event);
+		} catch (error) {
+			if (!didThrow) {
+				didThrow = true;
+				caughtError = error;
+			}
+		}
+	}
+	if (didThrow) {
+		throw caughtError;
+	}
 }

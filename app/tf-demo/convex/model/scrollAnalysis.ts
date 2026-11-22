@@ -1,15 +1,10 @@
 "use node";
 
-import { ConvexError, type Infer, type Value, v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import { operations, type Scroll } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import {
-	dumgenTraced,
-	inspected,
-	inspectionStep,
-} from "../../server/inspectionCapture";
+import { annotateInspectionStep } from "../../server/inspectionCapture";
 import { createIntake, sourceSentencesOf } from "../../server/intake";
 import {
 	createIntakeRunRecorder,
@@ -17,7 +12,6 @@ import {
 	type IntakeRun,
 	recordIntakeRun,
 } from "../../server/intakeRun";
-import { logged } from "../../server/logging";
 import { textSubmissionLimitViolation } from "../../server/textSubmissionLimits";
 import { saveTrace } from "../../server/traceWrite";
 import type { ScrollLanguage } from "../../shared/supported-target-language";
@@ -25,6 +19,7 @@ import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
 import { inspectionEnabled } from "../deploymentFlags";
+import { runConvexEffect } from "./convexEffect";
 import { deploymentDumgen, requireJev } from "./deploymentDumgen";
 import { inspectionFor } from "./inspectionAction";
 import { convexId } from "./resolutionSessionLifecycle";
@@ -41,23 +36,6 @@ export const submitTextResultValidator = v.union(
 );
 
 export type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
-
-/**
- * The coded Visitor error behind a failed Effect. Convex sends only a
- * ConvexError thrown as itself to the client, not one wrapped in a failure.
- */
-function visitorErrorIn(
-	cause: Cause.Cause<unknown>,
-): ConvexError<Value> | undefined {
-	for (const failure of [
-		...cause.reasons.filter(Cause.isFailReason).map(({ error }) => error),
-		...cause.reasons.filter(Cause.isDieReason).map(({ defect }) => defect),
-	]) {
-		const thrown = Cause.isUnknownError(failure) ? failure.cause : failure;
-		if (thrown instanceof ConvexError) return thrown;
-	}
-	return undefined;
-}
 
 /** A Scroll from a link, as `persistSubmittedScroll` stores it. */
 type LinkedScroll = {
@@ -80,6 +58,25 @@ type ScrollSubmission = {
 	readonly link?: LinkedScroll;
 };
 
+const analyzeSubmittedText = Effect.fn("Analyze submitted text", {
+	root: true,
+})(function* (
+	intake: ReturnType<typeof createIntake>,
+	submission: ScrollSubmission,
+) {
+	yield* annotateInspectionStep("app/tf-demo · intake", {
+		sourceText: submission.sourceText,
+	});
+	// Without a TypeSafe key, intake fails here with the typed VisitorActionError.
+	yield* requireJev;
+	return yield* intake.submitText({
+		submissionKey: submission.submissionKey,
+		sourceText: submission.sourceText,
+		extractedText: submission.extractedText,
+		language: submission.language,
+	});
+});
+
 /**
  * Splits, detects, segments and stores one Scroll. Only the text and rate
  * limit violations become Rejected, checked before any model work; every
@@ -89,7 +86,7 @@ export async function analyzeScroll(
 	ctx: ActionCtx,
 	submission: ScrollSubmission,
 ): Promise<SubmitTextActionResult> {
-	const { extractedText, language, link } = submission;
+	const { extractedText, link } = submission;
 	const sentences = sourceSentencesOf(extractedText);
 	const limitViolation = textSubmissionLimitViolation(
 		submission.sourceText,
@@ -138,8 +135,6 @@ export async function analyzeScroll(
 		outcome: "Accepted",
 	};
 	try {
-		// Without a TypeSafe key, intake fails here with the coded error.
-		requireJev();
 		const intake = createIntake({
 			dumgen: operations,
 			observer: run.observer,
@@ -167,41 +162,22 @@ export async function analyzeScroll(
 					),
 			},
 		});
-		const exit = await Effect.runPromiseExit(
-			inspected(
-				intake
-					.submitText({
-						submissionKey: submission.submissionKey,
-						sourceText: submission.sourceText,
-						extractedText,
-						language,
-					})
-					.pipe(
-						Effect.withSpan("Analyze submitted text", {
-							...inspectionStep("app/tf-demo · intake", {
-								sourceText: submission.sourceText,
-							}),
-							root: true,
-						}),
-						logged,
-						dumgenTraced(inspection, run.operation),
-						Effect.provide(deploymentDumgen()),
-					),
-				inspection,
+		const result = await runConvexEffect(
+			ctx,
+			analyzeSubmittedText(intake, submission).pipe(
+				Effect.provide(deploymentDumgen()),
 			),
+			{ inspection, traceSink: run.operation },
 		);
-		// The catch reads every failure and defect, not just the squashed one.
-		if (Exit.isFailure(exit)) throw exit.cause;
 		state = "Complete";
-		const scrollId = convexId<"scrolls">(exit.value.persisted.scrollId);
+		const scrollId = convexId<"scrolls">(result.persisted.scrollId);
 		attempt = { outcome: "Accepted", scrollId };
 		return { status: "Accepted", scrollId };
 	} catch (error) {
 		const cause = Cause.isCause(error) ? error : Cause.die(error);
 		attempt = { outcome: "Failed", failureTag: failureTagOf(cause) };
-		throw visitorErrorIn(cause) ?? Cause.squash(cause);
+		throw error;
 	} finally {
-		await inspection?.flush();
 		// The trace's writes come after the outcome is settled: a refused
 		// one is logged, never thrown over the Visitor's result.
 		if (inspectionVisitorId)

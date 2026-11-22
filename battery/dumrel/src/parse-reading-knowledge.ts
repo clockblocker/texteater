@@ -5,6 +5,26 @@ import type { KnowledgeParse, ReadingKnowledge } from "./types.js";
 import { parseKnowledgeShape } from "./validation.js";
 
 /**
+ * Validates and normalizes Knowledge against an already-parsed source Reading.
+ * Returns a fresh value or ParsingError; input is never mutated.
+ */
+export function parseReadingKnowledgeWithSource<R extends Dumling.Reading>(
+	source: R,
+	input: unknown,
+): KnowledgeParse<R> {
+	const knowledge = parseKnowledgeShape(input);
+	if (knowledge instanceof ParsingError)
+		return { success: false, error: knowledge } as const;
+	const contextual = contextualizeKnowledge(source, knowledge);
+	if (contextual instanceof ParsingError)
+		return { success: false, error: contextual } as const;
+	// contextualizeKnowledge checked each target against this source's Language
+	// and relation space, which ReadingKnowledge<R> encodes; a generic R hides
+	// that from TypeScript.
+	return { success: true, value: contextual as ReadingKnowledge<R> } as const;
+}
+
+/**
  * Validates and normalizes Knowledge against its exact owning Reading. Structural
  * schemas alone do not enforce source language/Family, self-reference or bucket
  * uniqueness. A Semantic Relation target appears once across all the Reading's
@@ -17,14 +37,5 @@ export function parseReadingKnowledge<const R extends Dumling.Reading>(input: {
 	const source = parseSource(input.source);
 	if (source instanceof ParsingError)
 		return { success: false, error: source } as const;
-	const knowledge = parseKnowledgeShape(input.knowledge);
-	if (knowledge instanceof ParsingError)
-		return { success: false, error: knowledge } as const;
-	const contextual = contextualizeKnowledge(source, knowledge);
-	if (contextual instanceof ParsingError)
-		return { success: false, error: contextual } as const;
-	// contextualizeKnowledge checked each target against this source's Language
-	// and relation space, which ReadingKnowledge<R> encodes; a generic R hides
-	// that from TypeScript.
-	return { success: true, value: contextual as ReadingKnowledge<R> } as const;
+	return parseReadingKnowledgeWithSource(source, input.knowledge);
 }

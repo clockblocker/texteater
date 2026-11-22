@@ -31,7 +31,6 @@ import {
 	germanSuffixes,
 } from "dumcorpus/inventories";
 import { zeroEndingCanonicalForm } from "dumling";
-import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { type Ask, type AskFailure, choice, choiceOf } from "../../ask.js";
 import {
@@ -39,19 +38,11 @@ import {
 	breakdownState,
 	type ProducedPiece,
 } from "../../breakdown-pieces.js";
+import { germanMorphemeShadow } from "./forms.js";
 import { isAffixTested, prefixCutConfirmed } from "./prefix-cut.js";
 import { wordRoots } from "./word-gates.js";
 
 const lower = (text: string) => text.toLocaleLowerCase("de");
-
-const morpheme = (kind: string, canonicalForm: string) =>
-	// Sound: German's Morpheme routes have a Shadow for every Kind used here.
-	({
-		language: "de",
-		family: "Morpheme",
-		kind,
-		canonicalForm,
-	}) as Dumrel.UnitShadow;
 
 /** The minimum letters a Root keeps. */
 const minRoot = 2;
@@ -75,10 +66,13 @@ function endingOf(word: string, kind: string): ProducedPiece | undefined {
 	)
 		return {
 			letters: word.slice(-overt.spelled.length),
-			target: morpheme("Ending", overt.canonicalForm),
+			target: germanMorphemeShadow("Ending", overt.canonicalForm),
 		};
 	return germanMorphemePolicy.zeroEndingKinds.has(kind)
-		? { letters: "", target: morpheme("Ending", zeroEndingCanonicalForm) }
+		? {
+				letters: "",
+				target: germanMorphemeShadow("Ending", zeroEndingCanonicalForm),
+			}
 		: undefined;
 }
 
@@ -112,19 +106,22 @@ function splitsOf(body: string): Split[] {
 					? [
 							{
 								letters: body.slice(0, start),
-								target: morpheme(
+								target: germanMorphemeShadow(
 									"Prefix",
 									prefix.canonicalForm,
 								),
 							},
 						]
 					: []),
-				{ letters: root, target: morpheme("Root", lower(root)) },
+				{
+					letters: root,
+					target: germanMorphemeShadow("Root", lower(root)),
+				},
 				...(suffix
 					? [
 							{
 								letters: body.slice(end),
-								target: morpheme(
+								target: germanMorphemeShadow(
 									"Suffix",
 									suffix.canonicalForm,
 								),
@@ -216,7 +213,12 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 	);
 	const [bare] = splits;
 	if (bare === undefined)
-		return [{ letters: word, target: morpheme("Root", lower(word)) }];
+		return [
+			{
+				letters: word,
+				target: germanMorphemeShadow("Root", lower(word)),
+			},
+		];
 	if (splits.length === 1) return bare;
 	const state = breakdownState(input, "word");
 	const rootOf = (split: Split) =>

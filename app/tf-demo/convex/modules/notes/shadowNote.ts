@@ -227,15 +227,19 @@ export async function loadShadowNote(ctx: QueryCtx, shadowIdValue: string) {
 	const compatible = await loadCompatibleShadow(ctx, shadowIdValue);
 	if (!compatible) return null;
 	const { shadow, descriptor } = compatible;
-	const references = await loadShadowReferencePage(ctx, shadow);
+	const [references, inspection, formations] = await Promise.all([
+		loadShadowReferencePage(ctx, shadow),
+		loadShadowInspection(ctx, descriptor),
+		loadFormations(ctx, { shadowId: shadow._id }),
+	]);
 	if (!references) return null;
 	return {
 		kind: "Shadow" as const,
 		target: { kind: "Shadow" as const, shadowId: shadow._id },
 		descriptor,
-		inspection: await loadShadowInspection(ctx, descriptor),
+		inspection,
 		references,
-		formations: await loadFormations(ctx, { shadowId: shadow._id }),
+		formations,
 	};
 }
 

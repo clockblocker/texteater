@@ -56,6 +56,7 @@ type SchemaGoldenCaseCollection<
 export type SelectionState = {
 	readonly corpus: CorpusState;
 	readonly entries: readonly ParsedCaseEntry[];
+	readonly idSet: ReadonlySet<string>;
 };
 
 const goldenCaseGroupStates = new WeakMap<object, GoldenCaseGroupState>();
@@ -274,21 +275,17 @@ function createSelection(
 			]);
 		},
 		intersection(other: CaseSelection) {
-			const rightIds = new Set(
-				assertSameCorpus(corpus, other).entries.map(({ id }) => id),
-			);
+			const right = assertSameCorpus(corpus, other);
 			return createSelection(
 				corpus,
-				frozenIds.filter((id) => rightIds.has(id)),
+				frozenIds.filter((id) => right.idSet.has(id)),
 			);
 		},
 		difference(other: CaseSelection) {
-			const rightIds = new Set(
-				assertSameCorpus(corpus, other).entries.map(({ id }) => id),
-			);
+			const right = assertSameCorpus(corpus, other);
 			return createSelection(
 				corpus,
-				frozenIds.filter((id) => !rightIds.has(id)),
+				frozenIds.filter((id) => !right.idSet.has(id)),
 			);
 		},
 		isDisjointFrom(other: CaseSelection) {
@@ -297,7 +294,11 @@ function createSelection(
 			);
 		},
 	});
-	selectionStates.set(selection, { corpus, entries: frozenEntries });
+	selectionStates.set(selection, {
+		corpus,
+		entries: frozenEntries,
+		idSet: seen,
+	});
 	return selection;
 }
 

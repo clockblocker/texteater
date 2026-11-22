@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Questions } from "@typesafe-ai/sdk";
 import { canonicalJson } from "common-utils";
+import { testLive } from "common-utils/effect-test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import {
@@ -190,70 +191,105 @@ test("answers are cached per question, so another chunking hits and a partial hi
 	expect(sent).toEqual([["c"]]);
 });
 
-test("buckets, question keys, prompt hashes and request sizes are taken over each value's canonical JSON, so the lab's cache stays readable", async () => {
-	const root = cacheDirectory();
-	// Keys out of order, nested, and an id that needs escaping.
-	const state = { units: [{ to: 2, from: 0 }], sentence: "Er zog sich an." };
-	const asked = { ...questions, 'say "x"': noul("Is ä so?") };
-	const bucketOf = async (key: string) =>
-		JSON.parse(
-			await readFile(
-				join(root, "jev-questions", key.slice(0, 2), `${key}.json`),
-				"utf8",
-			),
-		);
-	const keys = Object.entries(asked)
-		.map(([id, question]) => hashOf({ id, question }))
-		.sort();
-	const jev = new JevCache({ cacheDirectory: root, transport: answering() });
-	await jev.ask(1)(
-		{ model: pinnedJevModel, state, questions: asked },
-		context,
-	);
-	const bucket = await bucketOf(
-		hashOf({ model: pinnedJevModel, state, repetition: 1 }),
-	);
-	expect(Object.keys(bucket.answers).sort()).toEqual(keys);
-	expect(jev.promptHashes()).toEqual({
-		test: hashOf([hashOf({ state, questions: asked })]),
-	});
-	await Effect.runPromise(
-		throughPort(jev, { stage: "test", state, questions: asked }, [], {
-			salt: "limit",
-			questionsPerRequest: 2,
+testLive(
+	"buckets, question keys, prompt hashes and request sizes are taken over each value's canonical JSON, so the lab's cache stays readable",
+	() =>
+		Effect.gen(function* () {
+			const root = cacheDirectory();
+			// Keys out of order, nested, and an id that needs escaping.
+			const state = {
+				units: [{ to: 2, from: 0 }],
+				sentence: "Er zog sich an.",
+			};
+			const asked = { ...questions, 'say "x"': noul("Is ä so?") };
+			const bucketOf = (key: string) =>
+				Effect.promise(async () =>
+					JSON.parse(
+						await readFile(
+							join(
+								root,
+								"jev-questions",
+								key.slice(0, 2),
+								`${key}.json`,
+							),
+							"utf8",
+						),
+					),
+				);
+			const keys = Object.entries(asked)
+				.map(([id, question]) => hashOf({ id, question }))
+				.sort();
+			const jev = new JevCache({
+				cacheDirectory: root,
+				transport: answering(),
+			});
+			yield* Effect.promise(() =>
+				jev.ask(1)(
+					{ model: pinnedJevModel, state, questions: asked },
+					context,
+				),
+			);
+			const bucket = yield* bucketOf(
+				hashOf({ model: pinnedJevModel, state, repetition: 1 }),
+			);
+			expect(Object.keys(bucket.answers).sort()).toEqual(keys);
+			expect(jev.promptHashes()).toEqual({
+				test: hashOf([hashOf({ state, questions: asked })]),
+			});
+			yield* throughPort(
+				jev,
+				{ stage: "test", state, questions: asked },
+				[],
+				{
+					salt: "limit",
+					questionsPerRequest: 2,
+				},
+			);
+			const salted = yield* bucketOf(
+				hashOf({
+					model: pinnedJevModel,
+					state,
+					repetition: 0,
+					salt: "limit",
+				}),
+			);
+			expect(Object.keys(salted.answers).sort()).toEqual(keys);
+			const projecting = new JevCache({
+				cacheDirectory: root,
+				offline: true,
+				project: ({ questions: missing }) =>
+					Object.fromEntries(
+						Object.keys(missing).map((id) => [
+							id,
+							{ type: "noul", noul: 0.5 },
+						]),
+					),
+			});
+			const extra = { c: noul("Is c so?") };
+			yield* Effect.promise(() =>
+				projecting.ask(1)(
+					{ model: pinnedJevModel, state, questions: asked },
+					context,
+				),
+			);
+			yield* Effect.promise(() =>
+				projecting.ask(1)(
+					{
+						model: pinnedJevModel,
+						state,
+						questions: { ...asked, ...extra },
+					},
+					context,
+				),
+			);
+			expect(
+				projecting.projection.samples.map(({ chars }) => chars),
+			).toEqual([canonicalJson({ state, questions: asked }).length]);
+			expect(
+				projecting.projection.requests.map(({ chars }) => chars),
+			).toEqual([canonicalJson({ state, questions: extra }).length]);
 		}),
-	);
-	const salted = await bucketOf(
-		hashOf({ model: pinnedJevModel, state, repetition: 0, salt: "limit" }),
-	);
-	expect(Object.keys(salted.answers).sort()).toEqual(keys);
-	const projecting = new JevCache({
-		cacheDirectory: root,
-		offline: true,
-		project: ({ questions: missing }) =>
-			Object.fromEntries(
-				Object.keys(missing).map((id) => [
-					id,
-					{ type: "noul", noul: 0.5 },
-				]),
-			),
-	});
-	const extra = { c: noul("Is c so?") };
-	await projecting.ask(1)(
-		{ model: pinnedJevModel, state, questions: asked },
-		context,
-	);
-	await projecting.ask(1)(
-		{ model: pinnedJevModel, state, questions: { ...asked, ...extra } },
-		context,
-	);
-	expect(projecting.projection.samples.map(({ chars }) => chars)).toEqual([
-		canonicalJson({ state, questions: asked }).length,
-	]);
-	expect(projecting.projection.requests.map(({ chars }) => chars)).toEqual([
-		canonicalJson({ state, questions: extra }).length,
-	]);
-});
+);
 
 test("an answer from another jev version fails its request and is not cached", async () => {
 	const root = cacheDirectory();
@@ -279,66 +315,79 @@ test("an answer from another jev version fails its request and is not cached", a
 	).rejects.toThrow("cache miss");
 });
 
-test("the arms' port fails with a typed ProviderFailure when no answer came, a cache miss offline or a refused request", async () => {
-	const failureOf = async (jev: JevCache) => {
-		const exit = await Effect.runPromiseExit(
-			throughPort(jev, { stage: "test", ...request() }),
-		);
-		if (exit._tag === "Success") throw Error("The port answered");
-		const [reason] = exit.cause.reasons;
-		return reason?._tag === "Fail" ? reason.error : reason;
-	};
-	expect(
-		await failureOf(
-			new JevCache({ cacheDirectory: cacheDirectory(), offline: true }),
-		),
-	).toMatchObject({
-		_tag: "ProviderFailure",
-		stage: "test",
-		message: "jev cache miss in offline mode (test)",
-	});
-	expect(
-		await failureOf(
-			new JevCache({
-				cacheDirectory: cacheDirectory(),
-				transport: refusing(400),
-			}),
-		),
-	).toMatchObject({
-		_tag: "ProviderFailure",
-		stage: "test",
-		message: "TypeSafe answered 400: no",
-	});
-});
-
-test("interrupting the arms' port aborts the requests it sent", async () => {
-	const aborted: string[] = [];
-	// Each chunk reads its cache bucket before it reaches jev, in either
-	// order, so the port is interrupted once both requests are in flight.
-	let inFlight = 0;
-	const sent = Promise.withResolvers<void>();
-	const jev = new JevCache({
-		cacheDirectory: cacheDirectory(),
-		questionsPerRequest: 2,
-		// Never answers: each request settles only when its signal aborts.
-		transport: (asked, { signal }) =>
-			new Promise((_resolve, reject) => {
-				if (++inFlight === 2) sent.resolve();
-				signal.addEventListener("abort", () => {
-					aborted.push(Object.keys(asked.questions).join(","));
-					reject(signal.reason);
+testLive(
+	"the arms' port fails with a typed ProviderFailure when no answer came, a cache miss offline or a refused request",
+	() =>
+		Effect.gen(function* () {
+			const failureOf = (jev: JevCache) =>
+				Effect.gen(function* () {
+					const exit = yield* Effect.exit(
+						throughPort(jev, { stage: "test", ...request() }),
+					);
+					if (exit._tag === "Success")
+						throw Error("The port answered");
+					const [reason] = exit.cause.reasons;
+					return reason?._tag === "Fail" ? reason.error : reason;
 				});
-			}),
-	});
-	const calls: CallRecord[] = [];
-	const fiber = Effect.runFork(
-		throughPort(jev, { stage: "test", ...request() }, calls),
-	);
-	await sent.promise;
-	await Effect.runPromise(Fiber.interrupt(fiber));
-	expect(aborted.sort()).toEqual(["a,b", "r_10,r_1_2"]);
-	expect(jev.transport.interrupted).toBe(2);
-});
+			expect(
+				yield* failureOf(
+					new JevCache({
+						cacheDirectory: cacheDirectory(),
+						offline: true,
+					}),
+				),
+			).toMatchObject({
+				_tag: "ProviderFailure",
+				stage: "test",
+				message: "jev cache miss in offline mode (test)",
+			});
+			expect(
+				yield* failureOf(
+					new JevCache({
+						cacheDirectory: cacheDirectory(),
+						transport: refusing(400),
+					}),
+				),
+			).toMatchObject({
+				_tag: "ProviderFailure",
+				stage: "test",
+				message: "TypeSafe answered 400: no",
+			});
+		}),
+);
+
+testLive("interrupting the arms' port aborts the requests it sent", () =>
+	Effect.gen(function* () {
+		const aborted: string[] = [];
+		// Each chunk reads its cache bucket before it reaches jev, in either
+		// order, so the port is interrupted once both requests are in flight.
+		let inFlight = 0;
+		const sent = Promise.withResolvers<void>();
+		const jev = new JevCache({
+			cacheDirectory: cacheDirectory(),
+			questionsPerRequest: 2,
+			// Never answers: each request settles only when its signal aborts.
+			transport: (asked, { signal }) =>
+				new Promise((_resolve, reject) => {
+					if (++inFlight === 2) sent.resolve();
+					signal.addEventListener("abort", () => {
+						aborted.push(Object.keys(asked.questions).join(","));
+						reject(signal.reason);
+					});
+				}),
+		});
+		const calls: CallRecord[] = [];
+		const fiber = yield* Effect.forkChild(
+			throughPort(jev, { stage: "test", ...request() }, calls),
+		);
+		yield* Effect.promise(() => sent.promise);
+		yield* Fiber.interrupt(fiber);
+		// Let the aborted JS async `#attempts` catch handlers run on the microtask queue.
+		yield* Effect.promise(() => Promise.resolve());
+		expect(aborted.sort()).toEqual(["a,b", "r_10,r_1_2"]);
+		expect(jev.transport.interrupted).toBe(2);
+	}),
+);
 
 test("a reservation holds each fresh request's price until it is over, so requests in flight cannot carry the spend past a budget", async () => {
 	const budget = 250;

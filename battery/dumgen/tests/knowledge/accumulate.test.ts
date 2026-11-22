@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Question } from "@typesafe-ai/sdk";
+import { testEffect } from "common-utils/effect-test";
 import { checkPromptCitations, rules } from "dumcorpus";
 import { authoredReading } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
@@ -53,280 +54,320 @@ const writes = (...equivalents: string[]) => ({
 	},
 });
 
-async function accumulateOnce(
+function accumulateOnce(
 	models: { readonly jev: JevAsk; readonly luna: LunaAsk },
 	input: AccumulateTranslationsInput,
-): Promise<{
+): Effect.Effect<{
 	readonly result: TranslationAccumulation;
 	readonly trace: OperationTrace | undefined;
 }> {
-	const traces: OperationTrace[] = [];
-	const result = await Effect.runPromise(
-		operations.knowledge.accumulateTranslations(input).pipe(
-			Effect.provide(
-				liveOver({
-					...models,
-					onOperation: (trace) => traces.push(trace),
-				}),
-			),
-		),
-	);
-	return { result, trace: traces[0] };
+	return Effect.gen(function* () {
+		const traces: OperationTrace[] = [];
+		const result = yield* operations.knowledge
+			.accumulateTranslations(input)
+			.pipe(
+				Effect.provide(
+					liveOver({
+						...models,
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			);
+		return { result, trace: traces[0] };
+	});
 }
 
 const criteriaOf = (question: Question | undefined) =>
 	question?.type === "choice" ? question.criteria : {};
 
-test("jev sees the stored translations bare beside the marked Sentence, and its pick ends the language with no Luna call", async () => {
-	const jev = knowledgeJev({ translation: "t1" });
-	const luna = knowledgeLuna(writes("bouquet"));
-	const { result, trace } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet", "bunch of flowers", "Bouquet ") }),
-	);
-	expect(result).toEqual({ changes: [], failures: [] });
-	expect(luna.sent).toEqual([]);
-	const [request] = jev.sent;
-	expect(request?.stage).toBe("translationCoverage");
-	expect(request?.state).toMatchObject({
-		markedSentence:
-			"Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
-		language: "en",
-		reading: { lemma: "Strauß", emojiDescription: "💐" },
-	});
-	// A stored translation shows once, however it is cased or spaced.
-	expect(criteriaOf(request?.questions.translation)).toMatchObject({
-		t0: "bouquet",
-		t1: "bunch of flowers",
-	});
-	expect(Object.keys(criteriaOf(request?.questions.translation))).toEqual([
-		"t0",
-		"t1",
-		"NoMatch",
-	]);
-	expect(trace?.events).toEqual([
-		{
-			name: "TranslationAccumulation",
-			data: {
+testEffect(
+	"jev sees the stored translations bare beside the marked Sentence, and its pick ends the language with no Luna call",
+	() =>
+		Effect.gen(function* () {
+			const jev = knowledgeJev({ translation: "t1" });
+			const luna = knowledgeLuna(writes("bouquet"));
+			const { result, trace } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				bouquet({
+					en: texts("bouquet", "bunch of flowers", "Bouquet "),
+				}),
+			);
+			expect(result).toEqual({ changes: [], failures: [] });
+			expect(luna.sent).toEqual([]);
+			const [request] = jev.sent;
+			expect(request?.stage).toBe("translationCoverage");
+			expect(request?.state).toMatchObject({
+				markedSentence:
+					"Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
 				language: "en",
-				outcome: "Covered",
-				by: "bunch of flowers",
-			},
-		},
-	]);
-});
-
-test("after NoMatch Luna writes the occurrence's equivalents without the stored ones, and only the new ones are contributed", async () => {
-	const jev = knowledgeJev({ translation: "NoMatch" });
-	const luna = knowledgeLuna(writes("Bunch  of Flowers", "posy", "posy"));
-	const { result, trace } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet", "bunch of flowers") }),
-	);
-	expect(result).toEqual({
-		changes: [
-			{
-				kind: "Contribute",
-				aspect: "translations",
-				language: "en",
-				value: [[{ kind: "Text", text: "posy" }]],
-			},
-		],
-		failures: [],
-	});
-	const [request] = luna.sent;
-	expect(request?.systemPrompt).toBe(occurrenceTranslationPrompt);
-	const input = knowledgeLunaInput(request?.input);
-	expect(input).toMatchObject({
-		aspect: "translationAccumulation",
-		language: "en",
-		markedSentence:
-			"Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
-	});
-	expect(JSON.stringify(request?.input)).not.toContain("bouquet");
-	expect(trace?.events).toEqual([
-		{
-			name: "TranslationAccumulation",
-			data: {
-				language: "en",
-				outcome: "Added",
-				written: ["Bunch  of Flowers", "posy"],
-				added: ["posy"],
-			},
-		},
-	]);
-});
-
-test("when Luna writes only stored translations, nothing is added", async () => {
-	const jev = knowledgeJev({ translation: "NoMatch" });
-	const luna = knowledgeLuna(writes("BOUQUET"));
-	const { result, trace } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet") }),
-	);
-	expect(result).toEqual({ changes: [], failures: [] });
-	expect(trace?.events).toEqual([
-		{
-			name: "TranslationAccumulation",
-			data: {
-				language: "en",
-				outcome: "Contained",
-				written: ["BOUQUET"],
-			},
-		},
-	]);
-});
-
-test("each language with a stored set is judged on its own; one with none is left to Knowledge Production", async () => {
-	const jev = knowledgeJev((_, question) =>
-		Object.values(criteriaOf(question)).includes("букет")
-			? "t0"
-			: "NoMatch",
-	);
-	const luna = knowledgeLuna(writes("posy"));
-	const { result } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet"), ru: texts("букет") }),
-	);
-	expect(jev.sent.map(({ state }) => state.language)).toEqual(["en", "ru"]);
-	expect(result.changes).toEqual([
-		{
-			kind: "Contribute",
-			aspect: "translations",
-			language: "en",
-			value: [[{ kind: "Text", text: "posy" }]],
-		},
-	]);
-	const none = knowledgeJev();
-	const { result: empty } = await accumulateOnce(
-		{ jev: none.ask, luna: luna.ask },
-		bouquet({ en: [] }),
-	);
-	expect(empty).toEqual({ changes: [], failures: [] });
-	expect(none.sent).toEqual([]);
-});
-
-test("a language whose call fails is a failure value and adds nothing; its sibling still lands", async () => {
-	const jev = knowledgeJev({ translation: "NoMatch" });
-	const luna = knowledgeLuna({
-		translationAccumulation: (input) =>
-			input.language === "ru"
-				? { sentence: "…", equivalents: "букет" }
-				: { sentence: "…", equivalents: texts("posy") },
-	});
-	const { result } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet"), ru: texts("цветы") }),
-	);
-	expect(result.changes).toEqual([
-		{
-			kind: "Contribute",
-			aspect: "translations",
-			language: "en",
-			value: [[{ kind: "Text", text: "posy" }]],
-		},
-	]);
-	expect(result.failures).toEqual([
-		expect.objectContaining({
-			aspect: "translations",
-			leaf: "ru",
-			code: "InvalidModelOutput",
+				reading: { lemma: "Strauß", emojiDescription: "💐" },
+			});
+			// A stored translation shows once, however it is cased or spaced.
+			expect(criteriaOf(request?.questions.translation)).toMatchObject({
+				t0: "bouquet",
+				t1: "bunch of flowers",
+			});
+			expect(
+				Object.keys(criteriaOf(request?.questions.translation)),
+			).toEqual(["t0", "t1", "NoMatch"]);
+			expect(trace?.events).toEqual([
+				{
+					name: "TranslationAccumulation",
+					data: {
+						language: "en",
+						outcome: "Covered",
+						by: "bunch of flowers",
+					},
+				},
+			]);
 		}),
-	]);
-	const down = knowledgeJev({}, { fail: () => true });
-	const { result: failed } = await accumulateOnce(
-		{ jev: down.ask, luna: luna.ask },
-		bouquet({ en: texts("bouquet") }),
-	);
-	expect(failed.failures).toEqual([
-		expect.objectContaining({ leaf: "en", code: "ProviderFailure" }),
-	]);
-});
+);
 
-test("an authored Reading accumulates over its authored translations (ADR 0047)", async () => {
-	const { reading, attestation, sentence } = knowledgeInput(
-		{
-			family: "Lexeme",
-			kind: "ADP",
-			canonicalForm: "durch",
-			coreFeatures: {},
-		},
-		"🚪",
-		"Durch den Regen wurde es kalt.",
-		["Durch"],
-	);
-	const authored = authoredReading(reading)?.knowledge.translations;
-	expect(authored?.en).toEqual(texts("through"));
-	const jev = knowledgeJev({ translation: "NoMatch" });
-	const luna = knowledgeLuna({
-		translationAccumulation: {
-			sentence: "It got cold because of the rain.",
-			equivalents: texts("because of"),
-		},
-	});
-	const { result } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		{
-			language: "de",
-			reading,
-			attestation,
-			sentence,
-			translations: { en: authored?.en ?? [] },
-		},
-	);
-	expect(result.changes).toEqual([
-		{
-			kind: "Contribute",
-			aspect: "translations",
-			language: "en",
-			value: [[{ kind: "Text", text: "because of" }]],
-		},
-	]);
-});
-
-test("the writer's Preposition with no Slot after it is contributed as a Slot (ADR 0055)", async () => {
-	const jev = knowledgeJev({ translation: "NoMatch" });
-	const luna = knowledgeLuna({
-		translationAccumulation: {
-			sentence: "Она получила букет на день рождения.",
-			equivalents: [
-				[
-					{ kind: "Text", text: "радоваться" },
-					{ kind: "Preposition", text: "чему-то" },
+testEffect(
+	"after NoMatch Luna writes the occurrence's equivalents without the stored ones, and only the new ones are contributed",
+	() =>
+		Effect.gen(function* () {
+			const jev = knowledgeJev({ translation: "NoMatch" });
+			const luna = knowledgeLuna(
+				writes("Bunch  of Flowers", "posy", "posy"),
+			);
+			const { result, trace } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				bouquet({ en: texts("bouquet", "bunch of flowers") }),
+			);
+			expect(result).toEqual({
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "translations",
+						language: "en",
+						value: [[{ kind: "Text", text: "posy" }]],
+					},
 				],
-			],
-		},
-	});
-	const { result } = await accumulateOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ ru: texts("букет") }),
-	);
-	expect(result.changes).toEqual([
-		{
-			kind: "Contribute",
-			aspect: "translations",
-			language: "ru",
-			value: [
-				[
-					{ kind: "Text", text: "радоваться" },
-					{ kind: "Slot", text: "чему-то" },
-				],
-			],
-		},
-	]);
-});
+				failures: [],
+			});
+			const [request] = luna.sent;
+			expect(request?.systemPrompt).toBe(occurrenceTranslationPrompt);
+			const input = knowledgeLunaInput(request?.input);
+			expect(input).toMatchObject({
+				aspect: "translationAccumulation",
+				language: "en",
+				markedSentence:
+					"Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+			});
+			expect(JSON.stringify(request?.input)).not.toContain("bouquet");
+			expect(trace?.events).toEqual([
+				{
+					name: "TranslationAccumulation",
+					data: {
+						language: "en",
+						outcome: "Added",
+						written: ["Bunch  of Flowers", "posy"],
+						added: ["posy"],
+					},
+				},
+			]);
+		}),
+);
 
-test("bad input is a Defect, raised before anything is asked", async () => {
-	const jev = knowledgeJev();
-	const luna = knowledgeLuna({});
-	const exit = await Effect.runPromiseExit(
-		operations.knowledge
-			.accumulateTranslations(bouquet({ fr: ["bouquet"] } as never))
-			.pipe(Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask }))),
-	);
-	expect(Exit.isFailure(exit)).toBe(true);
-	expect(jev.sent).toEqual([]);
-});
+testEffect("when Luna writes only stored translations, nothing is added", () =>
+	Effect.gen(function* () {
+		const jev = knowledgeJev({ translation: "NoMatch" });
+		const luna = knowledgeLuna(writes("BOUQUET"));
+		const { result, trace } = yield* accumulateOnce(
+			{ jev: jev.ask, luna: luna.ask },
+			bouquet({ en: texts("bouquet") }),
+		);
+		expect(result).toEqual({ changes: [], failures: [] });
+		expect(trace?.events).toEqual([
+			{
+				name: "TranslationAccumulation",
+				data: {
+					language: "en",
+					outcome: "Contained",
+					written: ["BOUQUET"],
+				},
+			},
+		]);
+	}),
+);
+
+testEffect(
+	"each language with a stored set is judged on its own; one with none is left to Knowledge Production",
+	() =>
+		Effect.gen(function* () {
+			const jev = knowledgeJev((_, question) =>
+				Object.values(criteriaOf(question)).includes("букет")
+					? "t0"
+					: "NoMatch",
+			);
+			const luna = knowledgeLuna(writes("posy"));
+			const { result } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				bouquet({ en: texts("bouquet"), ru: texts("букет") }),
+			);
+			expect(jev.sent.map(({ state }) => state.language)).toEqual([
+				"en",
+				"ru",
+			]);
+			expect(result.changes).toEqual([
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: [[{ kind: "Text", text: "posy" }]],
+				},
+			]);
+			const none = knowledgeJev();
+			const { result: empty } = yield* accumulateOnce(
+				{ jev: none.ask, luna: luna.ask },
+				bouquet({ en: [] }),
+			);
+			expect(empty).toEqual({ changes: [], failures: [] });
+			expect(none.sent).toEqual([]);
+		}),
+);
+
+testEffect(
+	"a language whose call fails is a failure value and adds nothing; its sibling still lands",
+	() =>
+		Effect.gen(function* () {
+			const jev = knowledgeJev({ translation: "NoMatch" });
+			const luna = knowledgeLuna({
+				translationAccumulation: (input) =>
+					input.language === "ru"
+						? { sentence: "…", equivalents: "букет" }
+						: { sentence: "…", equivalents: texts("posy") },
+			});
+			const { result } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				bouquet({ en: texts("bouquet"), ru: texts("цветы") }),
+			);
+			expect(result.changes).toEqual([
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: [[{ kind: "Text", text: "posy" }]],
+				},
+			]);
+			expect(result.failures).toEqual([
+				expect.objectContaining({
+					aspect: "translations",
+					leaf: "ru",
+					code: "InvalidModelOutput",
+				}),
+			]);
+			const down = knowledgeJev({}, { fail: () => true });
+			const { result: failed } = yield* accumulateOnce(
+				{ jev: down.ask, luna: luna.ask },
+				bouquet({ en: texts("bouquet") }),
+			);
+			expect(failed.failures).toEqual([
+				expect.objectContaining({
+					leaf: "en",
+					code: "ProviderFailure",
+				}),
+			]);
+		}),
+);
+
+testEffect(
+	"an authored Reading accumulates over its authored translations (ADR 0047)",
+	() =>
+		Effect.gen(function* () {
+			const { reading, attestation, sentence } = knowledgeInput(
+				{
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "durch",
+					coreFeatures: {},
+				},
+				"🚪",
+				"Durch den Regen wurde es kalt.",
+				["Durch"],
+			);
+			const authored = authoredReading(reading)?.knowledge.translations;
+			expect(authored?.en).toEqual(texts("through"));
+			const jev = knowledgeJev({ translation: "NoMatch" });
+			const luna = knowledgeLuna({
+				translationAccumulation: {
+					sentence: "It got cold because of the rain.",
+					equivalents: texts("because of"),
+				},
+			});
+			const { result } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				{
+					language: "de",
+					reading,
+					attestation,
+					sentence,
+					translations: { en: authored?.en ?? [] },
+				},
+			);
+			expect(result.changes).toEqual([
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: [[{ kind: "Text", text: "because of" }]],
+				},
+			]);
+		}),
+);
+
+testEffect(
+	"the writer's Preposition with no Slot after it is contributed as a Slot (ADR 0055)",
+	() =>
+		Effect.gen(function* () {
+			const jev = knowledgeJev({ translation: "NoMatch" });
+			const luna = knowledgeLuna({
+				translationAccumulation: {
+					sentence: "Она получила букет на день рождения.",
+					equivalents: [
+						[
+							{ kind: "Text", text: "радоваться" },
+							{ kind: "Preposition", text: "чему-то" },
+						],
+					],
+				},
+			});
+			const { result } = yield* accumulateOnce(
+				{ jev: jev.ask, luna: luna.ask },
+				bouquet({ ru: texts("букет") }),
+			);
+			expect(result.changes).toEqual([
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "ru",
+					value: [
+						[
+							{ kind: "Text", text: "радоваться" },
+							{ kind: "Slot", text: "чему-то" },
+						],
+					],
+				},
+			]);
+		}),
+);
+
+testEffect("bad input is a Defect, raised before anything is asked", () =>
+	Effect.gen(function* () {
+		const jev = knowledgeJev();
+		const luna = knowledgeLuna({});
+		const exit = yield* Effect.exit(
+			operations.knowledge
+				.accumulateTranslations(bouquet({ fr: ["bouquet"] } as never))
+				.pipe(
+					Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask })),
+				),
+		);
+		expect(Exit.isFailure(exit)).toBe(true);
+		expect(jev.sent).toEqual([]);
+	}),
+);
 
 test("every accumulation prompt paragraph cites the Rules it states at their current hashes (ADR 0037, #695)", () => {
 	const prompts = accumulationPromptTexts();

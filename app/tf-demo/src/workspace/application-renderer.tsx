@@ -10,7 +10,6 @@ import {
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { api } from "../../convex/_generated/api";
 import type { SectionTarget } from "../../shared/navigation";
-import { scrollTitle } from "../../shared/scroll-title";
 import { HeadingSkeleton, type NotePart, NotePartProvider } from "./note-part";
 import {
 	type GroundPlace,
@@ -157,30 +156,29 @@ function dealtCard({ key, target, presentationContext }: WorkspaceCardTarget) {
 /** What the Library or a Codex calls a Section, loaded when its target came without it. */
 function useSectionTitle(target: SectionTarget): string | undefined {
 	const visitorId = useAnonymousVisitorId();
-	const codexQuery = useQuery({
-		...convexQuery(api.library.codex, {
-			sectionId: target.sectionId,
+	const titleQuery = useQuery({
+		...convexQuery(api.library.title, {
+			kind: "Section",
+			id: target.sectionId,
 			visitorId,
 		}),
 		enabled: target.title === undefined,
 	});
-	return target.title ?? codexQuery.data?.title;
+	return target.title ?? titleQuery.data ?? undefined;
 }
 
 /** What the Library calls a Scroll, loaded when its target came without it. */
 function useScrollTitle(target: ScrollSubjectTarget): string | undefined {
 	const visitorId = useAnonymousVisitorId();
-	const scrollQuery = useQuery({
-		...convexQuery(api.scrollViews.get, {
-			scrollId: target.scrollId,
+	const titleQuery = useQuery({
+		...convexQuery(api.library.title, {
+			kind: "Scroll",
+			id: target.scrollId,
 			visitorId,
 		}),
 		enabled: target.title === undefined,
 	});
-	return (
-		target.title ??
-		(scrollQuery.data ? scrollTitle(scrollQuery.data) : undefined)
-	);
+	return target.title ?? titleQuery.data ?? undefined;
 }
 
 /** A Section's Heading: what the Library or its Codex calls it. */

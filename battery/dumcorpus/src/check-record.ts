@@ -1,22 +1,9 @@
-import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
-import { languageAttestationIssues } from "./attestation-checks.js";
-import { authoredReadingIssues } from "./check-authored-readings.js";
-import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
-import {
-	checkKnowledge,
-	checkParadigm,
-	checkReading,
-} from "./check-reading.js";
-import { reflexiveMarkerIssues } from "./check-reflexive-readings.js";
-import { attestationSyncretismIssues } from "./check-syncretisms.js";
+import { checkTargetLayers } from "./check-record-layers.js";
 import type {
 	AnnotationLayer,
-	KnowledgeCoverage,
 	LegacyCase,
-	ReadingParadigm,
 	Segment,
 	SegmentationTarget,
 	Sources,
@@ -26,12 +13,10 @@ import type {
 	SpecTarget,
 } from "./corpus-types.js";
 import { unitRoutes } from "./generated/routes.js";
-import { checkIfGrundform } from "./grundform/check-if-grundform.js";
 import { idLanguage, specRecordIdPattern } from "./ids.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
 import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
-import { sameValue } from "./same-value.js";
 
 const fileSchema = recordFileSchema({
 	route: looseRouteSchema,
@@ -139,6 +124,98 @@ export function uncitedIssue(
 	};
 }
 
+function claimMemberIndices(
+	indices: readonly number[],
+	options: {
+		readonly path: string;
+		readonly check: SpecCheck;
+		readonly nonResolvableMessage: string;
+		readonly orderMessage: string;
+	},
+	state: {
+		readonly claims: number[];
+		readonly resolvable: (index: number) => boolean;
+		readonly issue: IssueSink;
+	},
+): void {
+	for (const [m, index] of indices.entries()) {
+		const at = `${options.path}.memberSegmentIndices.${m}`;
+		if (!state.resolvable(index)) {
+			state.issue(
+				"Segmentation",
+				options.check,
+				at,
+				options.nonResolvableMessage,
+			);
+			continue;
+		}
+		state.claims[index] = (state.claims[index] ?? 0) + 1;
+		if (m > 0 && index <= (indices[m - 1] ?? -1))
+			state.issue(
+				"Segmentation",
+				options.check,
+				at,
+				options.orderMessage,
+			);
+	}
+}
+
+function checkCoverage(
+	input: {
+		readonly segments: readonly Segment[];
+		readonly targetsCount: number;
+		readonly noTarget: readonly {
+			readonly memberSegmentIndices: readonly number[];
+		}[];
+		readonly coverage: "Full" | "Partial";
+	},
+	state: {
+		readonly claims: number[];
+		readonly resolvable: (index: number) => boolean;
+		readonly issue: IssueSink;
+	},
+): void {
+	for (const [n, entry] of input.noTarget.entries())
+		claimMemberIndices(
+			entry.memberSegmentIndices,
+			{
+				path: `noTarget.${n}`,
+				check: "Coverage",
+				nonResolvableMessage: "No Target names ResolvableText Segments",
+				orderMessage:
+					"No Target names its Segments in sentence order, each once",
+			},
+			state,
+		);
+	for (const [index, count] of state.claims.entries()) {
+		if (count > 1)
+			state.issue(
+				"Segmentation",
+				"Coverage",
+				`segments.${index}`,
+				"A Segment belongs to at most one target or No Target entry",
+			);
+		else if (
+			count === 0 &&
+			input.coverage === "Full" &&
+			state.resolvable(index)
+		)
+			state.issue(
+				"Segmentation",
+				"Coverage",
+				`segments.${index}`,
+				`Full coverage leaves ${JSON.stringify(input.segments[index]?.text)} in no target or No Target entry`,
+			);
+	}
+	if (input.targetsCount === 0 && input.noTarget.length === 0)
+		state.issue(
+			"Segmentation",
+			"Coverage",
+			"targets",
+			"A record has a target or No Target entry",
+		);
+}
+
 /**
  * Runs every check that needs only the record itself, each in its Annotation
  * Layer. Segmentation: the Segments spell the sentence, members are
@@ -152,7 +229,6 @@ export function uncitedIssue(
  * structural aspect its route requests. A reviewed layer must pass; a Draft
  * layer may fail or be missing.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
 	const language = idLanguage(specRecordIdPattern, id);
@@ -186,53 +262,10 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 		language,
 		issue,
 	);
-	const { claims, resolvable } = checked;
-	for (const [n, entry] of noTarget.entries()) {
-		const indices = entry.memberSegmentIndices;
-		for (const [m, index] of indices.entries()) {
-			const at = `noTarget.${n}.memberSegmentIndices.${m}`;
-			if (!resolvable(index)) {
-				issue(
-					"Segmentation",
-					"Coverage",
-					at,
-					"No Target names ResolvableText Segments",
-				);
-				continue;
-			}
-			claims[index] = (claims[index] ?? 0) + 1;
-			if (m > 0 && index <= (indices[m - 1] ?? -1))
-				issue(
-					"Segmentation",
-					"Coverage",
-					at,
-					"No Target names its Segments in sentence order, each once",
-				);
-		}
-	}
-	for (const [index, count] of claims.entries()) {
-		if (count > 1)
-			issue(
-				"Segmentation",
-				"Coverage",
-				`segments.${index}`,
-				"A Segment belongs to at most one target or No Target entry",
-			);
-		else if (count === 0 && coverage === "Full" && resolvable(index))
-			issue(
-				"Segmentation",
-				"Coverage",
-				`segments.${index}`,
-				`Full coverage leaves ${JSON.stringify(segments[index]?.text)} in no target or No Target entry`,
-			);
-	}
-	if (targets.length === 0 && noTarget.length === 0)
-		issue(
-			"Segmentation",
-			"Coverage",
-			"targets",
-			"A record has a target or No Target entry",
-		);
+	checkCoverage(
+		{ segments, targetsCount: targets.length, noTarget, coverage },
+		{ claims: checked.claims, resolvable: checked.resolvable, issue },
+	);
 	const uncited = uncitedIssue(id, reviewDepth !== undefined, sources);
 	if (uncited) found.push(uncited);
 
@@ -312,26 +345,17 @@ function checkTargets(
 	for (const [t, target] of targets.entries()) {
 		const path = `targets.${t}`;
 		const indices = target.memberSegmentIndices;
-		for (const [m, index] of indices.entries()) {
-			const at = `${path}.memberSegmentIndices.${m}`;
-			if (!resolvable(index)) {
-				issue(
-					"Segmentation",
-					"Members",
-					at,
-					"A member is a ResolvableText Segment",
-				);
-				continue;
-			}
-			claims[index] = (claims[index] ?? 0) + 1;
-			if (m > 0 && index <= (indices[m - 1] ?? -1))
-				issue(
-					"Segmentation",
-					"Members",
-					at,
+		claimMemberIndices(
+			indices,
+			{
+				path,
+				check: "Members",
+				nonResolvableMessage: "A member is a ResolvableText Segment",
+				orderMessage:
 					"Members occur in sentence order, each in its own Segment",
-				);
-		}
+			},
+			{ claims, resolvable, issue },
+		);
 		const { family, kind } = target.route;
 		const route = language
 			? unitRoutes[language].find(
@@ -366,248 +390,4 @@ function checkTargets(
 		if (!layers.knowledge) knowledgeComplete = false;
 	}
 	return { segmentation, attested, claims, resolvable, knowledgeComplete };
-}
-
-/**
- * Checks one target's Attestation, Reading and Knowledge layers. Returns the
- * target when its route is Dumling's and its Attestation passes, carrying
- * its Reading, Knowledge and coverage when they pass, and whether its
- * Knowledge is valid and covers every structural aspect its route requests.
- */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-function checkTargetLayers(
-	target: TargetFile,
-	segmented: SegmentationTarget | undefined,
-	context: {
-		path: string;
-		language: Dumling.Language | undefined;
-		segments: readonly Segment[];
-		resolvable: (index: number) => boolean;
-		reviewDepth: AnnotationLayer | undefined;
-		issue: IssueSink;
-	},
-): { target?: SpecTarget; knowledge: boolean } {
-	const { path, language, segments, resolvable, reviewDepth } = context;
-	let failed = false;
-	const issue = (
-		layer: AnnotationLayer,
-		...rest: [SpecCheck, string, string]
-	) => {
-		if (layer === "Attestation") failed = true;
-		context.issue(layer, ...rest);
-	};
-	const attestationIssue = (check: SpecCheck, at: string, message: string) =>
-		issue("Attestation", check, at, message);
-
-	if (target.attestation === undefined) {
-		attestationIssue(
-			"Attestation",
-			`${path}.attestation`,
-			"A target holds its Attestation",
-		);
-		return { knowledge: false };
-	}
-	const parsed = parseUnit(target.attestation);
-	if (!parsed.success) {
-		for (const error of parsed.error.issues)
-			attestationIssue(
-				"Attestation",
-				[path, "attestation", ...error.path].join("."),
-				error.message,
-			);
-		return { knowledge: false };
-	}
-	if (parsed.chain.unitKind !== "Attestation") {
-		attestationIssue(
-			"Attestation",
-			`${path}.attestation`,
-			"Expected an Attestation",
-		);
-		return { knowledge: false };
-	}
-	const attestation = parsed.chain.value;
-	if (!sameValue(attestation, target.attestation))
-		attestationIssue(
-			"Attestation",
-			`${path}.attestation`,
-			"Store the Attestation exactly as parseUnit normalizes it",
-		);
-	const { lemma } = attestation.surface;
-	if (language && lemma.language !== language)
-		attestationIssue(
-			"Attestation",
-			`${path}.attestation.surface.language`,
-			`A ${language} record holds ${language} Attestations`,
-		);
-	if (
-		lemma.family !== target.route.family ||
-		lemma.kind !== target.route.kind
-	)
-		attestationIssue(
-			"Route",
-			`${path}.attestation.surface.lemma`,
-			`The Attestation's Lemma is ${lemma.family} ${lemma.kind}, not the target's route ${target.route.family} ${target.route.kind}`,
-		);
-	for (const { check, ...found } of languageAttestationIssues(attestation))
-		attestationIssue(
-			check,
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-	for (const found of attestationSyncretismIssues(attestation))
-		attestationIssue(
-			"Syncretism",
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-
-	const indices = target.memberSegmentIndices;
-	if (indices.length !== attestation.members.length)
-		attestationIssue(
-			"Members",
-			`${path}.memberSegmentIndices`,
-			"Name one Segment per Attestation member",
-		);
-	for (const [m, member] of attestation.members.entries()) {
-		const index = indices[m];
-		if (index === undefined || !resolvable(index)) continue;
-		const text = segments[index]?.text;
-		if (member.attested !== text)
-			attestationIssue(
-				"Members",
-				`${path}.memberSegmentIndices.${m}`,
-				`Member ${JSON.stringify(member.attested)} is not Segment ${index} ${JSON.stringify(text)}`,
-			);
-	}
-	if (target.grundform !== undefined) {
-		const verdict = checkIfGrundform(attestation.surface);
-		// A stated verdict the assessment cannot settle is not checked, so it
-		// fails (ADR 0042).
-		if (!verdict.success)
-			attestationIssue(
-				"Grundform",
-				`${path}.grundform`,
-				`This Surface's Grundform cannot be assessed: ${verdict.error.message}`,
-			);
-		else if (verdict.value !== target.grundform)
-			attestationIssue(
-				"Grundform",
-				`${path}.grundform`,
-				`The assessment finds this Surface ${verdict.value ? "" : "not "}Grundform`,
-			);
-	}
-
-	const reading = checkReading(target.reading, attestation);
-	for (const failure of reading.issues)
-		issue("Reading", "Reading", `${path}.${failure.path}`, failure.message);
-	if (reading.value)
-		for (const found of authoredReadingIssues(reading.value))
-			issue(
-				"Reading",
-				"AuthoredReading",
-				`${path}.${found.path}`,
-				found.message,
-			);
-	let knowledge: Dumrel.ReadingKnowledge | undefined;
-	if (
-		reading.value !== undefined &&
-		target.reading?.knowledge !== undefined
-	) {
-		const checked = checkKnowledge(target.reading.knowledge, reading.value);
-		for (const failure of checked.issues)
-			issue(
-				"Knowledge",
-				"Knowledge",
-				`${path}.${failure.path}`,
-				failure.message,
-			);
-		if (checked.issues.length === 0) knowledge = checked.knowledge;
-	} else if (reviewDepth === "Knowledge")
-		issue(
-			"Knowledge",
-			"Knowledge",
-			`${path}.reading.knowledge`,
-			"A record reviewed through Knowledge holds each target's Reading Knowledge",
-		);
-	let paradigm: ReadingParadigm | undefined;
-	if (reading.value !== undefined && target.reading?.paradigm !== undefined) {
-		const checked = checkParadigm(target.reading.paradigm, reading.value);
-		for (const failure of checked.issues)
-			issue(
-				"Knowledge",
-				"Knowledge",
-				`${path}.${failure.path}`,
-				failure.message,
-			);
-		if (checked.issues.length === 0) paradigm = checked.paradigm;
-	}
-	const authoredCoverage: KnowledgeCoverage | undefined =
-		target.reading?.coverage;
-	if (
-		authoredCoverage !== undefined &&
-		target.reading?.knowledge === undefined
-	)
-		issue(
-			"Knowledge",
-			"KnowledgeCoverage",
-			`${path}.reading.knowledge`,
-			"A Reading with coverage holds its Knowledge, {} when it holds no aspect",
-		);
-	let coverage: KnowledgeCoverage | undefined;
-	let complete = false;
-	if (knowledge !== undefined && reading.value !== undefined) {
-		const covered = knowledgeCoverageIssues(
-			reading.value,
-			knowledge,
-			authoredCoverage,
-			// Paradigm forms that failed their check aren't held against coverage.
-			target.reading?.paradigm !== undefined && paradigm === undefined
-				? undefined
-				: (paradigm ?? {}),
-		);
-		for (const found of covered.issues)
-			issue(
-				"Knowledge",
-				"KnowledgeCoverage",
-				`${path}.${found.path}`,
-				found.message,
-			);
-		if (covered.uncovered.length > 0 && reviewDepth === "Knowledge")
-			issue(
-				"Knowledge",
-				"KnowledgeCoverage",
-				`${path}.reading.coverage`,
-				`A record reviewed through Knowledge covers each structural aspect its route requests; uncovered: ${covered.uncovered.join(", ")}`,
-			);
-		for (const found of reflexiveMarkerIssues(
-			reading.value,
-			knowledge,
-			authoredCoverage,
-		))
-			issue(
-				"Knowledge",
-				"ReflexiveMarker",
-				`${path}.${found.path}`,
-				found.message,
-			);
-		if (covered.issues.length === 0) coverage = authoredCoverage;
-		complete =
-			covered.issues.length === 0 && covered.uncovered.length === 0;
-	}
-	if (failed) return { knowledge: false };
-	if (!segmented) return { knowledge: complete };
-	return {
-		target: {
-			...segmented,
-			attestation,
-			...(reading.value === undefined ? {} : { reading: reading.value }),
-			...(knowledge === undefined ? {} : { knowledge }),
-			...(paradigm === undefined ? {} : { paradigm }),
-			...(coverage === undefined ? {} : { coverage }),
-			...(target.grundform === undefined
-				? {}
-				: { grundform: target.grundform }),
-		},
-		knowledge: complete,
-	};
 }

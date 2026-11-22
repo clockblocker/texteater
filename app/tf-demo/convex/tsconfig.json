@@ -3,6 +3,7 @@
    * Convex functions run in and is used to typecheck them.
    * You can modify it, but some settings are required to use Convex.
    */
+  "extends": "../../../tooling/typescript/effect.json",
   "compilerOptions": {
     /* These settings are not required by Convex and can be modified. */
     "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.convex.tsbuildinfo",
@@ -22,10 +23,7 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "isolatedModules": true,
-    "noEmit": true,
-
-    /* Effect diagnostics, served by the root @effect/tsgo install. */
-    "plugins": [{ "name": "@effect/language-service" }]
+    "noEmit": true
   },
   "include": ["./**/*"],
   "exclude": ["./_generated"]

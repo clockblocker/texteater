@@ -1,6 +1,7 @@
 "use node";
 
 import { operations } from "dumgen";
+import * as Effect from "effect/Effect";
 import type { ReadingResolution } from "../../server/clickResolution";
 import { dumgenClickResolution } from "../../server/dumgenClickResolution";
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
@@ -44,16 +45,14 @@ export function orchestratorFor(
 ) {
 	return createTfDemoOrchestrator({
 		resolution: dumgenClickResolution(
-			() => {
-				requireJev();
-				return operations;
-			},
+			() => operations,
 			(lemma) =>
 				ctx.runQuery(
 					internal.dumdictStorage.queries
 						.findOptionallyReflexiveReadings,
 					{ lemmaKey: lemmaIdentityKey(lemma) },
 				),
+			Effect.orDie(requireJev),
 		),
 		resegment,
 		findStoredReadings: async (lemma) =>

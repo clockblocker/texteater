@@ -49,6 +49,8 @@ export type BodyState = {
 	/** The element last mounted, to tell a remount from a re-attach. */
 	mounted: HTMLElement | null;
 	shell: HTMLElement | null;
+	/** The Shell's front face element, cached by ref to avoid per-frame DOM queries. */
+	front: HTMLElement | null;
 	/** The Place last committed, which the Body's CSS reads. */
 	place: Place | null;
 	/** Every Move in flight: its rest plus these is what it shows. */
@@ -83,6 +85,7 @@ export function bodyState(id: string): BodyState {
 		seat: null,
 		mounted: null,
 		shell: null,
+		front: null,
 		place: null,
 		moves: [],
 		spans: {},

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { dirname, isAbsolute, resolve, sep } from "node:path";
+import { dirname, isAbsolute, resolve } from "node:path";
 import {
 	CodegenConfigurationError,
 	CodegenOwnershipError,
@@ -7,6 +7,12 @@ import {
 } from "./errors.js";
 import { type CodegenFileSystem, nodeFileSystem } from "./file-system.js";
 import { materializeInputs } from "./inputs.js";
+import {
+	validateArtifactManifestCollisions,
+	validateArtifactSet,
+	validateManifestDestinations,
+	validateStaleDestinations,
+} from "./path-conflicts.js";
 import {
 	compareCodeUnits,
 	destinationWithin,
@@ -34,7 +40,6 @@ import {
 	cloneMetadata,
 	deepFreeze,
 	errorMessage,
-	formatProvenance,
 	freezeArray,
 	freezeChange,
 } from "./values.js";
@@ -48,6 +53,7 @@ type OutputContext = Readonly<{
 type ManifestState = Readonly<{
 	boundary: string;
 	content: Uint8Array;
+	current: Uint8Array | undefined;
 	destination: string;
 	path: string;
 	previousFiles: readonly string[];
@@ -79,7 +85,6 @@ export async function runCodegen<I extends Inputs, O extends Outputs, Metadata>(
 	return runCodegenWithFileSystem(recipe, options, nodeFileSystem);
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function runCodegenWithFileSystem<
 	I extends Inputs,
 	O extends Outputs,
@@ -89,12 +94,7 @@ export async function runCodegenWithFileSystem<
 	options: RunOptions,
 	fileSystem: CodegenFileSystem,
 ): Promise<CodegenRun<Metadata>> {
-	if (options.mode !== "check" && options.mode !== "write") {
-		throw new CodegenConfigurationError(
-			`Unknown codegen mode "${String(options.mode)}".`,
-		);
-	}
-
+	assertValidRunMode(options.mode);
 	const definition = recipe[recipeDefinition];
 	if (definition === undefined) {
 		throw new CodegenConfigurationError(
@@ -103,7 +103,8 @@ export async function runCodegenWithFileSystem<
 	}
 
 	const outputs = prepareOutputs(definition.outputs);
-	validateManifestDestinations(outputs);
+	const manifestDescriptors = collectManifestDescriptors(outputs);
+	validateManifestDestinations(manifestDescriptors);
 	const inputs = await materializeInputs(definition.inputs, fileSystem);
 	const primaryDrafts = await definition.build(inputs);
 	const primary = planArtifacts(primaryDrafts, outputs);
@@ -115,49 +116,14 @@ export async function runCodegenWithFileSystem<
 	const artifacts = freezeArray([...primary, ...aggregate]);
 	validateArtifactSet(artifacts);
 	validateArtifactReferences(artifacts);
-	validateArtifactManifestCollisions(artifacts, outputs);
+	validateArtifactManifestCollisions(artifacts, manifestDescriptors);
 
 	const plan = await inspectFileSystem(artifacts, outputs, fileSystem);
 	const changed = plan.changes.some((change) => change.kind !== "unchanged");
-	const applied: PlannedChange[] = [];
-
-	if (options.mode === "write") {
-		for (const change of plan.changes) {
-			if (change.kind === "unchanged" || change.subject === "manifest") {
-				continue;
-			}
-			await assertChangePathIsSafe(change, outputs, fileSystem);
-			if (change.kind === "delete") {
-				await fileSystem.remove(change.destination);
-			} else {
-				const content = plan.contents.get(change.destination);
-				if (content === undefined) {
-					throw new CodegenPlanError(
-						`No planned content for "${change.destination}".`,
-					);
-				}
-				await fileSystem.write(change.destination, content);
-			}
-			applied.push(change);
-		}
-
-		// Ownership is committed last: an interrupted artifact write never records
-		// files as successfully owned before their mutations have completed.
-		for (const change of plan.changes) {
-			if (change.subject !== "manifest" || change.kind === "unchanged") {
-				continue;
-			}
-			await assertChangePathIsSafe(change, outputs, fileSystem);
-			const content = plan.contents.get(change.destination);
-			if (content === undefined) {
-				throw new CodegenPlanError(
-					`No planned manifest content for "${change.destination}".`,
-				);
-			}
-			await fileSystem.write(change.destination, content);
-			applied.push(change);
-		}
-	}
+	const applied =
+		options.mode === "write"
+			? await applyPlannedChanges(plan, outputs, fileSystem)
+			: [];
 
 	return deepFreeze({
 		mode: options.mode,
@@ -168,6 +134,62 @@ export async function runCodegenWithFileSystem<
 		},
 		applied: freezeArray(applied),
 	});
+}
+
+function assertValidRunMode(mode: RunOptions["mode"]): void {
+	if (mode !== "check" && mode !== "write") {
+		throw new CodegenConfigurationError(
+			`Unknown codegen mode "${String(mode)}".`,
+		);
+	}
+}
+
+async function applyPlannedChanges<Metadata>(
+	plan: ExecutionPlan<Metadata>,
+	outputs: ReadonlyMap<string, OutputContext>,
+	fileSystem: CodegenFileSystem,
+): Promise<PlannedChange[]> {
+	const applied: PlannedChange[] = [];
+	const applyMatching = async (isManifest: boolean): Promise<void> => {
+		for (const change of plan.changes) {
+			if (
+				change.kind === "unchanged" ||
+				(change.subject === "manifest") !== isManifest
+			) {
+				continue;
+			}
+			await applyChange(change, plan.contents, outputs, fileSystem);
+			applied.push(change);
+		}
+	};
+
+	await applyMatching(false);
+	// Ownership is committed last: an interrupted artifact write never records
+	// files as successfully owned before their mutations have completed.
+	await applyMatching(true);
+	return applied;
+}
+
+async function applyChange(
+	change: PlannedChange,
+	contents: ReadonlyMap<string, Uint8Array>,
+	outputs: ReadonlyMap<string, OutputContext>,
+	fileSystem: CodegenFileSystem,
+): Promise<void> {
+	await assertChangePathIsSafe(change, outputs, fileSystem);
+	if (change.kind === "delete") {
+		await fileSystem.remove(change.destination);
+		return;
+	}
+	const content = contents.get(change.destination);
+	if (content === undefined) {
+		const label =
+			change.subject === "manifest" ? "manifest content" : "content";
+		throw new CodegenPlanError(
+			`No planned ${label} for "${change.destination}".`,
+		);
+	}
+	await fileSystem.write(change.destination, content);
 }
 
 function prepareOutputs(outputs: Outputs): ReadonlyMap<string, OutputContext> {
@@ -203,28 +225,17 @@ function prepareOutputs(outputs: Outputs): ReadonlyMap<string, OutputContext> {
 	return result;
 }
 
-function validateManifestDestinations(
+function collectManifestDescriptors(
 	outputs: ReadonlyMap<string, OutputContext>,
-): void {
+): ManifestDescriptor[] {
 	const manifests: ManifestDescriptor[] = [];
 	for (const output of outputs.values()) {
 		const manifest = manifestDescriptor(output);
-		if (manifest === undefined) {
-			continue;
-		}
-		manifests.push(manifest);
-	}
-
-	for (const [index, manifest] of manifests.entries()) {
-		for (const other of manifests.slice(index + 1)) {
-			if (!pathsConflict(manifest.destination, other.destination)) {
-				continue;
-			}
-			throw new CodegenConfigurationError(
-				`Ownership manifests for outputs "${manifest.target}" and "${other.target}" have conflicting paths "${manifest.destination}" and "${other.destination}".`,
-			);
+		if (manifest !== undefined) {
+			manifests.push(manifest);
 		}
 	}
+	return manifests;
 }
 
 function planArtifacts<Target extends string, Metadata>(
@@ -318,82 +329,6 @@ function validateProvenance(
 	);
 }
 
-function validateArtifactSet(
-	artifacts: readonly PlannedArtifact<string, unknown>[],
-): void {
-	const ids = new Map<string, PlannedArtifact<string, unknown>>();
-	for (const artifact of artifacts) {
-		const duplicateId = ids.get(artifact.id);
-		if (duplicateId !== undefined) {
-			throw new CodegenPlanError(
-				`Artifact id "${artifact.id}" is defined more than once (${formatProvenance(
-					duplicateId.provenance,
-				)}; ${formatProvenance(artifact.provenance)}).`,
-			);
-		}
-		ids.set(artifact.id, artifact);
-	}
-
-	for (const [index, artifact] of artifacts.entries()) {
-		for (const other of artifacts.slice(index + 1)) {
-			if (!pathsConflict(artifact.destination, other.destination)) {
-				continue;
-			}
-			throw new CodegenPlanError(
-				`Artifacts "${artifact.id}" and "${other.id}" have conflicting destinations "${artifact.destination}" and "${other.destination}" (${formatProvenance(
-					artifact.provenance,
-				)}; ${formatProvenance(other.provenance)}).`,
-			);
-		}
-	}
-}
-
-function pathsConflict(left: string, right: string): boolean {
-	const leftIdentity = pathIdentity(left);
-	const rightIdentity = pathIdentity(right);
-	return (
-		leftIdentity === rightIdentity ||
-		leftIdentity.startsWith(`${rightIdentity}${sep}`) ||
-		rightIdentity.startsWith(`${leftIdentity}${sep}`)
-	);
-}
-
-function validateStaleDestinations(
-	staleChanges: readonly PlannedChange[],
-	artifacts: readonly PlannedArtifact<string, unknown>[],
-	manifests: readonly ManifestState[],
-): void {
-	for (const stale of staleChanges) {
-		for (const artifact of artifacts) {
-			if (!pathsConflict(stale.destination, artifact.destination)) {
-				continue;
-			}
-			throw new CodegenPlanError(
-				`Stale owned file "${stale.destination}" conflicts with planned artifact "${artifact.id}".`,
-			);
-		}
-		for (const manifest of manifests) {
-			if (!pathsConflict(stale.destination, manifest.destination)) {
-				continue;
-			}
-			throw new CodegenOwnershipError(
-				`Stale owned file "${stale.destination}" conflicts with ownership manifest "${manifest.destination}".`,
-			);
-		}
-	}
-
-	for (const [index, stale] of staleChanges.entries()) {
-		for (const other of staleChanges.slice(index + 1)) {
-			if (!pathsConflict(stale.destination, other.destination)) {
-				continue;
-			}
-			throw new CodegenOwnershipError(
-				`Ownership manifests claim conflicting stale files "${stale.destination}" and "${other.destination}".`,
-			);
-		}
-	}
-}
-
 function validateArtifactReferences(
 	artifacts: readonly PlannedArtifact<string, unknown>[],
 ): void {
@@ -409,32 +344,46 @@ function validateArtifactReferences(
 	}
 }
 
-function validateArtifactManifestCollisions(
-	artifacts: readonly PlannedArtifact<string, unknown>[],
-	outputs: ReadonlyMap<string, OutputContext>,
-): void {
-	for (const output of outputs.values()) {
-		const manifest = manifestDescriptor(output);
-		if (manifest === undefined) {
-			continue;
-		}
-		for (const artifact of artifacts) {
-			if (!pathsConflict(artifact.destination, manifest.destination)) {
-				continue;
-			}
-			throw new CodegenPlanError(
-				`Artifact "${artifact.id}" conflicts with ownership manifest "${manifest.destination}".`,
-			);
-		}
-	}
-}
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function inspectFileSystem<Metadata>(
 	artifacts: readonly PlannedArtifact<string, Metadata>[],
 	outputs: ReadonlyMap<string, OutputContext>,
 	fileSystem: CodegenFileSystem,
 ): Promise<ExecutionPlan<Metadata>> {
+	const { changes, contents, desiredByTarget } = await planArtifactChanges(
+		artifacts,
+		outputs,
+		fileSystem,
+	);
+	const manifests = await loadManifestStates(
+		outputs,
+		desiredByTarget,
+		contents,
+		fileSystem,
+	);
+	const staleChanges = await planStaleChanges(
+		manifests,
+		desiredByTarget,
+		fileSystem,
+	);
+	validateStaleDestinations(staleChanges, artifacts, manifests);
+	changes.push(...staleChanges, ...planManifestChanges(manifests));
+
+	return Object.freeze({
+		artifacts,
+		changes: freezeArray(changes),
+		contents,
+	});
+}
+
+async function planArtifactChanges<Metadata>(
+	artifacts: readonly PlannedArtifact<string, Metadata>[],
+	outputs: ReadonlyMap<string, OutputContext>,
+	fileSystem: CodegenFileSystem,
+): Promise<{
+	changes: PlannedChange[];
+	contents: Map<string, Uint8Array>;
+	desiredByTarget: Map<string, Set<string>>;
+}> {
 	const changes: PlannedChange[] = [];
 	const contents = new Map<string, Uint8Array>();
 	const desiredByTarget = new Map<string, Set<string>>();
@@ -445,7 +394,8 @@ async function inspectFileSystem<Metadata>(
 
 	for (const artifact of artifacts) {
 		desiredByTarget.get(artifact.to.target)?.add(artifact.to.path);
-		contents.set(artifact.destination, artifact.content);
+		const content = artifact.content;
+		contents.set(artifact.destination, content);
 		const output = outputs.get(artifact.to.target);
 		if (output === undefined) {
 			throw new CodegenPlanError(
@@ -456,12 +406,7 @@ async function inspectFileSystem<Metadata>(
 		const current = await readForPlanning(artifact.destination, fileSystem);
 		changes.push(
 			freezeChange({
-				kind:
-					current === undefined
-						? "create"
-						: bytesEqual(current, artifact.content)
-							? "unchanged"
-							: "update",
+				kind: changeKindForContent(current, content),
 				subject: "artifact",
 				target: artifact.to.target,
 				path: artifact.to.path,
@@ -471,6 +416,15 @@ async function inspectFileSystem<Metadata>(
 		);
 	}
 
+	return { changes, contents, desiredByTarget };
+}
+
+async function loadManifestStates(
+	outputs: ReadonlyMap<string, OutputContext>,
+	desiredByTarget: ReadonlyMap<string, ReadonlySet<string>>,
+	contents: Map<string, Uint8Array>,
+	fileSystem: CodegenFileSystem,
+): Promise<ManifestState[]> {
 	const manifests: ManifestState[] = [];
 	for (const output of outputs.values()) {
 		const manifest = manifestDescriptor(output);
@@ -496,6 +450,7 @@ async function inspectFileSystem<Metadata>(
 			Object.freeze({
 				boundary: manifest.boundary,
 				content,
+				current,
 				destination: manifest.destination,
 				path: manifest.path,
 				previousFiles,
@@ -505,14 +460,19 @@ async function inspectFileSystem<Metadata>(
 		);
 		contents.set(manifest.destination, content);
 	}
+	return manifests;
+}
 
+async function planStaleChanges(
+	manifests: readonly ManifestState[],
+	desiredByTarget: ReadonlyMap<string, ReadonlySet<string>>,
+	fileSystem: CodegenFileSystem,
+): Promise<PlannedChange[]> {
 	const staleChanges: PlannedChange[] = [];
 	for (const manifest of manifests) {
-		const files = [
-			...(desiredByTarget.get(manifest.target) ?? new Set<string>()),
-		];
+		const desired = desiredByTarget.get(manifest.target);
 		for (const stalePath of manifest.previousFiles) {
-			if (files.includes(stalePath)) {
+			if (desired?.has(stalePath)) {
 				continue;
 			}
 			const staleDestination = destinationWithin(
@@ -534,32 +494,31 @@ async function inspectFileSystem<Metadata>(
 			}
 		}
 	}
-	validateStaleDestinations(staleChanges, artifacts, manifests);
-	changes.push(...staleChanges);
+	return staleChanges;
+}
 
-	for (const manifest of manifests) {
-		const current = await readForPlanning(manifest.destination, fileSystem);
-		changes.push(
-			freezeChange({
-				kind:
-					current === undefined
-						? "create"
-						: bytesEqual(current, manifest.content)
-							? "unchanged"
-							: "update",
-				subject: "manifest",
-				target: manifest.target,
-				path: manifest.path,
-				destination: manifest.destination,
-			}),
-		);
+function planManifestChanges(
+	manifests: readonly ManifestState[],
+): PlannedChange[] {
+	return manifests.map((manifest) =>
+		freezeChange({
+			kind: changeKindForContent(manifest.current, manifest.content),
+			subject: "manifest",
+			target: manifest.target,
+			path: manifest.path,
+			destination: manifest.destination,
+		}),
+	);
+}
+
+function changeKindForContent(
+	current: Uint8Array | undefined,
+	desired: Uint8Array,
+): "create" | "unchanged" | "update" {
+	if (current === undefined) {
+		return "create";
 	}
-
-	return Object.freeze({
-		artifacts,
-		changes: freezeArray(changes),
-		contents,
-	});
+	return bytesEqual(current, desired) ? "unchanged" : "update";
 }
 
 async function readForPlanning(

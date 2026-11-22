@@ -33,6 +33,12 @@ export const ciGates = [
 		],
 	},
 	{
+		// Oxlint with the Effect type-aware rules and local Textfresser plugin
+		// (.oxlintrc.json, tooling/oxlint-plugin/).
+		name: "oxlint",
+		args: ["bun", "tooling/oxlint.ts"],
+	},
+	{
 		// Unused files, exports and dependencies across the repository,
 		// against tooling/knip-baseline.json.
 		name: "knip",

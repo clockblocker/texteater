@@ -101,11 +101,11 @@ function linesOf(items: readonly Item[]): TextItem[][] {
 	return lines;
 }
 
-type Char = { readonly char: string; mask: number };
+export type MaskedChar = { readonly char: string; mask: number };
 
 /** Collapses whitespace across items and trims the line's ends. */
-function charsOf(items: readonly TextItem[]): Char[] {
-	const chars: Char[] = [];
+function charsOf(items: readonly TextItem[]): MaskedChar[] {
+	const chars: MaskedChar[] = [];
 	let space = true;
 	for (const item of items)
 		for (const char of item.text.normalize("NFC")) {
@@ -125,7 +125,7 @@ function charsOf(items: readonly TextItem[]): Char[] {
 }
 
 /** Drops each style from the whitespace at the edges of its stretches. */
-function unstyleEdges(chars: readonly Char[]): void {
+export function unstyleEdges(chars: readonly MaskedChar[]): void {
 	for (const bit of Object.values(styleBits)) {
 		let index = 0;
 		while (index < chars.length) {
@@ -136,12 +136,12 @@ function unstyleEdges(chars: readonly Char[]): void {
 			let stop = index;
 			while (((chars[stop]?.mask ?? 0) & bit) !== 0) stop += 1;
 			for (let at = index; at < stop; at += 1) {
-				const char = chars[at] as Char;
+				const char = chars[at] as MaskedChar;
 				if (!/\s/u.test(char.char)) break;
 				char.mask &= ~bit;
 			}
 			for (let at = stop - 1; at >= index; at -= 1) {
-				const char = chars[at] as Char;
+				const char = chars[at] as MaskedChar;
 				if (!/\s/u.test(char.char)) break;
 				char.mask &= ~bit;
 			}
@@ -205,8 +205,11 @@ export function finish(draft: Draft): Block[] {
 			? [{ kind: "Heading", level: draft.level, runs }]
 			: [];
 	}
+	const hasContent = draft.cells.some((cell) =>
+		cell.some((item) => item.kind === "Text" && !blank.test(item.text)),
+	);
+	if (!hasContent) return [];
 	const cells = draft.cells.map(spaceFor);
-	if (cells.every((cell) => runsOf(cell).length === 0)) return [];
 	const separator: TextItem = {
 		kind: "Text",
 		text: " | ",

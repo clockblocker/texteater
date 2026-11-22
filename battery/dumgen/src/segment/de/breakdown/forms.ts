@@ -15,6 +15,20 @@ import {
 	germanReflexiveForms,
 	germanStemCitations,
 } from "dumcorpus/inventories";
+import type * as Dumrel from "dumrel/types";
+
+/** A German Morpheme Unit Shadow for breakdown links. */
+export const germanMorphemeShadow = (
+	kind: "Ending" | "Interfix" | "Prefix" | "Root" | "Suffix",
+	canonicalForm: string,
+): Dumrel.UnitShadow =>
+	// Sound: German's Morpheme routes have a Shadow for every Kind used here.
+	({
+		language: "de",
+		family: "Morpheme",
+		kind,
+		canonicalForm,
+	}) as Dumrel.UnitShadow;
 
 const capitalized = (word: string) =>
 	word.charAt(0).toLocaleUpperCase("de") + word.slice(1);

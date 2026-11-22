@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "./inflectional-bag.js";
 import type {
 	ArticleAgreement,
 	ArticleMember,
@@ -24,10 +25,7 @@ type ArticleEvidence =
  */
 export function headAgreement(surface: Dumling.Surface): ArticleAgreement {
 	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
-	const bag: Readonly<Record<string, unknown>> =
-		"inflectionalFeatures" in surface && surface.inflectionalFeatures
-			? surface.inflectionalFeatures
-			: {};
+	const bag = inflectionalBagOf(surface) ?? {};
 	const coordinate = (name: string) => {
 		const value = bag[name] ?? core[name];
 		return typeof value === "string" ? value : null;

@@ -7,7 +7,7 @@ import {
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
 import type { ScrollLanguage } from "../shared/supported-target-language";
-import { inspectionStep } from "./inspectionCapture";
+import { annotateInspectionStep } from "./inspectionCapture";
 import {
 	detectionSlice,
 	fitsSegments,
@@ -113,6 +113,18 @@ function placed(paragraphs: Paragraphs) {
 	);
 }
 
+const detectSentenceLanguages = Effect.fn("Detect sentence languages")(
+	function* (
+		dumgen: IntakeDumgen,
+		asked: readonly { readonly sentences: readonly string[] }[],
+	) {
+		yield* annotateInspectionStep("battery/dumgen · language.detect", {
+			paragraphs: asked,
+		});
+		return yield* dumgen.language.detect({ paragraphs: asked });
+	},
+);
+
 /**
  * Each Sentence's Detected Language by position, or undefined when
  * `language.detect` brought no usable answer. Detection reads a long
@@ -122,13 +134,7 @@ function detectedLanguages(dumgen: IntakeDumgen, paragraphs: Paragraphs) {
 	const asked = paragraphs.map(({ sentences }) => ({
 		sentences: sentences.map((sentence) => detectionSlice(sentence)),
 	}));
-	return dumgen.language.detect({ paragraphs: asked }).pipe(
-		Effect.withSpan(
-			"Detect sentence languages",
-			inspectionStep("battery/dumgen · language.detect", {
-				paragraphs: asked,
-			}),
-		),
+	return detectSentenceLanguages(dumgen, asked).pipe(
 		Effect.result,
 		Effect.map((detection) =>
 			Result.isFailure(detection)
@@ -140,73 +146,80 @@ function detectedLanguages(dumgen: IntakeDumgen, paragraphs: Paragraphs) {
 	);
 }
 
+const segmentSentencesInUnits = Effect.fn("Segment sentences in units")(
+	function* (
+		dumgen: IntakeDumgen,
+		segmentedParagraphs: readonly {
+			readonly sentences: readonly string[];
+		}[],
+	) {
+		yield* annotateInspectionStep("battery/dumgen · segment.inUnits", {
+			paragraphs: segmentedParagraphs,
+		});
+		return yield* dumgen.segment.inUnits({
+			language: "de",
+			paragraphs: segmentedParagraphs,
+		});
+	},
+);
+
 /**
  * The cut of every Sentence `cut` names, by position: `segment.inUnits`
  * reads each in its paragraph, a long one in parts joined back into one.
  */
-function cutSentences(
+const cutSentences = Effect.fn("IntakeAnalysis.cutSentences")(function* (
 	dumgen: IntakeDumgen,
 	paragraphs: Paragraphs,
 	cut: (position: number) => boolean,
 	observer: IntakeObserver | undefined,
 ) {
-	return Effect.gen(function* () {
-		const asked: { position: number; parts: SentenceParts }[][] = [];
-		let position = 0;
-		for (const { sentences } of paragraphs) {
-			const paragraph: { position: number; parts: SentenceParts }[] = [];
-			for (const sentence of sentences) {
-				if (cut(position))
-					paragraph.push({
-						position,
-						parts: sentenceParts(sentence),
-					});
-				position++;
-			}
-			if (paragraph.length > 0) asked.push(paragraph);
-		}
-		const sentences = asked.flat();
-		observer?.segmenting?.(
-			sentences.flatMap(({ position, parts }) =>
-				parts.parts.map(() => position),
-			),
-		);
-		const cuts = new Map<number, SegmentedSentence>();
-		if (sentences.length === 0) return cuts;
-		const segmentedParagraphs = asked.map((paragraph) => ({
-			sentences: paragraph.flatMap(({ parts }) => parts.parts),
-		}));
-		// A Sentence whose calls fail comes back marked, so this step
-		// fails only on a bug or an interruption.
-		const segmented = yield* dumgen.segment
-			.inUnits({ language: "de", paragraphs: segmentedParagraphs })
-			.pipe(
-				Effect.withSpan(
-					"Segment sentences in units",
-					inspectionStep("battery/dumgen · segment.inUnits", {
-						paragraphs: segmentedParagraphs,
-					}),
-				),
-			);
-		const parts = segmented.paragraphs.flatMap(
-			({ sentences }) => sentences,
-		);
-		let next = 0;
+	const asked: { position: number; parts: SentenceParts }[][] = [];
+	let position = 0;
+	for (const { sentences } of paragraphs) {
+		const paragraph: { position: number; parts: SentenceParts }[] = [];
 		for (const sentence of sentences) {
-			const count = sentence.parts.parts.length;
-			cuts.set(
-				sentence.position,
-				joinedSentence(parts.slice(next, next + count), sentence.parts),
-			);
-			next += count;
+			if (cut(position))
+				paragraph.push({
+					position,
+					parts: sentenceParts(sentence),
+				});
+			position++;
 		}
-		if (next !== parts.length)
-			throw new Error(
-				"segment.inUnits returned other Sentences than it was given.",
-			);
-		return cuts;
-	});
-}
+		if (paragraph.length > 0) asked.push(paragraph);
+	}
+	const sentences = asked.flat();
+	observer?.segmenting?.(
+		sentences.flatMap(({ position, parts }) =>
+			parts.parts.map(() => position),
+		),
+	);
+	const cuts = new Map<number, SegmentedSentence>();
+	if (sentences.length === 0) return cuts;
+	const segmentedParagraphs = asked.map((paragraph) => ({
+		sentences: paragraph.flatMap(({ parts }) => parts.parts),
+	}));
+	// A Sentence whose calls fail comes back marked, so this step
+	// fails only on a bug or an interruption.
+	const segmented = yield* segmentSentencesInUnits(
+		dumgen,
+		segmentedParagraphs,
+	);
+	const parts = segmented.paragraphs.flatMap(({ sentences }) => sentences);
+	let next = 0;
+	for (const sentence of sentences) {
+		const count = sentence.parts.parts.length;
+		cuts.set(
+			sentence.position,
+			joinedSentence(parts.slice(next, next + count), sentence.parts),
+		);
+		next += count;
+	}
+	if (next !== parts.length)
+		throw new Error(
+			"segment.inUnits returned other Sentences than it was given.",
+		);
+	return cuts;
+});
 
 /**
  * One Sentence as both results leave it: in the target language with its
@@ -246,13 +259,13 @@ function joined(
  * Analyzes Sentences already split, by paragraph: detection and
  * segmentation side by side, joined Sentence by Sentence (see above).
  */
-export function analyzeParagraphs(
-	dumgen: IntakeDumgen,
-	paragraphs: Paragraphs,
-	language: ScrollLanguage,
-	observer?: IntakeObserver,
-) {
-	return Effect.gen(function* () {
+export const analyzeParagraphs = Effect.fn("IntakeAnalysis.analyzeParagraphs")(
+	function* (
+		dumgen: IntakeDumgen,
+		paragraphs: Paragraphs,
+		language: ScrollLanguage,
+		observer?: IntakeObserver,
+	) {
 		const sentences = placed(paragraphs);
 		const cut = sentences.map(
 			({ text }) => fitsSegments(text) && mayBeIn(text, language),
@@ -293,5 +306,5 @@ export function analyzeParagraphs(
 				(_, position) => sentences[position]?.paragraph === paragraph,
 			),
 		);
-	});
-}
+	},
+);

@@ -158,6 +158,65 @@ function splitChunk<TChange, TPendingRelation>(
 	];
 }
 
+export type RelationPublicationChunk<TChange, TPendingRelation> = {
+	readonly final: boolean;
+	readonly changes: TChange[];
+	readonly pendingRelations: TPendingRelation[];
+	readonly proposed: readonly TPendingRelation[];
+};
+
+type QueuedRelationChunk<TChange, TPendingRelation> = {
+	readonly chunk: Chunk<TChange, TPendingRelation>;
+	readonly final: boolean;
+	readonly publication: RelationPublicationChunk<TChange, TPendingRelation>;
+};
+
+/**
+ * Stateful chunk queue for publishing a final Knowledge publication within
+ * Dumdict's per-transaction budget. Callers drive the loop (either Promise- or
+ * Effect-based) so each commit stays inside its own execution context.
+ */
+export function createRelationChunkQueue<TChange, TPendingRelation>(
+	publishable: {
+		readonly changes: readonly TChange[];
+		readonly pendingRelations: readonly TPendingRelation[];
+	},
+	unitsPerChunk: number = RELATION_UNITS_PER_PUBLICATION,
+) {
+	const chunks = packRelationUnits(relationUnits(publishable), unitsPerChunk);
+	const queue = chunks.map((chunk, index) => ({
+		chunk,
+		final: index === chunks.length - 1,
+	}));
+	return {
+		next(): QueuedRelationChunk<TChange, TPendingRelation> | undefined {
+			const entry = queue.shift();
+			if (!entry) return undefined;
+			const publication = chunkPublication(entry.chunk);
+			return {
+				chunk: entry.chunk,
+				final: entry.final,
+				publication: {
+					...publication,
+					final: entry.final,
+					proposed: entry.final
+						? publishable.pendingRelations
+						: publication.pendingRelations,
+				},
+			};
+		},
+		splitAndRequeue(
+			entry: QueuedRelationChunk<TChange, TPendingRelation>,
+		): void {
+			const [first, second] = splitChunk(entry.chunk);
+			queue.unshift(
+				{ chunk: first, final: false },
+				{ chunk: second, final: entry.final },
+			);
+		},
+	};
+}
+
 /**
  * Publishes a final Knowledge publication chunk by chunk and stops at the
  * first chunk that is neither Committed nor OverBudget. A chunk whose plan
@@ -170,35 +229,16 @@ export async function publishInRelationChunks<TChange, TPendingRelation>(
 		readonly changes: readonly TChange[];
 		readonly pendingRelations: readonly TPendingRelation[];
 	},
-	publishChunk: (chunk: {
-		readonly final: boolean;
-		readonly changes: TChange[];
-		readonly pendingRelations: TPendingRelation[];
-		readonly proposed: readonly TPendingRelation[];
-	}) => Promise<string>,
+	publishChunk: (
+		chunk: RelationPublicationChunk<TChange, TPendingRelation>,
+	) => Promise<string>,
 	unitsPerChunk: number = RELATION_UNITS_PER_PUBLICATION,
 ): Promise<void> {
-	const chunks = packRelationUnits(relationUnits(publishable), unitsPerChunk);
-	const queue = chunks.map((chunk, index) => ({
-		chunk,
-		final: index === chunks.length - 1,
-	}));
-	for (let next = queue.shift(); next; next = queue.shift()) {
-		const { chunk, final } = next;
-		const publication = chunkPublication(chunk);
-		const status = await publishChunk({
-			...publication,
-			final,
-			proposed: final
-				? publishable.pendingRelations
-				: publication.pendingRelations,
-		});
+	const queue = createRelationChunkQueue(publishable, unitsPerChunk);
+	for (let next = queue.next(); next; next = queue.next()) {
+		const status = await publishChunk(next.publication);
 		if (status === "OverBudget") {
-			const [first, second] = splitChunk(chunk);
-			queue.unshift(
-				{ chunk: first, final: false },
-				{ chunk: second, final },
-			);
+			queue.splitAndRequeue(next);
 			continue;
 		}
 		if (status !== "Committed") return;

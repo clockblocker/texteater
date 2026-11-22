@@ -100,26 +100,28 @@ const tableResetResultValidator = v.object({
 
 async function clearTableBatch(
 	ctx: MutationCtx,
+	tableNames: readonly TableNames[],
 	tableIndexValue: number | undefined,
+	invalidIndexMessage: string,
 ) {
 	const tableIndex = tableIndexValue ?? 0;
 	if (
 		!Number.isSafeInteger(tableIndex) ||
 		tableIndex < 0 ||
-		tableIndex > resetDemoTableNames.length
+		tableIndex > tableNames.length
 	) {
-		throw new Error("Reset table index is invalid.");
+		throw new Error(invalidIndexMessage);
 	}
-	if (tableIndex === resetDemoTableNames.length) {
+	if (tableIndex === tableNames.length) {
 		return { deleted: 0, hasMore: false, nextTableIndex: tableIndex };
 	}
-	const tableName = resetDemoTableNames[tableIndex];
-	if (!tableName) throw new Error("Reset table index is invalid.");
+	const tableName = tableNames[tableIndex];
+	if (!tableName) throw new Error(invalidIndexMessage);
 	const { deleted, cleared } = await deleteTableBatch(ctx, tableName);
 	const nextTableIndex = cleared ? tableIndex + 1 : tableIndex;
 	return {
 		deleted,
-		hasMore: nextTableIndex < resetDemoTableNames.length,
+		hasMore: nextTableIndex < tableNames.length,
 		nextTableIndex,
 	};
 }
@@ -189,7 +191,13 @@ async function clearTablesInBatches(
 export const clearSharedDataBatch = internalMutation({
 	args: { tableIndex: v.optional(v.number()) },
 	returns: tableResetResultValidator,
-	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
+	handler: (ctx, { tableIndex }) =>
+		clearTableBatch(
+			ctx,
+			resetDemoTableNames,
+			tableIndex,
+			"Reset table index is invalid.",
+		),
 });
 
 const visitorResetResultValidator = v.object({
@@ -290,43 +298,16 @@ export const listScrollIds = internalQuery({
 	},
 });
 
-const inspectionResetResultValidator = v.object({
-	deleted: v.number(),
-	hasMore: v.boolean(),
-	nextTableIndex: v.number(),
-});
-
 export const clearResolutionInspectionBatch = internalMutation({
 	args: { tableIndex: v.optional(v.number()) },
-	returns: inspectionResetResultValidator,
-	handler: async (ctx, { tableIndex: tableIndexValue }) => {
-		const tableIndex = tableIndexValue ?? 0;
-		if (
-			!Number.isSafeInteger(tableIndex) ||
-			tableIndex < 0 ||
-			tableIndex > resolutionInspectionTableNames.length
-		) {
-			throw new Error(
-				"Resolution inspection reset table index is invalid.",
-			);
-		}
-		if (tableIndex === resolutionInspectionTableNames.length) {
-			return { deleted: 0, hasMore: false, nextTableIndex: tableIndex };
-		}
-		const tableName = resolutionInspectionTableNames[tableIndex];
-		if (!tableName) {
-			throw new Error(
-				"Resolution inspection reset table index is invalid.",
-			);
-		}
-		const { deleted, cleared } = await deleteTableBatch(ctx, tableName);
-		const nextTableIndex = cleared ? tableIndex + 1 : tableIndex;
-		return {
-			deleted,
-			hasMore: nextTableIndex < resolutionInspectionTableNames.length,
-			nextTableIndex,
-		};
-	},
+	returns: tableResetResultValidator,
+	handler: (ctx, { tableIndex }) =>
+		clearTableBatch(
+			ctx,
+			resolutionInspectionTableNames,
+			tableIndex,
+			"Resolution inspection reset table index is invalid.",
+		),
 });
 
 /** Clears every tf-demo table, processed in bounded mutation batches. */

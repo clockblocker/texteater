@@ -1,6 +1,7 @@
 import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { DimensionId } from "./generated/types.js";
+import { lookupRoute, type RoutePolicy } from "./route-policy.js";
 import { pluralMarkerValues } from "./vocabulary.js";
 
 /**
@@ -21,13 +22,9 @@ type DimensionRule = {
  * Lemmas have, keyed by Family and Kind, so a key that names no route fails
  * to type-check.
  */
-type ParadigmPolicy<L extends Dumling.Language> = {
-	readonly [F in Dumling.Family<L>]?: {
-		readonly [K in Dumling.Kind<L, F>]?: readonly DimensionId[];
-	};
-};
-type RouteLookup = Readonly<
-	Record<string, Readonly<Record<string, readonly DimensionId[]>>>
+type ParadigmPolicy<L extends Dumling.Language> = RoutePolicy<
+	L,
+	readonly DimensionId[]
 >;
 
 /** The separable particle a German VERB Lemma names in Core, or undefined. */
@@ -152,18 +149,7 @@ const rules: {
 export function paradigmDimensions(
 	route: Dumling.LemmaRoute,
 ): readonly DimensionId[] {
-	const policies: Readonly<Record<string, RouteLookup | undefined>> =
-		paradigmPolicies;
-	const policy = Object.hasOwn(policies, route.language)
-		? policies[route.language]
-		: undefined;
-	const kinds =
-		policy && Object.hasOwn(policy, route.family)
-			? policy[route.family]
-			: undefined;
-	return kinds && Object.hasOwn(kinds, route.kind)
-		? (kinds[route.kind] ?? [])
-		: [];
+	return lookupRoute(paradigmPolicies, route) ?? [];
 }
 
 /** The rule of a dimension the Lemma's route names, or undefined. */

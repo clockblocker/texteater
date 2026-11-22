@@ -19,10 +19,29 @@ import { ruleStatementHash } from "./rules.js";
  */
 export type AdrIds = ReadonlySet<AdrId>;
 
+const ruleHashesByList = new WeakMap<
+	readonly Rule[],
+	ReadonlyMap<RuleId, string>
+>();
+
+/** Cached SHA-256 statement hashes for `rules`, first entry winning per id. */
+function ruleHashes(rules: readonly Rule[]): ReadonlyMap<RuleId, string> {
+	let cached = ruleHashesByList.get(rules);
+	if (cached === undefined) {
+		const map = new Map<RuleId, string>();
+		for (const rule of rules) {
+			if (!map.has(rule.id))
+				map.set(rule.id, ruleStatementHash(rule.statement));
+		}
+		cached = map;
+		ruleHashesByList.set(rules, cached);
+	}
+	return cached;
+}
+
 /** The hash a citation of Rule `id` stores now; undefined for no such Rule. */
 function currentHash(id: RuleId, rules: readonly Rule[]): string | undefined {
-	const rule = rules.find((candidate) => candidate.id === id);
-	return rule && ruleStatementHash(rule.statement);
+	return ruleHashes(rules).get(id);
 }
 
 /**
@@ -48,20 +67,17 @@ function checkRuleCitation(
 	rules: readonly Rule[],
 	reopen: string,
 ): RuleCitationCheck {
-	switch (ruleCitationStatus(citation, rules)) {
-		case "Current":
-			return undefined;
-		case "Unknown":
-			return {
-				check: "UnknownCitation",
-				message: `No Rule ${citation.rule}`,
-			};
-		case "Stale":
-			return {
-				check: "StaleCitation",
-				message: `Rule ${citation.rule} changed since ${reopen} and cite hash ${currentHash(citation.rule, rules)}`,
-			};
-	}
+	const hash = currentHash(citation.rule, rules);
+	if (hash === undefined)
+		return {
+			check: "UnknownCitation",
+			message: `No Rule ${citation.rule}`,
+		};
+	if (hash === citation.hash) return undefined;
+	return {
+		check: "StaleCitation",
+		message: `Rule ${citation.rule} changed since ${reopen} and cite hash ${hash}`,
+	};
 }
 
 /**

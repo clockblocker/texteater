@@ -183,7 +183,7 @@ export function baseOrderSurface(input: BaseOrderInput): string {
 	const cited = input.canonicalForm.split(" ");
 	const verb = cited.at(-1) ?? "";
 	const lead = input.expletive ? ["es"] : [];
-	if (bag.mood === "Imp" || !/n$/u.test(verb))
+	if (bag.mood === "Imp" || !verb.endsWith("n"))
 		return [...lead, ...input.words.map(({ text }) => text)].join(" ");
 	const words = joinedAdverbs(input.words, cited.slice(0, -1));
 	const texts = words.map(({ text }) => text);

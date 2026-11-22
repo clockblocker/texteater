@@ -26,6 +26,10 @@ export function subscribeToInteractionState(
 }
 
 export function updateCursorFlags(cursorFlags: number) {
+	if (state.cursorFlags === cursorFlags) {
+		return;
+	}
+
 	const prev = state;
 
 	const next = { ...state };

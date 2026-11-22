@@ -187,6 +187,26 @@ export type Assembly = {
 	readonly edges: readonly AssembledEdge[];
 };
 
+/** The pieces held by a Saying span. */
+export function sayingPieces(edges: readonly AssembledEdge[]): Set<number> {
+	const pieces = new Set<number>();
+	for (const edge of edges) {
+		if (edge.source !== "saying") continue;
+		pieces.add(edge.pieces[0]);
+		pieces.add(edge.pieces[1]);
+	}
+	return pieces;
+}
+
+/** Whether a piece is neither in a Saying nor decided by a code rule. */
+export function openPiecePredicate(
+	edges: readonly AssembledEdge[],
+	bound: ReadonlySet<number>,
+): (id: number) => boolean {
+	const saying = sayingPieces(edges);
+	return (id: number) => !saying.has(id) && !bound.has(id);
+}
+
 /**
  * What a multiword unit's members absorb (de/fused-word-pieces,
  * de/fixed-member-test): the other pieces of a member's fused word, and
@@ -256,11 +276,11 @@ export function assemble(
 			locutionPieces.add(left);
 			locutionPieces.add(right);
 		}
-	const sayingPieces = new Set<number>();
+	const inSaying = new Set<number>();
 	const expression: (readonly [number, number])[] = [...input.expression];
 	for (const span of input.sayings)
 		for (const id of span) {
-			sayingPieces.add(id);
+			inSaying.add(id);
 			expression.push([span[0] ?? id, id]);
 			tagged.push({ pieces: [span[0] ?? id, id], source: "saying" });
 		}
@@ -284,7 +304,7 @@ export function assemble(
 		familyOf: (group) =>
 			group.length === 1
 				? "Lexeme"
-				: group.some((id) => sayingPieces.has(id))
+				: group.some((id) => inSaying.has(id))
 					? "Saying"
 					: group.some((id) => locutionPieces.has(id))
 						? "Locution"

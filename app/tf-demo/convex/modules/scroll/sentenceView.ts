@@ -54,6 +54,160 @@ export const sentenceViewValidator = v.object({
 });
 
 /**
+ * Several Sentences as a Visitor sees them in the reader, batching and
+ * deduplicating Attestation -> Reading -> Lemma gender lookups across the
+ * whole batch in three parallel waves.
+ */
+export async function projectSentenceViews(
+	ctx: QueryCtx,
+	sentences: readonly Doc<"sentences">[],
+	visitorId: string,
+) {
+	if (sentences.length === 0) return [];
+	const prepared = await Promise.all(
+		sentences.map(async (sentence) => {
+			// A Plain Sentence, unprocessed ones included, has no Segments to load
+			// or encounter, so a long plain Scroll costs one read per Sentence.
+			const plain = isPlainSentence(sentence.language);
+			const [segments, encounteredSegmentIds] = plain
+				? [[], new Set<Id<"segments">>()]
+				: await Promise.all([
+						loadStoredSegments(ctx, sentence._id),
+						loadEncounteredSegmentIds(ctx, {
+							visitorId,
+							sentenceId: sentence._id,
+						}),
+					]);
+			const encounteredAttestationIds = new Set<Id<"attestations">>();
+			for (const segment of segments) {
+				const attestationId =
+					segment.attestationMembership?.attestationId;
+				if (encounteredSegmentIds.has(segment._id) && attestationId) {
+					encounteredAttestationIds.add(attestationId);
+				}
+			}
+			return {
+				sentence,
+				plain,
+				segments,
+				encounteredSegmentIds,
+				encounteredAttestationIds,
+			};
+		}),
+	);
+
+	const uniqueAttestationIds = [
+		...new Set(
+			prepared.flatMap(({ encounteredAttestationIds }) => [
+				...encounteredAttestationIds,
+			]),
+		),
+	];
+	const attestationsById = new Map(
+		await Promise.all(
+			uniqueAttestationIds.map(
+				async (id) => [id, await ctx.db.get(id)] as const,
+			),
+		),
+	);
+
+	const uniqueReadingIds = [
+		...new Set(
+			[...attestationsById.values()].flatMap((attestation) =>
+				attestation ? [attestation.readingId] : [],
+			),
+		),
+	];
+	const readingsById = new Map(
+		await Promise.all(
+			uniqueReadingIds.map(
+				async (id) => [id, await ctx.db.get(id)] as const,
+			),
+		),
+	);
+
+	const uniqueLemmaIds = [
+		...new Set(
+			[...readingsById.values()].flatMap((reading) =>
+				reading ? [reading.lemmaId] : [],
+			),
+		),
+	];
+	const lemmasById = new Map(
+		await Promise.all(
+			uniqueLemmaIds.map(
+				async (id) => [id, await ctx.db.get(id)] as const,
+			),
+		),
+	);
+
+	const genders = new Map(
+		uniqueAttestationIds.map((id) => {
+			const attestation = attestationsById.get(id);
+			const reading = attestation
+				? readingsById.get(attestation.readingId)
+				: null;
+			const lemma = reading ? lemmasById.get(reading.lemmaId) : null;
+			return [id, lemma ? coreGender(lemma) : undefined] as const;
+		}),
+	);
+
+	return prepared.map(
+		({
+			sentence,
+			plain,
+			segments,
+			encounteredSegmentIds,
+			encounteredAttestationIds,
+		}) => {
+			const unitOf = unitsByMember(sentence.units);
+			return {
+				sentenceId: sentence._id,
+				position: sentence.position,
+				paragraph: sentence.paragraph,
+				...(sentence.language === undefined
+					? {}
+					: { language: sentence.language }),
+				...(plain ? { plain: true as const } : {}),
+				stitchedText: sentence.stitchedText,
+				...(sentence.heading ? { heading: sentence.heading } : {}),
+				...(sentence.segmentationFailed
+					? { segmentationFailed: true as const }
+					: {}),
+				segments: segments.map((segment) => {
+					const attestationId =
+						segment.attestationMembership?.attestationId;
+					const unit = unitOf.get(segment.index);
+					const encountered = Boolean(
+						encounteredSegmentIds.has(segment._id) ||
+							(attestationId &&
+								encounteredAttestationIds.has(attestationId)),
+					);
+					const gender = attestationId
+						? genders.get(attestationId)
+						: undefined;
+					return {
+						index: segment.index,
+						kind: segment.kind,
+						text: segment.text,
+						...(segment.surface === undefined
+							? {}
+							: { surface: segment.surface }),
+						...(attestationId ? { attestationId } : {}),
+						encountered,
+						...(gender ? { gender } : {}),
+						...(encountered && segment.resolutionState
+							? { resolutionState: segment.resolutionState.kind }
+							: {}),
+						...(unit ? { unit } : {}),
+					};
+				}),
+			};
+		},
+	);
+}
+
+/**
  * One Sentence as a Visitor sees it in the reader: every Segment, the
  * biggest unit and the occurrence it belongs to, and the resolution state
  * this Visitor has earned by encountering it. An occurrence counts as
@@ -65,78 +219,7 @@ export async function projectSentenceView(
 	sentence: Doc<"sentences">,
 	visitorId: string,
 ) {
-	// A Plain Sentence, unprocessed ones included, has no Segments to load
-	// or encounter, so a long plain Scroll costs one read per Sentence.
-	const plain = isPlainSentence(sentence.language);
-	const [segments, encounteredSegmentIds] = plain
-		? [[], new Set<Id<"segments">>()]
-		: await Promise.all([
-				loadStoredSegments(ctx, sentence._id),
-				loadEncounteredSegmentIds(ctx, {
-					visitorId,
-					sentenceId: sentence._id,
-				}),
-			]);
-	const encounteredAttestationIds = new Set<Id<"attestations">>();
-	for (const segment of segments) {
-		const attestationId = segment.attestationMembership?.attestationId;
-		if (encounteredSegmentIds.has(segment._id) && attestationId) {
-			encounteredAttestationIds.add(attestationId);
-		}
-	}
-	const genders = new Map(
-		await Promise.all(
-			[...encounteredAttestationIds].map(async (id) => {
-				const attestation = await ctx.db.get(id);
-				const reading = attestation
-					? await ctx.db.get(attestation.readingId)
-					: null;
-				const lemma = reading
-					? await ctx.db.get(reading.lemmaId)
-					: null;
-				return [id, lemma ? coreGender(lemma) : undefined] as const;
-			}),
-		),
-	);
-	const unitOf = unitsByMember(sentence.units);
-	return {
-		sentenceId: sentence._id,
-		position: sentence.position,
-		paragraph: sentence.paragraph,
-		...(sentence.language === undefined
-			? {}
-			: { language: sentence.language }),
-		...(plain ? { plain: true as const } : {}),
-		stitchedText: sentence.stitchedText,
-		...(sentence.heading ? { heading: sentence.heading } : {}),
-		...(sentence.segmentationFailed
-			? { segmentationFailed: true as const }
-			: {}),
-		segments: segments.map((segment) => {
-			const attestationId = segment.attestationMembership?.attestationId;
-			const unit = unitOf.get(segment.index);
-			const encountered = Boolean(
-				encounteredSegmentIds.has(segment._id) ||
-					(attestationId &&
-						encounteredAttestationIds.has(attestationId)),
-			);
-			return {
-				index: segment.index,
-				kind: segment.kind,
-				text: segment.text,
-				...(segment.surface === undefined
-					? {}
-					: { surface: segment.surface }),
-				...(attestationId ? { attestationId } : {}),
-				encountered,
-				...(attestationId && genders.get(attestationId)
-					? { gender: genders.get(attestationId) }
-					: {}),
-				...(encountered && segment.resolutionState
-					? { resolutionState: segment.resolutionState.kind }
-					: {}),
-				...(unit ? { unit } : {}),
-			};
-		}),
-	};
+	const [view] = await projectSentenceViews(ctx, [sentence], visitorId);
+	if (!view) throw new Error("Expected a projected Sentence view.");
+	return view;
 }

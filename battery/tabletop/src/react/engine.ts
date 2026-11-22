@@ -1,6 +1,6 @@
 import type { Point } from "../core/geometry";
 import { HAND_Z, type HandPose, LIFTED } from "../core/hand";
-import { startMoves, sumAt } from "../core/move";
+import { sampleMoves, startMoves } from "../core/move";
 import type { SlotId } from "../core/place";
 import type { Pose } from "../core/plan";
 import type { MotionPolicy } from "../core/reduce";
@@ -59,7 +59,7 @@ export class Engine {
 	prefix = "tt";
 	/** Device pixels per CSS px, read once a frame: what offsets snap to. */
 	dpr = devicePixelRatio();
-	private readonly active = new Set<BodyState>();
+	readonly active = new Set<BodyState>();
 	private readonly unstarted = new Set<BodyState>();
 	/** The frame the held Moves start on: the one after the frame that paints them. */
 	private startFrame = Number.POSITIVE_INFINITY;
@@ -155,10 +155,54 @@ export class Engine {
 		body.el = null;
 		body.lean = null;
 		this.tilting.delete(body);
+		this.scheduleEvict(id, body);
 	}
 
 	seat(id: string, el: HTMLElement | null) {
+		if (el === null) {
+			const body = this.bodies.get(id);
+			if (!body) return;
+			body.seat = null;
+			this.scheduleEvict(id, body);
+			return;
+		}
 		this.body(id).seat = el;
+	}
+
+	/**
+	 * Evicts a fully detached Body on the microtask queue so synchronous React
+	 * StrictMode same-element re-attach retains its state while real unmounts
+	 * release `BodyState` and its DOM references.
+	 */
+	private scheduleEvict(id: string, body: BodyState) {
+		if (body.el !== null || body.seat !== null) return;
+		queueMicrotask(() => {
+			if (
+				this.bodies.get(id) === body &&
+				body.el === null &&
+				body.seat === null
+			) {
+				body.mounted = null;
+				this.bodies.delete(id);
+				this.active.delete(body);
+				this.unstarted.delete(body);
+				this.tilting.delete(body);
+			}
+		});
+	}
+
+	/** Stops the frame loop and drops pending animations, cues, waiters, and veils. */
+	dispose() {
+		if (this.loop !== null) {
+			cancelAnimationFrame(this.loop);
+			this.loop = null;
+		}
+		this.active.clear();
+		this.unstarted.clear();
+		this.tilting.clear();
+		this.cues.length = 0;
+		this.waiters.length = 0;
+		this.veils.clear();
 	}
 
 	/** Where the Table's px boxes start, in client px. */
@@ -219,12 +263,13 @@ export class Engine {
 	shownPose(body: BodyState, now: number): Pose | null {
 		const rest = this.restPose(body);
 		if (!rest) return null;
+		const sample = sampleMoves(body.moves, now);
 		const shown: Pose = {};
 		for (const [channel, value] of Object.entries(rest) as [
 			keyof Pose,
 			number,
 		][])
-			shown[channel] = value + sumAt(body.moves, channel, now);
+			shown[channel] = value + (sample[channel] ?? 0);
 		return shown;
 	}
 

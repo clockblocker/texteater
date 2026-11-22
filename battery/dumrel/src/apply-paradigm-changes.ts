@@ -1,11 +1,11 @@
 import { ParsingError } from "common-utils/validation";
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
+import { issue } from "./issue.js";
 import {
 	checkChange,
 	contextOf,
 	failed,
-	issue,
 	paradigmIssue,
 	parseIn,
 	pruneParadigm,

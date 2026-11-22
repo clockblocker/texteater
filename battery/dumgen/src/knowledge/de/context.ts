@@ -8,6 +8,7 @@
  */
 
 import type { EntryType } from "@typesafe-ai/sdk";
+import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	applyKnowledgeChange,
@@ -69,6 +70,35 @@ export type StoredParadigm = {
 	readonly paradigm: Dumrel.LemmaParadigm;
 	readonly readings: readonly Dumling.Reading<"de">[];
 };
+
+/** Why an occurrence's Reading, Attestation, or target Segments are bad input, if they are. */
+export function validateOccurrenceTarget(input: {
+	readonly reading: Dumling.Reading<"de">;
+	readonly attestation: Dumling.Attestation<"de">;
+	readonly sentence: {
+		readonly segments: readonly unknown[];
+		readonly target: readonly number[];
+	};
+}): string | undefined {
+	if (
+		lemmaIdentityKey(input.attestation.surface.lemma) !==
+		lemmaIdentityKey(input.reading.lemma)
+	)
+		return "The Attestation is of another Lemma than the Reading";
+	const { segments, target } = input.sentence;
+	if (
+		target.length === 0 ||
+		target.some(
+			(index, at) =>
+				!Number.isInteger(index) ||
+				index < 0 ||
+				index >= segments.length ||
+				(at > 0 && index <= (target[at - 1] ?? -1)),
+		)
+	)
+		return "The target is no ascending run of the Sentence's Segments";
+	return undefined;
+}
 
 /** The aspects' context, with jev, Luna and the log of the running operation. */
 export const aspectContext = (

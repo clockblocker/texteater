@@ -25,7 +25,12 @@
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import type { Answers } from "../ask.js";
-import type { AssembledEdge, Family, Membership } from "./assembly.js";
+import {
+	type AssembledEdge,
+	type Family,
+	type Membership,
+	sayingPieces,
+} from "./assembly.js";
 import { fixedMemberQuestion, keptApart } from "./fixed-member.js";
 import type { Nomination } from "./nomination.js";
 import { groupKey, type Partition, partitionOf } from "./partition.js";
@@ -84,11 +89,7 @@ export function memberChecks(
 	ruled: Membership,
 	bound: ReadonlySet<number>,
 ): MemberCheck[] {
-	const saying = new Set(
-		ruled.edges
-			.filter((edge) => edge.source === "saying")
-			.flatMap((edge) => edge.pieces),
-	);
+	const saying = sayingPieces(ruled.edges);
 	const ranged = new Set(ruled.ranges.flat());
 	const checks: MemberCheck[] = [];
 	for (const unit of ruled.partition) {

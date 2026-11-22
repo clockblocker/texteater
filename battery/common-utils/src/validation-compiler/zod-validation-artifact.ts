@@ -1,11 +1,8 @@
 import type { z } from "zod";
 
 import type {
-	ArrayConstraintCheck,
 	ArtifactPrimitive,
 	Constraint,
-	NumberConstraintCheck,
-	StringConstraintCheck,
 	ValidationEffect,
 } from "../validation/validation-artifact.js";
 import {
@@ -120,7 +117,6 @@ function compileReference(
 	return ["ref", id];
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function compileDefinition(
 	definition: ZodDefinition,
 	schemaIdentity: object,
@@ -130,30 +126,8 @@ function compileDefinition(
 ): Constraint {
 	assertNoErrorCustomization(definition, schemaName, path, "Zod node");
 	switch (definition.type) {
-		case "array": {
-			const element = compileReference(
-				definition.element,
-				schemaName,
-				`${path}[]`,
-				context,
-			);
-			const effects = compileChecks(
-				definition.checks,
-				schemaName,
-				path,
-				context,
-				"array",
-			);
-			const checks: ArrayConstraintCheck[] = [];
-			for (const effect of effects) {
-				if (effect[0] !== "array") break;
-				checks.push(effect[1]);
-			}
-			return withEffects(
-				["array", element, checks],
-				effects.slice(checks.length),
-			);
-		}
+		case "array":
+			return compileArray(definition, schemaName, path, context);
 		case "boolean":
 			assertNoChecks(definition, schemaName, path);
 			return ["boolean"];
@@ -164,55 +138,14 @@ function compileDefinition(
 				primitiveValues(definition.entries, schemaName, path),
 			];
 		case "lazy":
-			if (definition.getter === undefined) {
-				throw unsupported(
-					schemaName,
-					path,
-					"lazy node without a getter",
-				);
-			}
-			return withEffects(
-				compileReference(
-					definition.getter(),
-					schemaName,
-					path,
-					context,
-				),
-				compileChecks(definition.checks, schemaName, path, context),
-			);
-		case "literal": {
-			assertNoChecks(definition, schemaName, path);
-			const values = definition.values ?? [];
-			if (values.length !== 1) {
-				throw unsupported(
-					schemaName,
-					path,
-					`literal node with ${values.length} values`,
-				);
-			}
-			return ["literal", primitiveValue(values[0], schemaName, path)];
-		}
+			return compileLazy(definition, schemaName, path, context);
+		case "literal":
+			return compileLiteral(definition, schemaName, path);
 		case "null":
 			assertNoChecks(definition, schemaName, path);
 			return ["null"];
-		case "number": {
-			const effects = compileChecks(
-				definition.checks,
-				schemaName,
-				path,
-				context,
-				"number",
-			);
-			const checks: NumberConstraintCheck[] = [];
-			for (const effect of effects) {
-				if (effect[0] !== "number") break;
-				checks.push(effect[1]);
-			}
-			return withEffects(
-				checks.length === 0 ? ["number"] : ["number", checks],
-				effects.slice(checks.length),
-			);
-		}
+		case "number":
+			return compileNumber(definition, schemaName, path, context);
 		case "nullable":
 			assertNoChecks(definition, schemaName, path);
 			return [
@@ -235,239 +168,38 @@ function compileDefinition(
 					context,
 				),
 			];
-		case "object": {
-			const shape =
-				typeof definition.shape === "function"
-					? definition.shape()
-					: definition.shape;
-			if (shape === undefined) {
-				throw unsupported(
-					schemaName,
-					path,
-					"object node without a shape",
-				);
-			}
-			const compiledShape: Record<string, Constraint> = {};
-			for (const [key, child] of Object.entries(shape)) {
-				compiledShape[key] = compileReference(
-					child,
-					schemaName,
-					propertyPath(path, key),
-					context,
-				);
-			}
-			return withEffects(
-				[
-					"object",
-					compiledShape,
-					objectPolicy(definition, schemaName, path),
-				],
-				compileChecks(definition.checks, schemaName, path, context),
-			);
-		}
-		case "pipe": {
-			const input = zodInternals(definition.in, schemaName, path)._zod
-				.def;
-			if (definition.out === undefined) {
-				throw unsupported(schemaName, path, "pipe without an output");
-			}
-			const output = zodInternals(definition.out, schemaName, path)._zod
-				.def;
-			if (input.type === "transform" && input.transform !== undefined) {
-				return withEffects(
-					[
-						"preprocess",
-						registeredOperation(
-							"transform",
-							input.transform,
-							input.error,
-							schemaName,
-							path,
-							context,
-						),
-						compileReference(
-							definition.out,
-							schemaName,
-							path,
-							context,
-						),
-					],
-					compileChecks(definition.checks, schemaName, path, context),
-				);
-			}
-			if (output.type === "transform" && output.transform !== undefined) {
-				if (output.transform.length > 1) {
-					throw unsupported(
-						schemaName,
-						path,
-						"contextual post-transform",
-					);
-				}
-				return withEffects(
-					withEffects(
-						compileReference(
-							definition.in,
-							schemaName,
-							path,
-							context,
-						),
-						[
-							[
-								"operation",
-								registeredOperation(
-									"transform",
-									output.transform,
-									output.error,
-									schemaName,
-									path,
-									context,
-								),
-							],
-						],
-					),
-					compileChecks(definition.checks, schemaName, path, context),
-				);
-			}
-			throw unsupported(
-				schemaName,
-				path,
-				"pipe other than a registered preprocess or post-transform",
-			);
-		}
-		case "record": {
-			const key = compileReference(
-				definition.keyType,
-				schemaName,
-				`${path}<key>`,
-				context,
-			);
-			const value = compileReference(
-				definition.valueType,
-				schemaName,
-				`${path}<value>`,
-				context,
-			);
-			return withEffects(
-				isPartialRecordKey(definition.keyType)
-					? ["partial-record", key, value]
-					: ["record", key, value],
-				compileChecks(definition.checks, schemaName, path, context),
-			);
-		}
+		case "object":
+			return compileObject(definition, schemaName, path, context);
+		case "pipe":
+			return compilePipe(definition, schemaName, path, context);
+		case "record":
+			return compileRecord(definition, schemaName, path, context);
 		case "readonly":
-			assertNoChecks(definition, schemaName, path);
-			return withEffects(
-				compileReference(
-					definition.innerType,
-					schemaName,
-					path,
-					context,
-				),
-				[
-					[
-						"operation",
-						registeredSchemaOperation(
-							"readonly",
-							schemaIdentity,
-							schemaName,
-							path,
-							context,
-						),
-					],
-				],
-			);
-		case "string": {
-			const effects = compileChecks(
-				definition.checks,
+			return compileReadonly(
+				definition,
+				schemaIdentity,
 				schemaName,
 				path,
 				context,
-				"string",
+			);
+		case "string":
+			return compileString(
+				definition,
 				schemaIdentity,
+				schemaName,
+				path,
+				context,
 			);
-			const checks: StringConstraintCheck[] = [];
-			for (const effect of effects) {
-				if (effect[0] !== "string") break;
-				checks.push(effect[1]);
-			}
-			return withEffects(
-				checks.length === 0 ? ["string"] : ["string", checks],
-				effects.slice(checks.length),
+		case "tuple":
+			return compileTuple(definition, schemaName, path, context);
+		case "union":
+			return compileUnion(
+				definition,
+				schemaIdentity,
+				schemaName,
+				path,
+				context,
 			);
-		}
-		case "tuple": {
-			const items = definition.items ?? [];
-			const [first] = items;
-			if (
-				first === undefined ||
-				items.some((item) => item !== first) ||
-				(definition.rest !== undefined && definition.rest !== first) ||
-				zodInternals(first, schemaName, `${path}[0]`)._zod.def.type ===
-					"optional"
-			) {
-				throw unsupported(
-					schemaName,
-					path,
-					"homogeneous tuple shape other than required fixed items with an optional identical rest",
-				);
-			}
-			const compiledItems = items.map((item, index) =>
-				compileReference(
-					item,
-					schemaName,
-					`${path}[${String(index)}]`,
-					context,
-				),
-			);
-			return withEffects(
-				definition.rest === undefined
-					? ["tuple", compiledItems]
-					: [
-							"tuple",
-							compiledItems,
-							compileReference(
-								definition.rest,
-								schemaName,
-								`${path}<rest>`,
-								context,
-							),
-						],
-				compileChecks(definition.checks, schemaName, path, context),
-			);
-		}
-		case "union": {
-			const options = definition.options ?? [];
-			if (options.length === 0) {
-				throw unsupported(schemaName, path, "empty union node");
-			}
-			if (definition.discriminator !== undefined) {
-				return withEffects(
-					compileDiscriminatedUnion(
-						schemaIdentity,
-						definition.discriminator,
-						options,
-						schemaName,
-						path,
-						context,
-					),
-					compileChecks(definition.checks, schemaName, path, context),
-				);
-			}
-			return withEffects(
-				[
-					"union",
-					options.map((option, index) =>
-						compileReference(
-							option,
-							schemaName,
-							`${path}<option:${index}>`,
-							context,
-						),
-					),
-				],
-				compileChecks(definition.checks, schemaName, path, context),
-			);
-		}
 		default:
 			throw unsupported(
 				schemaName,
@@ -475,6 +207,344 @@ function compileDefinition(
 				`Zod node ${JSON.stringify(definition.type)}`,
 			);
 	}
+}
+
+function partitionLeadingChecks<Kind extends "array" | "number" | "string">(
+	effects: readonly ValidationEffect[],
+	kind: Kind,
+): {
+	checks: Extract<ValidationEffect, readonly [Kind, unknown]>[1][];
+	rest: ValidationEffect[];
+} {
+	const checks: Extract<ValidationEffect, readonly [Kind, unknown]>[1][] = [];
+	for (const effect of effects) {
+		if (effect[0] !== kind) break;
+		checks.push(
+			effect[1] as Extract<ValidationEffect, readonly [Kind, unknown]>[1],
+		);
+	}
+	return { checks, rest: effects.slice(checks.length) };
+}
+
+function compileArray(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const element = compileReference(
+		definition.element,
+		schemaName,
+		`${path}[]`,
+		context,
+	);
+	const effects = compileChecks(
+		definition.checks,
+		schemaName,
+		path,
+		context,
+		"array",
+	);
+	const { checks, rest } = partitionLeadingChecks(effects, "array");
+	return withEffects(["array", element, checks], rest);
+}
+
+function compileLazy(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	if (definition.getter === undefined) {
+		throw unsupported(schemaName, path, "lazy node without a getter");
+	}
+	return withEffects(
+		compileReference(definition.getter(), schemaName, path, context),
+		compileChecks(definition.checks, schemaName, path, context),
+	);
+}
+
+function compileLiteral(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+): Constraint {
+	assertNoChecks(definition, schemaName, path);
+	const values = definition.values ?? [];
+	if (values.length !== 1) {
+		throw unsupported(
+			schemaName,
+			path,
+			`literal node with ${values.length} values`,
+		);
+	}
+	return ["literal", primitiveValue(values[0], schemaName, path)];
+}
+
+function compileNumber(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const effects = compileChecks(
+		definition.checks,
+		schemaName,
+		path,
+		context,
+		"number",
+	);
+	const { checks, rest } = partitionLeadingChecks(effects, "number");
+	return withEffects(
+		checks.length === 0 ? ["number"] : ["number", checks],
+		rest,
+	);
+}
+
+function compileObject(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const shape =
+		typeof definition.shape === "function"
+			? definition.shape()
+			: definition.shape;
+	if (shape === undefined) {
+		throw unsupported(schemaName, path, "object node without a shape");
+	}
+	const compiledShape: Record<string, Constraint> = {};
+	for (const [key, child] of Object.entries(shape)) {
+		compiledShape[key] = compileReference(
+			child,
+			schemaName,
+			propertyPath(path, key),
+			context,
+		);
+	}
+	return withEffects(
+		["object", compiledShape, objectPolicy(definition, schemaName, path)],
+		compileChecks(definition.checks, schemaName, path, context),
+	);
+}
+
+function compilePipe(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const input = zodInternals(definition.in, schemaName, path)._zod.def;
+	if (definition.out === undefined) {
+		throw unsupported(schemaName, path, "pipe without an output");
+	}
+	const output = zodInternals(definition.out, schemaName, path)._zod.def;
+	if (input.type === "transform" && input.transform !== undefined) {
+		return withEffects(
+			[
+				"preprocess",
+				registeredOperation(
+					"transform",
+					input.transform,
+					input.error,
+					schemaName,
+					path,
+					context,
+				),
+				compileReference(definition.out, schemaName, path, context),
+			],
+			compileChecks(definition.checks, schemaName, path, context),
+		);
+	}
+	if (output.type === "transform" && output.transform !== undefined) {
+		if (output.transform.length > 1) {
+			throw unsupported(schemaName, path, "contextual post-transform");
+		}
+		return withEffects(
+			withEffects(
+				compileReference(definition.in, schemaName, path, context),
+				[
+					[
+						"operation",
+						registeredOperation(
+							"transform",
+							output.transform,
+							output.error,
+							schemaName,
+							path,
+							context,
+						),
+					],
+				],
+			),
+			compileChecks(definition.checks, schemaName, path, context),
+		);
+	}
+	throw unsupported(
+		schemaName,
+		path,
+		"pipe other than a registered preprocess or post-transform",
+	);
+}
+
+function compileRecord(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const key = compileReference(
+		definition.keyType,
+		schemaName,
+		`${path}<key>`,
+		context,
+	);
+	const value = compileReference(
+		definition.valueType,
+		schemaName,
+		`${path}<value>`,
+		context,
+	);
+	return withEffects(
+		isPartialRecordKey(definition.keyType)
+			? ["partial-record", key, value]
+			: ["record", key, value],
+		compileChecks(definition.checks, schemaName, path, context),
+	);
+}
+
+function compileReadonly(
+	definition: ZodDefinition,
+	schemaIdentity: object,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	assertNoChecks(definition, schemaName, path);
+	return withEffects(
+		compileReference(definition.innerType, schemaName, path, context),
+		[
+			[
+				"operation",
+				registeredSchemaOperation(
+					"readonly",
+					schemaIdentity,
+					schemaName,
+					path,
+					context,
+				),
+			],
+		],
+	);
+}
+
+function compileString(
+	definition: ZodDefinition,
+	schemaIdentity: object,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const effects = compileChecks(
+		definition.checks,
+		schemaName,
+		path,
+		context,
+		"string",
+		schemaIdentity,
+	);
+	const { checks, rest } = partitionLeadingChecks(effects, "string");
+	return withEffects(
+		checks.length === 0 ? ["string"] : ["string", checks],
+		rest,
+	);
+}
+
+function compileTuple(
+	definition: ZodDefinition,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const items = definition.items ?? [];
+	const [first] = items;
+	if (
+		first === undefined ||
+		items.some((item) => item !== first) ||
+		(definition.rest !== undefined && definition.rest !== first) ||
+		zodInternals(first, schemaName, `${path}[0]`)._zod.def.type ===
+			"optional"
+	) {
+		throw unsupported(
+			schemaName,
+			path,
+			"homogeneous tuple shape other than required fixed items with an optional identical rest",
+		);
+	}
+	const compiledItems = items.map((item, index) =>
+		compileReference(
+			item,
+			schemaName,
+			`${path}[${String(index)}]`,
+			context,
+		),
+	);
+	return withEffects(
+		definition.rest === undefined
+			? ["tuple", compiledItems]
+			: [
+					"tuple",
+					compiledItems,
+					compileReference(
+						definition.rest,
+						schemaName,
+						`${path}<rest>`,
+						context,
+					),
+				],
+		compileChecks(definition.checks, schemaName, path, context),
+	);
+}
+
+function compileUnion(
+	definition: ZodDefinition,
+	schemaIdentity: object,
+	schemaName: string,
+	path: string,
+	context: CompilationContext,
+): Constraint {
+	const options = definition.options ?? [];
+	if (options.length === 0) {
+		throw unsupported(schemaName, path, "empty union node");
+	}
+	if (definition.discriminator !== undefined) {
+		return withEffects(
+			compileDiscriminatedUnion(
+				schemaIdentity,
+				definition.discriminator,
+				options,
+				schemaName,
+				path,
+				context,
+			),
+			compileChecks(definition.checks, schemaName, path, context),
+		);
+	}
+	return withEffects(
+		[
+			"union",
+			options.map((option, index) =>
+				compileReference(
+					option,
+					schemaName,
+					`${path}<option:${index}>`,
+					context,
+				),
+			),
+		],
+		compileChecks(definition.checks, schemaName, path, context),
+	);
 }
 
 function compileDiscriminatedUnion(

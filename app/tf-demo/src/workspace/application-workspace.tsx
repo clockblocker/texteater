@@ -2,6 +2,7 @@ import { RegistryContext } from "@effect/atom-react";
 import { BAR_REM, groundOf, panesOf, type WorkspaceState } from "compass";
 import {
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useLayoutEffect,
@@ -68,19 +69,28 @@ export function ApplicationWorkspace() {
 		[registry],
 	);
 	const { state } = workspace;
-	const controller = {
-		canCloseAllSheets: !atStart(state),
-		closeAllSheets: () => {
-			/* the counter runs on, so no new Presentation takes the id of
-			   one the browser's history still names */
-			const fresh = initialWorkspace();
-			workspace.reset({
-				...fresh,
-				nextId: Math.max(fresh.nextId, workspace.current().nextId),
-			});
-			setRun((value) => value + 1);
-		},
-	};
+	const latestWorkspace = useRef(workspace);
+	useLayoutEffect(() => {
+		latestWorkspace.current = workspace;
+	});
+	const canCloseAllSheets = !atStart(state);
+	const closeAllSheets = useCallback(() => {
+		/* the counter runs on, so no new Presentation takes the id of
+		   one the browser's history still names */
+		const fresh = initialWorkspace();
+		latestWorkspace.current.reset({
+			...fresh,
+			nextId: Math.max(
+				fresh.nextId,
+				latestWorkspace.current.current().nextId,
+			),
+		});
+		setRun((value) => value + 1);
+	}, []);
+	const controller = useMemo(
+		() => ({ canCloseAllSheets, closeAllSheets }),
+		[canCloseAllSheets, closeAllSheets],
+	);
 	return (
 		<WorkspaceControllerProvider controller={controller}>
 			<Compass

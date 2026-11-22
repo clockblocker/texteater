@@ -1,4 +1,6 @@
+import { foldCase, lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "../../inflectional-bag.js";
 import type { AuthoredMember } from "../member.js";
 import {
 	type AuthoredRealization,
@@ -21,23 +23,7 @@ export type StemSyncretism = {
 
 const json = (value: unknown) => JSON.stringify(value ?? null);
 /** A spelling without letter case, as Dumling folds German. */
-const fold = (text: string) => text.toLocaleLowerCase("de");
-/**
- * A Lemma's identity (system ADR 0002) computed here, so the inventories
- * entry loads no Zod (ADR 0025): route, folded Canonical Form and the set
- * Core Features.
- */
-function identityOf(lemma: Dumling.Lemma): string {
-	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
-	return json([
-		lemma.family,
-		lemma.kind,
-		fold(lemma.canonicalForm),
-		Object.entries(core)
-			.filter(([, value]) => value !== null && value !== undefined)
-			.toSorted(([left], [right]) => (left < right ? -1 : 1)),
-	]);
-}
+const fold = (text: string) => foldCase(text, "de");
 /**
  * The cell a stem PRON realization marks, or undefined for any other
  * realization. A stem pronoun's spelling marks a whole cell of its table.
@@ -74,7 +60,7 @@ function groupKey(
 	cell: { readonly case?: unknown; readonly number?: unknown },
 ): string {
 	return json([
-		identityOf(lemma),
+		lemmaIdentityKey(lemma),
 		fold(spelled),
 		spelling ?? { kind: "Canonical" },
 		cell.case ?? null,
@@ -93,7 +79,12 @@ function generate(): Map<string, StemSyncretism> {
 			realization.spelling,
 			cell,
 		);
-		groups.set(key, [...(groups.get(key) ?? []), { realization, cell }]);
+		let bucket = groups.get(key);
+		if (bucket === undefined) {
+			bucket = [];
+			groups.set(key, bucket);
+		}
+		bucket.push({ realization, cell });
 	}
 	const generated = new Map<string, StemSyncretism>();
 	for (const [key, group] of groups) {
@@ -161,8 +152,7 @@ export function referentCanLeaveOpen(syncretism: StemSyncretism): boolean {
 export function stemSyncretismFor(
 	surface: Dumling.Surface,
 ): StemSyncretism | undefined {
-	const bag: Readonly<Record<string, unknown>> | null =
-		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
+	const bag = inflectionalBagOf(surface);
 	if (!bag) return undefined;
 	return stemSyncretisms.get(
 		groupKey(

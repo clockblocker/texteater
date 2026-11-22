@@ -1,7 +1,8 @@
 import type * as Dumling from "dumling/types";
 
+import { compareCodeUnits } from "../core/identity";
 import type { DerivedForm, FormCodec } from "./pack";
-import { compare, type SchemaCell } from "./placement";
+import type { SchemaCell } from "./placement";
 import type { AttestedSource, CellView, FormView } from "./views";
 
 /**
@@ -37,8 +38,8 @@ export function stateOf<F>(
 		.map((form) => ({ ...form, key: codec.key(form.form) }))
 		.sort(
 			(left, right) =>
-				compare(variantOrder(left), variantOrder(right)) ||
-				compare(left.key, right.key),
+				compareCodeUnits(variantOrder(left), variantOrder(right)) ||
+				compareCodeUnits(left.key, right.key),
 		);
 	return {
 		kind: "Known",
@@ -105,8 +106,8 @@ export function cellView<L extends Dumling.Language, F>(
 		}
 	const metOnly = [...input.attested].sort(
 		(left, right) =>
-			compare(left.key, right.key) ||
-			compare(left.source.surfaceId, right.source.surfaceId),
+			compareCodeUnits(left.key, right.key) ||
+			compareCodeUnits(left.source.surfaceId, right.source.surfaceId),
 	);
 	for (const met of metOnly) {
 		const known = forms.get(met.key);

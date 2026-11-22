@@ -61,6 +61,67 @@ function mapRefs(
 		: children(c, (child) => mapRefs(child, visit));
 }
 
+function resolveAlias(
+	owner: string,
+	definitions: Readonly<Record<string, Constraint>>,
+	initialId: string,
+): { id: string; target: Constraint } {
+	let id = initialId;
+	const aliases = new Set<string>();
+	while (true) {
+		if (!Object.hasOwn(definitions, id))
+			throw Error(`Missing definition: ${owner}/${id}`);
+		const target = required(
+			definitions[id],
+			`Missing definition: ${owner}/${id}`,
+		);
+		if (target[0] !== "ref") return { id, target };
+		if (aliases.has(id))
+			throw Error(`Unproductive reference cycle: ${owner}/${id}`);
+		aliases.add(id);
+		id = target[1];
+	}
+}
+
+function buildOwnerRootGraph(
+	owner: string,
+	ownerIndex: number,
+	registry: LinkInput,
+	nodes: { owner: number; body: Constraint }[],
+): Record<string, Constraint> {
+	const memo = new Map<string, number>();
+
+	function internRef(refId: string): Constraint {
+		const { id, target } = resolveAlias(owner, registry.definitions, refId);
+		const existing = memo.get(id);
+		if (existing !== undefined) return ["ref", String(existing)];
+		const index = nodes.length;
+		memo.set(id, index);
+		const node = { owner: ownerIndex, body: ["unknown"] as Constraint };
+		nodes.push(node);
+		node.body = children(target, graph);
+		return ["ref", String(index)];
+	}
+
+	function graph(c: Constraint): Constraint {
+		return c[0] === "ref" ? internRef(c[1]) : children(c, graph);
+	}
+
+	return Object.fromEntries(
+		Object.keys(registry.roots)
+			.sort()
+			.map((name) => [
+				name,
+				graph(
+					required(
+						registry.roots[name],
+						`Missing root: ${owner}/${name}`,
+					),
+				),
+			]),
+	);
+}
+
 /**
  * Compiler link pass over the existing IR, after flat types have been emitted.
  * Ordered graph partition refinement handles recursive rules as well as DAGs.
@@ -83,59 +144,7 @@ export function linkRegistries(
 				throw Error(`Incompatible operation: ${name}`);
 			operations.set(name, encoded);
 		}
-		const memo = new Map<string, number>();
-		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-		function graph(c: Constraint): Constraint {
-			if (c[0] === "ref") {
-				let id = c[1];
-				const aliases = new Set<string>();
-				while (true) {
-					if (!Object.hasOwn(registry.definitions, id))
-						throw Error(`Missing definition: ${owner}/${id}`);
-					const target = required(
-						registry.definitions[id],
-						`Missing definition: ${owner}/${id}`,
-					);
-					if (target[0] !== "ref") break;
-					if (aliases.has(id))
-						throw Error(
-							`Unproductive reference cycle: ${owner}/${id}`,
-						);
-					aliases.add(id);
-					id = target[1];
-				}
-				if (memo.has(id))
-					return [
-						"ref",
-						String(required(memo.get(id), "Missing memoized node")),
-					];
-				const index = nodes.length;
-				memo.set(id, index);
-				nodes.push({ owner: ownerIndex, body: ["unknown"] });
-				required(nodes[index], "Missing graph node").body = children(
-					required(
-						registry.definitions[id],
-						`Missing definition: ${owner}/${id}`,
-					),
-					graph,
-				);
-				return ["ref", String(index)];
-			}
-			return children(c, graph);
-		}
-		return Object.fromEntries(
-			Object.keys(registry.roots)
-				.sort()
-				.map((name) => [
-					name,
-					graph(
-						required(
-							registry.roots[name],
-							`Missing root: ${owner}/${name}`,
-						),
-					),
-				]),
-		);
+		return buildOwnerRootGraph(owner, ownerIndex, registry, nodes);
 	});
 	let colors = nodes.map(() => 0),
 		rounds = 0;

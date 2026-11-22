@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { lookupRoute, type RoutePolicy } from "./route-policy.js";
 import { DE_REL_MAP } from "./selection-policy-de.js";
 import type { KnowledgeRequestMask } from "./types.js";
 
@@ -7,14 +8,9 @@ import type { KnowledgeRequestMask } from "./types.js";
  * keyed by its Families and Kinds, so a key that names no route fails to
  * type-check.
  */
-export type KnowledgePolicy<L extends Dumling.Language> = {
-	readonly [F in Dumling.Family<L>]?: {
-		readonly [K in Dumling.Kind<L, F>]?: KnowledgeRequestMask;
-	};
-};
-/** A policy as `knowledgePolicyMask` reads it at runtime. */
-type RouteLookup = Readonly<
-	Record<string, Readonly<Record<string, KnowledgeRequestMask>>>
+export type KnowledgePolicy<L extends Dumling.Language> = RoutePolicy<
+	L,
+	KnowledgeRequestMask
 >;
 
 /**
@@ -30,16 +26,5 @@ const knowledgePolicies: {
 export function knowledgePolicyMask(
 	route: Dumling.LemmaRoute,
 ): KnowledgeRequestMask | undefined {
-	const policies: Readonly<Record<string, RouteLookup | undefined>> =
-		knowledgePolicies;
-	const policy = Object.hasOwn(policies, route.language)
-		? policies[route.language]
-		: undefined;
-	const kinds =
-		policy && Object.hasOwn(policy, route.family)
-			? policy[route.family]
-			: undefined;
-	return kinds && Object.hasOwn(kinds, route.kind)
-		? kinds[route.kind]
-		: undefined;
+	return lookupRoute(knowledgePolicies, route);
 }

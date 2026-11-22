@@ -199,7 +199,7 @@ export async function loadUnitReadingNote(
 		relationProjections,
 		grammaticalAlternatives,
 		pendingRelations,
-		structuralReferences,
+		structuralReferencesResult,
 		sourceContexts,
 		attempts,
 		personalAnnotation,
@@ -211,8 +211,8 @@ export async function loadUnitReadingNote(
 				q.eq("ownerReadingKey", reading.readingKey),
 			)
 			.unique(),
-		loadRelationProjections(ctx, reading._id),
-		loadGrammaticalAlternatives(ctx, reading._id),
+		loadRelationProjections(ctx, reading, lemma),
+		loadGrammaticalAlternatives(ctx, reading, lemma),
 		ctx.db
 			.query("pendingSemanticRelations")
 			.withIndex("by_source_reading_key", (q) =>
@@ -242,13 +242,22 @@ export async function loadUnitReadingNote(
 		readingValue,
 		readingKnowledge?.knowledge,
 	);
-	const sourceLinks = await loadSourceLinks(
-		ctx,
-		reading,
-		lemma,
-		knowledge.source,
-	);
-	const breakdown = await loadBreakdownView(ctx, readingValue, knowledge);
+	const [sourceLinks, breakdown, definitionText] = await Promise.all([
+		loadSourceLinks(
+			ctx,
+			reading,
+			lemma,
+			knowledge.source,
+			structuralReferencesResult.raw,
+		),
+		loadBreakdownView(ctx, readingValue, knowledge),
+		projectDefinitionText(
+			ctx,
+			knowledge.definition,
+			definitionTextRow,
+			visitorId,
+		),
+	]);
 	const activeAttempt = attempts.find(
 		({ state }) =>
 			state === "Waiting" || state === "Scheduled" || state === "Running",
@@ -284,12 +293,7 @@ export async function loadUnitReadingNote(
 			relationProjections.knowledge,
 		),
 		personalAnnotation,
-		definitionText: await projectDefinitionText(
-			ctx,
-			knowledge.definition,
-			definitionTextRow,
-			visitorId,
-		),
+		definitionText,
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
 		relationsTruncated: relationProjections.truncated,
@@ -297,7 +301,7 @@ export async function loadUnitReadingNote(
 		sourceLinks,
 		...(breakdown ? { breakdown } : {}),
 		pendingRelations: projectPendingRelations(pendingRelations),
-		structuralReferences,
+		structuralReferences: structuralReferencesResult.projected,
 		sourceContexts,
 	};
 }
@@ -505,7 +509,11 @@ async function loadStructuralReferencesForReading(
 	const shadows = await Promise.all(
 		rows.map((reference) => ctx.db.get(reference.shadowId)),
 	);
-	return rows.flatMap((reference, index) => {
+	const raw = rows.map((reference, index) => ({
+		locatorKey: reference.locatorKey,
+		shadow: shadows[index] ?? null,
+	}));
+	const projected = rows.flatMap((reference, index) => {
 		const shadow = shadows[index];
 		if (
 			!shadow ||
@@ -537,6 +545,7 @@ async function loadStructuralReferencesForReading(
 			},
 		];
 	});
+	return { projected, raw };
 }
 
 /**
@@ -557,20 +566,21 @@ async function projectSourceContext(
 	const scroll = await ctx.db.get(sentence.scrollId);
 	if (!scroll) return null;
 	if (scroll.origin?.readingKey === ownerReadingKey) return null;
-	const source = await projectOccurrenceSource(
-		ctx,
-		{
-			attestationId,
-			sentence,
-			scroll,
-			memberSegmentIndices: members.memberSegmentIndices,
-		},
-		visitorId,
-	);
+	const [source, attestation] = await Promise.all([
+		projectOccurrenceSource(
+			ctx,
+			{
+				attestationId,
+				sentence,
+				scroll,
+				memberSegmentIndices: members.memberSegmentIndices,
+			},
+			visitorId,
+		),
+		ctx.db.get(attestationId),
+	]);
 	if (!source) return null;
-	const realizedCase = occurrenceRealizedCase(
-		(await ctx.db.get(attestationId))?.valencyEvidence,
-	);
+	const realizedCase = occurrenceRealizedCase(attestation?.valencyEvidence);
 	return {
 		attestationId,
 		...source,

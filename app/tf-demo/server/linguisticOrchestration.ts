@@ -10,7 +10,7 @@ import type {
 	ReadingResolution,
 } from "./clickResolution";
 import { assertNonEmpty } from "./identifiers";
-import { inspectionStep } from "./inspectionCapture";
+import { annotateInspectionStep } from "./inspectionCapture";
 import { type JudgedGrammarSave, judgedGrammarSave } from "./judgedGrammarSave";
 import {
 	emojiDescriptionOf,
@@ -75,46 +75,53 @@ type TfDemoOrchestratorOptions<R = never> = {
 export function createTfDemoOrchestrator<R = never>(
 	options: TfDemoOrchestratorOptions<R>,
 ) {
-	function resolveSegment(
-		selection: ResolveSegmentInput,
-		checkpoints: ResolutionCheckpoints = {},
-		initialContext?: ResolutionContext,
-	): Effect.Effect<ResolveSegmentResult, ResolutionRunError, R> {
-		const judging = judgedGrammarSave(options.observer);
-		return Effect.gen(function* () {
-			validateSelection(selection);
-			const loaded =
-				initialContext ??
-				(yield* loadResolutionContext(options, selection));
-			const { input, context } = yield* resegmentIfFailed(
-				options,
-				selection,
-				loaded,
-				checkpoints,
-			);
-			if (context.reusable) {
-				return yield* commitReuse(options, input, context.reusable);
-			}
+	const resolveSegment = Effect.fn("LinguisticOrchestration.resolveSegment")(
+		function* (
+			selection: ResolveSegmentInput,
+			checkpoints: ResolutionCheckpoints = {},
+			initialContext?: ResolutionContext,
+		): Effect.fn.Return<ResolveSegmentResult, ResolutionRunError, R> {
+			const judging = judgedGrammarSave(options.observer);
+			return yield* Effect.gen(function* () {
+				validateSelection(selection);
+				const loaded =
+					initialContext ??
+					(yield* loadResolutionContext(options, selection));
+				const { input, context } = yield* resegmentIfFailed(
+					options,
+					selection,
+					loaded,
+					checkpoints,
+				);
+				if (context.reusable) {
+					return yield* commitReuse(options, input, context.reusable);
+				}
 
-			const grammatical = checkpoints.grammatical
-				? checkpoints.grammatical
-				: yield* resolveGrammatical(options, context, input, judging);
+				const grammatical = checkpoints.grammatical
+					? checkpoints.grammatical
+					: yield* resolveGrammatical(
+							options,
+							context,
+							input,
+							judging,
+						);
 
-			if (grammatical.decision === "CatalogMiss") {
-				return { catalogMiss: grammatical };
-			}
-			if (grammatical.decision !== "Resolved") {
-				return yield* commitUnresolved(options, input, grammatical);
-			}
-			return yield* resolveAndCommitReading(
-				options,
-				input,
-				context,
-				checkpoints,
-				grammatical,
-			);
-		}).pipe(Effect.ensuring(judging.landed));
-	}
+				if (grammatical.decision === "CatalogMiss") {
+					return { catalogMiss: grammatical };
+				}
+				if (grammatical.decision !== "Resolved") {
+					return yield* commitUnresolved(options, input, grammatical);
+				}
+				return yield* resolveAndCommitReading(
+					options,
+					input,
+					context,
+					checkpoints,
+					grammatical,
+				);
+			}).pipe(Effect.ensuring(judging.landed));
+		},
+	);
 
 	return Object.freeze({ resolveSegment });
 }
@@ -128,68 +135,76 @@ function validateSelection(input: ResolveSegmentInput): void {
 	}
 }
 
-function loadResolutionContext<R>(
-	options: TfDemoOrchestratorOptions<R>,
-	input: ResolveSegmentInput,
-) {
-	return Effect.tryPromise(() =>
+const loadResolutionContext = Effect.fn("Load resolution context")(function* <
+	R,
+>(options: TfDemoOrchestratorOptions<R>, input: ResolveSegmentInput) {
+	yield* annotateInspectionStep("app/tf-demo", input);
+	return yield* Effect.tryPromise(() =>
 		options.persistence.loadResolutionContext(input),
-	).pipe(
-		Effect.withSpan(
-			"Load resolution context",
-			inspectionStep("app/tf-demo", input),
-		),
 	);
-}
+});
+
+const resegmentFailedSentence = Effect.fn("Segment the failed sentence again")(
+	function* <R>(
+		resegment: NonNullable<TfDemoOrchestratorOptions<R>["resegment"]>,
+		stitchedText: string,
+	) {
+		yield* annotateInspectionStep("battery/dumgen · segment.inUnits", {
+			stitchedText,
+		});
+		return yield* resegment(stitchedText);
+	},
+);
+
+const storeResegmentedUnits = Effect.fn("Store the sentence's new units")(
+	function* (
+		store: NonNullable<
+			OrchestrationPersistence["storeResegmentedSentence"]
+		>,
+		input: ResolveSegmentInput,
+		resegmented: ResegmentedSentence,
+	) {
+		yield* annotateInspectionStep("app/tf-demo · persistence", resegmented);
+		return yield* Effect.tryPromise(() =>
+			store({ ...input, ...resegmented }),
+		);
+	},
+);
 
 /**
  * A Sentence intake failed to segment is segmented again on its first
  * click, its units stored, then resolved as usual (#861): the click's
  * Segment index and context after that, or both unchanged.
  */
-function resegmentIfFailed<R>(
+const resegmentIfFailed = Effect.fn(
+	"LinguisticOrchestration.resegmentIfFailed",
+)(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	context: ResolutionContext,
 	checkpoints: ResolutionCheckpoints,
 ) {
-	return Effect.gen(function* () {
-		const failed = context.sentence?.segmentationFailed === true;
-		const { resegment } = options;
-		const store = options.persistence.storeResegmentedSentence;
-		if (!failed || checkpoints.grammatical || !resegment || !store) {
-			return { input, context };
-		}
-		const stitchedText = context.sentence?.stitchedText ?? "";
-		const resegmented = yield* resegment(stitchedText).pipe(
-			Effect.withSpan(
-				"Segment the failed sentence again",
-				inspectionStep("battery/dumgen · segment.inUnits", {
-					stitchedText,
-				}),
-			),
-		);
-		const stored = yield* Effect.tryPromise(() =>
-			store({ ...input, ...resegmented }),
-		).pipe(
-			Effect.withSpan(
-				"Store the sentence's new units",
-				inspectionStep("app/tf-demo · persistence", resegmented),
-			),
-		);
-		const next = {
-			...input,
-			clickedSegmentIndex: stored.clickedSegmentIndex,
-		};
-		return {
-			input: next,
-			context: yield* loadResolutionContext(options, next),
-		};
-	});
-}
+	const failed = context.sentence?.segmentationFailed === true;
+	const { resegment } = options;
+	const store = options.persistence.storeResegmentedSentence;
+	if (!failed || checkpoints.grammatical || !resegment || !store) {
+		return { input, context };
+	}
+	const stitchedText = context.sentence?.stitchedText ?? "";
+	const resegmented = yield* resegmentFailedSentence(resegment, stitchedText);
+	const stored = yield* storeResegmentedUnits(store, input, resegmented);
+	const next = {
+		...input,
+		clickedSegmentIndex: stored.clickedSegmentIndex,
+	};
+	return {
+		input: next,
+		context: yield* loadResolutionContext(options, next),
+	};
+});
 
 /** A click on a Segment whose occurrence is stored already reuses it. */
-function commitReuse<R>(
+const commitReuse = Effect.fn("Commit reused occurrence")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	reusable: ReusableAttestation,
@@ -198,50 +213,40 @@ function commitReuse<R>(
 		...input,
 		attestationId: reusable.attestationId,
 	};
-	return Effect.tryPromise(() =>
+	yield* annotateInspectionStep("app/tf-demo · persistence", reuse);
+	const persisted = yield* Effect.tryPromise(() =>
 		options.persistence.persistReusedResolvedClick(reuse),
-	).pipe(
-		Effect.withSpan(
-			"Commit reused occurrence",
-			inspectionStep("app/tf-demo · persistence", reuse),
-		),
-		Effect.map((persisted) => ({
-			grammatical: reusable.grammatical,
-			reading: reusable.reading,
-			reused: true as const,
-			persisted,
-		})),
 	);
-}
+	return {
+		grammatical: reusable.grammatical,
+		reading: reusable.reading,
+		reused: true as const,
+		persisted,
+	};
+});
 
 /** Commits a click Grammar left unresolved, or the occurrence a competing click resolved meanwhile. */
-function commitUnresolved<R>(
+const commitUnresolved = Effect.fn("Commit unresolved encounter")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	grammatical: NonResolvedGrammatical,
 ) {
-	return Effect.tryPromise(() =>
+	yield* annotateInspectionStep("app/tf-demo · persistence", input);
+	const persisted = yield* Effect.tryPromise(() =>
 		options.persistence.persistUnresolvedClick(input),
-	).pipe(
-		Effect.withSpan(
-			"Commit unresolved encounter",
-			inspectionStep("app/tf-demo · persistence", input),
-		),
-		Effect.map((persisted) =>
-			persisted.status === "Reused"
-				? {
-						grammatical: persisted.occurrence.grammatical,
-						reading: persisted.occurrence.reading,
-						reused: true as const,
-						persisted,
-					}
-				: { grammatical, persisted },
-		),
 	);
-}
+	return persisted.status === "Reused"
+		? {
+				grammatical: persisted.occurrence.grammatical,
+				reading: persisted.occurrence.reading,
+				reused: true as const,
+				persisted,
+			}
+		: { grammatical, persisted };
+});
 
 /** Grammar, telling `judging` what jev judged and when it has returned. */
-function resolveGrammatical<R>(
+const resolveGrammatical = Effect.fn("Resolve grammar")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	context: ResolutionContext,
 	request: ResolveSegmentInput,
@@ -249,17 +254,22 @@ function resolveGrammatical<R>(
 ) {
 	const input = clickGrammarInputOf(context, request.clickedSegmentIndex);
 	const { unit } = input;
-	return options.resolution.grammar(input, judging.onJudged).pipe(
-		Effect.ensuring(judging.grammarReturned),
-		Effect.withSpan(
-			"Resolve grammar",
-			inspectionStep("app/tf-demo · ClickResolution", {
-				clickedSegmentIndex: request.clickedSegmentIndex,
-				unit,
-			}),
-		),
-	);
-}
+	yield* annotateInspectionStep("app/tf-demo · ClickResolution", {
+		clickedSegmentIndex: request.clickedSegmentIndex,
+		unit,
+	});
+	return yield* options.resolution
+		.grammar(input, judging.onJudged)
+		.pipe(Effect.ensuring(judging.grammarReturned));
+});
+
+const findStoredReadings = Effect.fn("Find stored Readings")(function* <R>(
+	options: TfDemoOrchestratorOptions<R>,
+	lemma: Dumling.Lemma<"de">,
+) {
+	yield* annotateInspectionStep("battery/dumdict", { lemma });
+	return yield* Effect.tryPromise(() => options.findStoredReadings(lemma));
+});
 
 /**
  * Resolves the Reading of a resolved Grammar and commits the occurrence.
@@ -271,31 +281,33 @@ function resolveGrammatical<R>(
  * still reaches GrammarAvailable before ReadingAvailable, and every other
  * ending waits for it too, since a Convex write cannot be cancelled.
  */
-function resolveAndCommitReading<R>(
+const resolveAndCommitReading = Effect.fn(
+	"LinguisticOrchestration.resolveAndCommitReading",
+)(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	context: ResolutionContext,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
 ) {
-	return Effect.gen(function* () {
-		const saving = yield* Effect.forkChild(
-			saveGrammar(options, checkpoints, grammatical),
-			{ uninterruptible: true },
-		);
-		const grammarSaved = Fiber.join(saving);
-		return yield* resolveReadingAndCommit(
-			options,
-			input,
-			context,
-			checkpoints,
-			grammatical,
-			grammarSaved,
-		).pipe(Effect.ensuring(Effect.asVoid(Effect.exit(grammarSaved))));
-	});
-}
+	const saving = yield* Effect.forkChild(
+		saveGrammar(options, checkpoints, grammatical),
+		{ uninterruptible: true },
+	);
+	const grammarSaved = Fiber.join(saving);
+	return yield* resolveReadingAndCommit(
+		options,
+		input,
+		context,
+		checkpoints,
+		grammatical,
+		grammarSaved,
+	).pipe(Effect.ensuring(Effect.asVoid(Effect.exit(grammarSaved))));
+});
 
-function resolveReadingAndCommit<R>(
+const resolveReadingAndCommit = Effect.fn(
+	"LinguisticOrchestration.resolveReadingAndCommit",
+)(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	context: ResolutionContext,
@@ -303,107 +315,105 @@ function resolveReadingAndCommit<R>(
 	grammatical: ResolvedGrammatical,
 	grammarSaved: Effect.Effect<void, Cause.UnknownError>,
 ) {
-	return Effect.gen(function* () {
-		const { lemma } = grammatical.attestation.surface;
-		const storedReadings = checkpoints.reading
-			? null
-			: yield* Effect.tryPromise(() =>
-					options.findStoredReadings(lemma),
-				).pipe(
-					Effect.withSpan(
-						"Find stored Readings",
-						inspectionStep("battery/dumdict", { lemma }),
-					),
-				);
-		const lemmaKey = lemmaIdentityKey(lemma);
-		const first = yield* firstReading(
+	const { lemma } = grammatical.attestation.surface;
+	const storedReadings = checkpoints.reading
+		? null
+		: yield* findStoredReadings(options, lemma);
+	const lemmaKey = lemmaIdentityKey(lemma);
+	const first = yield* firstReading(
+		options,
+		checkpoints,
+		grammatical,
+		lemma,
+		storedReadings,
+	);
+	if (first.decision === "CatalogMiss") {
+		return { catalogMiss: first };
+	}
+	let readingResolution: ReadingResolution = first;
+	let reading = readingOf(lemma, readingResolution);
+	if (checkpoints.reading) {
+		reading = checkpointedReading(
+			checkpoints.reading.reading,
+			lemmaKey,
+			reading,
+		);
+	}
+
+	const scope: ClickCommitScope = {
+		input,
+		sentence: context.sentence,
+		grammatical,
+		surfaceKey: surfaceIdentityKey(grammatical.attestation.surface),
+		lemmaKey,
+	};
+	yield* grammarSaved;
+	let persisted = yield* commitResolvedClick(
+		options,
+		scope,
+		reading,
+		readingResolution,
+		!checkpoints.reading,
+	);
+	// A New whose judge saw fewer Readings than the Lemma has now is
+	// refused: the judge runs again over the current candidates, and a
+	// second NoMatch keeps the description already written (ADR 0031).
+	for (let rejudged = 0; persisted.status === "StaleReading"; rejudged++) {
+		if (rejudged === MAX_STALE_REJUDGES)
+			throw new Error(
+				"The Lemma kept gaining Readings while this click resolved; click it again.",
+			);
+		const again = yield* resolveReading(
 			options,
-			checkpoints,
 			grammatical,
 			lemma,
-			storedReadings,
+			persisted.candidates,
+			readingResolution.emojiDescription,
 		);
-		if (first.decision === "CatalogMiss") {
-			return { catalogMiss: first };
+		if (again.decision === "CatalogMiss") {
+			return { catalogMiss: again };
 		}
-		let readingResolution: ReadingResolution = first;
-		let reading = readingOf(lemma, readingResolution);
-		if (checkpoints.reading) {
-			reading = checkpointedReading(
-				checkpoints.reading.reading,
-				lemmaKey,
-				reading,
-			);
-		}
-
-		const scope: ClickCommitScope = {
-			input,
-			sentence: context.sentence,
-			grammatical,
-			surfaceKey: surfaceIdentityKey(grammatical.attestation.surface),
-			lemmaKey,
-		};
-		yield* grammarSaved;
-		let persisted = yield* commitResolvedClick(
+		readingResolution = again;
+		reading = readingOf(lemma, readingResolution);
+		persisted = yield* commitResolvedClick(
 			options,
 			scope,
 			reading,
 			readingResolution,
-			!checkpoints.reading,
+			true,
 		);
-		// A New whose judge saw fewer Readings than the Lemma has now is
-		// refused: the judge runs again over the current candidates, and a
-		// second NoMatch keeps the description already written (ADR 0031).
-		for (
-			let rejudged = 0;
-			persisted.status === "StaleReading";
-			rejudged++
-		) {
-			if (rejudged === MAX_STALE_REJUDGES)
-				throw new Error(
-					"The Lemma kept gaining Readings while this click resolved; click it again.",
-				);
-			const again = yield* resolveReading(
-				options,
-				grammatical,
-				lemma,
-				persisted.candidates,
-				readingResolution.emojiDescription,
-			);
-			if (again.decision === "CatalogMiss") {
-				return { catalogMiss: again };
-			}
-			readingResolution = again;
-			reading = readingOf(lemma, readingResolution);
-			persisted = yield* commitResolvedClick(
-				options,
-				scope,
-				reading,
-				readingResolution,
-				true,
-			);
-		}
-		if (
-			persisted.status === "MembershipConflict" ||
-			persisted.status === "DictionaryConflict"
-		) {
-			return {
-				grammatical,
-				readingResolution,
-				reading,
-				persisted,
-			};
-		}
-
+	}
+	if (
+		persisted.status === "MembershipConflict" ||
+		persisted.status === "DictionaryConflict"
+	) {
 		return {
-			grammatical: persisted.occurrence.grammatical,
+			grammatical,
 			readingResolution,
-			reading: persisted.occurrence.reading,
-			reused: persisted.status === "Reused",
+			reading,
 			persisted,
 		};
+	}
+
+	return {
+		grammatical: persisted.occurrence.grammatical,
+		readingResolution,
+		reading: persisted.occurrence.reading,
+		reused: persisted.status === "Reused",
+		persisted,
+	};
+});
+
+const saveGrammarAvailable = Effect.fn("Save GrammarAvailable")(function* (
+	observer: ResolutionProgressObserver,
+	grammatical: ResolvedGrammatical,
+) {
+	yield* annotateInspectionStep("app/tf-demo · resolutionSessions", {
+		progress: "GrammarAvailable",
+		grammatical,
 	});
-}
+	yield* Effect.tryPromise(() => observer.grammarAvailable({ grammatical }));
+});
 
 /** Saves Grammar as GrammarAvailable unless a checkpoint holds it. */
 function saveGrammar<R>(
@@ -414,17 +424,7 @@ function saveGrammar<R>(
 	const { observer } = options;
 	return checkpoints.grammatical || !observer
 		? Effect.void
-		: Effect.tryPromise(() =>
-				observer.grammarAvailable({ grammatical }),
-			).pipe(
-				Effect.withSpan(
-					"Save GrammarAvailable",
-					inspectionStep("app/tf-demo · resolutionSessions", {
-						progress: "GrammarAvailable",
-						grammatical,
-					}),
-				),
-			);
+		: saveGrammarAvailable(observer, grammatical);
 }
 
 /** The Reading a checkpoint holds, a Foreign Lemma's one Reading, or the one judged over the stored candidates. */
@@ -500,19 +500,33 @@ export function resolvedClickCommit(
 	};
 }
 
+const persistResolvedOccurrence = Effect.fn("Commit resolved occurrence")(
+	function* <R>(
+		options: TfDemoOrchestratorOptions<R>,
+		commit: ResolvedClickPersistence,
+	) {
+		yield* annotateInspectionStep("app/tf-demo · persistence", commit);
+		return yield* Effect.tryPromise(() =>
+			options.persistence.persistResolvedClick(commit),
+		);
+	},
+);
+
 /** Commits a resolved click; `announce` sends its Reading as the ReadingAvailable progress. */
-function commitResolvedClick<R>(
+const commitResolvedClick = Effect.fn(
+	"LinguisticOrchestration.commitResolvedClick",
+)(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	scope: ClickCommitScope,
 	reading: Dumling.Reading<"de">,
 	resolution: ReadingResolution,
 	announce: boolean,
 ) {
-	return Effect.try((): ResolvedClickPersistence => {
-		const commit = resolvedClickCommit(scope, reading, resolution);
+	const commit = yield* Effect.try((): ResolvedClickPersistence => {
+		const base = resolvedClickCommit(scope, reading, resolution);
 		return options.observer
 			? {
-					...commit,
+					...base,
 					progress: options.observer.committing(
 						announce
 							? {
@@ -524,23 +538,13 @@ function commitResolvedClick<R>(
 							: {},
 					),
 				}
-			: commit;
-	}).pipe(
-		Effect.flatMap((commit) =>
-			Effect.tryPromise(() =>
-				options.persistence.persistResolvedClick(commit),
-			).pipe(
-				Effect.withSpan(
-					"Commit resolved occurrence",
-					inspectionStep("app/tf-demo · persistence", commit),
-				),
-			),
-		),
-	);
-}
+			: base;
+	});
+	return yield* persistResolvedOccurrence(options, commit);
+});
 
 /** The Reading over `candidates`; Grammar's draft stands in for a description not yet written. */
-function resolveReading<R>(
+const resolveReading = Effect.fn("Resolve Reading")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	resolved: ResolvedGrammatical,
 	lemma: Dumling.Lemma<"de">,
@@ -552,26 +556,20 @@ function resolveReading<R>(
 		resolved.encounter.target.kind !== lemma.kind
 	)
 		throw new Error("Reading route does not match the Encounter.");
-	return options.resolution
-		.reading({
-			grammar: resolved,
-			lemma,
-			candidates,
-			...(written === undefined ? {} : { written }),
-			...(written === undefined && resolved.drafted !== undefined
-				? { drafted: resolved.drafted }
-				: {}),
-		})
-		.pipe(
-			Effect.withSpan(
-				"Resolve Reading",
-				inspectionStep("app/tf-demo · ClickResolution", {
-					lemma,
-					...(written === undefined ? {} : { written }),
-				}),
-			),
-		);
-}
+	yield* annotateInspectionStep("app/tf-demo · ClickResolution", {
+		lemma,
+		...(written === undefined ? {} : { written }),
+	});
+	return yield* options.resolution.reading({
+		grammar: resolved,
+		lemma,
+		candidates,
+		...(written === undefined ? {} : { written }),
+		...(written === undefined && resolved.drafted !== undefined
+			? { drafted: resolved.drafted }
+			: {}),
+	});
+});
 
 /** The Reading a resolution names; both sides compare as Dumling parses them (ADR 0031). */
 function readingOf(lemma: Dumling.Lemma<"de">, resolution: ReadingResolution) {

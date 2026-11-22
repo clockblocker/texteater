@@ -19,7 +19,10 @@ import {
 } from "../../model/shadows";
 import { semanticRelationValidator } from "../../model/validators";
 import { projectReadingValue } from "./projections";
-import { loadReflexiveSlot, reflexiveSlotValidator } from "./readingReflexive";
+import {
+	reflexiveSlotValidator,
+	storedReflexiveSlot,
+} from "./readingReflexive";
 import {
 	loadTargetedRelationProjections,
 	MAX_RELATIONS_PER_NOTE,
@@ -81,42 +84,27 @@ type RelationProjection<
 
 export async function loadRelationProjections(
 	ctx: QueryCtx,
-	readingId: Id<"readings">,
+	readingOrId: Doc<"readings"> | Id<"readings">,
+	sourceLemma?: Doc<"lemmas">,
 ) {
-	const source = await ctx.db.get(readingId);
+	const source =
+		typeof readingOrId === "string"
+			? await ctx.db.get(readingOrId)
+			: readingOrId;
 	if (!source)
 		return {
 			knowledge: {},
 			resolved: [],
 			truncated: false,
 		};
-	const loaded = await loadTargetedRelationProjections(ctx, source);
+	const loaded = await loadTargetedRelationProjections(
+		ctx,
+		source,
+		sourceLemma,
+	);
 	const truncated =
 		loaded.truncated || loaded.projections.length > MAX_RELATIONS_PER_NOTE;
 	const projections = loaded.projections.slice(0, MAX_RELATIONS_PER_NOTE);
-	const targetDocs = await Promise.all(
-		projections.map((projection) =>
-			projection.targetKind === "reading"
-				? ctx.db
-						.query("readings")
-						.withIndex("by_reading_key", (q) =>
-							q.eq(
-								"readingKey",
-								readingIdentityKey(projection.targetReading),
-							),
-						)
-						.unique()
-				: ctx.db
-						.query("lemmas")
-						.withIndex("by_lemma_key", (q) =>
-							q.eq(
-								"lemmaKey",
-								lemmaIdentityKey(projection.targetLemma),
-							),
-						)
-						.unique(),
-		),
-	);
 	const readingMode = projections[0]?.targetKind === "reading";
 	if (
 		projections.some(
@@ -131,22 +119,19 @@ export async function loadRelationProjections(
 	const knowledge: PresentedRelations = readingMode
 		? { targetKind: "reading" }
 		: {};
-	for (const [index, projection] of projections.entries()) {
-		const targetDoc = targetDocs[index];
-		if (!targetDoc) continue;
+	for (const projection of projections) {
 		if (projection.targetKind === "reading") {
-			if (
-				!("readingKey" in targetDoc) ||
-				knowledge.targetKind !== "reading"
-			)
-				continue;
+			const targetDoc = loaded.readingsByKey.get(
+				readingIdentityKey(projection.targetReading),
+			);
+			if (!targetDoc || knowledge.targetKind !== "reading") continue;
 			resolved.push({
 				relation: projection.relation,
 				targetCanonicalForm:
 					projection.targetReading.lemma.canonicalForm,
-				targetReflexive: await loadReflexiveSlot(
-					ctx,
-					targetDoc.readingKey,
+				targetReflexive: storedReflexiveSlot(
+					loaded.accumulatedKnowledge.get(targetDoc.readingKey)
+						?.knowledge,
 				),
 				provenance: projection.provenance,
 				target: {
@@ -159,8 +144,10 @@ export async function loadRelationProjections(
 			else knowledge[projection.relation] = [projection.targetReading];
 			continue;
 		}
-		if (!("lemmaKey" in targetDoc) || knowledge.targetKind === "reading")
-			continue;
+		const targetDoc = loaded.lemmasByKey.get(
+			lemmaIdentityKey(projection.targetLemma),
+		);
+		if (!targetDoc || knowledge.targetKind === "reading") continue;
 		const target = parseStoredGermanLemma(targetDoc);
 		resolved.push({
 			relation: projection.relation,
@@ -201,6 +188,11 @@ export const sourceLinkValidator = v.object({
 	),
 });
 
+type LoadedStructuralShadowReference = {
+	readonly locatorKey: string;
+	readonly shadow: Doc<"shadows"> | null;
+};
+
 /**
  * Where a Source link leads: the stored Lemma a Lemma target names, matched
  * by its full identity, or the Unit Shadow the Reading's Knowledge refers to
@@ -210,6 +202,7 @@ async function sourceTarget(
 	ctx: QueryCtx,
 	ownerReadingKey: string,
 	target: Dumrel.LinkTarget,
+	loadedStructuralReferences?: readonly LoadedStructuralShadowReference[],
 ): Promise<Infer<typeof sourceLinkValidator>["target"] | null> {
 	if ("unitKind" in target) {
 		const lemma = await ctx.db
@@ -220,21 +213,29 @@ async function sourceTarget(
 			.unique();
 		if (lemma) return { kind: "Lemma", lemmaId: lemma._id };
 	}
-	const references = await ctx.db
-		.query("structuralShadowReferences")
-		.withIndex("by_owner_reading_key", (q) =>
-			q.eq("ownerReadingKey", ownerReadingKey),
-		)
-		.take(MAX_STRUCTURAL_REFERENCES_PER_READING + 1);
 	const sourceLocator = structuralShadowLocatorKey(
 		ownerReadingKey,
 		"source",
 		"target",
 	);
-	const reference = references.find(
-		({ locatorKey }) => locatorKey === sourceLocator,
-	);
-	const shadow = reference ? await ctx.db.get(reference.shadowId) : null;
+	let shadow: Doc<"shadows"> | null = null;
+	if (loadedStructuralReferences) {
+		shadow =
+			loadedStructuralReferences.find(
+				({ locatorKey }) => locatorKey === sourceLocator,
+			)?.shadow ?? null;
+	} else {
+		const references = await ctx.db
+			.query("structuralShadowReferences")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", ownerReadingKey),
+			)
+			.take(MAX_STRUCTURAL_REFERENCES_PER_READING + 1);
+		const reference = references.find(
+			({ locatorKey }) => locatorKey === sourceLocator,
+		);
+		shadow = reference ? await ctx.db.get(reference.shadowId) : null;
+	}
 	return shadow &&
 		shadowIsCompatible(shadow, {
 			language: target.language,
@@ -255,6 +256,7 @@ export async function loadSourceLinks(
 	source: Doc<"readings">,
 	sourceLemma: Doc<"lemmas">,
 	stored: Dumrel.Source | undefined,
+	loadedStructuralReferences?: readonly LoadedStructuralShadowReference[],
 ): Promise<Infer<typeof sourceLinkValidator>[]> {
 	if (!stored) return [];
 	const projected = projectSources([
@@ -264,19 +266,33 @@ export async function loadSourceLinks(
 		},
 	]);
 	if (!projected.success) throw projected.error;
-	const links: Infer<typeof sourceLinkValidator>[] = [];
-	for (const edge of projected.value) {
-		if (edge.relation !== "source") continue;
-		const target = await sourceTarget(ctx, source.readingKey, edge.target);
-		if (target)
-			links.push({
-				relation: edge.relation,
-				...(edge.meaning ? { meaning: edge.meaning } : {}),
-				targetCanonicalForm: edge.target.canonicalForm,
-				target,
-			});
-	}
-	return links;
+	const sourceEdges = projected.value.filter(
+		(edge): edge is Extract<typeof edge, { relation: "source" }> =>
+			edge.relation === "source",
+	);
+	const targets = await Promise.all(
+		sourceEdges.map((edge) =>
+			sourceTarget(
+				ctx,
+				source.readingKey,
+				edge.target,
+				loadedStructuralReferences,
+			),
+		),
+	);
+	return sourceEdges.flatMap((edge, index) => {
+		const target = targets[index];
+		return target
+			? [
+					{
+						relation: edge.relation,
+						...(edge.meaning ? { meaning: edge.meaning } : {}),
+						targetCanonicalForm: edge.target.canonicalForm,
+						target,
+					},
+				]
+			: [];
+	});
 }
 
 /** One participial adjective on its source verb's Lemma Note. */
@@ -312,16 +328,36 @@ export async function loadParticipialAdjectives(
 			q.eq("sourceLemmaKey", verb.lemmaKey),
 		)
 		.take(MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE);
+	const loadedReadings = await Promise.all(
+		rows.map((row) =>
+			ctx.db
+				.query("readings")
+				.withIndex("by_reading_key", (q) =>
+					q.eq("readingKey", row.ownerReadingKey),
+				)
+				.unique(),
+		),
+	);
+	const uniqueLemmaIds = [
+		...new Set(
+			loadedReadings.flatMap((reading) =>
+				reading ? [reading.lemmaId] : [],
+			),
+		),
+	];
+	const lemmasById = new Map(
+		await Promise.all(
+			uniqueLemmaIds.map(
+				async (lemmaId) =>
+					[lemmaId, await ctx.db.get(lemmaId)] as const,
+			),
+		),
+	);
 	const entries: Dumrel.ReadingWithKnowledge[] = [];
 	const readings = new Map<string, Doc<"readings">>();
-	for (const row of rows) {
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", row.ownerReadingKey),
-			)
-			.unique();
-		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
+	for (const [index, row] of rows.entries()) {
+		const reading = loadedReadings[index];
+		const lemma = reading ? lemmasById.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
 		const value = projectReadingValue(reading, lemma);
 		const stored = isRecord(row.knowledge)
@@ -369,11 +405,18 @@ export async function loadParticipialAdjectives(
 
 export async function loadGrammaticalAlternatives(
 	ctx: QueryCtx,
-	readingId: Id<"readings">,
+	readingOrId: Doc<"readings"> | Id<"readings">,
+	loadedLemma?: Doc<"lemmas">,
 ): Promise<GrammaticalAlternative[]> {
-	const source = await ctx.db.get(readingId);
-	if (!source) return [];
-	const lemmaDoc = await ctx.db.get(source.lemmaId);
+	let lemmaDoc = loadedLemma ?? null;
+	if (!lemmaDoc) {
+		const source =
+			typeof readingOrId === "string"
+				? await ctx.db.get(readingOrId)
+				: readingOrId;
+		if (!source) return [];
+		lemmaDoc = await ctx.db.get(source.lemmaId);
+	}
 	if (!lemmaDoc) return [];
 	return reviewedAlternatives(parseStoredGermanLemma(lemmaDoc)).map(
 		({ feature, reading }) => ({

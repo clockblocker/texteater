@@ -2,7 +2,9 @@
 
 import {
 	type CSSProperties,
+	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useSyncExternalStore,
 } from "react";
@@ -13,7 +15,11 @@ import { useMergedRefs } from "../../hooks/useMergedRefs";
 import { useStableCallback } from "../../hooks/useStableCallback";
 import { useStableObject } from "../../hooks/useStableObject";
 import { useSplitContext } from "../split/useSplitContext";
-import type { RegionSize, RegisteredRegion, SplitRegionProps } from "./types";
+import {
+	createRegisteredRegion,
+	hasRegionOnResize,
+} from "./createRegisteredRegion";
+import type { RegionSize, SplitRegionProps } from "./types";
 
 /**
  * A SplitRegion holds one part of a Split's space. It can be configured with
@@ -63,14 +69,14 @@ export function SplitRegion({
 	const mergedRef = useMergedRefs(elementRef, elementRefProp);
 
 	const {
-		getRegionStyles,
+		getRegionStyleSnapshot,
 		id: splitId,
 		orientation,
 		registerRegion,
 		updateRegionProps,
 	} = useSplitContext();
 
-	const hasOnResize = onResizeUnstable !== null;
+	const hasOnResize = hasRegionOnResize(onResizeUnstable);
 	const onResizeStable = useStableCallback(
 		(
 			regionSize: RegionSize,
@@ -85,15 +91,12 @@ export function SplitRegion({
 	useIsomorphicLayoutEffect(() => {
 		const element = elementRef.current;
 		if (element !== null) {
-			const registeredRegion: RegisteredRegion = {
+			const registeredRegion = createRegisteredRegion({
 				element,
+				hasOnResize,
 				id,
 				idIsStable,
-				mutableValues: {
-					expandToSize: undefined,
-					prevSize: undefined,
-				},
-				onResize: hasOnResize ? onResizeStable : undefined,
+				onResizeStable,
 				regionConstraints: {
 					splitResizeBehavior,
 					collapsedSize,
@@ -103,7 +106,7 @@ export function SplitRegion({
 					maxSize,
 					minSize,
 				},
-			};
+			});
 
 			return registerRegion(registeredRegion);
 		}
@@ -127,33 +130,38 @@ export function SplitRegion({
 		updateRegionProps(id, { disabled });
 	}, [disabled, id, updateRegionProps]);
 
-	// useSyncExternalStore does not support a custom equality check
-	// stringify avoids re-rendering when the style value hasn't changed
-	const read = () => {
-		const maybeRegionStyles = getRegionStyles(splitId, id);
-		if (maybeRegionStyles) {
-			return JSON.stringify(maybeRegionStyles);
-		}
-	};
-
-	const regionStylesString = useSyncExternalStore(
-		(subscribe) => subscribeToMountedSplit(splitId, subscribe),
-		read,
-		read,
+	const subscribe = useCallback(
+		(onStoreChange: () => void) =>
+			subscribeToMountedSplit(splitId, onStoreChange),
+		[splitId],
 	);
 
-	let regionStyles: CSSProperties;
-	if (regionStylesString) {
-		regionStyles = JSON.parse(regionStylesString);
-	} else if (defaultSize !== undefined) {
-		regionStyles = {
-			flexGrow: undefined,
-			flexShrink: undefined,
-			flexBasis: defaultSize,
-		};
-	} else {
-		regionStyles = { flexGrow: 1 };
-	}
+	const read = () => getRegionStyleSnapshot(splitId, id);
+
+	const regionStyleSnapshot = useSyncExternalStore(subscribe, read, read);
+
+	const regionStyles = useMemo<CSSProperties>(() => {
+		if (regionStyleSnapshot !== undefined) {
+			const separatorIndex = regionStyleSnapshot.indexOf("|");
+			const flexGrow = Number(
+				regionStyleSnapshot.slice(0, separatorIndex),
+			);
+			const dragActive =
+				regionStyleSnapshot.charCodeAt(separatorIndex + 1) === 49;
+			return {
+				flexGrow,
+				pointerEvents: dragActive ? "none" : undefined,
+			};
+		}
+		if (defaultSize !== undefined) {
+			return {
+				flexGrow: undefined,
+				flexShrink: undefined,
+				flexBasis: defaultSize,
+			};
+		}
+		return { flexGrow: 1 };
+	}, [defaultSize, regionStyleSnapshot]);
 
 	return (
 		<div

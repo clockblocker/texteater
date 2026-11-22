@@ -23,7 +23,7 @@
  */
 
 import { isRecord } from "common-utils";
-import { lemmaIdentityKey, normalizeForm, routeOf } from "dumling";
+import { normalizeForm, routeOf } from "dumling";
 import {
 	selectKnowledge,
 	translationLanguageValues,
@@ -54,6 +54,7 @@ import {
 	aspectContext,
 	checkedChanges,
 	judgeState,
+	validateOccurrenceTarget,
 	write,
 } from "./context.js";
 import {
@@ -212,25 +213,9 @@ const accumulateLanguage = Effect.fnUntraced(function* (
 
 /** Why the input is bad, if it is: a Defect, raised before anything is asked. */
 function badInput(input: AccumulateTranslationsInput): string | undefined {
-	const { reading, attestation, sentence, translations } = input;
-	if (
-		lemmaIdentityKey(attestation.surface.lemma) !==
-		lemmaIdentityKey(reading.lemma)
-	)
-		return "The Attestation is of another Lemma than the Reading";
-	const { segments, target } = sentence;
-	if (
-		target.length === 0 ||
-		target.some(
-			(index, at) =>
-				!Number.isInteger(index) ||
-				index < 0 ||
-				index >= segments.length ||
-				(at > 0 && index <= (target[at - 1] ?? -1)),
-		)
-	)
-		return "The target is no ascending run of the Sentence's Segments";
-	for (const [language, texts] of Object.entries(translations)) {
+	const occurrenceError = validateOccurrenceTarget(input);
+	if (occurrenceError !== undefined) return occurrenceError;
+	for (const [language, texts] of Object.entries(input.translations)) {
 		if (!translationLanguageValues.some((known) => known === language))
 			return `${JSON.stringify(language)} is no translation language`;
 		if (

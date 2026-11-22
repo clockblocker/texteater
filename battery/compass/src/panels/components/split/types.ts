@@ -59,10 +59,10 @@ export type RegisteredSplit = Readonly<{
 
 export type SplitContextType = {
 	disableCursor: boolean;
-	getRegionStyles: (
+	getRegionStyleSnapshot: (
 		splitId: string,
 		regionId: string,
-	) => CSSProperties | undefined;
+	) => string | undefined;
 	id: string;
 	orientation: Orientation;
 	registerRegion: (region: RegisteredRegion) => () => void;
@@ -79,26 +79,6 @@ export type SplitContextType = {
 		},
 	) => void;
 };
-
-/**
- * Reads and sets a Split's layout from outside React.
- */
-export interface SplitImperativeHandle {
-	/**
-	 * Get the Split's current layout as a map of Region id to percentage (0..100)
-	 *
-	 * @return Map of Region id to percentages (specified as numbers ranging between 0..100)
-	 */
-	getLayout: () => { [regionId: string]: number };
-
-	/**
-	 * Set a new layout for the Split
-	 *
-	 * @param layout Map of Region id to percentage (a number between 0..100)
-	 * @return Applied layout (after validation)
-	 */
-	setLayout: (layout: { [regionId: string]: number }) => Layout;
-}
 
 export type SplitProps = HTMLAttributes<HTMLDivElement> & {
 	/**

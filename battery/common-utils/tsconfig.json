@@ -1,4 +1,7 @@
 {
-	"extends": "../../tooling/typescript/battery.json",
+	"extends": [
+		"../../tooling/typescript/battery.json",
+		"../../tooling/typescript/effect.json"
+	],
 	"include": ["src/**/*.ts", "tests/**/*.ts"]
 }

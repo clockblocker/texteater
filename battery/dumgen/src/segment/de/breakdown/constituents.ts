@@ -46,6 +46,7 @@ import {
 } from "../../breakdown-pieces.js";
 import { allRoutes, type RouteKey } from "../routes.js";
 import {
+	germanMorphemeShadow,
 	inflectedDeterminerOrPronoun,
 	nounPartFormGuide,
 	onlyPronoun,
@@ -120,15 +121,6 @@ function constituentsOf(pieces: readonly ProducedPiece[]): Constituents {
 	return linked.length >= 2 ? { kind: "Constituents", pieces } : none;
 }
 
-const morpheme = (kind: string, canonicalForm: string) =>
-	// Sound: German's Morpheme routes have Prefix, Suffix and Interfix Shadows.
-	({
-		language: "de",
-		family: "Morpheme",
-		kind,
-		canonicalForm,
-	}) as Dumrel.UnitShadow;
-
 /**
  * An analysis's pieces with their links: a word part's from jev, an
  * affix's from the inventory, a particle's outside a verb its ADP
@@ -151,7 +143,7 @@ function linkedPieces(
 					(piece.role === "Prefix"
 						? particleAdposition(piece.canonicalForm, kind)
 						: undefined) ??
-					morpheme(piece.role, piece.canonicalForm),
+					germanMorphemeShadow(piece.role, piece.canonicalForm),
 			});
 			continue;
 		}
@@ -176,7 +168,10 @@ function linkedPieces(
 				{ letters: split.word, target },
 				{
 					letters: split.interfix,
-					target: morpheme("Interfix", split.canonicalForm),
+					target: germanMorphemeShadow(
+						"Interfix",
+						split.canonicalForm,
+					),
 				},
 			);
 	}

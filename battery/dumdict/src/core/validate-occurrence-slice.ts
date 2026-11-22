@@ -1,9 +1,4 @@
-import {
-	lemmaIdentityKey,
-	readingIdentityKey,
-	sameLemma,
-	sameReading,
-} from "dumling";
+import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues, parseLemmaParadigm } from "dumrel";
 
@@ -55,6 +50,24 @@ function validateParadigmReadings<L extends Dumling.Language>(
 		);
 }
 
+function validateLemmaReadingMembership<L extends Dumling.Language>(
+	lemma: Dumling.Lemma<L>,
+	readings: readonly Dumling.Reading<L>[],
+	record: LemmaRecord<L> | undefined,
+): Set<string> {
+	const readingKeys = new Set<string>();
+	for (const reading of readings) {
+		if (!sameLemma(reading.lemma, lemma))
+			throw new Error("Lemma Reading belongs to another Lemma.");
+		const key = readingIdentityKey(reading);
+		if (readingKeys.has(key))
+			throw new Error("Lemma Readings contains duplicates.");
+		readingKeys.add(key);
+	}
+	if (record) validateParadigmReadings(record, readings);
+	return readingKeys;
+}
+
 /**
  * Every stored Reading of one Lemma, each once, which the Lemma's stored
  * Paradigm, when the slice holds it, licenses.
@@ -70,8 +83,7 @@ export function validateLemmaReadings<L extends Dumling.Language>(
 		if (!sameLemma(reading.lemma, lemma))
 			throw new Error("Lemma Reading belongs to another Lemma.");
 	}
-	assertNoDuplicates(readings.map(readingIdentityKey), "Lemma Readings");
-	if (record) validateParadigmReadings(record, readings);
+	validateLemmaReadingMembership(lemma, readings, record);
 }
 
 /** Stored Attestation Links, each with a requested ref. */
@@ -80,6 +92,7 @@ export function validateLinksWithRefs<L extends Dumling.Language>(
 	links: readonly AttestationLink<L>[],
 	refs: readonly string[],
 ) {
+	const requestedRefs = new Set(refs);
 	for (const link of links) {
 		unwrapDumdictParse(
 			parseAsReadingEntry(
@@ -92,7 +105,7 @@ export function validateLinksWithRefs<L extends Dumling.Language>(
 				expected,
 			),
 		);
-		if (!refs.includes(link.ref))
+		if (!requestedRefs.has(link.ref))
 			throw new Error(
 				"Attestation Link was not requested by this workflow.",
 			);
@@ -120,8 +133,7 @@ function validateLemmaSlice<L extends Dumling.Language>(
 		slice.ownedSurfaceEntries.map(({ id }) => id),
 		"Lemma Slice Surfaces",
 	);
-	validateLemmaReadings(
-		expected,
+	const readingKeys = validateLemmaReadingMembership(
 		lemma,
 		slice.readingEntries.map(({ reading }) => reading),
 		slice.lemmaRecord,
@@ -137,11 +149,7 @@ function validateLemmaSlice<L extends Dumling.Language>(
 				);
 	for (const record of slice.pendingRelations) {
 		validatePendingRecord(expected, record);
-		if (
-			!slice.readingEntries.some((entry) =>
-				sameReading(entry.reading, record.sourceReading),
-			)
-		)
+		if (!readingKeys.has(readingIdentityKey(record.sourceReading)))
 			throw new Error(
 				"Lemma Slice pending relation has a source outside the Lemma.",
 			);
@@ -232,17 +240,22 @@ export function validateOccurrenceSlice<L extends Dumling.Language>(
 		),
 		"occurrence Lemmas",
 	);
+	const requestedRefs = new Set(request.refs);
+	const requestedReadingKeys = new Set(
+		(request.readings ?? []).map(readingIdentityKey),
+	);
 	for (const lemma of slice.lemmas) {
 		validateLemmaSlice(expected, lemma);
 		if (
 			!lemma.readingEntries.some(
 				(entry) =>
 					entry.attestationLinks.some(({ ref }) =>
-						request.refs.includes(ref),
+						requestedRefs.has(ref),
 					) ||
-					(request.readings ?? []).some((reading) =>
-						sameReading(reading, entry.reading),
-					),
+					(requestedReadingKeys.size > 0 &&
+						requestedReadingKeys.has(
+							readingIdentityKey(entry.reading),
+						)),
 			)
 		)
 			throw new Error(

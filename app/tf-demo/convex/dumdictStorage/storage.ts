@@ -113,13 +113,7 @@ export async function findCanonicalLemma(ctx: ServerCtx, lemma: unknown) {
 }
 
 export async function findLemma(ctx: ServerCtx, lemma: unknown) {
-	const canonical = await findCanonicalLemma(ctx, lemma);
-	if (!canonical) return null;
-	const dictionary = await ctx.db
-		.query("dictionaryLemmas")
-		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
-		.unique();
-	return dictionary ? { canonical, dictionary } : null;
+	return findLemmaByKey(ctx, lemmaIdentityKey(lemma));
 }
 
 export async function findLemmaByKey(ctx: ServerCtx, lemmaKey: string) {
@@ -157,6 +151,22 @@ export async function findCanonicalReading(
 			),
 		)
 		.unique();
+}
+
+export async function readingEntryExists(
+	ctx: ServerCtx,
+	readingInput: unknown,
+): Promise<boolean> {
+	const canonical = await findCanonicalReading(ctx, readingInput);
+	if (!canonical) return false;
+	const [entry, lemma] = await Promise.all([
+		ctx.db
+			.query("readingEntries")
+			.withIndex("by_reading_id", (q) => q.eq("readingId", canonical._id))
+			.unique(),
+		ctx.db.get(canonical.lemmaId),
+	]);
+	return Boolean(entry && lemma);
 }
 
 export async function findReading(ctx: ServerCtx, readingInput: unknown) {
@@ -277,9 +287,10 @@ async function loadCanonicalReadingKnowledge(
 		bucket.push(targetValue);
 		semanticRelations[edge.relation] = bucket;
 	}
-	const base = withoutSemanticRelationTargets(storedKnowledge);
 	const knowledge =
-		base === undefined ? {} : requireRecord(base, "Reading Knowledge");
+		preserved === undefined
+			? {}
+			: requireRecord(preserved, "Reading Knowledge");
 	if (Object.keys(semanticRelations).length > 0) {
 		knowledge.semanticRelations = semanticRelations;
 	}
@@ -422,6 +433,22 @@ export async function findCanonicalSurface(ctx: ServerCtx, surfaceKey: string) {
 		.query("surfaces")
 		.withIndex("by_surface_key", (q) => q.eq("surfaceKey", surfaceKey))
 		.unique();
+}
+
+export async function ownedSurfaceExists(
+	ctx: ServerCtx,
+	surfaceKey: string,
+): Promise<boolean> {
+	const canonical = await findCanonicalSurface(ctx, surfaceKey);
+	if (!canonical) return false;
+	const [entry, lemma] = await Promise.all([
+		ctx.db
+			.query("ownedSurfaces")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", canonical._id))
+			.unique(),
+		ctx.db.get(canonical.lemmaId),
+	]);
+	return Boolean(entry && lemma);
 }
 
 export async function findSurface(ctx: ServerCtx, surfaceKey: string) {

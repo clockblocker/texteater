@@ -15,17 +15,26 @@ import type {
 	SurfaceEntry,
 } from "../domain-types.js";
 
-type LanguageParserName =
-	| "parseAsChangePrecondition"
-	| "parseAsCommitChangesRequest"
-	| "parseAsDumdictPlan"
-	| "parseAsLemmaRecord"
-	| "parseAsPendingSemanticRelationLocator"
-	| "parseAsPendingSemanticRelationRecord"
-	| "parseAsPlannedChangeOp"
-	| "parseAsReadingEntry"
-	| "parseAsReadingPatchOp"
-	| "parseAsSurfaceEntry";
+type LanguageParserOutputMap<L extends Dumling.Language> = {
+	parseAsChangePrecondition: ChangePrecondition<L>;
+	parseAsCommitChangesRequest: CommitChangesRequest<L>;
+	parseAsDumdictPlan: DumdictPlan<L>;
+	parseAsLemmaRecord: LemmaRecord<L>;
+	parseAsPendingSemanticRelationLocator: PendingSemanticRelationLocator<L>;
+	parseAsPendingSemanticRelationRecord: PendingSemanticRelationRecord<L>;
+	parseAsPlannedChangeOp: PlannedChangeOp<L>;
+	parseAsReadingEntry: ReadingEntry<L>;
+	parseAsReadingPatchOp: ReadingPatchOp<L>;
+	parseAsSurfaceEntry: SurfaceEntry<L>;
+};
+
+export type LanguageParserName =
+	keyof LanguageParserOutputMap<Dumling.Language>;
+
+export type LanguageParserOutput<
+	Name extends LanguageParserName,
+	Language extends Dumling.Language,
+> = LanguageParserOutputMap<Language>[Name];
 
 export type DumdictValidationRouteKey =
 	| `${LanguageParserName}:${Dumling.Language}`
@@ -56,29 +65,11 @@ export type InternalDumdictValidationRouteOutput<
 > = InternalDumdictValidationRouteOutputMap[Key];
 
 type FrozenOutputForRoute<Key extends DumdictValidationRouteKey> =
-	Key extends `parseAsChangePrecondition:${infer Language extends Dumling.Language}`
-		? ChangePrecondition<Language>
-		: Key extends `parseAsCommitChangesRequest:${infer Language extends Dumling.Language}`
-			? CommitChangesRequest<Language>
-			: Key extends "parseAsCommitChangesResult"
-				? CommitChangesResult
-				: Key extends `parseAsDumdictPlan:${infer Language extends Dumling.Language}`
-					? DumdictPlan<Language>
-					: Key extends `parseAsLemmaRecord:${infer Language extends Dumling.Language}`
-						? LemmaRecord<Language>
-						: Key extends `parseAsPendingSemanticRelationLocator:${infer Language extends Dumling.Language}`
-							? PendingSemanticRelationLocator<Language>
-							: Key extends `parseAsPendingSemanticRelationRecord:${infer Language extends Dumling.Language}`
-								? PendingSemanticRelationRecord<Language>
-								: Key extends `parseAsPlannedChangeOp:${infer Language extends Dumling.Language}`
-									? PlannedChangeOp<Language>
-									: Key extends `parseAsReadingEntry:${infer Language extends Dumling.Language}`
-										? ReadingEntry<Language>
-										: Key extends `parseAsReadingPatchOp:${infer Language extends Dumling.Language}`
-											? ReadingPatchOp<Language>
-											: Key extends `parseAsSurfaceEntry:${infer Language extends Dumling.Language}`
-												? SurfaceEntry<Language>
-												: never;
+	Key extends "parseAsCommitChangesResult"
+		? CommitChangesResult
+		: Key extends `${infer Name extends LanguageParserName}:${infer Language extends Dumling.Language}`
+			? LanguageParserOutput<Name, Language>
+			: never;
 
 export type DumdictValidationRouteOutputMap = {
 	[Key in DumdictValidationRouteKey]: FrozenOutputForRoute<Key>;

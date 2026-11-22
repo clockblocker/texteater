@@ -37,6 +37,48 @@ export function coreOf({ lemma }: AuthoredMember): Core {
 		: {};
 }
 
+type RealizationIndex = {
+	readonly byCanonicalForm: ReadonlyMap<
+		string,
+		readonly AuthoredRealization[]
+	>;
+	readonly bySpelled: ReadonlyMap<string, readonly AuthoredRealization[]>;
+};
+
+let realizationIndex: RealizationIndex | undefined;
+
+const realizationKey = (family: string, kind: string, form: string) =>
+	`${family}\0${kind}\0${foldCase(form, "de")}`;
+
+function indexOfRealizations(): RealizationIndex {
+	if (realizationIndex !== undefined) return realizationIndex;
+	const byCanonicalForm = new Map<string, AuthoredRealization[]>();
+	const bySpelled = new Map<string, AuthoredRealization[]>();
+	for (const realization of authoredRealizations) {
+		const { lemma } = realization.member;
+		if (isSyncreticUnit(lemma)) continue;
+		const canonicalKey = realizationKey(
+			lemma.family,
+			lemma.kind,
+			lemma.canonicalForm,
+		);
+		const canonicalBucket = byCanonicalForm.get(canonicalKey);
+		if (canonicalBucket) canonicalBucket.push(realization);
+		else byCanonicalForm.set(canonicalKey, [realization]);
+
+		const spelledKey = realizationKey(
+			lemma.family,
+			lemma.kind,
+			realization.spelled,
+		);
+		const spelledBucket = bySpelled.get(spelledKey);
+		if (spelledBucket) spelledBucket.push(realization);
+		else bySpelled.set(spelledKey, [realization]);
+	}
+	realizationIndex = { byCanonicalForm, bySpelled };
+	return realizationIndex;
+}
+
 /** Whether an authored member has the stored identity, its Canonical Form compared without case. */
 function hasIdentity(member: AuthoredMember, identity: ClosedClassIdentity) {
 	const core = coreOf(member);
@@ -63,10 +105,12 @@ export function matchingRealizations(
 	member: Member,
 	opensSentence: boolean,
 ): readonly MatchedRealization[] {
-	const ofIdentity = authoredRealizations.filter(
-		(realization) =>
-			!isSyncreticUnit(realization.member.lemma) &&
-			hasIdentity(realization.member, identity),
+	const candidates =
+		indexOfRealizations().byCanonicalForm.get(
+			realizationKey("Lexeme", identity.kind, identity.canonicalForm),
+		) ?? [];
+	const ofIdentity = candidates.filter((realization) =>
+		hasIdentity(realization.member, identity),
 	);
 	// A clitic's apostrophe is no part of its authored spelling: 's is s.
 	const texts = new Set([member.text, member.text.replace(/^['’]/u, "")]);
@@ -165,11 +209,9 @@ export function joinedRealizations(
 	joined: string,
 ): readonly AuthoredRealization[] {
 	const { family, kind } = target.route;
-	return authoredRealizations.filter(
-		(realization) =>
-			!isSyncreticUnit(realization.member.lemma) &&
-			realization.member.lemma.family === family &&
-			realization.member.lemma.kind === kind &&
-			foldCase(realization.spelled, "de") === foldCase(joined, "de"),
+	return (
+		indexOfRealizations().bySpelled.get(
+			realizationKey(family, kind, joined),
+		) ?? []
 	);
 }

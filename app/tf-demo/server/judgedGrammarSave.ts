@@ -1,7 +1,7 @@
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type { OnJudged } from "./clickResolution";
-import { inspectionStep } from "./inspectionCapture";
+import { annotateInspectionStep } from "./inspectionCapture";
 import type { ResolutionProgressObserver } from "./orchestrationPorts";
 
 /**
@@ -30,28 +30,31 @@ export type JudgedGrammarSave = {
 export function judgedGrammarSave(
 	observer: ResolutionProgressObserver | undefined,
 ): JudgedGrammarSave {
-	const grammarJudged = observer?.grammarJudged;
+	const notify =
+		observer && typeof observer.grammarJudged === "function"
+			? (input: { readonly judged: Parameters<OnJudged>[0] }) =>
+					observer.grammarJudged?.(input) ?? Promise.resolve()
+			: undefined;
 	let returned = false;
 	let saving: Fiber.Fiber<void> | undefined;
+	const persistJudgedGrammar =
+		notify &&
+		Effect.fn("Save the judged Grammar")(function* (input: {
+			readonly judged: Parameters<OnJudged>[0];
+		}) {
+			yield* annotateInspectionStep(
+				"app/tf-demo · resolutionSessions",
+				input.judged,
+			);
+			yield* Effect.tryPromise(() => notify(input));
+		});
 	const save =
-		grammarJudged &&
-		((input: Parameters<typeof grammarJudged>[0]) =>
+		persistJudgedGrammar &&
+		((input: { readonly judged: Parameters<OnJudged>[0] }) =>
 			Effect.yieldNow.pipe(
 				Effect.andThen(
 					Effect.suspend(() =>
-						returned
-							? Effect.void
-							: Effect.tryPromise(() =>
-									grammarJudged.call(observer, input),
-								).pipe(
-									Effect.withSpan(
-										"Save the judged Grammar",
-										inspectionStep(
-											"app/tf-demo · resolutionSessions",
-											input.judged,
-										),
-									),
-								),
+						returned ? Effect.void : persistJudgedGrammar(input),
 					),
 				),
 				Effect.catchCause((cause) =>

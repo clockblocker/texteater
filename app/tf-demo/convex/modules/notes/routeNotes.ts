@@ -208,7 +208,10 @@ async function loadAttestationRouteNote(
 	) {
 		return null;
 	}
-	const scroll = await ctx.db.get(occurrence.sentence.scrollId);
+	const [scroll, valency] = await Promise.all([
+		ctx.db.get(occurrence.sentence.scrollId),
+		loadReadingFrame(ctx, occurrence.reading.readingKey),
+	]);
 	if (!scroll) return null;
 	const source = await projectOccurrenceSource(
 		ctx,
@@ -221,7 +224,6 @@ async function loadAttestationRouteNote(
 		visitorId,
 	);
 	if (!source) return null;
-	const valency = await loadReadingFrame(ctx, occurrence.reading.readingKey);
 	return {
 		kind: "Attestation" as const,
 		target: {
@@ -348,6 +350,15 @@ async function loadLemmaRouteNote(
 	const lemma = await ctx.db.get(lemmaId);
 	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
 
+	const participialAdjectivesPromise =
+		contextCursor === undefined
+			? loadParticipialAdjectives(ctx, lemma)
+			: Promise.resolve([]);
+	const formationsPromise =
+		contextCursor === undefined
+			? loadFormations(ctx, lemma)
+			: Promise.resolve([]);
+
 	const [firstSurfaces, firstReadings] = await Promise.all([
 		ctx.db
 			.query("surfaces")
@@ -436,6 +447,23 @@ async function loadLemmaRouteNote(
 				);
 	}
 
+	const [participialAdjectives, formations, projectedReadings] =
+		await Promise.all([
+			participialAdjectivesPromise,
+			formationsPromise,
+			Promise.all(
+				readings.map(async (reading) => ({
+					readingId: reading._id,
+					emojiDescription: reading.emojiDescription,
+					reflexive: await loadReflexiveSlot(ctx, reading.readingKey),
+					target: {
+						kind: "Reading" as const,
+						readingId: reading._id,
+					},
+				})),
+			),
+		]);
+
 	return {
 		kind: "Lemma" as const,
 		target: {
@@ -443,12 +471,8 @@ async function loadLemmaRouteNote(
 			lemmaId: lemma._id,
 		},
 		presented: presentLemma(lemmaValue(lemma)),
-		participialAdjectives:
-			contextCursor === undefined
-				? await loadParticipialAdjectives(ctx, lemma)
-				: [],
-		formations:
-			contextCursor === undefined ? await loadFormations(ctx, lemma) : [],
+		participialAdjectives,
+		formations,
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
 				surface.language === "de" && lemma.language === "de"
@@ -469,17 +493,7 @@ async function loadLemmaRouteNote(
 						]
 					: [],
 			),
-			readings: await Promise.all(
-				readings.map(async (reading) => ({
-					readingId: reading._id,
-					emojiDescription: reading.emojiDescription,
-					reflexive: await loadReflexiveSlot(ctx, reading.readingKey),
-					target: {
-						kind: "Reading" as const,
-						readingId: reading._id,
-					},
-				})),
-			),
+			readings: projectedReadings,
 			sameWrittenForm: sameWritten.flatMap((candidate) =>
 				candidate._id !== lemma._id &&
 				isUnitReadingFamily(candidate.family)

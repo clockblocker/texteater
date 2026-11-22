@@ -1,21 +1,20 @@
+import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { AuthoredMember } from "../member.js";
 import { germanSyncretisms } from "./generated/syncretisms.js";
 
-type Core = Readonly<Record<string, unknown>>;
-/** A Syncretism's `syncretic` list, the features it leaves open; undefined for any other Lemma. */
-function syncreticOf(lemma: {
-	readonly canonicalForm: string;
-	readonly syncretic?: readonly string[];
-}): readonly string[] | undefined {
-	return lemma.syncretic;
-}
+let byIdentity: ReadonlyMap<string, AuthoredMember> | undefined;
 
-/** Core Features count by their set values: a missing one equals a null one. */
-function sameCore(left: Core, right: Core): boolean {
-	return [...new Set([...Object.keys(left), ...Object.keys(right)])].every(
-		(name) => (left[name] ?? null) === (right[name] ?? null),
-	);
+function syncretismsByIdentity(): ReadonlyMap<string, AuthoredMember> {
+	if (byIdentity === undefined) {
+		const index = new Map<string, AuthoredMember>();
+		for (const member of germanSyncretisms) {
+			const key = lemmaIdentityKey(member.lemma);
+			if (!index.has(key)) index.set(key, member);
+		}
+		byIdentity = index;
+	}
+	return byIdentity;
 }
 
 /**
@@ -24,27 +23,16 @@ function sameCore(left: Core, right: Core): boolean {
  * Syncretism's view, without its units, and has the Syncretism's identity
  * (system ADR 0002): the route, the Canonical Form without letter case, the
  * Core and the `syncretic` list. The member holds the whole Syncretism, with
- * its Reading and Knowledge. This compares identities itself, so the
- * inventories entry loads no Zod (ADR 0025).
+ * its Reading and Knowledge.
  */
 export function syncretismFor(
 	lemma: Dumling.Lemma,
 ): AuthoredMember | undefined {
-	const syncretic = syncreticOf(lemma);
-	if (syncretic === undefined || lemma.language !== "de") return undefined;
-	const form = lemma.canonicalForm.toLocaleLowerCase("de");
-	return germanSyncretisms.find((member) => {
-		const generated = member.lemma;
-		const generatedSyncretic = syncreticOf(generated);
-		return (
-			generated.family === lemma.family &&
-			generated.kind === lemma.kind &&
-			generated.canonicalForm.toLocaleLowerCase("de") === form &&
-			generatedSyncretic?.length === syncretic.length &&
-			syncretic.every(
-				(name, index) => generatedSyncretic?.[index] === name,
-			) &&
-			sameCore(generated.coreFeatures, lemma.coreFeatures)
-		);
-	});
+	if (
+		!("syncretic" in lemma) ||
+		lemma.syncretic === undefined ||
+		lemma.language !== "de"
+	)
+		return undefined;
+	return syncretismsByIdentity().get(lemmaIdentityKey(lemma));
 }

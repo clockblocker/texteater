@@ -46,9 +46,14 @@ import type { Questions } from "@typesafe-ai/sdk";
 import type * as Effect from "effect/Effect";
 import { type Answers, type Ask, type AskFailure, choice } from "../ask.js";
 import { askPlan, type Plan } from "../stage-graph.js";
-import type { AssembledEdge, Membership } from "./assembly.js";
+import {
+	type AssembledEdge,
+	type Membership,
+	openPiecePredicate,
+} from "./assembly.js";
 import { fusedSiblings, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
+import { wordingOf } from "./fixed-member.js";
 import {
 	flaggedPrepositions,
 	type GovernmentFamily,
@@ -56,7 +61,12 @@ import {
 	governmentFamilies,
 } from "./government-flags.js";
 import type { Nomination } from "./nomination.js";
-import { argmaxBesideNone, partitionOf } from "./partition.js";
+import {
+	argmaxBesideNone,
+	pairKey,
+	partitionOf,
+	pieceGroupMap,
+} from "./partition.js";
 import type { Piece } from "./sentence.js";
 
 export {
@@ -136,26 +146,6 @@ function phraseOf(nomination: Nomination, piece: Piece): readonly number[] {
 	return [piece.id];
 }
 
-/** The pieces as written, in order, with … where others stand between. */
-function wordingOf(nomination: Nomination, ids: readonly number[]): string {
-	const { pieces, segments } = nomination.sentence;
-	let text = "";
-	let previous: Piece | undefined;
-	for (const id of [...ids].sort((a, b) => a - b)) {
-		const piece = pieces[id - 1];
-		if (!piece) continue;
-		if (previous && previous.id === piece.id - 1)
-			text += segments
-				.slice(previous.segment + 1, piece.segment)
-				.map((segment) => segment.text)
-				.join("");
-		else if (previous) text += " … ";
-		text += piece.text;
-		previous = piece;
-	}
-	return text;
-}
-
 /** The `government` request's questions: a Choice per flag. */
 function governmentQuestions(
 	nomination: Nomination,
@@ -163,9 +153,7 @@ function governmentQuestions(
 	flags: readonly GovernmentFlag[],
 ): Questions {
 	const { sentence, ref } = nomination;
-	const groupOf = new Map<number, readonly number[]>();
-	for (const group of membership.partition)
-		for (const id of group) groupOf.set(id, group);
+	const groupOf = pieceGroupMap(membership.partition);
 	const siblings = fusedSiblings(sentence);
 	const questions: Questions = {};
 	for (const flag of flags) {
@@ -303,8 +291,6 @@ function actionOf(
 	}
 }
 
-const pairKey = (a: number, b: number) => `${Math.min(a, b)},${Math.max(a, b)}`;
-
 /**
  * The membership with the answers past the floor applied: a split drops
  * the satellite link between the preposition and its host; a join links
@@ -332,16 +318,9 @@ export function withGovernmentChoice(
 			return action ? [action] : [];
 		});
 	if (actions.length === 0) return membership;
-	const groupOf = new Map<number, readonly number[]>();
-	for (const group of membership.partition)
-		for (const id of group) groupOf.set(id, group);
-	const saying = new Set(
-		membership.edges
-			.filter((edge) => edge.source === "saying")
-			.flatMap((edge) => edge.pieces),
-	);
+	const groupOf = pieceGroupMap(membership.partition);
 	const bound = boundPieces(nomination, membership, rules);
-	const open = (id: number) => !saying.has(id) && !bound.has(id);
+	const open = openPiecePredicate(membership.edges, bound);
 	const splits = new Set<string>();
 	const literal = new Set<number>();
 	const joins: AssembledEdge[] = [];

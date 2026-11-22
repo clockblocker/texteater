@@ -1,5 +1,7 @@
 import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
+import { inflectionalBagOf } from "../inflectional-bag.js";
+import { germanFiniteAuxiliaries } from "../inventories/de/closed-verb-tables.js";
 
 /** A base-order form that fails to spell its Canonical Form, at a path inside the checked Attestation. */
 type BaseOrderIssue = {
@@ -8,10 +10,6 @@ type BaseOrderIssue = {
 };
 
 type Bag = Readonly<Record<string, unknown>>;
-
-/** The finite words of haben, sein and werden a periphrasis ends with. */
-const AUXILIARY =
-	/^(?:hab(?:e|en|est|et|t)?|hast|hat|hatte(?:st|n|t)?|hätte(?:st|n|t)?|bin|bist|ist|sind|seid|sei(?:en|st|est|et)?|war(?:st|en|t)?|wär(?:e|st|est|en|t|et)?|werde(?:n|t|st)?|wirst|wird|wurde(?:st|n|t)?|würde(?:st|n|t)?|ward)$/u;
 
 /** The finite words of the other verbs a periphrasis ends with: a recipient passive's or a causative's. */
 const OTHER_AUXILIARY =
@@ -78,7 +76,8 @@ function complexIssue(complex: readonly string[], bag: Bag): string | null {
 	if (bag.verbForm !== "Fin" || complex.length === 1) return null;
 	const finite = (word: string | undefined) =>
 		word !== undefined &&
-		(AUXILIARY.test(fold(word)) || OTHER_AUXILIARY.test(fold(word)));
+		(germanFiniteAuxiliaries.has(fold(word)) ||
+			OTHER_AUXILIARY.test(fold(word)));
 	if (finite(complex.at(-1))) return null;
 	if (
 		bag.perfect === "Yes" &&
@@ -149,10 +148,7 @@ export function attestationBaseOrderIssues(
 	const { surface } = attestation;
 	if (surface.lemma.kind !== "VERB") return [];
 	if (attestation.realizationCoverage !== "Full") return [];
-	const bag: Bag =
-		("inflectionalFeatures" in surface
-			? (surface.inflectionalFeatures as Bag | null)
-			: null) ?? {};
+	const bag: Bag = inflectionalBagOf(surface) ?? {};
 	if (bag.mood === "Imp") return [];
 	const cited = surface.lemma.canonicalForm.split(" ");
 	let stored = surface.normalizedSurface.split(" ");

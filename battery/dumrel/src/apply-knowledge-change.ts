@@ -1,9 +1,13 @@
 import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
-import { contextualizeChange, parseSource } from "./context.js";
+import {
+	checkKnowledgeInvariants,
+	contextualizeChange,
+	parseSource,
+} from "./context.js";
 import { structuralKeys } from "./fingerprint.js";
 import { issue } from "./issue.js";
-import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
+import { parseReadingKnowledgeWithSource } from "./parse-reading-knowledge.js";
 import { translationText } from "./translation.js";
 import type {
 	KnowledgeChange,
@@ -58,13 +62,11 @@ export function applyKnowledgeChanges<const R extends Dumling.Reading>(input: {
 	const source = parseSource(input.source);
 	if (source instanceof ParsingError)
 		return { success: false, error: source } as const;
-	const current = parseReadingKnowledge({
-		source,
-		knowledge: input.knowledge,
-	});
+	const current = parseReadingKnowledgeWithSource(source, input.knowledge);
 	if (!current.success) return current;
-	// Applied as plain Reading Knowledge; parsing the result checks it against
-	// the source again. The parse answered a fresh value, so it is ours to edit.
+	// Applied as plain Reading Knowledge; each change is checked against the
+	// already-parsed source and cross-aspect invariants are verified once at
+	// the end without re-parsing unchanged Dumling units.
 	const next: ReadingKnowledge = current.value;
 	for (const change of input.changes) {
 		const contextual = checkChange(source, change);
@@ -73,7 +75,10 @@ export function applyKnowledgeChanges<const R extends Dumling.Reading>(input: {
 		const failure = apply(next, contextual);
 		if (failure) return { success: false, error: failure } as const;
 	}
-	return parseReadingKnowledge({ source, knowledge: next });
+	const invariantFailure = checkKnowledgeInvariants(next);
+	if (invariantFailure)
+		return { success: false, error: invariantFailure } as const;
+	return { success: true, value: next as ReadingKnowledge<R> } as const;
 }
 
 /**
@@ -182,7 +187,7 @@ function applyValency(
 						: [{ ...slot, complements }];
 				})
 			: [];
-	} else if (change.kind === "Correct") next = structuredClone(change.value);
+	} else if (change.kind === "Correct") next = [...change.value];
 	else {
 		next = [...frame];
 		for (const slot of change.value) {
@@ -194,7 +199,7 @@ function applyValency(
 					),
 				)
 			)
-				next.push(structuredClone(slot));
+				next.push(slot);
 		}
 	}
 	if (next.length === 0) delete knowledge.valency;
@@ -267,7 +272,7 @@ function applyBreakdown(
 				["change", "value"],
 				`Contribute conflicts with existing breakdown ${change.part}; use Correct to replace them`,
 			);
-		breakdown[change.part] = structuredClone(change.value);
+		breakdown[change.part] = change.value;
 	}
 	if (Object.keys(breakdown).length === 0) delete knowledge.breakdown;
 	else knowledge.breakdown = breakdown;
@@ -319,22 +324,22 @@ function storeAtomic(
 ): void {
 	switch (change.aspect) {
 		case "transcription":
-			knowledge.transcription = structuredClone(change.value);
+			knowledge.transcription = change.value;
 			return;
 		case "definition":
-			knowledge.definition = structuredClone(change.value);
+			knowledge.definition = change.value;
 			return;
 		case "source":
-			knowledge.source = structuredClone(change.value);
+			knowledge.source = change.value;
 			return;
 		case "locutionType":
-			knowledge.locutionType = structuredClone(change.value);
+			knowledge.locutionType = change.value;
 			return;
 		case "sayingType":
-			knowledge.sayingType = structuredClone(change.value);
+			knowledge.sayingType = change.value;
 			return;
 		case "formulaRole":
-			knowledge.formulaRole = structuredClone(change.value);
+			knowledge.formulaRole = change.value;
 			return;
 		default:
 			// A new atomic aspect fails to type-check here until it has a case.
@@ -349,7 +354,7 @@ function uniqueTranslations(values: readonly Translation[]): Translation[] {
 		const text = translationText(value);
 		if (seen.has(text)) return [];
 		seen.add(text);
-		return [structuredClone(value)];
+		return [value];
 	});
 }
 
@@ -361,7 +366,7 @@ function unique<T>(values: readonly T[]): T[] {
 		const identity = key(value);
 		if (seen.has(identity)) continue;
 		seen.add(identity);
-		result.push(structuredClone(value));
+		result.push(value);
 	}
 	return result;
 }

@@ -155,3 +155,22 @@ export const closedAuxiliaryTables: Readonly<Record<string, ClosedVerbTable>> =
 		haben: withoutImperative(haben),
 		werden: { ...withoutImperative(werden), participle: ["worden"] },
 	};
+
+/**
+ * Every finite word of haben, sein and werden a German periphrasis opens or
+ * ends with: all finite panels of `closedAuxiliaryTables`, plus colloquial
+ * shorthands (`hab`, `hätt`, `wär`) and archaic `ward` / `wardst`.
+ */
+export const germanFiniteAuxiliaries: ReadonlySet<string> = new Set([
+	...Object.values(closedAuxiliaryTables).flatMap((table) => [
+		...table.present.flat(),
+		...table.preterite.flat(),
+		...table.subjunctive2.flat(),
+		...table.subjunctive1.flat(),
+	]),
+	"hab",
+	"hätt",
+	"wär",
+	"ward",
+	"wardst",
+]);

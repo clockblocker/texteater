@@ -52,7 +52,11 @@ import {
 import type * as Effect from "effect/Effect";
 import type { Answers, Ask, AskFailure } from "../ask.js";
 import { askPlan, type Plan } from "../stage-graph.js";
-import type { AssembledEdge, Membership } from "./assembly.js";
+import {
+	type AssembledEdge,
+	type Membership,
+	openPiecePredicate,
+} from "./assembly.js";
 import {
 	expletiveForms,
 	foldedText,
@@ -61,7 +65,7 @@ import {
 } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
-import { argmaxBesideNone, partitionOf } from "./partition.js";
+import { argmaxBesideNone, pairKey, partitionOf } from "./partition.js";
 import type { Piece } from "./sentence.js";
 import {
 	asksPerfectAuxiliary,
@@ -117,6 +121,7 @@ const auxiliaryForms = (lemma: string): ReadonlySet<string> =>
 
 let lassenForms: ReadonlySet<string> | undefined;
 let bekommenForms: ReadonlySet<string> | undefined;
+let closedVerbFormSet: ReadonlySet<string> | undefined;
 
 /** haben and sein forms that can carry a perfect; their participles are hosts' business (`sein-chain`). */
 export const perfectAuxiliaries: ReadonlySet<string> = new Set(
@@ -129,11 +134,14 @@ export const perfectAuxiliaries: ReadonlySet<string> = new Set(
 
 /** Verb forms that are never the participle a haben or sein serves: modals, auxiliaries, lassen. */
 function closedVerbForm(word: string): boolean {
-	lassenForms ??= auxiliaryForms("lassen");
-	return (
-		lassenForms.has(word) ||
-		Object.values(closedVerbForms).some((forms) => forms.includes(word))
-	);
+	if (closedVerbFormSet === undefined) {
+		lassenForms ??= auxiliaryForms("lassen");
+		closedVerbFormSet = new Set([
+			...lassenForms,
+			...Object.values(closedVerbForms).flat(),
+		]);
+	}
+	return closedVerbFormSet.has(word);
 }
 
 /** What the Verb Choice's flags read: `candidates` alone. */
@@ -376,8 +384,6 @@ function actionOf(
 	}
 }
 
-const pairKey = (a: number, b: number) => `${Math.min(a, b)},${Math.max(a, b)}`;
-
 /**
  * The membership with the answers past the floor applied: each split drops
  * the satellite link between its two pieces, each join links them, unless
@@ -396,13 +402,8 @@ export function withVerbChoice(
 			actionOf(nomination, flag, asked.answers, settings.floor),
 		);
 	if (actions.length === 0) return membership;
-	const saying = new Set(
-		membership.edges
-			.filter((edge) => edge.source === "saying")
-			.flatMap((edge) => edge.pieces),
-	);
 	const bound = boundPieces(nomination, membership, rules);
-	const open = (id: number) => !saying.has(id) && !bound.has(id);
+	const open = openPiecePredicate(membership.edges, bound);
 	const splits = new Set<string>();
 	const joins: AssembledEdge[] = [];
 	for (const action of actions) {

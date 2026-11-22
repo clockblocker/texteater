@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, projectSemanticRelations } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -78,11 +79,11 @@ export function parseStoredGermanLemma(
 
 /** A loader that loads each key once and answers repeats from its cache. */
 function memoized<Key, Value>(load: (key: Key) => Promise<Value>) {
-	const cache = new Map<Key, Value>();
-	return async (key: Key) => {
+	const cache = new Map<Key, Promise<Value>>();
+	return (key: Key) => {
 		const known = cache.get(key);
 		if (known) return known;
-		const value = await load(key);
+		const value = load(key);
 		cache.set(key, value);
 		return value;
 	};
@@ -134,11 +135,14 @@ function queryLemmaReadings(ctx: QueryCtx, lemmaId: Id<"lemmas">) {
 function createRelationNeighborhoodLoader(
 	ctx: QueryCtx,
 	source: Doc<"readings">,
+	sourceLemma?: Doc<"lemmas">,
 ) {
 	let truncated = false;
 	const neighborhood: RelationNeighborhood = {
 		readings: new Map([[source._id, source]]),
-		lemmas: new Map(),
+		lemmas: sourceLemma
+			? new Map([[sourceLemma._id, sourceLemma]])
+			: new Map(),
 		edges: new Map(),
 	};
 
@@ -214,11 +218,12 @@ function createRelationNeighborhoodLoader(
 
 	/** The Reading's outgoing edges, then those into it and into its Lemma. */
 	async function loadIncident(reading: Doc<"readings">) {
-		return [
-			...(await loadOutgoing(reading._id)),
-			...(await loadIncomingReading(reading._id)),
-			...(await loadIncomingLemma(reading.lemmaId)),
-		];
+		const [outgoing, incomingReading, incomingLemma] = await Promise.all([
+			loadOutgoing(reading._id),
+			loadIncomingReading(reading._id),
+			loadIncomingLemma(reading.lemmaId),
+		]);
+		return [...outgoing, ...incomingReading, ...incomingLemma];
 	}
 
 	return {
@@ -245,8 +250,11 @@ async function targetReadings(
 			: [];
 	}
 	if (!edge.targetLemmaId) return [];
-	await loader.rememberLemma(edge.targetLemmaId);
-	return loader.loadReadingsByLemma(edge.targetLemmaId);
+	const [, readings] = await Promise.all([
+		loader.rememberLemma(edge.targetLemmaId),
+		loader.loadReadingsByLemma(edge.targetLemmaId),
+	]);
+	return readings;
 }
 
 async function expandSynonymComponent(
@@ -361,30 +369,49 @@ export function relationsOf<
 	return relations;
 }
 
+function storedSemanticRelationTargetKind(
+	knowledge: unknown,
+): "lemma" | "reading" | undefined {
+	if (!isRecord(knowledge) || !isRecord(knowledge.semanticRelations))
+		return undefined;
+	const { targetKind } = knowledge.semanticRelations;
+	return targetKind === "reading" || targetKind === "lemma"
+		? targetKind
+		: undefined;
+}
+
 /** Each loaded Reading with the Semantic Relations its gathered edges give it. */
-function loadRelationEntries(
+async function loadRelationEntries(
 	ctx: QueryCtx,
 	neighborhood: RelationNeighborhood,
 	units: ReadonlyMap<Id<"readings">, Dumling.Reading<"de">>,
 	truncated: boolean,
-): Promise<Dumrel.ReadingWithKnowledge[]> {
+): Promise<{
+	entries: Dumrel.ReadingWithKnowledge[];
+	accumulatedKnowledge: Map<string, Doc<"accumulatedKnowledge"> | null>;
+}> {
 	const edges = [...neighborhood.edges.values()];
-	return Promise.all(
+	const accumulatedKnowledge = new Map<
+		string,
+		Doc<"accumulatedKnowledge"> | null
+	>();
+	const entries = await Promise.all(
 		[...units].map(async ([readingId, reading]) => {
+			const ownerReadingKey =
+				neighborhood.readings.get(readingId)?.readingKey ??
+				readingIdentityKey(reading);
 			const accumulated = await ctx.db
 				.query("accumulatedKnowledge")
 				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", readingIdentityKey(reading)),
+					q.eq("ownerReadingKey", ownerReadingKey),
 				)
 				.unique();
-			const stored = parseReadingKnowledge({
-				source: reading,
-				knowledge: accumulated?.knowledge ?? {},
-			});
-			if (!stored.success) throw stored.error;
+			accumulatedKnowledge.set(ownerReadingKey, accumulated);
 			const relations = relationsOf({
 				readingId,
-				storedTargetKind: stored.value.semanticRelations?.targetKind,
+				storedTargetKind: storedSemanticRelationTargetKind(
+					accumulated?.knowledge,
+				),
 				edges,
 				units,
 				lemmas: neighborhood.lemmas,
@@ -398,6 +425,7 @@ function loadRelationEntries(
 			return { reading, knowledge: knowledge.value };
 		}),
 	);
+	return { entries, accumulatedKnowledge };
 }
 
 /**
@@ -456,8 +484,18 @@ function toTargetedProjection(
 export async function loadTargetedRelationProjections(
 	ctx: QueryCtx,
 	source: Doc<"readings">,
-): Promise<{ projections: TargetedRelationProjection[]; truncated: boolean }> {
-	const loader = createRelationNeighborhoodLoader(ctx, source);
+	sourceLemma?: Doc<"lemmas">,
+): Promise<{
+	projections: TargetedRelationProjection[];
+	truncated: boolean;
+	readingsByKey: ReadonlyMap<string, Doc<"readings">>;
+	lemmasByKey: ReadonlyMap<string, Doc<"lemmas">>;
+	accumulatedKnowledge: ReadonlyMap<
+		string,
+		Doc<"accumulatedKnowledge"> | null
+	>;
+}> {
+	const loader = createRelationNeighborhoodLoader(ctx, source, sourceLemma);
 	await walkRelationNeighborhood(loader, source);
 	const { neighborhood } = loader;
 	const truncated = loader.truncated();
@@ -469,22 +507,34 @@ export async function loadTargetedRelationProjections(
 			return [reading._id, projectReadingValue(reading, lemma)] as const;
 		}),
 	);
-	const entries = await loadRelationEntries(
-		ctx,
-		neighborhood,
-		units,
-		truncated,
-	);
+	const [{ entries, accumulatedKnowledge }, readingCounts] =
+		await Promise.all([
+			loadRelationEntries(ctx, neighborhood, units, truncated),
+			countLemmaReadings(ctx, neighborhood),
+		]);
 	const sourceReading = units.get(source._id);
 	if (!sourceReading)
 		throw new Error("Relation neighborhood is missing its source Reading.");
 	const projected = projectSemanticRelations(entries, {
 		source: sourceReading,
-		readingCounts: await countLemmaReadings(ctx, neighborhood),
+		readingCounts,
 	});
 	if (!projected.success) throw projected.error;
 	return {
 		projections: projected.value.map(toTargetedProjection),
 		truncated,
+		readingsByKey: new Map(
+			[...neighborhood.readings.values()].map((reading) => [
+				reading.readingKey,
+				reading,
+			]),
+		),
+		lemmasByKey: new Map(
+			[...neighborhood.lemmas.values()].map((lemma) => [
+				lemma.lemmaKey,
+				lemma,
+			]),
+		),
+		accumulatedKnowledge,
 	};
 }

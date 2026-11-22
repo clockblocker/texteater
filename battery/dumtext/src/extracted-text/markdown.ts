@@ -39,6 +39,7 @@ import type {
 	Scroll,
 	Section,
 } from "./extracted-text.js";
+import { type MaskedChar, styleBits, unstyleEdges } from "./html-blocks.js";
 import {
 	canonical,
 	headingRuns,
@@ -48,7 +49,6 @@ import {
 	run,
 	styleOrder,
 	tokenizeLine,
-	trimLine,
 	whitespace,
 } from "./markdown-inline.js";
 import {
@@ -372,8 +372,6 @@ export function extractedTextFromMarkdown(markdown: string): ExtractedText {
 
 // Export.
 
-type StyledChar = { readonly char: string; readonly styles: Set<InlineStyle> };
-
 type Markers = Readonly<Record<InlineStyle, readonly [string, string]>>;
 
 const markdownMarkers: Markers = {
@@ -391,27 +389,12 @@ const htmlMarkers: Markers = {
 /** Which of two styles opening together goes outside. */
 const nestingOrder: readonly InlineStyle[] = ["Quotation", "Italic", "Bold"];
 
-/** Drops `style` from the whitespace at the edges of each of its stretches. */
-function unstyleEdges(chars: readonly StyledChar[], style: InlineStyle): void {
-	const edges = (from: number, to: number, step: 1 | -1) => {
-		for (let index = from; index !== to; index += step) {
-			const at = chars[index];
-			if (at === undefined || !whitespace.test(at.char)) return;
-			at.styles.delete(style);
-		}
-	};
-	let index = 0;
-	while (index < chars.length) {
-		if (!chars[index]?.styles.has(style)) {
-			index += 1;
-			continue;
-		}
-		let stop = index;
-		while (chars[stop]?.styles.has(style)) stop += 1;
-		edges(index, stop, 1);
-		edges(stop - 1, index - 1, -1);
-		index = stop;
+function styleMask(styles: readonly InlineStyle[] | undefined): number {
+	let mask = 0;
+	if (styles !== undefined) {
+		for (const style of styles) mask |= styleBits[style];
 	}
+	return mask;
 }
 
 /**
@@ -419,30 +402,33 @@ function unstyleEdges(chars: readonly StyledChar[], style: InlineStyle): void {
  * the whitespace at the edges of its stretches: emphasis cannot open before
  * or close after a space.
  */
-function styledChars(runs: readonly Run[]): StyledChar[] {
-	const chars = runs.flatMap((current) =>
-		Array.from(current.text, (char) => ({
-			char,
-			styles: new Set(current.styles ?? []),
-		})),
-	);
+function styledChars(runs: readonly Run[]): MaskedChar[] {
+	const chars: MaskedChar[] = [];
+	for (const current of runs) {
+		const mask = styleMask(current.styles);
+		for (const char of current.text) chars.push({ char, mask });
+	}
 	let start = 0;
 	while (whitespace.test(chars[start]?.char ?? "x")) start += 1;
 	let end = chars.length;
 	while (end > start && whitespace.test(chars[end - 1]?.char ?? "x"))
 		end -= 1;
 	const kept = chars.slice(start, end);
-	for (const style of styleOrder) unstyleEdges(kept, style);
+	unstyleEdges(kept);
 	return kept;
 }
 
-function runsOf(chars: readonly StyledChar[]): Run[] {
-	return trimLine(
-		chars.map(({ char, styles }) =>
-			run(
-				char,
-				styleOrder.filter((style) => styles.has(style)),
-			),
+function runsOf(chars: readonly MaskedChar[]): Run[] {
+	const merged: { text: string; mask: number }[] = [];
+	for (const { char, mask } of chars) {
+		const last = merged.at(-1);
+		if (last?.mask === mask) last.text += char;
+		else merged.push({ text: char, mask });
+	}
+	return merged.map(({ text, mask }) =>
+		run(
+			text,
+			styleOrder.filter((style) => (mask & styleBits[style]) !== 0),
 		),
 	);
 }
@@ -495,6 +481,35 @@ function renderRuns(
 	return out;
 }
 
+function sameRuns(left: readonly Inline[], right: readonly Run[]): boolean {
+	if (left.length !== right.length) return false;
+	for (let index = 0; index < left.length; index += 1) {
+		const actual = left[index];
+		const expected = right[index];
+		if (
+			actual === undefined ||
+			expected === undefined ||
+			actual.kind !== "Run" ||
+			actual.text !== expected.text
+		)
+			return false;
+		const actualStyles = actual.styles;
+		const expectedStyles = expected.styles;
+		if ((actualStyles?.length ?? 0) !== (expectedStyles?.length ?? 0))
+			return false;
+		if (actualStyles !== undefined && expectedStyles !== undefined) {
+			for (
+				let styleIndex = 0;
+				styleIndex < actualStyles.length;
+				styleIndex += 1
+			)
+				if (actualStyles[styleIndex] !== expectedStyles[styleIndex])
+					return false;
+		}
+	}
+	return true;
+}
+
 /**
  * One line of Markdown for runs, with `*` and `**` where CommonMark reads
  * them back as written, and `<i>` and `<b>` where it would not.
@@ -503,7 +518,7 @@ function renderLine(runs: readonly Run[], inHeading: boolean): string {
 	const expected = runsOf(styledChars(runs));
 	const written = renderRuns(expected, markdownMarkers, inHeading);
 	const reread = inlinesOf(tokenizeLine(written));
-	return JSON.stringify(reread) === JSON.stringify(expected)
+	return sameRuns(reread, expected)
 		? written
 		: renderRuns(expected, htmlMarkers, inHeading);
 }

@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { diffJson, type JsonChange } from "./json-diff.js";
 import type { OperationEvaluationRun } from "./operation-evaluation.js";
-import { summarizeQuality } from "./quality.js";
+import { summarizeQuality, summarizeRunCounts } from "./quality.js";
 import {
 	operationEvaluationRunSchema,
 	operationManifestSchema,
@@ -66,23 +66,16 @@ export async function loadRun(
 		)
 	)
 		throw Error("Run records do not match their manifest");
-	const succeeded = parsed.cases.filter(
-		(record) => record.status === "Success",
-	).length;
-	const interrupted = parsed.cases.filter(
-		(record) => record.status === "Interrupted",
-	).length;
-	const failed = parsed.cases.length - succeeded - interrupted;
+	const counts = summarizeRunCounts(parsed.cases);
 	if (
-		parsed.summary.total !== parsed.cases.length ||
-		parsed.summary.succeeded !== succeeded ||
-		parsed.summary.interrupted !== interrupted ||
-		parsed.summary.failed !== failed ||
+		parsed.summary.total !== counts.total ||
+		parsed.summary.succeeded !== counts.succeeded ||
+		parsed.summary.interrupted !== counts.interrupted ||
+		parsed.summary.failed !== counts.failed ||
 		(parsed.summary.quality !== undefined &&
 			JSON.stringify(parsed.summary.quality) !==
 				JSON.stringify(summarizeQuality(parsed.cases))) ||
-		parsed.summary.status !==
-			(interrupted ? "Interrupted" : failed ? "Failed" : "Completed")
+		parsed.summary.status !== counts.status
 	)
 		throw Error("Run summary does not match its cases");
 	if (repetitionsMismatch(parsed))
