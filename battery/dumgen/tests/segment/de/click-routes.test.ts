@@ -98,3 +98,62 @@ test("an even DET/PRON test leaves the identity Choice's Kind; an answer either 
 	const modifies = await run(dienst, { ...relative, tm_5: noul(0.6) });
 	expect(unitAt(modifies.units, 9)?.route).toEqual(route("Lexeme", "DET"));
 });
+
+test("a mid-sentence capitalized noun homograph skips closed-class override and keeps the open route Choice", async () => {
+	// Doch0 _1 jedes2 _3 Mal4 _5 erwies6 _7 sich8 _9 der10 _11 Vogel12 _13 als14 _15 Taube16 .17
+	const { units, judge } = await run(
+		segmentsOf("Doch jedes Mal erwies sich der Vogel als Taube."),
+		{
+			r_3: picked("Lexeme/NOUN", {
+				"Lexeme/NOUN": 0.94,
+				"Lexeme/ADV": 0.06,
+			}),
+			cc_3: picked("adverb"),
+		},
+	);
+	expect(judge.questionsOf("closed")?.cc_3).toBeUndefined();
+	expect(unitAt(units, 4)).toEqual({
+		segments: [4],
+		route: route("Lexeme", "NOUN"),
+	});
+	// Fixed closed-class spellings (Selbst, Nein) also defer to the open route
+	// when capitalized mid-sentence as nouns.
+	// Sie0 _1 akzeptierte2 _3 kein4 _5 Nein6 .7
+	const nein = await run(segmentsOf("Sie akzeptierte kein Nein."), {
+		r_4: picked("Lexeme/NOUN"),
+	});
+	expect(unitAt(nein.units, 6)?.route).toEqual(route("Lexeme", "NOUN"));
+	// Er0 _1 fand2 _3 sein4 _5 eigenes6 _7 Selbst8 .9
+	const selbst = await run(segmentsOf("Er fand sein eigenes Selbst."), {
+		r_5: picked("Lexeme/NOUN"),
+	});
+	expect(unitAt(selbst.units, 8)?.route).toEqual(route("Lexeme", "NOUN"));
+});
+
+test("position-capitalized closed-class words still ask closed-class uses, including noun and verb homographs", async () => {
+	// Kommst0 _1 du2 ?3 _4 –5 _6 Ja7 .8
+	const dialogue = await run(segmentsOf("Kommst du? – Ja."), {
+		r_3: picked("Lexeme/NOUN"),
+		cc_3: picked("answer"),
+	});
+	expect(dialogue.judge.questionsOf("closed")?.cc_3).toBeDefined();
+	expect(unitAt(dialogue.units, 7)?.route).toEqual(route("Lexeme", "INTJ"));
+	// Halt0 _1 fand2 _3 er4 _5 keinen6 .7
+	const haltNoun = await run(segmentsOf("Halt fand er keinen."), {
+		cc_1: picked("noun"),
+	});
+	const haltQuestion = haltNoun.judge.questionsOf("closed")?.cc_1;
+	expect(
+		haltQuestion?.type === "choice" && Object.keys(haltQuestion.criteria),
+	).toEqual(["modal", "interjection", "noun", "verb"]);
+	expect(unitAt(haltNoun.units, 0)?.route).toEqual(route("Lexeme", "NOUN"));
+	// Mal0 _1 ein2 _3 Bild4 !5
+	const malVerb = await run(segmentsOf("Mal ein Bild!"), {
+		cc_1: picked("verb"),
+	});
+	const malQuestion = malVerb.judge.questionsOf("closed")?.cc_1;
+	expect(
+		malQuestion?.type === "choice" && Object.keys(malQuestion.criteria),
+	).toEqual(["modal", "adverb", "noun", "verb"]);
+	expect(unitAt(malVerb.units, 0)?.route).toEqual(route("Lexeme", "VERB"));
+});

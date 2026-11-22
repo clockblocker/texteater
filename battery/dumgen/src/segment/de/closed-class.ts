@@ -18,7 +18,7 @@
  * spelling it routes to PART is an authored member.
  */
 import type { RouteKey } from "./routes.js";
-import type { Piece } from "./sentence.js";
+import type { Piece, Sentence } from "./sentence.js";
 
 export type ClosedClassQuestion = {
 	readonly instructions: (piece: string) => string;
@@ -43,6 +43,14 @@ const adjective = (description: string): Use => ({
 	description,
 	route: "Lexeme/ADJ",
 });
+const noun = (description: string): Use => ({
+	description,
+	route: "Lexeme/NOUN",
+});
+const verb = (description: string): Use => ({
+	description,
+	route: "Lexeme/VERB",
+});
 const answer = (example: string): Use => ({
 	description: `An answer word replying to a question, also reported (${example})`,
 	route: "Lexeme/INTJ",
@@ -53,6 +61,9 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 	ja: {
 		modal: modal("Du kennst den Weg ja"),
 		answer: answer("Kommst du? – Ja."),
+		noun: noun(
+			"The noun 'yes, consent', capitalized (ein klares Ja, sein Ja geben)",
+		),
 	},
 	doch: {
 		modal: modal("Komm doch herein"),
@@ -81,6 +92,9 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 			route: "Lexeme/CCONJ",
 		},
 		modal: modal("Das ist aber schön!"),
+		noun: noun(
+			"The noun 'but, objection', capitalized (ohne Wenn und Aber, kein Aber)",
+		),
 	},
 	halt: {
 		modal: modal("Dann warten wir halt"),
@@ -88,11 +102,23 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 			description: "The exclamation 'stop!' (Halt!)",
 			route: "Lexeme/INTJ",
 		},
+		noun: noun(
+			"The noun 'hold, support, stop', capitalized (keinen Halt finden, ohne Halt, der nächste Halt)",
+		),
+		verb: verb(
+			"The verb halten 'to hold, stop', imperative (Halt den Mund!, Halt das kurz!)",
+		),
 	},
 	mal: {
 		modal: modal("Sieh mal"),
 		adverb: adverb(
 			"'times, once' counting occurrences (drei mal, noch mal)",
+		),
+		noun: noun(
+			"The noun 'time, occasion, mark', capitalized (jedes Mal, zum ersten Mal, dieses Mal)",
+		),
+		verb: verb(
+			"The verb malen 'to paint, draw', imperative (Mal ein Bild!)",
 		),
 	},
 	einmal: {
@@ -109,6 +135,9 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 		modal: modal("Er wird wohl kommen = I suppose"),
 		adverb: adverb(
 			"'well' or 'probably' as its own content (Mir ist nicht wohl; wohl bekannt)",
+		),
+		noun: noun(
+			"The noun 'well-being, good', capitalized (zum Wohl, für mein Wohl)",
 		),
 	},
 	eigentlich: {
@@ -210,9 +239,37 @@ export const fixed: Readonly<Record<string, RouteKey>> = {
 
 const spelling = (piece: Piece) => piece.word.toLowerCase();
 
+const titleCased = /^\p{Lu}\p{Ll}/u;
+
+/**
+ * Whether a piece is capitalized mid-sentence (after another word, a comma or
+ * a semicolon) rather than at a sentence, quote or clause-opening position:
+ * in German orthography, a Title-cased word there is a noun or nominalization
+ * (jedes Mal, ohne Halt, sein eigenes Selbst, kein Nein), not a closed-class
+ * function word.
+ */
+function isMidSentenceCapitalized(
+	piece: Piece,
+	sentence: Sentence | undefined,
+): boolean {
+	if (!sentence || !titleCased.test(piece.word)) return false;
+	for (let index = piece.segment - 1; index >= 0; index--) {
+		const previous = sentence.segments[index];
+		if (!previous || previous.kind === "Whitespace") continue;
+		return (
+			previous.kind !== "Punctuation" ||
+			previous.text === "," ||
+			previous.text === ";"
+		);
+	}
+	return false;
+}
+
 export function closedClassQuestion(
 	piece: Piece,
+	sentence?: Sentence,
 ): ClosedClassQuestion | undefined {
+	if (isMidSentenceCapitalized(piece, sentence)) return undefined;
 	const options = uses[spelling(piece)];
 	if (!options) return undefined;
 	return {
@@ -227,13 +284,16 @@ export function closedClassQuestion(
 export function closedClassRoute(
 	piece: Piece,
 	choice: string | undefined,
+	sentence?: Sentence,
 ): RouteKey | undefined {
+	if (isMidSentenceCapitalized(piece, sentence)) return undefined;
 	const word = spelling(piece);
 	if (fixed[word]) return fixed[word];
 	return choice === undefined ? undefined : uses[word]?.[choice]?.route;
 }
 
-export const hasFixedRoute = (piece: Piece) =>
+export const hasFixedRoute = (piece: Piece, sentence?: Sentence) =>
+	!isMidSentenceCapitalized(piece, sentence) &&
 	fixed[spelling(piece)] !== undefined;
 
 /** A Choice over a spelling's uses, as the shares of the routes they imply. */

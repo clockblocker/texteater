@@ -398,7 +398,7 @@ export function closedPlan(
 	const fused = fusedPrepositions(proposal.sentence);
 	for (const piece of proposal.sentence.pieces) {
 		if (fused.has(piece.id)) continue;
-		const question = closedClassQuestion(piece);
+		const question = closedClassQuestion(piece, proposal.sentence);
 		if (question)
 			questions[closedId(piece.id)] = choice(
 				question.instructions(proposal.ref(piece)),

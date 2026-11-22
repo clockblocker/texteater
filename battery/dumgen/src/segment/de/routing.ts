@@ -380,10 +380,11 @@ export function routeMembership(
 		if (group.length !== 1 || only === undefined) return undefined;
 		const piece = sentence.pieces[only - 1];
 		if (!piece) return undefined;
-		if (hasFixedRoute(piece)) return closedClassRoute(piece, undefined);
+		if (hasFixedRoute(piece, sentence))
+			return closedClassRoute(piece, undefined, sentence);
 		const answer = closedAnswers[closedId(only)];
 		return answer?.type === "choice"
-			? closedClassRoute(piece, answer.choice)
+			? closedClassRoute(piece, answer.choice, sentence)
 			: undefined;
 	};
 	const fixed = (group: readonly number[]): RouteKey | undefined =>
@@ -420,9 +421,12 @@ export function routeMembership(
 		const [only] = group;
 		if (group.length === 1 && only !== undefined) {
 			const piece = sentence.pieces[only - 1];
-			if (!piece || hasFixedRoute(piece)) return undefined;
+			if (!piece || hasFixedRoute(piece, sentence)) return undefined;
 			const closed = closedAnswers[closedId(only)];
-			if (closed?.type === "choice")
+			if (
+				closed?.type === "choice" &&
+				closedClassRoute(piece, closed.choice, sentence) !== undefined
+			)
 				return closedClassRouteShares(piece, closed.probabilities);
 			const abbreviation = route2[abbreviationId(only)];
 			if (abbreviation?.type === "choice")
