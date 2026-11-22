@@ -31,6 +31,7 @@
 		"lint:tooling": "biome check --error-on-warnings --config-path tooling/biome/base.json tooling",
 		"prepare": "effect-tsgo patch --typescript --oxlint && git config core.hooksPath .githooks",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
+		"setup": "bun tooling/setup.ts",
 		"test": "turbo run test test:tooling --continue",
 		"test:tooling": "bun test --timeout 20000 ./tooling",
 		"validate": "bun tooling/ci.ts validate knip dum-runtime",
