@@ -1,3 +1,4 @@
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import type {
 	ClickGrammarInput,
 	ClickGrammarSentence,
@@ -16,7 +17,7 @@ import {
 export function clickSentenceOf(
 	stored: PersistedSentence,
 ): ClickGrammarSentence {
-	if (stored.language !== "de") {
+	if (!isSupportedTargetLanguage(stored.language)) {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}
 	assertStoredSentence(stored);

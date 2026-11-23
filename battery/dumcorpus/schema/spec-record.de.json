@@ -4699,6 +4699,23 @@
 											"Initiation",
 											"Transition"
 										]
+									},
+									"hebrewParadigm": {
+										"type": "object",
+										"properties": {
+											"forms": {
+												"minItems": 1,
+												"maxItems": 100,
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/__schema658"
+												}
+											}
+										},
+										"required": [
+											"forms"
+										],
+										"additionalProperties": false
 									}
 								},
 								"additionalProperties": false
@@ -4706,10 +4723,10 @@
 							"paradigm": {
 								"type": "object",
 								"propertyNames": {
-									"$ref": "#/$defs/__schema658"
+									"$ref": "#/$defs/__schema659"
 								},
 								"additionalProperties": {
-									"$ref": "#/$defs/__schema659"
+									"$ref": "#/$defs/__schema660"
 								},
 								"description": "The forms, or the marker, this Reading licenses per Variation Dimension of its Lemma's Paradigm: plural (Pizzen, or NoPlural), preterite (stand auf), present1, present2, present3, pastParticiple, subjunctivePast."
 							},
@@ -4717,37 +4734,40 @@
 								"type": "object",
 								"properties": {
 									"transcription": {
-										"$ref": "#/$defs/__schema660"
-									},
-									"definition": {
-										"$ref": "#/$defs/__schema660"
-									},
-									"translations": {
 										"$ref": "#/$defs/__schema661"
 									},
-									"breakdown": {
-										"$ref": "#/$defs/__schema660"
+									"definition": {
+										"$ref": "#/$defs/__schema661"
 									},
-									"semanticRelations": {
+									"translations": {
 										"$ref": "#/$defs/__schema662"
 									},
+									"breakdown": {
+										"$ref": "#/$defs/__schema661"
+									},
+									"semanticRelations": {
+										"$ref": "#/$defs/__schema663"
+									},
 									"valency": {
-										"$ref": "#/$defs/__schema660"
+										"$ref": "#/$defs/__schema661"
 									},
 									"source": {
-										"$ref": "#/$defs/__schema660"
+										"$ref": "#/$defs/__schema661"
 									},
 									"locutionType": {
-										"$ref": "#/$defs/__schema660"
+										"$ref": "#/$defs/__schema661"
 									},
 									"sayingType": {
-										"$ref": "#/$defs/__schema660"
+										"$ref": "#/$defs/__schema661"
 									},
 									"formulaRole": {
-										"$ref": "#/$defs/__schema660"
+										"$ref": "#/$defs/__schema661"
+									},
+									"hebrewParadigm": {
+										"$ref": "#/$defs/__schema661"
 									},
 									"paradigm": {
-										"$ref": "#/$defs/__schema663"
+										"$ref": "#/$defs/__schema664"
 									}
 								},
 								"additionalProperties": false,
@@ -17804,6 +17824,90 @@
 			]
 		},
 		"__schema658": {
+			"type": "object",
+			"properties": {
+				"form": {
+					"type": "string",
+					"minLength": 1
+				},
+				"features": {
+					"type": "object",
+					"properties": {
+						"gender": {
+							"type": "string",
+							"enum": [
+								"Masc",
+								"Fem"
+							]
+						},
+						"number": {
+							"type": "string",
+							"enum": [
+								"Sing",
+								"Plur",
+								"Dual"
+							]
+						},
+						"person": {
+							"type": "string",
+							"enum": [
+								"1",
+								"2",
+								"3"
+							]
+						},
+						"tense": {
+							"type": "string",
+							"enum": [
+								"Past",
+								"Fut"
+							]
+						},
+						"verbForm": {
+							"type": "string",
+							"enum": [
+								"Inf",
+								"Part"
+							]
+						},
+						"mood": {
+							"type": "string",
+							"const": "Imp"
+						},
+						"definite": {
+							"type": "string",
+							"enum": [
+								"Ind",
+								"Def",
+								"Cons"
+							]
+						},
+						"voice": {
+							"type": "string",
+							"enum": [
+								"Act",
+								"Mid",
+								"Pass"
+							]
+						},
+						"polarity": {
+							"type": "string",
+							"enum": [
+								"Pos",
+								"Neg"
+							]
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"form",
+				"features"
+			],
+			"additionalProperties": false
+		},
+		"__schema659": {
 			"type": "string",
 			"enum": [
 				"plural",
@@ -17815,14 +17919,14 @@
 				"subjunctivePast"
 			]
 		},
-		"__schema659": {
+		"__schema660": {
 			"minItems": 1,
 			"type": "array",
 			"items": {
 				"$ref": "#/$defs/__schema0"
 			}
 		},
-		"__schema660": {
+		"__schema661": {
 			"type": "string",
 			"enum": [
 				"Authored",
@@ -17830,41 +17934,14 @@
 			],
 			"description": "Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none."
 		},
-		"__schema661": {
-			"type": "object",
-			"properties": {
-				"en": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"ru": {
-					"$ref": "#/$defs/__schema660"
-				}
-			},
-			"additionalProperties": false
-		},
 		"__schema662": {
 			"type": "object",
 			"properties": {
-				"synonym": {
-					"$ref": "#/$defs/__schema660"
+				"en": {
+					"$ref": "#/$defs/__schema661"
 				},
-				"nearSynonym": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"antonym": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"nearAntonym": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"hypernym": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"holonym": {
-					"$ref": "#/$defs/__schema660"
-				},
-				"endonym": {
-					"$ref": "#/$defs/__schema660"
+				"ru": {
+					"$ref": "#/$defs/__schema661"
 				}
 			},
 			"additionalProperties": false
@@ -17872,26 +17949,53 @@
 		"__schema663": {
 			"type": "object",
 			"properties": {
+				"synonym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"nearSynonym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"antonym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"nearAntonym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"hypernym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"holonym": {
+					"$ref": "#/$defs/__schema661"
+				},
+				"endonym": {
+					"$ref": "#/$defs/__schema661"
+				}
+			},
+			"additionalProperties": false
+		},
+		"__schema664": {
+			"type": "object",
+			"properties": {
 				"plural": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"preterite": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"present1": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"present2": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"present3": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"pastParticiple": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				},
 				"subjunctivePast": {
-					"$ref": "#/$defs/__schema660"
+					"$ref": "#/$defs/__schema661"
 				}
 			},
 			"additionalProperties": false,

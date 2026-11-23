@@ -36,9 +36,11 @@ type ResolutionMember =
  * Kind so Family, Kind and Core Features stay correlated.
  */
 export type ResolutionGrammarProjection<
-	Lemma extends Dumling.Lemma<"de"> = Dumling.Lemma<"de">,
+	Lemma extends
+		Dumling.Lemma<Dumling.Language> = Dumling.Lemma<Dumling.Language>,
 > = Lemma extends unknown
 	? {
+			language: Lemma["language"];
 			grundform: boolean | null;
 			members: ResolutionMember[];
 			/** Members realizing a valency marker, such as a governed preposition. */
@@ -54,7 +56,8 @@ export type ResolutionGrammarProjection<
 	: never;
 
 export type ResolutionReadingProjection<
-	Lemma extends Dumling.Lemma<"de"> = Dumling.Lemma<"de">,
+	Lemma extends
+		Dumling.Lemma<Dumling.Language> = Dumling.Lemma<Dumling.Language>,
 > = Lemma extends { family: "Foreign" }
 	? {
 			/** A Foreign Reading has no Emoji Description (ADR 0045). */
@@ -71,7 +74,7 @@ export type ResolutionReadingProjection<
 		};
 
 type ResolvedGrammaticalProjectionInput = {
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 };
 
 export function projectResolutionGrammar(
@@ -82,6 +85,7 @@ export function projectResolutionGrammar(
 	// Family, Kind and Core Features all come from the same Lemma, which
 	// TypeScript cannot follow through a union value.
 	return {
+		language: surface.lemma.language,
 		grundform: assessment.success ? assessment.value : null,
 		members: grammatical.attestation.members.map(
 			(member): ResolutionMember =>
@@ -136,7 +140,7 @@ export function projectJudgedGrammar(
 }
 
 export function projectResolutionReading(
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 ): ResolutionReadingProjection {
 	return {
 		...("emojiDescription" in reading

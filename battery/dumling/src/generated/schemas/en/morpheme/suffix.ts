@@ -5,9 +5,8 @@ import { EnSuffixMorphemeFeatureBagsSchema as featureBags } from "../../../../sc
 import { enRoutePolicy as routePolicy } from "../../../../schemas/concrete-language/en/route-policy.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
-
 // The route's Feature Bags draw only on the Feature Pool (system ADR 0032).
-type _InFeaturePool = Assert<
+export type _InFeaturePool = Assert<
 	IsUniversalFeatureBags<z.infer<typeof featureBags>>
 >;
 const schemas = buildUnitSchemas(

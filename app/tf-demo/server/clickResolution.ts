@@ -44,7 +44,7 @@ export function routedUnit(
 
 /** A stored Lemma and the Sentence texts it was found under. */
 export type LemmaCandidate = {
-	readonly lemma: Dumling.Lemma<"de">;
+	readonly lemma: Dumling.Lemma<Dumling.Language>;
 	readonly foundUnder: readonly string[];
 };
 
@@ -84,7 +84,7 @@ export type ClickGrammarInput = {
 
 type UnresolvedGrammar = {
 	readonly decision: "Unresolved";
-	readonly language: "de";
+	readonly language: ClickSentence["language"];
 };
 
 type ClickGrammar = ResolvedGrammar | UnresolvedGrammar | CatalogMissSignal;
@@ -106,7 +106,7 @@ export type ReadingResolution = {
 
 export type ClickReadingInput = {
 	readonly grammar: ResolvedGrammar;
-	readonly lemma: Dumling.Lemma<"de">;
+	readonly lemma: Dumling.Lemma<Dumling.Language>;
 	/** The Emoji Descriptions of the Lemma's stored Readings. */
 	readonly candidates: readonly string[];
 	/**

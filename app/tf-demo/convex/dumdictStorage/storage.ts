@@ -68,8 +68,10 @@ export function withoutSemanticRelationTargets(value: unknown): unknown {
  */
 export function storedReadingEntry(stored: {
 	readonly entry: CompactReadingEntry;
-}): ReadingEntry<"de"> {
-	return structuredClone(stored.entry) as unknown as ReadingEntry<"de">;
+}): ReadingEntry<Dumling.Language> {
+	return structuredClone(
+		stored.entry,
+	) as unknown as ReadingEntry<Dumling.Language>;
 }
 
 export function pendingLocatorKey(recordValue: unknown): string {

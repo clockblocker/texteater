@@ -1,4 +1,8 @@
 import type * as Dumling from "dumling/types";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 import type { StoredSegment } from "./storedSegments";
 
 /**
@@ -10,7 +14,7 @@ import type { StoredSegment } from "./storedSegments";
 /** The Sentence a click resolves against: its stored Segments, a fused word as its pieces. */
 export type ClickSentence = {
 	readonly id: string;
-	readonly language: "de";
+	readonly language: SupportedTargetLanguage;
 	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
 };
 
@@ -21,8 +25,8 @@ export type ClickSentence = {
 export type ClickEncounter = {
 	readonly sentence: ClickSentence;
 	readonly target: {
-		readonly family: Dumling.Family<"de">;
-		readonly kind: Dumling.Kind<"de">;
+		readonly family: Dumling.Family<Dumling.Language>;
+		readonly kind: Dumling.Kind<Dumling.Language>;
 		readonly memberSegmentIndices: readonly number[];
 	};
 };
@@ -43,8 +47,9 @@ export function validateClickEncounter(value: unknown): ClickEncounter {
 	const segments = encounter?.sentence?.segments;
 	const members = encounter?.target?.memberSegmentIndices;
 	if (
-		typeof encounter?.sentence?.id !== "string" ||
-		encounter.sentence.language !== "de" ||
+		!encounter ||
+		typeof encounter.sentence?.id !== "string" ||
+		!isSupportedTargetLanguage(encounter.sentence.language) ||
 		!Array.isArray(segments) ||
 		!Array.isArray(members) ||
 		members.length === 0 ||

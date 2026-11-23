@@ -6,7 +6,7 @@ import type { ReadingResolution } from "../../server/clickResolution";
 import { dumgenClickResolution } from "../../server/dumgenClickResolution";
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import { createTfDemoOrchestrator } from "../../server/linguisticOrchestration";
-import { parseGermanReading } from "../../server/operationalParsing";
+import { parseReading } from "../../server/operationalParsing";
 import type {
 	LateResolvedClickCommit,
 	OrchestrationPersistence,
@@ -61,7 +61,7 @@ export function orchestratorFor(
 					internal.dumdictStorage.queries.findStoredReadings,
 					{ lemmaKey: lemmaIdentityKey(lemma) },
 				)
-			).map(parseGermanReading),
+			).map((value: unknown) => parseReading(value)),
 		persistence: createConvexPersistence(ctx, sessionGuard),
 		...(observer ? { observer } : {}),
 	});

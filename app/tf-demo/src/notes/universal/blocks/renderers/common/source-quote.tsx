@@ -92,6 +92,7 @@ export function SourceQuote({
 					? "neuter"
 					: "default";
 	const quote = {
+		dir: "auto" as const,
 		tone,
 		lang: language,
 		onFollow: follow,

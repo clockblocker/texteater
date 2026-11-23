@@ -147,9 +147,9 @@ function failedSentenceRun(
 }
 
 test("a click on a Sentence intake failed to segment segments it again, stores its units, then resolves the unit", async () => {
-	const resegmented: string[] = [];
-	const run = failedSentenceRun((stitchedText) => {
-		resegmented.push(stitchedText);
+	const resegmented: { stitchedText: string; language: string }[] = [];
+	const run = failedSentenceRun((stitchedText, language) => {
+		resegmented.push({ stitchedText, language });
 		return Effect.succeed({
 			segments: [{ kind: "ResolvableText" as const, text: "Banken" }],
 			units: [unit],
@@ -159,7 +159,7 @@ test("a click on a Sentence intake failed to segment segments it again, stores i
 		Effect.flip(run.orchestrator.resolveSegment(selection)),
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);
-	expect(resegmented).toEqual(["Banken"]);
+	expect(resegmented).toEqual([{ stitchedText: "Banken", language: "de" }]);
 	expect(run.stored).toEqual([
 		{
 			...selection,
@@ -182,3 +182,37 @@ test("a re-segmentation that fails again fails the click and stores nothing", as
 	expect(run.stored).toEqual([]);
 	expect(run.fake.grammarInputs).toEqual([]);
 });
+
+for (const language of ["en", undefined] as const) {
+	test(`a failed Sentence with ${language ?? "missing"} language makes no retry or storage request`, async () => {
+		const retried: string[] = [];
+		const run = failedSentenceRun((text) => {
+			retried.push(text);
+			return Effect.succeed({
+				segments: [{ kind: "ResolvableText", text }],
+				units: [unit],
+			});
+		});
+		const loaded = context();
+		if (!loaded.sentence) throw new Error("Expected a Sentence.");
+		const { language: _language, ...sentence } = loaded.sentence;
+		const initial = context({
+			sentence: {
+				...sentence,
+				...(language === undefined ? {} : { language }),
+				units: [],
+				segmentationFailed: true,
+			},
+		});
+		await expect(
+			Effect.runPromise(
+				run.orchestrator.resolveSegment(selection, {}, initial),
+			),
+		).rejects.toThrow(
+			"Click resolution requires a supported target language.",
+		);
+		expect(retried).toEqual([]);
+		expect(run.stored).toEqual([]);
+		expect(run.fake.grammarInputs).toEqual([]);
+	});
+}

@@ -99,6 +99,7 @@ export async function analyzeScroll(
 	const analyzed = await ctx.runQuery(
 		internal.persistence.analyzedSubmission,
 		{
+			targetLanguage: submission.language,
 			submissionKey: submission.submissionKey,
 			sourceText: submission.sourceText,
 		},

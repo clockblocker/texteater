@@ -1,8 +1,9 @@
 import { messageOf } from "common-utils";
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import { withoutCitedReflexive } from "../server/citedReflexive";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { spellingOf, unitsByMember } from "../server/storedSegments";
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
@@ -66,7 +67,10 @@ type DictionaryHintCache = ReturnType<typeof createDictionaryHintCache>;
  * lookups, and owner Lemma fetches across spellings (and across units of a
  * Sentence when loading contexts in a batch).
  */
-function createDictionaryHintCache(ctx: QueryCtx) {
+function createDictionaryHintCache(
+	ctx: QueryCtx,
+	language: "de" | "he" = "de",
+) {
 	const lemmasByFolded = new Map<string, Promise<Doc<"lemmas">[]>>();
 	const surfacesBySpelling = new Map<string, Promise<Doc<"surfaces">[]>>();
 	const lemmasById = new Map<Id<"lemmas">, Promise<Doc<"lemmas"> | null>>();
@@ -79,7 +83,7 @@ function createDictionaryHintCache(ctx: QueryCtx) {
 					.query("lemmas")
 					.withIndex("by_shadow_descriptor", (q) =>
 						q
-							.eq("language", "de")
+							.eq("language", language)
 							.eq("foldedCanonicalForm", folded),
 					)
 					.take(9);
@@ -94,7 +98,7 @@ function createDictionaryHintCache(ctx: QueryCtx) {
 					.query("surfaces")
 					.withIndex("by_language_and_normalized_surface", (q) =>
 						q
-							.eq("language", "de")
+							.eq("language", language)
 							.eq("normalizedSurface", spelling),
 					)
 					.take(9);
@@ -206,7 +210,10 @@ async function lookupLemmaCandidates(
 	const foldedBySpelling = new Map(
 		spellings.map((spelling) => [
 			spelling,
-			foldedCanonicalForm({ language: "de", canonicalForm: spelling }),
+			foldedCanonicalForm({
+				language: sentence.language === "he" ? "he" : "de",
+				canonicalForm: spelling,
+			}),
 		]),
 	);
 	const uniqueFolded = [...new Set(foldedBySpelling.values())];
@@ -260,7 +267,7 @@ async function lookupLemmaCandidates(
 		for (const lemma of lemmas) addCandidate(candidates, lemma, texts);
 		for (const id of new Set(surfaces.map((surface) => surface.lemmaId))) {
 			const owner = ownerDocsById.get(id);
-			if (owner?.language === "de")
+			if (owner && owner.language === sentence.language)
 				addCandidate(candidates, owner, texts);
 		}
 	}
@@ -284,7 +291,7 @@ export async function loadResolutionContext(
 		clickedSegmentIndex: number;
 	},
 	loadGrammar = true,
-) {
+): Promise<Infer<typeof resolutionContextValidator>> {
 	const { sentence: sentenceDoc, segment: clickedSegment } =
 		await requireClickableSegment(
 			ctx,
@@ -306,7 +313,8 @@ export async function loadResolutionContext(
 			};
 	}
 	// A resumed Grammar still needs the Sentence to commit stored membership.
-	const needGrammar = loadGrammar && sentenceDoc.language === "de";
+	const needGrammar =
+		loadGrammar && isSupportedTargetLanguage(sentenceDoc.language);
 	const [storedSegments, scroll, neighbours] = await Promise.all([
 		loadStoredSegments(ctx, sentenceDoc._id),
 		ctx.db.get(sentenceDoc.scrollId),
@@ -327,10 +335,14 @@ export async function loadResolutionContext(
 			neighbours: {},
 		};
 	const lemmaCandidates = await lookupLemmaCandidates(
-		createDictionaryHintCache(ctx),
+		createDictionaryHintCache(
+			ctx,
+			sentenceDoc.language === "he" ? "he" : "de",
+		),
 		sentence,
 		input.clickedSegmentIndex,
 	);
+
 	return {
 		reusable: null,
 		sentence,
@@ -358,7 +370,7 @@ export async function loadSentenceResolutionContexts(
 			error: "Sentence does not exist.",
 		}));
 	}
-	const needGrammar = sentenceDoc.language === "de";
+	const needGrammar = isSupportedTargetLanguage(sentenceDoc.language);
 	const [storedSegments, scroll, neighbours] = await Promise.all([
 		loadStoredSegments(ctx, sentenceDoc._id),
 		ctx.db.get(sentenceDoc.scrollId),
@@ -374,7 +386,10 @@ export async function loadSentenceResolutionContexts(
 		storedSegments,
 		scroll,
 	);
-	const cache = createDictionaryHintCache(ctx);
+	const cache = createDictionaryHintCache(
+		ctx,
+		sentenceDoc.language === "he" ? "he" : "de",
+	);
 	return Promise.all(
 		input.clickedSegmentIndices.map(async (clickedSegmentIndex) => {
 			try {

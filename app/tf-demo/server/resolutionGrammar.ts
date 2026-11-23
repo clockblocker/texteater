@@ -1,14 +1,14 @@
 import { messageOf } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { type ClickEncounter, validateClickEncounter } from "./clickEncounter";
-import { parseGermanAttestation } from "./operationalParsing";
+import { parseAttestation } from "./operationalParsing";
 
 /** Durable grammar checkpoint retains the exact Encounter used for generation. */
 export type ResolvedGrammar = {
 	readonly decision: "Resolved";
-	readonly language: "de";
+	readonly language: ClickEncounter["sentence"]["language"];
 	readonly encounter: ClickEncounter;
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 	/**
 	 * The Emoji Description Luna drafted with the Canonical Form, for the
 	 * Reading. The checkpoint keeps no draft: a resumed click has Luna write
@@ -27,7 +27,10 @@ export function parseResolvedGrammar(input: {
 	attestation: unknown;
 }): ResolvedGrammar {
 	const encounter = validateClickEncounter(input.encounter);
-	const attestation = parseGermanAttestation(input.attestation);
+	const attestation = parseAttestation(
+		input.attestation,
+		encounter.sentence.language,
+	);
 	if (
 		attestation.surface.lemma.family !== encounter.target.family ||
 		attestation.surface.lemma.kind !== encounter.target.kind ||
@@ -45,7 +48,7 @@ export function parseResolvedGrammar(input: {
 		throw new Error("Grammar checkpoint does not match its Encounter.");
 	return {
 		decision: "Resolved",
-		language: "de",
+		language: encounter.sentence.language,
 		encounter,
 		attestation,
 	};

@@ -26,6 +26,7 @@ import {
 } from "../../model/resolutionLifecycleValidators";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
+	languageValidator,
 	resolutionGrammarProjectionValidator,
 	resolutionJudgedProjectionValidator,
 	resolutionReadingProjectionValidator,
@@ -46,7 +47,7 @@ export const canonicalOccurrenceValidator = v.object({
 	readingId: v.id("readings"),
 	lemmaId: v.id("lemmas"),
 	surfaceId: v.id("surfaces"),
-	surfaceLanguage: v.literal("de"),
+	surfaceLanguage: languageValidator,
 	normalizedSurface: v.string(),
 	attestationId: v.id("attestations"),
 	/**
@@ -309,12 +310,7 @@ export async function loadCanonicalOccurrence(
 		ctx.db.get(attestation.readingId),
 		ctx.db.get(attestation.surfaceId),
 	]);
-	if (
-		!reading ||
-		!surface ||
-		surface.lemmaId !== reading.lemmaId ||
-		surface.language !== "de"
-	)
+	if (!reading || !surface || surface.lemmaId !== reading.lemmaId)
 		return null;
 	const [lemma, members, readings] = await Promise.all([
 		ctx.db.get(reading.lemmaId),

@@ -8,6 +8,7 @@ import {
 import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { ClickEncounter } from "./clickResolution";
+import { parseAttestation, parseReading } from "./operationalParsing";
 
 /**
  * The valency accumulation port (ADR 0034): the model work that extracts or
@@ -19,11 +20,11 @@ import type { ClickEncounter } from "./clickResolution";
  */
 export type ValencyAccumulator<R = never> = (input: {
 	readonly encounter: ClickEncounter;
-	readonly reading: Dumling.Reading<"de">;
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 	/** The Reading's stored concrete Valency Patterns, possibly empty. */
 	readonly valency: AccumulateValencyInput["valency"];
-}) => Effect.Effect<ValencyAccumulation, never, R>;
+}) => Effect.Effect<ValencyAccumulation<"de" | "he">, never, R>;
 
 /**
  * The ValencyAccumulator whose model work is Dumgen's: the Encounter's
@@ -34,9 +35,12 @@ export const dumgenValencyAccumulator: ValencyAccumulator<Jev | Luna> = (
 	input,
 ) =>
 	operations.knowledge.accumulateValency({
-		language: "de",
-		reading: input.reading,
-		attestation: input.attestation,
+		language: input.encounter.sentence.language,
+		reading: parseReading(input.reading, input.encounter.sentence.language),
+		attestation: parseAttestation(
+			input.attestation,
+			input.encounter.sentence.language,
+		),
 		sentence: {
 			segments: input.encounter.sentence.segments.map(
 				({ kind, text }) => ({ kind, text }),

@@ -1,5 +1,10 @@
 import { v } from "convex/values";
+import {
+	createDumdictPlanner,
+	type ReevaluateShadowsSlice,
+} from "dumdict/planning";
 import type * as Dumling from "dumling/types";
+import { parseLemma } from "../server/operationalParsing";
 
 import type { Doc, Id } from "./_generated/dataModel";
 import {
@@ -8,8 +13,10 @@ import {
 	type MutationCtx,
 } from "./_generated/server";
 import {
-	createDumdictTransaction,
+	applyDumdictPlanInTransaction,
 	DICTIONARY_REVISION,
+	dictionaryPlanResult,
+	loadReevaluateShadowsSlice,
 	MAX_PLANNED_CHANGES,
 } from "./model/dumdictTransaction";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
@@ -551,15 +558,45 @@ async function reevaluateShadowsWithout(
 	ctx: MutationCtx,
 	lemma: Doc<"lemmas">,
 ): Promise<number> {
-	const outcome = await createDumdictTransaction(ctx).reevaluateShadows({
+	let removedLemma: Dumling.Lemma;
+	try {
+		removedLemma = parseLemma(lemmaValue(lemma), lemma.language);
+	} catch {
+		// Legacy rows may predate the current Lemma schema. They must remain
+		// deletable, but cannot safely participate in the strict Shadow planner.
+		warnMalformedStoredRow(
+			"lemmas",
+			lemma._id,
+			"Shadows matching the pruned Lemma stay as they are: invalid stored Lemma.",
+		);
+		return 0;
+	}
+	const request = {
 		baseRevision: DICTIONARY_REVISION,
-		removedLemmas: [lemmaValue(lemma) as Dumling.Lemma<"de">],
-	});
-	if (outcome.status === "committed") return outcome.plan.changes.length;
+		removedLemmas: [removedLemma],
+	};
+	const planned = createDumdictPlanner(lemma.language).reevaluateShadows(
+		(await loadReevaluateShadowsSlice(
+			ctx,
+			request,
+		)) as unknown as ReevaluateShadowsSlice<Dumling.Language>,
+		request,
+	);
+	let status: string = planned.status;
+	if (planned.status === "planned") {
+		if (planned.plan.changes.length > MAX_PLANNED_CHANGES) {
+			status = "overBudget";
+		} else {
+			const plan = dictionaryPlanResult(planned.plan);
+			const outcome = await applyDumdictPlanInTransaction(ctx, plan);
+			if (outcome.status === "committed") return plan.changes.length;
+			status = outcome.status;
+		}
+	}
 	warnMalformedStoredRow(
 		"lemmas",
 		lemma._id,
-		`Shadows matching the pruned Lemma stay as they are: ${outcome.status}.`,
+		`Shadows matching the pruned Lemma stay as they are: ${status}.`,
 	);
 	return 0;
 }

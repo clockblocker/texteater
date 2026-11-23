@@ -33,6 +33,7 @@ const source = {
 };
 
 const grammar = {
+	language: "de" as const,
 	members: [{ attested: "Banken", orthography: "Standard" as const }],
 	valencyMembers: [],
 	realizationCoverage: "Full" as const,

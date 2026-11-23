@@ -9,6 +9,7 @@ import type { Jev } from "../jev-call.js";
 import { languageModuleOf } from "../language-module.js";
 import { Languages } from "../languages.js";
 import type { Luna } from "../luna-call.js";
+import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import type { AccumulateValencyInput, ValencyAccumulation } from "./types.js";
 
 /**
@@ -16,9 +17,9 @@ import type { AccumulateValencyInput, ValencyAccumulation } from "./types.js";
  * module, or a Reading of another language than the input's, is bad input,
  * a Defect raised before anything is asked; the module checks the rest.
  */
-export const accumulateValency = (
-	input: AccumulateValencyInput,
-): Effect.Effect<ValencyAccumulation, never, Jev | Luna | CallLog> =>
+export const accumulateValency = <L extends SegmentLanguage>(
+	input: AccumulateValencyInput<L>,
+): Effect.Effect<ValencyAccumulation<L>, never, Jev | Luna | CallLog> =>
 	Effect.flatMap(Languages, (modules) => {
 		const language: string = input.reading.lemma.language;
 		const module = languageModuleOf(modules, input.language);

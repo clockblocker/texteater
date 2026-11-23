@@ -16,6 +16,7 @@ const DUM_PUBLIC_ZOD_SURFACES = {
 		"governedCaseSchema",
 		"governmentProjectionSchema",
 		"governmentRelationSchema",
+		"hebrewParadigmSchema",
 		"hebrewValencyComplementSchema",
 		"knowledgeChangeSchema",
 		"knowledgeRequestMaskSchema",

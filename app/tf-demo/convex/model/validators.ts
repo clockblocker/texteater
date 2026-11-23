@@ -1,19 +1,10 @@
-import { ConvexError, type Infer, v } from "convex/values";
-import type { Route } from "dumgen";
+import { type Infer, v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import {
 	directSemanticRelationValues,
 	translationLanguageValues,
 } from "dumrel";
-import { familyValues, kindValues, lemmaRouteKinds } from "./lemmaRoutes";
 
-const grammaticalResolutionLanguageValues = ["de"] as const;
-const segmentKindValues = [
-	"ResolvableText",
-	"OpaqueText",
-	"Whitespace",
-	"Punctuation",
-] as const;
 const memberOrthographyValues = [
 	"Standard",
 	"Typo",
@@ -36,14 +27,35 @@ const semanticRelationValues = [
 ] as const;
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
-import { SCROLL_LANGUAGE_VALUES } from "../../shared/supported-target-language";
+import {
+	SCROLL_LANGUAGE_VALUES,
+	SUPPORTED_TARGET_LANGUAGE_VALUES,
+} from "../../shared/supported-target-language";
 
-export function literalUnion<const Value extends string>(
-	values: readonly [Value, ...Value[]],
-) {
-	const [first, ...rest] = values;
-	return v.union(v.literal(first), ...rest.map((value) => v.literal(value)));
-}
+import { literalUnion } from "./literalUnion";
+import {
+	familyValidator,
+	type SameMembers,
+	unitRouteValidator,
+} from "./routeValidators";
+import {
+	segmentInputValidator,
+	storedSegmentInputValidator,
+} from "./segmentValidators";
+
+export { literalUnion } from "./literalUnion";
+export {
+	familyValidator,
+	isLemmaRoute,
+	kindValidator,
+} from "./routeValidators";
+export {
+	segmentInputValidator,
+	segmentKindValidator,
+	segmentResolutionStateValidator,
+	storedSegmentInputValidator,
+	storedSegmentValidator,
+} from "./segmentValidators";
 
 export const languageValidator = literalUnion(SCROLL_LANGUAGE_VALUES);
 
@@ -56,35 +68,13 @@ export const detectedLanguageValidator = literalUnion([
 	"other",
 ]);
 
-export const familyValidator = literalUnion(familyValues);
-export const kindValidator = literalUnion(kindValues);
-
-type SameMembers<A, B> = [A] extends [B]
-	? [B] extends [A]
-		? true
-		: false
-	: false;
-// The validators admit every Dumling Family, Kind and route, and nothing else.
-true satisfies SameMembers<Infer<typeof familyValidator>, Dumling.Family>;
-true satisfies SameMembers<Infer<typeof kindValidator>, Dumling.Kind>;
 true satisfies SameMembers<
 	(typeof variantTagValues)[number],
 	Dumling.VariantTag
 >;
 
-export const grammaticalLanguageValidator = v.literal(
-	grammaticalResolutionLanguageValues[0],
-);
-
-export const segmentKindValidator = literalUnion(segmentKindValues);
-
-export const segmentResolutionStateValidator = v.union(
-	v.object({
-		kind: v.literal("Active"),
-		activeSessionCount: v.number(),
-	}),
-	v.object({ kind: v.literal("Unresolved") }),
-	v.object({ kind: v.literal("PermanentFailure") }),
+export const grammaticalLanguageValidator = literalUnion(
+	SUPPORTED_TARGET_LANGUAGE_VALUES,
 );
 
 /**
@@ -122,24 +112,6 @@ export const definitionTextStateValidator = v.union(
 	v.literal("Ready"),
 	v.literal("Failed"),
 );
-
-export const segmentInputValidator = v.object({
-	kind: segmentKindValidator,
-	text: v.string(),
-});
-
-/** A Segment to store; `surface` marks a fusion component. */
-export const storedSegmentInputValidator = v.object({
-	kind: segmentKindValidator,
-	text: v.string(),
-	/** The word the Segment stands for: `in` for the `i` of `im`, `es` for `'s`. */
-	surface: v.optional(v.string()),
-});
-
-/** A stored Segment at its storage key; see server/storedSegments.ts. */
-export const storedSegmentValidator = storedSegmentInputValidator.extend({
-	index: v.number(),
-});
 
 export const orthographyValidator = literalUnion(memberOrthographyValues);
 
@@ -242,35 +214,6 @@ const attestationValueValidator = v.object({
 });
 
 /**
- * Where a click on a stored unit routes (Dumgen ADR 0007): German, a Family
- * other than Morpheme, and one of its Kinds.
- */
-const unitRouteValidator = v.union(
-	v.object({
-		language: v.literal("de"),
-		family: v.literal("Lexeme"),
-		kind: literalUnion(lemmaRouteKinds.de.Lexeme),
-	}),
-	v.object({
-		language: v.literal("de"),
-		family: v.literal("Locution"),
-		kind: literalUnion(lemmaRouteKinds.de.Locution),
-	}),
-	v.object({
-		language: v.literal("de"),
-		family: v.literal("Saying"),
-		kind: v.literal("Saying"),
-	}),
-	v.object({
-		language: v.literal("de"),
-		family: v.literal("Foreign"),
-		kind: v.literal("Foreign"),
-	}),
-);
-// A stored route is exactly a Route `segment.inUnits` gives.
-true satisfies SameMembers<Infer<typeof unitRouteValidator>, Route>;
-
-/**
  * One biggest unit intake stores with its Sentence (Dumgen ADR 0007): the
  * indices of its Segments in the Sentence, ascending (#767), its route or
  * `Unresolved`, and any route variants, its route first.
@@ -327,7 +270,7 @@ export const relationPublicationFingerprintsValidator = v.object({
 });
 
 export const relationTargetShadowValidator = v.object({
-	language: v.literal("de"),
+	language: grammaticalLanguageValidator,
 	canonicalForm: v.string(),
 	family: familyValidator,
 	kind: v.string(),
@@ -393,7 +336,7 @@ export const readingBlockKindValidator = literalUnion(
 );
 
 export const readingBlockRouteValidator = v.object({
-	targetLanguage: v.literal("de"),
+	targetLanguage: grammaticalLanguageValidator,
 	family: v.string(),
 	kind: v.string(),
 });
@@ -426,6 +369,7 @@ export const catalogMissValidator = v.object({
 });
 
 export const resolutionGrammarProjectionValidator = v.object({
+	language: v.optional(languageValidator),
 	grundform: grundformValidator,
 	members: v.array(attestationMemberValidator),
 	/** Members realizing a valency marker, such as a governed preposition. */
@@ -651,26 +595,4 @@ export const knowledgeProductionEvidenceValidator = v.object({
 	operationTraces: v.array(v.string()),
 });
 
-const visitorErrorCodeValidator = v.union(
-	v.literal("Conflict"),
-	v.literal("InvalidInput"),
-	v.literal("NotConfigured"),
-	v.literal("RateLimited"),
-);
-
-/**
- * The data of a condition the Visitor can act on: retry after a conflict, fix
- * the input, configure the deployment, or wait out a rate limit. Anything else
- * is a bug and throws a plain Error, which the client reports generically.
- */
-export type VisitorErrorData = {
-	readonly code: Infer<typeof visitorErrorCodeValidator>;
-	readonly message: string;
-};
-
-export function visitorError(
-	code: VisitorErrorData["code"],
-	message: string,
-): ConvexError<VisitorErrorData> {
-	return new ConvexError({ code, message });
-}
+export { type VisitorErrorData, visitorError } from "./visitorError";

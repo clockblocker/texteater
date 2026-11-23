@@ -23,8 +23,9 @@ import type { Segment } from "../segment/segmented-sentence.js";
  */
 export type KnowledgeOrigin = "New" | "TopUp";
 
-/** The aspects `knowledge.produce` fills, in Dumrel's names. */
+/** The producible aspects in Dumrel's schema; Morphological Tree stays deferred. */
 export type KnowledgeAspect =
+	| "hebrewParadigm"
 	| "transcription"
 	| "definition"
 	| "translations"
@@ -58,19 +59,21 @@ export type KnowledgeFailure = {
 	readonly message: string;
 };
 
-/** A Knowledge change on a German Reading, as Dumrel checks it. */
-export type GermanKnowledgeChange = Dumrel.KnowledgeChange<
-	Dumling.Reading<"de">
->;
+/** A Knowledge change on the specified language's Reading, as Dumrel checks it. */
+export type KnowledgeChange<L extends Dumling.Language = "de"> =
+	Dumrel.KnowledgeChange<Dumling.Reading<L>>;
+export type GermanKnowledgeChange = KnowledgeChange<"de">;
 
-/** A Semantic Relation to a German Unit Shadow tf-demo resolves later. */
-export type GermanPendingRelation = Dumrel.PendingSemanticRelation & {
-	readonly target: { readonly language: "de" };
-};
+/** A Semantic Relation to a same-language Unit Shadow tf-demo resolves later. */
+export type PendingRelation<L extends Dumling.Language = "de"> =
+	Dumrel.PendingSemanticRelation & {
+		readonly target: { readonly language: L };
+	};
+export type GermanPendingRelation = PendingRelation<"de">;
 
 /** What one run produced, the shape tf-demo's port returns. */
-export type KnowledgeProduction = {
-	readonly changes: readonly GermanKnowledgeChange[];
+export type KnowledgeProduction<L extends Dumling.Language = "de"> = {
+	readonly changes: readonly KnowledgeChange<L>[];
 	/**
 	 * The Paradigm Changes of the requested dimensions (ADR 0048), in
 	 * dimension order: per dimension a Contribute per new variant, then a
@@ -78,7 +81,7 @@ export type KnowledgeProduction = {
 	 * it takes, stored or new.
 	 */
 	readonly paradigmChanges: readonly Dumrel.ParadigmChange[];
-	readonly pendingRelations: readonly GermanPendingRelation[];
+	readonly pendingRelations: readonly PendingRelation<L>[];
 	readonly failures: readonly KnowledgeFailure[];
 };
 
@@ -97,15 +100,18 @@ export type KnowledgeSentence = {
 	readonly target: readonly number[];
 };
 
-export type ProduceKnowledgeInput<E = never> = {
-	readonly language: "de";
+export type ProduceKnowledgeInput<
+	E = never,
+	L extends Dumling.Language = "de",
+> = {
+	readonly language: L;
 	/**
 	 * The resolved Reading. Its Emoji Description is the sense boundary of
 	 * every prompt (#623); a Foreign Reading has none (ADR 0045).
 	 */
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<L>;
 	/** The occurrence's Attestation, of the Reading's Lemma. */
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly attestation: Dumling.Attestation<L>;
 	readonly sentence: KnowledgeSentence;
 	readonly origin: KnowledgeOrigin;
 	/**
@@ -149,7 +155,7 @@ export type ProduceKnowledgeInput<E = never> = {
 		readonly readings?: readonly Dumling.Reading<"de">[];
 	};
 	readonly onContribution?: (
-		changes: readonly GermanKnowledgeChange[],
+		changes: readonly KnowledgeChange<L>[],
 	) => Effect.Effect<void, E>;
 };
 
@@ -159,12 +165,12 @@ export type ProduceKnowledgeInput<E = never> = {
  * translations. Only a language given a non-empty set is checked; a
  * language with none is Knowledge Production's to fill.
  */
-export type AccumulateTranslationsInput = {
-	readonly language: "de";
+export type AccumulateTranslationsInput<L extends Dumling.Language = "de"> = {
+	readonly language: L;
 	/** The Reading the click resolved to, stored or authored. */
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<L>;
 	/** The occurrence's Attestation, of the Reading's Lemma. */
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly attestation: Dumling.Attestation<L>;
 	readonly sentence: KnowledgeSentence;
 	/** The Reading's stored translations, by language, as the note holds them. */
 	readonly translations: Readonly<
@@ -179,8 +185,8 @@ export type AccumulateTranslationsInput = {
  * translations, holding only the new ones, and a failure per language
  * whose call brought nothing usable, which adds nothing.
  */
-export type TranslationAccumulation = {
-	readonly changes: readonly GermanKnowledgeChange[];
+export type TranslationAccumulation<L extends Dumling.Language = "de"> = {
+	readonly changes: readonly KnowledgeChange<L>[];
 	readonly failures: readonly KnowledgeFailure[];
 };
 
@@ -188,12 +194,12 @@ export type TranslationAccumulation = {
  * What `knowledge.accumulateValency` takes (ADR 0034): a click's occurrence
  * of a Reading and the concrete Valency Patterns already stored on it.
  */
-export type AccumulateValencyInput = {
-	readonly language: "de";
+export type AccumulateValencyInput<L extends Dumling.Language = "de"> = {
+	readonly language: L;
 	/** The Reading the click resolved to, stored or authored. */
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<L>;
 	/** The occurrence's Attestation, of the Reading's Lemma. */
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly attestation: Dumling.Attestation<L>;
 	readonly sentence: KnowledgeSentence;
 	/** The Reading's stored concrete Valency Patterns, possibly empty. */
 	readonly valency: readonly Dumrel.ValencyPattern[];
@@ -205,8 +211,8 @@ export type AccumulateValencyInput = {
  * `realizedPattern` matched or extracted for this Attestation (or null when
  * no governed complement was realized), and any failure.
  */
-export type ValencyAccumulation = {
-	readonly changes: readonly GermanKnowledgeChange[];
+export type ValencyAccumulation<L extends Dumling.Language = "de"> = {
+	readonly changes: readonly KnowledgeChange<L>[];
 	readonly realizedPattern: Dumrel.ValencyPattern | null;
 	readonly failures: readonly KnowledgeFailure[];
 };

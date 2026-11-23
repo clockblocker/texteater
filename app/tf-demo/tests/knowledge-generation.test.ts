@@ -13,9 +13,14 @@ import type {
 	KnowledgeInput,
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
+import {
+	HEBREW_READING,
+	seedOccurrence as seedHebrewOccurrence,
+} from "./knowledge-generation-fixtures";
 import { actionContext, createTestConvex } from "./support/convex";
 import {
 	ANGST_READING,
+	addToDictionary,
 	attempts,
 	BANK_READING_KEY,
 	generateWith,
@@ -43,6 +48,57 @@ beforeEach(() => {
 
 afterEach(() => {
 	jest.useRealTimers();
+});
+
+test("Hebrew Knowledge passes action planning and publishes to its dictionary Reading", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedHebrewOccurrence(t, HEBREW_READING);
+	await t.run((ctx) =>
+		ctx.db.patch(occurrence.sentenceId, { language: "he" }),
+	);
+	await addToDictionary(t, occurrence);
+	await insertAttempt(t, occurrence, "hebrew", { state: "Scheduled" });
+	const received: string[] = [];
+	await generateWith(t, "hebrew", (input) => {
+		received.push(input.reading.lemma.language);
+		return Effect.succeed({
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "יצירה כתובה לקריאה.",
+				},
+				{
+					kind: "Contribute",
+					aspect: "hebrewParadigm",
+					value: {
+						forms: [
+							{ form: "ספרים", features: { number: "Plur" } },
+						],
+					},
+				},
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: [[{ kind: "Text", text: "book" }]],
+				},
+			],
+			pendingRelations: [],
+			failures: [],
+		});
+	});
+	expect(received).toEqual(["he"]);
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+	expect((await rows(t, "readingEntries"))[0]?.record).toMatchObject({
+		knowledge: {
+			definition: "יצירה כתובה לקריאה.",
+			translations: { en: [[{ kind: "Text", text: "book" }]] },
+		},
+	});
+	expect((await rows(t, "accumulatedKnowledge"))[0]?.ownerReadingKey).toBe(
+		occurrence.readingKey,
+	);
 });
 
 test("retry requests skip saved text and covered translations but retain missing leaves", () => {

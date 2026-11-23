@@ -7,6 +7,7 @@ import {
 	parseSourceLink,
 	sourceAndConstituentsIssue,
 } from "./breakdown-context.js";
+import { hebrewParadigmIssue } from "./hebrew-paradigm.js";
 import { issue, type Path, prefixIssues } from "./issue.js";
 import type {
 	DirectSemanticRelation,
@@ -318,6 +319,10 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge | ParsingError {
 	const result = structuredClone(knowledge);
+	if (result.hebrewParadigm) {
+		const failure = hebrewParadigmIssue(source, result.hebrewParadigm);
+		if (failure) return issue(["knowledge", "hebrewParadigm"], failure);
+	}
 	const routeFailure = checkRouteAspects(source, result);
 	if (routeFailure) return routeFailure;
 	if (result.source) {
@@ -410,6 +415,10 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange | ParsingError {
+	if (change.aspect === "hebrewParadigm" && change.kind !== "Retract") {
+		const failure = hebrewParadigmIssue(source, change.value);
+		if (failure) return issue(["change", "value"], failure);
+	}
 	switch (change.aspect) {
 		case "locutionType":
 		case "sayingType":

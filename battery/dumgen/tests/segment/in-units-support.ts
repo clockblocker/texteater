@@ -81,7 +81,7 @@ export const noLuna: LunaAsk = async () => {
 export async function inUnits(
 	options: Omit<FakeDumgenOptions, "luna">,
 	input: InUnitsInput,
-): Promise<{ text: SegmentedText; traces: OperationTrace[] }> {
+): Promise<{ text: SegmentedText<"de" | "he">; traces: OperationTrace[] }> {
 	const traces: OperationTrace[] = [];
 	const text = await Effect.runPromise(
 		operations.segment.inUnits(input).pipe(

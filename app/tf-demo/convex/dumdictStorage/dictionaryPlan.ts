@@ -1,5 +1,6 @@
 import type { Infer } from "convex/values";
 import type { DumdictPlan } from "dumdict/planning";
+import type * as Dumling from "dumling/types";
 
 import type { dictionaryPlanValidator } from "../model/validators";
 
@@ -27,7 +28,7 @@ function mutableReading<
 
 function mutablePendingRecord(
 	input: Extract<
-		DumdictPlan<"de">["changes"][number],
+		DumdictPlan<Dumling.Language>["changes"][number],
 		{
 			type:
 				| "createPendingSemanticRelation"
@@ -53,7 +54,7 @@ function mutablePendingRecord(
 }
 
 function mutablePreconditions(
-	input: DumdictPlan<"de">["changes"][number]["preconditions"],
+	input: DumdictPlan<Dumling.Language>["changes"][number]["preconditions"],
 ) {
 	return input.map((precondition) => {
 		switch (precondition.kind) {
@@ -99,7 +100,7 @@ function hostGraphOwnsAttestations(): Error {
  * revision is dropped: a plan commits against the transaction's own reads.
  */
 export function dictionaryPlanResult(
-	input: Pick<DumdictPlan<"de">, "changes">,
+	input: Pick<DumdictPlan<Dumling.Language>, "changes">,
 ): DictionaryPlanResult {
 	return {
 		changes: input.changes.map((change) => {

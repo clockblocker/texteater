@@ -8,9 +8,7 @@ import {
 	type ChangePrecondition,
 	impliedChangePreconditions,
 	makeSurfaceId,
-	ParsingError,
 	type PlannedChangeOp,
-	parseAsPlannedChangeOp,
 	type ReadingEntry,
 } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
@@ -34,6 +32,7 @@ import {
 	completeAuthoredComponentKnowledge,
 	withAuthoredArticleKnowledge,
 } from "./authoredKnowledge";
+import { parsePlannedChange } from "./plannedChange";
 import {
 	knowledgeRelationEdits,
 	relationEdgeEdit,
@@ -56,18 +55,8 @@ import {
 	withoutSemanticRelationTargets,
 } from "./storage";
 
-type PlannedChange = PlannedChangeOp<"de">;
-type GermanReadingEntry = ReadingEntry<"de">;
-/**
- * Parses one planned change at the write boundary. The Convex schema stores
- * Dumdict payloads as `v.any()`, so this is where they become typed; every
- * step after it reads the typed union.
- */
-function parsePlannedChange(value: unknown): PlannedChange {
-	const parsed = parseAsPlannedChangeOp(value, "de");
-	if (parsed instanceof ParsingError) throw parsed;
-	return parsed;
-}
+type PlannedChange = PlannedChangeOp<Dumling.Language>;
+type GermanReadingEntry = ReadingEntry<Dumling.Language>;
 
 function hostGraphOwnsAttestations(): Error {
 	return new Error(
@@ -124,7 +113,7 @@ function createPreflightState(): PreflightState {
 
 async function preflightReadingEntry(
 	ctx: MutationCtx,
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 	shadow: PreflightState,
 ): Promise<GermanReadingEntry | null> {
 	const key = readingIdentityKey(reading);
@@ -152,7 +141,7 @@ async function cachedPresence(
 
 async function preconditionFails(
 	ctx: MutationCtx,
-	precondition: ChangePrecondition<"de">,
+	precondition: ChangePrecondition<Dumling.Language>,
 	shadow: PreflightState,
 ): Promise<boolean> {
 	switch (precondition.kind) {
@@ -359,7 +348,7 @@ async function applyCreateReading(
 ): Promise<void> {
 	const entry = withAuthoredArticleKnowledge(change.entry);
 	// Stored and compared as Dumling parses it (ADR 0031).
-	const reading = parseUnitAs(entry.reading, "Reading", "de");
+	const reading = parseUnitAs(entry.reading, "Reading");
 	const emojiDescription = emojiDescriptionOf(reading);
 	const [storedLemma, canonical] = await Promise.all([
 		findLemma(ctx, reading.lemma),
@@ -439,7 +428,7 @@ async function applyCreateOwnedSurface(
 			throw divergedFromPreflight();
 		}
 	}
-	const surface = parseUnitAs(entry.surface, "Surface", "de");
+	const surface = parseUnitAs(entry.surface, "Surface");
 	if (entry.id !== makeSurfaceId(surface.language, surface))
 		throw new Error("Surface Entry key does not match its current value");
 	const reference = deriveGrammaticalComponent(surface);
@@ -657,7 +646,7 @@ export async function materializeGrammaticalComponent(
 			options,
 		);
 	await completeAuthoredComponentKnowledge(ctx, reading, options);
-	const id = makeSurfaceId("de", surface);
+	const id = makeSurfaceId(surface.language, surface);
 	if (!(await ownedSurfaceExists(ctx, id)))
 		await applyChange(ctx, {
 			type: "createOwnedSurface",

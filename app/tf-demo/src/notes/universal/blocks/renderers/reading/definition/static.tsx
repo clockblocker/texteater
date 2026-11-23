@@ -43,7 +43,7 @@ export const renderReadingDefinition = (({
 					className="rounded-lg border border-destructive/40 px-2 py-1"
 					role="alert"
 				>
-					<NoteProse as="div" lang={language}>
+					<NoteProse as="div" lang={language} dir="auto">
 						{text}
 					</NoteProse>
 					<p className="mt-1 text-sm text-destructive">
@@ -69,7 +69,7 @@ export const renderReadingDefinition = (({
 
 	return (
 		<NoteSection label="Definition">
-			<NoteProse as="div" lang={language}>
+			<NoteProse as="div" lang={language} dir="auto">
 				{text}
 			</NoteProse>
 		</NoteSection>
@@ -86,7 +86,12 @@ function DefinitionSentence({
 	readonly capabilities: DefinitionCapabilities;
 }) {
 	return (
-		<NoteProse as="div" data-slot="definition-sentence" lang={language}>
+		<NoteProse
+			as="div"
+			data-slot="definition-sentence"
+			lang={language}
+			dir="auto"
+		>
 			<ReaderSentence
 				sentence={sentence}
 				className="text-reader__sentence"

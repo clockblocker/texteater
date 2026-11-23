@@ -3,10 +3,7 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, projectSemanticRelations } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { readingIdentityKey } from "../../../server/linguisticIdentity";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-} from "../../../server/operationalParsing";
+import { parseLemma, parseReading } from "../../../server/operationalParsing";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { projectReadingValue } from "./projections";
@@ -36,13 +33,13 @@ type TargetedRelationProjection =
 	| {
 			relation: Dumrel.SemanticRelation;
 			targetKind: "lemma";
-			targetLemma: Dumling.Lemma<"de">;
+			targetLemma: Dumling.Lemma<Dumling.Language>;
 			provenance: "direct" | "inferred";
 	  }
 	| {
 			relation: Dumrel.SemanticRelation;
 			targetKind: "reading";
-			targetReading: Dumling.Reading<"de">;
+			targetReading: Dumling.Reading<Dumling.Language>;
 			provenance: "direct" | "inferred";
 	  };
 
@@ -64,10 +61,12 @@ type StoredRelationEdge<ReadingId extends string, LemmaId extends string> = {
 	readonly targetReadingId?: ReadingId;
 };
 
-export function parseStoredGermanLemma(
+export const parseStoredGermanLemma = parseStoredLemma;
+
+export function parseStoredLemma(
 	lemma: StoredLemmaFields,
-): Dumling.Lemma<"de"> {
-	return parseGermanLemma({
+): Dumling.Lemma<Dumling.Language> {
+	return parseLemma({
 		unitKind: "Lemma",
 		language: lemma.language,
 		family: lemma.family,
@@ -320,14 +319,17 @@ async function walkRelationNeighborhood(
 /** The edge's target value, or undefined when the neighbourhood lacks it. */
 function relationTarget<ReadingId extends string, LemmaId extends string>(
 	edge: StoredRelationEdge<ReadingId, LemmaId>,
-	units: ReadonlyMap<ReadingId, Dumling.Reading<"de">>,
+	units: ReadonlyMap<ReadingId, Dumling.Reading<Dumling.Language>>,
 	lemmas: ReadonlyMap<LemmaId, StoredLemmaFields>,
-): Dumling.Reading<"de"> | Dumling.Lemma<"de"> | undefined {
+):
+	| Dumling.Reading<Dumling.Language>
+	| Dumling.Lemma<Dumling.Language>
+	| undefined {
 	if (edge.targetReadingId) return units.get(edge.targetReadingId);
 	const lemma = edge.targetLemmaId
 		? lemmas.get(edge.targetLemmaId)
 		: undefined;
-	return lemma ? parseStoredGermanLemma(lemma) : undefined;
+	return lemma ? parseStoredLemma(lemma) : undefined;
 }
 
 /**
@@ -342,7 +344,7 @@ export function relationsOf<
 	readonly readingId: ReadingId;
 	readonly storedTargetKind: "lemma" | "reading" | undefined;
 	readonly edges: readonly StoredRelationEdge<ReadingId, LemmaId>[];
-	readonly units: ReadonlyMap<ReadingId, Dumling.Reading<"de">>;
+	readonly units: ReadonlyMap<ReadingId, Dumling.Reading<Dumling.Language>>;
 	readonly lemmas: ReadonlyMap<LemmaId, StoredLemmaFields>;
 	readonly truncated: boolean;
 }): Record<string, unknown> {
@@ -384,7 +386,7 @@ function storedSemanticRelationTargetKind(
 async function loadRelationEntries(
 	ctx: QueryCtx,
 	neighborhood: RelationNeighborhood,
-	units: ReadonlyMap<Id<"readings">, Dumling.Reading<"de">>,
+	units: ReadonlyMap<Id<"readings">, Dumling.Reading<Dumling.Language>>,
 	truncated: boolean,
 ): Promise<{
 	entries: Dumrel.ReadingWithKnowledge[];
@@ -445,7 +447,7 @@ async function countLemmaReadings(
 		[...neighborhood.lemmas.values()]
 			.filter((lemma) => (loaded.get(lemma._id) ?? 0) < 2)
 			.map(async (lemma) => ({
-				lemma: parseStoredGermanLemma(lemma),
+				lemma: parseStoredLemma(lemma),
 				readingCount: (
 					await ctx.db
 						.query("readings")
@@ -465,13 +467,13 @@ function toTargetedProjection(
 		? {
 				relation: item.relation,
 				targetKind: "reading",
-				targetReading: parseGermanReading(item.target),
+				targetReading: parseReading(item.target),
 				provenance: item.provenance,
 			}
 		: {
 				relation: item.relation,
 				targetKind: "lemma",
-				targetLemma: parseGermanLemma(item.target),
+				targetLemma: parseLemma(item.target),
 				provenance: item.provenance,
 			};
 }

@@ -273,6 +273,65 @@ describe("Shadow reset lifecycle", () => {
 	});
 });
 
+test.each([
+	{
+		kind: "NOUN",
+		canonicalForm: "Ziel",
+		coreFeatures: { gender: "invalid" },
+	},
+	{ kind: "VERB", canonicalForm: "zielen", coreFeatures: {} },
+])(
+	"deletes malformed legacy $kind Lemmas without fabricating Shadow reevaluation input",
+	async ({ kind, canonicalForm, coreFeatures }) => {
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-survivor", structuralKnowledge());
+		const shadowsBefore = await rows(t, "shadows");
+		const referencesBefore = await rows(t, "structuralShadowReferences");
+		const lemmaId = await t.run(async (ctx) => {
+			const id = await ctx.db.insert("lemmas", {
+				lemmaKey: "legacy-malformed",
+				language: "de",
+				family: "Lexeme",
+				kind,
+				canonicalForm,
+				foldedCanonicalForm: foldedCanonicalForm({
+					language: "de",
+					canonicalForm,
+				}),
+				coreFeatures,
+			});
+			await ctx.db.insert("dictionaryLemmas", { lemmaId: id });
+			return id;
+		});
+		const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+		try {
+			const result = await t.mutation(
+				internal.analysisStripping.clearLemmaDataBatch,
+				{
+					lemmaIds: [lemmaId],
+				},
+			);
+			expect(result.hasMore).toBe(false);
+			expect(result.deletedLemmas).toBe(1);
+			expect(await rows(t, "lemmas")).toEqual([]);
+			expect(await rows(t, "dictionaryLemmas")).toEqual([]);
+			expect(await rows(t, "shadows")).toEqual(shadowsBefore);
+			expect(await rows(t, "structuralShadowReferences")).toEqual(
+				referencesBefore,
+			);
+			expect(warn).toHaveBeenCalledTimes(1);
+			expect(JSON.parse(String(warn.mock.calls[0]?.[0]))).toMatchObject({
+				event: "MalformedStoredRow",
+				table: "lemmas",
+				id: lemmaId,
+				reason: expect.stringContaining("invalid stored Lemma"),
+			});
+		} finally {
+			warn.mockRestore();
+		}
+	},
+);
+
 test("Reading deletion removes outgoing edges and preserves incoming edges until the target Lemma dies", async () => {
 	const t = createTestConvex();
 	const { doomedLemmaId, doomedReadingId, incomingEdgeId } = await t.run(

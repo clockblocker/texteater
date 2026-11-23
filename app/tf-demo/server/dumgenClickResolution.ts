@@ -10,6 +10,7 @@ import type {
 } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import {
 	type ClickGrammarInput,
 	type ClickGrammarSentence,
@@ -19,6 +20,7 @@ import {
 	type ReadingResolution,
 	routedUnit,
 } from "./clickResolution";
+import { parseAttestation, parseLemma } from "./operationalParsing";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import type { StoredUnit } from "./storedSegments";
 
@@ -28,11 +30,19 @@ type ModelFailure = ProviderFailure | InvalidModelOutput;
 export type ClickDumgen<R> = {
 	readonly resolve: {
 		readonly grammar: (
-			input: ResolveGrammarInput,
-		) => Effect.Effect<GrammarResolution, ModelFailure, R>;
+			input: ResolveGrammarInput<SupportedTargetLanguage>,
+		) => Effect.Effect<
+			GrammarResolution<SupportedTargetLanguage>,
+			ModelFailure,
+			R
+		>;
 		readonly reading: (
-			input: ResolveReadingInput,
-		) => Effect.Effect<DumgenReading, ModelFailure, R>;
+			input: ResolveReadingInput<SupportedTargetLanguage>,
+		) => Effect.Effect<
+			DumgenReading<SupportedTargetLanguage>,
+			ModelFailure,
+			R
+		>;
 	};
 };
 
@@ -43,8 +53,8 @@ export type ClickDumgen<R> = {
  */
 function dumgenSentence(
 	sentence: ClickGrammarSentence,
-	units: readonly Unit[],
-): SegmentedSentence {
+	units: readonly Unit<SupportedTargetLanguage>[],
+): SegmentedSentence<SupportedTargetLanguage> {
 	return {
 		text: sentence.segments.map(({ text }) => text).join(""),
 		segments: sentence.segments.map(({ kind, text, surface }) => ({
@@ -57,12 +67,12 @@ function dumgenSentence(
 }
 
 /** A stored unit as Dumgen's: its Segments, route and closed-class identity. */
-const dumgenUnit = (unit: StoredUnit): Unit =>
+const dumgenUnit = (unit: StoredUnit): Unit<SupportedTargetLanguage> =>
 	({
 		segments: [...unit.segments],
 		route: unit.route === "Unresolved" ? "Unresolved" : { ...unit.route },
 		...(unit.identity ? { identity: { ...unit.identity } } : {}),
-	}) as Unit;
+	}) as Unit<SupportedTargetLanguage>;
 
 /**
  * What Dumgen's `resolve.grammar` takes for a click, but its `onJudged`:
@@ -73,24 +83,27 @@ const dumgenUnit = (unit: StoredUnit): Unit =>
  */
 export function dumgenGrammarInput(
 	input: ClickGrammarInput,
-): ResolveGrammarInput | undefined {
+): ResolveGrammarInput<SupportedTargetLanguage> | undefined {
 	const unit = routedUnit(input.unit);
 	if (!unit) return undefined;
 	const stored = dumgenUnit(unit);
 	// The clicked unit among the Sentence's others, as intake stored them.
-	const units = input.units.some(
+	const units = (input.units ?? []).some(
 		({ segments }) =>
 			segments.length === stored.segments.length &&
 			segments.every((index, at) => index === stored.segments[at]),
 	)
-		? input.units.map(dumgenUnit)
+		? (input.units ?? []).map(dumgenUnit)
 		: [stored];
 	return {
-		language: "de",
+		language: input.sentence.language,
 		sentence: dumgenSentence(input.sentence, units),
 		unit: stored,
 		neighbours: input.neighbours,
-		lemmaCandidates: input.lemmaCandidates,
+		lemmaCandidates: input.lemmaCandidates.map(({ lemma, ...rest }) => ({
+			...rest,
+			lemma: parseLemma(lemma, input.sentence.language),
+		})),
 	};
 }
 
@@ -129,7 +142,7 @@ export function dumgenClickResolution<R>(
 		if (!grammarInput)
 			return {
 				decision: "Unresolved" as const,
-				language: "de" as const,
+				language: input.sentence.language,
 			};
 		// Handed over when a click needs it, so a click that reuses a
 		// committed occurrence needs no model key.
@@ -148,17 +161,24 @@ export function dumgenClickResolution<R>(
 		const unit = {
 			segments: [...encounter.target.memberSegmentIndices],
 			route: {
-				language: "de",
+				language: encounter.sentence.language,
 				family: encounter.target.family,
 				kind: encounter.target.kind,
 			},
-		} as Unit;
+		} as Unit<SupportedTargetLanguage>;
 		if (ensureReady) yield* ensureReady;
-		const optional = holdsReflexive(attestation)
-			? yield* Effect.promise(() => optionallyReflexive(input.lemma))
-			: [];
+		const optional =
+			attestation.surface.lemma.language === "de" &&
+			holdsReflexive(attestation as Dumling.Attestation<"de">)
+				? yield* Effect.promise(() =>
+						optionallyReflexive(parseLemma(input.lemma, "de")),
+					)
+				: [];
 		const result = yield* dumgen().resolve.reading({
-			attestation,
+			attestation: parseAttestation(
+				attestation,
+				encounter.sentence.language,
+			),
 			sentence: dumgenSentence(encounter.sentence, [unit]),
 			unit,
 			candidates: input.candidates,
@@ -181,14 +201,14 @@ const holdsReflexive = (attestation: Dumling.Attestation<"de">) =>
 
 /** Dumgen's Reading as the orchestrator commits it; a New keeps the candidates its judge saw. */
 function clickReadingOf(
-	result: DumgenReading,
+	result: DumgenReading<SupportedTargetLanguage>,
 	input: ClickReadingInput,
 ): ReadingResolution | CatalogMissSignal {
 	if (result._tag === "CatalogMiss")
 		return {
 			decision: "CatalogMiss",
 			stage: "resolve.reading",
-			route: `de/${result.route.family}/${result.route.kind}`,
+			route: `${result.route.language}/${result.route.family}/${result.route.kind}`,
 			message: result.message,
 		};
 	return result._tag === "Reuse"
@@ -210,23 +230,26 @@ function encounterSentence(sentence: ClickGrammarSentence): ClickSentence {
 
 /** Dumgen's answer as the orchestrator stores it, with the Encounter Grammar resolved. */
 function clickGrammarOf(
-	result: GrammarResolution,
+	result: GrammarResolution<SupportedTargetLanguage>,
 	input: Parameters<ClickResolution["grammar"]>[0],
-	unit: Unit,
+	unit: Unit<SupportedTargetLanguage>,
 ) {
 	if (result._tag === "Unresolved")
-		return { decision: "Unresolved" as const, language: "de" as const };
+		return {
+			decision: "Unresolved" as const,
+			language: input.sentence.language,
+		};
 	if (result._tag === "CatalogMiss")
 		return {
 			decision: "CatalogMiss" as const,
 			stage: "resolve.grammar",
-			route: `de/${result.route.family}/${result.route.kind}`,
+			route: `${result.route.language}/${result.route.family}/${result.route.kind}`,
 			message: result.message,
 		};
 	const { lemma } = result.attestation.surface;
 	const grammar: ResolvedGrammar = {
 		decision: "Resolved",
-		language: "de",
+		language: input.sentence.language,
 		encounter: {
 			sentence: encounterSentence(input.sentence),
 			target: {

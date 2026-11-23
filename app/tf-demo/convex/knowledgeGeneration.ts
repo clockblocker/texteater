@@ -12,7 +12,7 @@ import type {
 	KnowledgeFailure,
 	KnowledgeRequest,
 } from "../server/knowledgeProduction";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseReading } from "../server/operationalParsing";
 import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { createDumdictTransaction } from "./model/dumdictTransaction";
@@ -284,7 +284,7 @@ export const sourcePointsBack = internalQuery({
 	handler: async (ctx, args) =>
 		(await backPointingSourceBase(
 			ctx,
-			parseGermanReading(args.reading).lemma,
+			parseReading(args.reading, "de").lemma,
 			args.change,
 		)) !== undefined,
 });
@@ -392,7 +392,7 @@ export const publish = internalMutation({
 					.take(MAX_PUBLISHED_CHANGES_PER_RUN)
 			).map((row) => canonicalJson(row.change)),
 		);
-		const ownerReading = parseGermanReading(args.reading);
+		const ownerReading = parseReading(args.reading);
 		// A Source whose base already names this Reading's Lemma as its own
 		// Source is dropped and counts as none (ADR 0050, #1279).
 		// A link whose part is already stored names its Lemma (ADR 0050).
@@ -414,15 +414,19 @@ export const publish = internalMutation({
 		)
 			? await inspectRequestIdFor(ctx, attempt.attemptKey)
 			: undefined;
-		const request = checkApplyGeneratedKnowledgeRequest("de", {
-			reading: ownerReading,
-			changes,
-			pendingRelations: publishable.pendingRelations,
-		});
+		const request = checkApplyGeneratedKnowledgeRequest(
+			ownerReading.lemma.language,
+			{
+				reading: ownerReading,
+				changes,
+				pendingRelations: publishable.pendingRelations,
+			},
+		);
 		const dictionary =
 			request.status === "ok"
 				? await createDumdictTransaction(
 						ctx,
+						ownerReading.lemma.language,
 						inspectRequestId ? { inspectRequestId } : undefined,
 					).applyGeneratedKnowledge(request.request)
 				: request;

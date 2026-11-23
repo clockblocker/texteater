@@ -64,6 +64,7 @@ function grammar(
 	],
 ): ResolutionNote["grammar"] {
 	return {
+		language: "de",
 		grundform: true,
 		members,
 		valencyMembers: [],

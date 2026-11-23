@@ -6,7 +6,10 @@ import {
 } from "dumgen";
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
-import type { ScrollLanguage } from "../shared/supported-target-language";
+import {
+	isSupportedTargetLanguage,
+	type ScrollLanguage,
+} from "../shared/supported-target-language";
 import { annotateInspectionStep } from "./inspectionCapture";
 import {
 	detectionSlice,
@@ -149,6 +152,7 @@ function detectedLanguages(dumgen: IntakeDumgen, paragraphs: Paragraphs) {
 const segmentSentencesInUnits = Effect.fn("Segment sentences in units")(
 	function* (
 		dumgen: IntakeDumgen,
+		language: ScrollLanguage,
 		segmentedParagraphs: readonly {
 			readonly sentences: readonly string[];
 		}[],
@@ -157,7 +161,7 @@ const segmentSentencesInUnits = Effect.fn("Segment sentences in units")(
 			paragraphs: segmentedParagraphs,
 		});
 		return yield* dumgen.segment.inUnits({
-			language: "de",
+			language: isSupportedTargetLanguage(language) ? language : "de",
 			paragraphs: segmentedParagraphs,
 		});
 	},
@@ -172,6 +176,7 @@ const cutSentences = Effect.fn("IntakeAnalysis.cutSentences")(function* (
 	paragraphs: Paragraphs,
 	cut: (position: number) => boolean,
 	observer: IntakeObserver | undefined,
+	language: ScrollLanguage,
 ) {
 	const asked: { position: number; parts: SentenceParts }[][] = [];
 	let position = 0;
@@ -193,7 +198,7 @@ const cutSentences = Effect.fn("IntakeAnalysis.cutSentences")(function* (
 			parts.parts.map(() => position),
 		),
 	);
-	const cuts = new Map<number, SegmentedSentence>();
+	const cuts = new Map<number, SegmentedSentence<"de" | "he">>();
 	if (sentences.length === 0) return cuts;
 	const segmentedParagraphs = asked.map((paragraph) => ({
 		sentences: paragraph.flatMap(({ parts }) => parts.parts),
@@ -202,6 +207,7 @@ const cutSentences = Effect.fn("IntakeAnalysis.cutSentences")(function* (
 	// fails only on a bug or an interruption.
 	const segmented = yield* segmentSentencesInUnits(
 		dumgen,
+		language,
 		segmentedParagraphs,
 	);
 	const parts = segmented.paragraphs.flatMap(({ sentences }) => sentences);
@@ -230,7 +236,7 @@ const cutSentences = Effect.fn("IntakeAnalysis.cutSentences")(function* (
 function joined(
 	text: string,
 	detected: DetectedLanguage | undefined,
-	cut: SegmentedSentence | undefined,
+	cut: SegmentedSentence<"de" | "he"> | undefined,
 	language: ScrollLanguage,
 ): AnalyzedSentence {
 	if (detected === language && cut)
@@ -278,6 +284,7 @@ export const analyzeParagraphs = Effect.fn("IntakeAnalysis.analyzeParagraphs")(
 					paragraphs,
 					(position) => cut[position] === true,
 					observer,
+					language,
 				),
 			],
 			{ concurrency: "unbounded" },

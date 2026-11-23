@@ -14,6 +14,9 @@ import {
 	germanLunaAhead,
 	resolveGermanGrammar,
 } from "../resolve/de/grammar.js";
+
+import { resolveGermanReading } from "../resolve/de/reading.js";
+
 import { germanConstituents } from "../segment/de/breakdown/constituents.js";
 import { germanMorphemes } from "../segment/de/breakdown/morphemes.js";
 import {
@@ -41,6 +44,9 @@ export function germanLanguage(options: LanguageOptions): LanguageModule {
 		},
 		resolveGrammar: resolveGermanGrammar,
 		lunaAhead: germanLunaAhead,
+
+		resolveReading: resolveGermanReading,
+
 		produceKnowledge: produceGermanKnowledge,
 		accumulateTranslations: accumulateGermanTranslations,
 		accumulateValency: accumulateGermanValency,

@@ -8,6 +8,11 @@
  * @module
  */
 
+import type * as dumdictStorage_plannedChange from "../dumdictStorage/plannedChange.js";
+import type * as model_literalUnion from "../model/literalUnion.js";
+import type * as model_routeValidators from "../model/routeValidators.js";
+import type * as model_segmentValidators from "../model/segmentValidators.js";
+import type * as model_visitorError from "../model/visitorError.js";
 import type * as analysisStripping from "../analysisStripping.js";
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as crons from "../crons.js";
@@ -136,6 +141,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "dumdictStorage/plannedChange": typeof dumdictStorage_plannedChange;
+  "model/literalUnion": typeof model_literalUnion;
+  "model/routeValidators": typeof model_routeValidators;
+  "model/segmentValidators": typeof model_segmentValidators;
+  "model/visitorError": typeof model_visitorError;
   analysisStripping: typeof analysisStripping;
   catalogGrowthSignals: typeof catalogGrowthSignals;
   crons: typeof crons;

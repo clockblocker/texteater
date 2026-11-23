@@ -12,6 +12,10 @@ import {
 	recordFailedStep,
 } from "../server/inspectionCapture";
 import { storedUnitOf } from "../server/storedSegments";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { type ActionCtx, internalAction } from "./_generated/server";
 import {
@@ -70,6 +74,7 @@ function logFailedSentence(trace: OperationTrace) {
  */
 const segmentDefinition = Effect.fn("DefinitionText.segment")(function* (
 	definition: string,
+	language: SupportedTargetLanguage,
 ) {
 	if (!modelTransports().jev)
 		return yield* new DefinitionSegmentationError({
@@ -77,7 +82,7 @@ const segmentDefinition = Effect.fn("DefinitionText.segment")(function* (
 		});
 	const segmented = yield* operations.segment
 		.inUnits({
-			language: "de",
+			language,
 			paragraphs: [{ sentences: [definition] }],
 		})
 		.pipe(Effect.provide(deploymentDumgen()));
@@ -142,18 +147,21 @@ const materializeDefinition = Effect.fn("Materialize Definition Text", {
 		}
 		if (sync.definition === undefined) return { kind: "Retracted" };
 		if (sync.scrollId && !replace) return { kind: "Ready" };
-		if (sync.language !== "de")
+		if (!isSupportedTargetLanguage(sync.language))
 			return yield* new DefinitionSegmentationError({
 				reason: "UnsupportedLanguage",
 				language: sync.language ?? undefined,
 			});
-		const sentence = yield* segmentDefinition(sync.definition);
+		const sentence = yield* segmentDefinition(
+			sync.definition,
+			sync.language,
+		);
 		if (sentence.failed) yield* markSpanFailed;
 		const persistArgs = {
 			ownerReadingKey,
 			runNumber,
 			definition: sync.definition,
-			language: "de" as const,
+			language: sync.language,
 			stitchedText: sentence.text,
 			segments: sentence.segments.map(({ kind, text, surface }) =>
 				surface === undefined

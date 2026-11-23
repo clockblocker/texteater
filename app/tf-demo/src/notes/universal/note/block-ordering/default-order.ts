@@ -5,6 +5,7 @@ export const WEIGHT_FOR_NOTE_LAYOUT_BLOCK_KIND = {
 	Definition: 2,
 	Breakdown: 3,
 	Valency: 4,
+	Paradigm: 4.5,
 	Relations: 5,
 	PersonalAnnotation: 6,
 	Fusion: 7,

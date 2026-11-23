@@ -1,4 +1,5 @@
 import type { ReadingEntry, ReadingKnowledgeChange } from "dumdict/planning";
+import type * as Dumling from "dumling/types";
 
 import type * as Dumrel from "dumrel/types";
 import type { Doc, Id } from "../_generated/dataModel";
@@ -11,7 +12,7 @@ import { findLemma, findReading, MAX_RELATIONS_PER_READING } from "./storage";
  */
 
 export type SemanticRelationChange = Extract<
-	ReadingKnowledgeChange<"de">["change"],
+	ReadingKnowledgeChange<Dumling.Language>["change"],
 	{ aspect: "semanticRelations" }
 >;
 
@@ -163,7 +164,7 @@ export function relationEdgeEdit(
 
 /** The edges a new Reading's Knowledge names, as Contribute edits. */
 export function knowledgeRelationEdits(
-	knowledge: ReadingEntry<"de">["knowledge"],
+	knowledge: ReadingEntry<Dumling.Language>["knowledge"],
 ): RelationEdgeEdit[] {
 	const relations = knowledge?.semanticRelations;
 	if (!relations) return [];

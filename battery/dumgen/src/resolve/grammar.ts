@@ -10,6 +10,7 @@ import type { Jev } from "../jev-call.js";
 import { languageModuleOf } from "../language-module.js";
 import { Languages } from "../languages.js";
 import type { Luna } from "../luna-call.js";
+import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
 
 /**
@@ -17,10 +18,12 @@ import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
  * segmentation failed, or a unit that is no unit of its Sentence is bad
  * input, a Defect raised before anything is asked.
  */
-export const resolveGrammar = Effect.fnUntraced(function* (
-	input: ResolveGrammarInput,
+export const resolveGrammar = Effect.fnUntraced(function* <
+	L extends SegmentLanguage,
+>(
+	input: ResolveGrammarInput<L>,
 ): Effect.fn.Return<
-	GrammarResolution,
+	GrammarResolution<L>,
 	ProviderFailure | InvalidModelOutput,
 	Jev | Luna | CallLog
 > {
@@ -28,7 +31,7 @@ export const resolveGrammar = Effect.fnUntraced(function* (
 	if (module === undefined)
 		return yield* Effect.die(
 			Error(
-				`resolve.grammar resolves German ("de") only, not ${JSON.stringify(input.language)}`,
+				`No grammar resolver registered for ${JSON.stringify(input.language)}`,
 			),
 		);
 	if (input.sentence.failed)

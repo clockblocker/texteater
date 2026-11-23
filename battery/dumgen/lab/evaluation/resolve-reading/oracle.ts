@@ -31,7 +31,6 @@ const picked = (choice: string): Answer => ({
 const nouled = (noul: number): Answer => ({
 	type: "noul",
 	noul,
-	confidence: 1,
 });
 
 /** The option naming gold's description, else NoMatch, else the first. */

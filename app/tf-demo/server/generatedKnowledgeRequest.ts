@@ -12,7 +12,7 @@ import type * as Dumrel from "dumrel/types";
  * beside the request, never in it.
  */
 export function generationRequestFor(
-	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	reading: { readonly lemma: Dumling.Lemma<Dumling.Language> },
 	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[],
 	options: {
 		readonly translationLanguages?: readonly Dumrel.TranslationLanguage[];

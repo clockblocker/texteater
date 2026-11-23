@@ -12,10 +12,10 @@ import { selectKnowledge } from "dumrel";
  * Full.
  */
 export function asksSource(
-	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	reading: { readonly lemma: Dumling.Lemma<Dumling.Language> },
 	options: { readonly topUpOnly: boolean; readonly knowledge: unknown },
 ): boolean {
-	if (options.topUpOnly) return false;
+	if (options.topUpOnly || reading.lemma.language !== "de") return false;
 	const stored = isRecord(options.knowledge)
 		? options.knowledge.source
 		: undefined;

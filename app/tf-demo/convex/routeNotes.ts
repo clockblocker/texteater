@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 
 import { query } from "./_generated/server";
+import { languageValidator } from "./model/validators";
 import { loadRouteNote, routeNoteValidator } from "./modules/notes/routeNotes";
 
 export const get = query({
@@ -14,7 +15,7 @@ export const get = query({
 			}),
 			v.object({
 				kind: v.literal("Surface"),
-				language: v.literal("de"),
+				language: languageValidator,
 				normalizedSurface: v.string(),
 				activeAnalysisKey: v.optional(v.id("surfaces")),
 				/** The Reading the Deck leads to, whose frame slots the Surface's line. */

@@ -5,9 +5,8 @@ import { heRoutePolicy as routePolicy } from "../../../../schemas/concrete-langu
 import { HeSayingFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/he/saying/saying.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
-
 // The route's Feature Bags draw only on the Feature Pool (system ADR 0032).
-type _InFeaturePool = Assert<
+export type _InFeaturePool = Assert<
 	IsUniversalFeatureBags<z.infer<typeof featureBags>>
 >;
 const schemas = buildUnitSchemas(

@@ -17,9 +17,9 @@ export function resolvingAttestationCaption(
 	note: ResolutionNote,
 ): Caption | null {
 	const { grammar } = note;
-	// A Resolution Session resolves German.
-	const languages = captionLanguages("de");
-	if (!grammar || !languages) return null;
+	if (!grammar) return null;
+	const languages = captionLanguages(grammar.language);
+	if (!languages) return null;
 	return attestationCaption(
 		{
 			members: grammar.members,

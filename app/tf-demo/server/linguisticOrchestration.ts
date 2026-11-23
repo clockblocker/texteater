@@ -3,6 +3,10 @@ import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 import { clickGrammarInputOf, clickSentenceOf } from "./clickGrammarInput";
 import type {
 	ClickEncounter,
@@ -17,7 +21,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "./linguisticIdentity";
-import { parseGermanReading } from "./operationalParsing";
+import { parseReading } from "./operationalParsing";
 import type {
 	NonResolvedGrammatical,
 	OrchestrationPersistence,
@@ -49,8 +53,8 @@ type TfDemoOrchestratorOptions<R = never> = {
 	readonly resolution: ClickResolution<R>;
 	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
 	readonly findStoredReadings: (
-		lemma: Dumling.Lemma<"de">,
-	) => Promise<readonly Dumling.Reading<"de">[]>;
+		lemma: Dumling.Lemma<Dumling.Language>,
+	) => Promise<readonly Dumling.Reading<Dumling.Language>[]>;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 	/**
@@ -61,6 +65,7 @@ type TfDemoOrchestratorOptions<R = never> = {
 	 */
 	readonly resegment?: (
 		stitchedText: string,
+		language: SupportedTargetLanguage,
 	) => Effect.Effect<ResegmentedSentence, ModelFailure, R>;
 };
 
@@ -148,11 +153,12 @@ const resegmentFailedSentence = Effect.fn("Segment the failed sentence again")(
 	function* <R>(
 		resegment: NonNullable<TfDemoOrchestratorOptions<R>["resegment"]>,
 		stitchedText: string,
+		language: SupportedTargetLanguage,
 	) {
 		yield* annotateInspectionStep("battery/dumgen · segment.inUnits", {
 			stitchedText,
 		});
-		return yield* resegment(stitchedText);
+		return yield* resegment(stitchedText, language);
 	},
 );
 
@@ -191,7 +197,16 @@ const resegmentIfFailed = Effect.fn(
 		return { input, context };
 	}
 	const stitchedText = context.sentence?.stitchedText ?? "";
-	const resegmented = yield* resegmentFailedSentence(resegment, stitchedText);
+	const language = context.sentence?.language;
+	if (!isSupportedTargetLanguage(language))
+		throw new Error(
+			"Click resolution requires a supported target language.",
+		);
+	const resegmented = yield* resegmentFailedSentence(
+		resegment,
+		stitchedText,
+		language,
+	);
 	const stored = yield* storeResegmentedUnits(store, input, resegmented);
 	const next = {
 		...input,
@@ -265,7 +280,7 @@ const resolveGrammatical = Effect.fn("Resolve grammar")(function* <R>(
 
 const findStoredReadings = Effect.fn("Find stored Readings")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
-	lemma: Dumling.Lemma<"de">,
+	lemma: Dumling.Lemma<Dumling.Language>,
 ) {
 	yield* annotateInspectionStep("battery/dumdict", { lemma });
 	return yield* Effect.tryPromise(() => options.findStoredReadings(lemma));
@@ -432,8 +447,8 @@ function firstReading<R>(
 	options: TfDemoOrchestratorOptions<R>,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	lemma: Dumling.Lemma<Dumling.Language>,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ) {
 	if (checkpoints.reading) {
 		return Effect.succeed(checkpoints.reading.resolution);
@@ -451,11 +466,11 @@ function firstReading<R>(
 
 /** The checkpointed Reading, which must name the Reading Grammar resolved. */
 function checkpointedReading(
-	checkpoint: Dumling.Reading<"de">,
+	checkpoint: Dumling.Reading<Dumling.Language>,
 	lemmaKey: string,
-	resolved: Dumling.Reading<"de">,
-): Dumling.Reading<"de"> {
-	const checkpointed = parseGermanReading(checkpoint);
+	resolved: Dumling.Reading<Dumling.Language>,
+): Dumling.Reading<Dumling.Language> {
+	const checkpointed = parseReading(checkpoint);
 	if (
 		lemmaIdentityKey(checkpointed.lemma) !== lemmaKey ||
 		emojiDescriptionOf(checkpointed) !== emojiDescriptionOf(resolved)
@@ -477,7 +492,7 @@ type ClickCommitScope = {
 /** The commit of a resolved click with `reading`, before its progress. */
 export function resolvedClickCommit(
 	scope: ClickCommitScope,
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 	resolution: ReadingResolution,
 ): ResolvedClickPersistence {
 	return {
@@ -518,7 +533,7 @@ const commitResolvedClick = Effect.fn(
 )(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	scope: ClickCommitScope,
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 	resolution: ReadingResolution,
 	announce: boolean,
 ) {
@@ -547,7 +562,7 @@ const commitResolvedClick = Effect.fn(
 const resolveReading = Effect.fn("Resolve Reading")(function* <R>(
 	options: TfDemoOrchestratorOptions<R>,
 	resolved: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
+	lemma: Dumling.Lemma<Dumling.Language>,
 	candidates: readonly string[],
 	written?: string,
 ) {
@@ -572,8 +587,11 @@ const resolveReading = Effect.fn("Resolve Reading")(function* <R>(
 });
 
 /** The Reading a resolution names; both sides compare as Dumling parses them (ADR 0031). */
-function readingOf(lemma: Dumling.Lemma<"de">, resolution: ReadingResolution) {
-	return parseGermanReading({
+function readingOf(
+	lemma: Dumling.Lemma<Dumling.Language>,
+	resolution: ReadingResolution,
+) {
+	return parseReading({
 		unitKind: "Reading",
 		lemma,
 		...(resolution.emojiDescription === undefined
@@ -584,7 +602,7 @@ function readingOf(lemma: Dumling.Lemma<"de">, resolution: ReadingResolution) {
 
 /** A Foreign Lemma's one Reading, which has no Emoji Description (ADR 0045). */
 function foreignReading(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ): ReadingResolution {
 	return {
 		decision: loadedReadings(storedReadings).length > 0 ? "Reuse" : "New",
@@ -593,7 +611,7 @@ function foreignReading(
 
 /** The Emoji Descriptions of the Lemma's stored Readings. */
 function storedCandidates(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ): string[] {
 	return loadedReadings(storedReadings).flatMap(
 		(stored) => emojiDescriptionOf(stored) ?? [],
@@ -601,14 +619,16 @@ function storedCandidates(
 }
 
 function loadedReadings(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
-): readonly Dumling.Reading<"de">[] {
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
+): readonly Dumling.Reading<Dumling.Language>[] {
 	if (!storedReadings) throw new Error("Reading candidates were not loaded.");
 	return storedReadings;
 }
 
-function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
-	return makeSurfaceId("de", surface);
+function surfaceIdentityKey(
+	surface: Dumling.Surface<Dumling.Language>,
+): string {
+	return makeSurfaceId(surface.language, surface);
 }
 
 /** The stored Segments an Encounter's target names, for committing membership. */

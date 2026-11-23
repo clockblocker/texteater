@@ -457,7 +457,7 @@ export async function loadCleanupRelationsSlice(
  */
 export async function loadReevaluateShadowsSlice(
 	ctx: ServerCtx,
-	request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
+	request: Omit<ReevaluateShadowsRequest<Dumling.Language>, "baseRevision">,
 ) {
 	const shadows = (request.removedLemmas ?? []).map((lemma) =>
 		unitShadowOf(lemma),
@@ -507,7 +507,7 @@ export async function loadReevaluateShadowsSlice(
  */
 async function readingsClaimingRemoved(
 	ctx: ServerCtx,
-	lemmas: readonly Dumling.Lemma<"de">[],
+	lemmas: readonly Dumling.Lemma<Dumling.Language>[],
 ): Promise<string[]> {
 	const keys = new Set<string>();
 	for (const lemma of lemmas) {

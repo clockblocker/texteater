@@ -1,0 +1,115 @@
+import { expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
+import { accumulateHebrewTranslations } from "../../../src/knowledge/he/accumulate.js";
+import type { AccumulateTranslationsInput } from "../../../src/knowledge/types.js";
+import { defaultLunaConfiguration } from "../../../src/luna.js";
+import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
+import { knowledgeJev, knowledgeLuna, knowledgeLunaInput } from "../support.js";
+
+const tr = (text: string) => [{ kind: "Text" as const, text }];
+
+const lemma = {
+	unitKind: "Lemma",
+	language: "he",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "ספר",
+	coreFeatures: { gender: "Masc", abbr: null },
+} as const;
+const reading = { unitKind: "Reading", lemma, emojiDescription: "📚" } as const;
+const attestation = {
+	unitKind: "Attestation",
+	surface: {
+		unitKind: "Surface",
+		language: "he",
+		lemma,
+		normalizedSurface: "ספר",
+		spelling: { kind: "Canonical" },
+		surfaceFeatures: null,
+		inflectionalFeatures: { number: "Sing", definite: "Ind" },
+	},
+	members: [{ attested: "ספר", orthography: "Standard" }],
+	realizationCoverage: "Full",
+	articleEvidence: null,
+	valencyEvidence: [],
+} as const satisfies Dumling.Attestation<"he">;
+const input = (
+	translations: AccumulateTranslationsInput<"he">["translations"],
+): AccumulateTranslationsInput<"he"> => ({
+	language: "he",
+	reading,
+	attestation,
+	sentence: {
+		segments: [{ text: "קראתי " }, { text: "ספר" }, { text: "." }],
+		target: [1],
+	},
+	translations,
+});
+const run = (
+	jev: ReturnType<typeof knowledgeJev>,
+	luna: ReturnType<typeof knowledgeLuna>,
+	value = input({ en: [tr("book")] }),
+) =>
+	Effect.runPromise(
+		runOperation(
+			"knowledge.accumulateTranslations",
+			{ budget: requestBudget(4), payloads: true },
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: jev.ask, model: pinnedJevModel },
+			},
+			accumulateHebrewTranslations(value),
+		),
+	);
+
+test("Hebrew accumulation judges bare stored options and does not write when covered", async () => {
+	const jev = knowledgeJev({ translation: "t0" });
+	const luna = knowledgeLuna({});
+	const result = await run(
+		jev,
+		luna,
+		input({ en: [tr("book"), tr("BOOK ")] }),
+	);
+	expect(result).toEqual({ changes: [], failures: [] });
+	expect(luna.sent).toEqual([]);
+	const request = jev.sent[0];
+	expect(request?.state).toMatchObject({
+		language: "en",
+		markedSentence: "קראתי <TARGET>ספר</TARGET>.",
+		reading: { lemma: "ספר", emojiDescription: "📚" },
+	});
+});
+
+test("Hebrew NoMatch writes occurrence equivalents without stored hints and appends only new ones", async () => {
+	const jev = knowledgeJev({ translation: "NoMatch" });
+	const luna = knowledgeLuna({
+		translationAccumulation: {
+			sentence: "I read a volume.",
+			equivalents: [tr("BOOK"), tr("volume"), tr("volume")],
+		},
+	});
+	const result = await run(jev, luna);
+	expect(result).toEqual({
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "translations",
+				language: "en",
+				value: [tr("volume")],
+			},
+		],
+		failures: [],
+	});
+	expect(knowledgeLunaInput(luna.sent[0]?.input)).toMatchObject({
+		aspect: "translationAccumulation",
+		language: "en",
+		markedSentence: "קראתי <TARGET>ספר</TARGET>.",
+		reading: { emojiDescription: "📚" },
+	});
+	expect(JSON.stringify(luna.sent[0]?.input)).not.toContain("book");
+});

@@ -6,6 +6,8 @@
  * module up by `input.language` and treat a language with none as bad
  * input, a Defect; the language's own code stays behind the module. `languages.ts` registers the modules.
  */
+
+import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { CallLog } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
@@ -22,7 +24,9 @@ import type { StagedLunaDraft } from "./luna.js";
 import type { Luna } from "./luna-call.js";
 import type {
 	GrammarResolution,
+	ReadingResolution,
 	ResolveGrammarInput,
+	ResolveReadingInput,
 } from "./resolve/types.js";
 import type { Ask, AskFailure } from "./segment/ask.js";
 import type {
@@ -54,12 +58,12 @@ export type SentenceSegmentation = {
  * One Sentence's units from the unit stage, and the stages it settled
  * without their failed request's answers, each as its declaration says.
  */
-type SentenceUnits = {
-	readonly units: readonly Unit[];
+type SentenceUnits<L extends Dumling.Language> = {
+	readonly units: readonly Unit<L>[];
 	readonly degraded: readonly Degraded[];
 };
 
-export type LanguageModule = {
+export type LanguageModule<L extends Dumling.Language = "de"> = {
 	readonly segment: {
 		/** The Segment stage: one Sentence's Segments, cut with jev. */
 		readonly segments: (
@@ -72,23 +76,31 @@ export type LanguageModule = {
 		readonly units: (
 			segmentation: SentenceSegmentation,
 			ask: Ask,
-		) => Effect.Effect<SentenceUnits, AskFailure>;
+		) => Effect.Effect<SentenceUnits<L>, AskFailure>;
+
 		/** The body of `segment.inConstituents`: a Reading's immediate parts, or none. */
-		readonly constituents: (
+		readonly constituents?: (
 			input: BreakdownInput,
 			ask: Ask,
 		) => Effect.Effect<Constituents, AskFailure>;
 		/** The body of `segment.inMorphemes`: a single-word Lexeme's morphemes. */
-		readonly morphemes: (
+		readonly morphemes?: (
 			input: BreakdownInput,
 			ask: Ask,
 		) => Effect.Effect<readonly ProducedPiece[], AskFailure>;
 	};
 	/** The body of `resolve.grammar` for a click on a Sentence that segmented. */
 	readonly resolveGrammar: (
-		input: ResolveGrammarInput,
+		input: ResolveGrammarInput<L>,
 	) => Effect.Effect<
-		GrammarResolution,
+		GrammarResolution<L>,
+		ProviderFailure | InvalidModelOutput,
+		Needs
+	>;
+	readonly resolveReading: (
+		input: ResolveReadingInput<L>,
+	) => Effect.Effect<
+		ReadingResolution<L>,
 		ProviderFailure | InvalidModelOutput,
 		Needs
 	>;
@@ -97,31 +109,34 @@ export type LanguageModule = {
 	 * answers, if any, with its stage, so a host may ask it ahead (#1351).
 	 */
 	readonly lunaAhead: (
-		input: ResolveGrammarInput,
+		input: ResolveGrammarInput<L>,
 	) => StagedLunaDraft | undefined;
 	/** The body of `knowledge.produce` for a Reading of the language. */
 	readonly produceKnowledge: <E>(
-		input: ProduceKnowledgeInput<E>,
-	) => Effect.Effect<KnowledgeProduction, E, Needs>;
+		input: ProduceKnowledgeInput<E, L>,
+	) => Effect.Effect<KnowledgeProduction<L>, E, Needs>;
 	/** The body of `knowledge.accumulateTranslations` for a Reading of the language. */
 	readonly accumulateTranslations: (
-		input: AccumulateTranslationsInput,
-	) => Effect.Effect<TranslationAccumulation, never, Needs>;
+		input: AccumulateTranslationsInput<L>,
+	) => Effect.Effect<TranslationAccumulation<L>, never, Needs>;
 	/** The body of `knowledge.accumulateValency` for a Reading of the language. */
 	readonly accumulateValency: (
-		input: AccumulateValencyInput,
-	) => Effect.Effect<ValencyAccumulation, never, Needs>;
+		input: AccumulateValencyInput<L>,
+	) => Effect.Effect<ValencyAccumulation<L>, never, Needs>;
 };
 
 /** Each registered language's module. */
 export type LanguageModules = {
-	readonly [L in SegmentLanguage]: LanguageModule;
+	readonly [L in SegmentLanguage]?: LanguageModule<L>;
 };
 
 /** The module of `language`, or undefined where none is registered. */
-export function languageModuleOf(
+export function languageModuleOf<L extends SegmentLanguage>(
 	modules: LanguageModules,
-	language: string,
-): LanguageModule | undefined {
-	return Object.entries(modules).find(([key]) => key === language)?.[1];
+	language: L,
+): LanguageModule<L> | undefined {
+	// The registry is a mapped type: the value at L has handlers for exactly L.
+	// TypeScript does not retain that indexed correlation through optional keys.
+	if (!Object.hasOwn(modules, language)) return undefined;
+	return modules[language] as LanguageModule<L> | undefined;
 }

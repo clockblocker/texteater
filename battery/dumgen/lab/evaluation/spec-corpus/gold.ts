@@ -82,7 +82,7 @@ const sidecarUrl = new URL("sidecar.json", import.meta.url);
  */
 export function goldRouteOf(route: Dumcorpus.SpecRoute): Route {
 	const checked = segmentRouteOf(route);
-	if (checked === undefined)
+	if (checked === undefined || checked.language !== "de")
 		throw Error(
 			`No click routes to ${route.language} ${route.family}/${route.kind}`,
 		);

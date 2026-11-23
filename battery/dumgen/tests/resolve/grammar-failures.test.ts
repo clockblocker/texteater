@@ -71,7 +71,7 @@ testEffect(
 				operations.resolve
 					.grammar({ ...input, language: "en" as "de" })
 					.pipe(Effect.provide(live)),
-				'German ("de") only',
+				"No grammar resolver registered",
 			);
 			yield* expectDefect(
 				operations.resolve

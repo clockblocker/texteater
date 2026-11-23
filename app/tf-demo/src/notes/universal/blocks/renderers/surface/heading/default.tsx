@@ -10,8 +10,8 @@ import type { NoteDataFor } from "../../../../note/data";
 import type { NoteBlockRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
 
-type SurfaceContext = Parameters<
-	NoteBlockRenderer<SupportedTargetLanguage, "Surface">
+type SurfaceContext<L extends SupportedTargetLanguage> = Parameters<
+	NoteBlockRenderer<L, "Surface">
 >[0];
 type SurfaceAnalysis = NoteDataFor<"Surface">["analyses"][number];
 
@@ -21,11 +21,11 @@ type SurfaceAnalysis = NoteDataFor<"Surface">["analyses"][number];
  * an active analysis keeps its bare, neutral title. The title is the stored
  * form unless a language prints it otherwise, from the active analysis.
  */
-export function SurfaceHeading({
+export function SurfaceHeading<L extends SupportedTargetLanguage>({
 	context: { noteData, PresentationCapabilities },
 	title,
 }: {
-	readonly context: SurfaceContext;
+	readonly context: SurfaceContext<L>;
 	readonly title?: (active: SurfaceAnalysis | undefined) => ReactNode;
 }) {
 	const active =

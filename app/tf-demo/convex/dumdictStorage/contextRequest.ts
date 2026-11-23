@@ -4,6 +4,7 @@ import {
 	type LoadReadingEntryContextRequest,
 	makeSurfaceId,
 } from "dumdict/planning";
+import type * as Dumling from "dumling/types";
 
 import {
 	lemmaIdentityKey,
@@ -60,7 +61,7 @@ export type ReadingEntryContextArgs =
 	  };
 
 export function readingEntryContextArgs(
-	request: LoadReadingEntryContextRequest<"de">,
+	request: LoadReadingEntryContextRequest<Dumling.Language>,
 ): ReadingEntryContextArgs {
 	const readingKey = readingIdentityKey(request.reading);
 	switch (request.intent) {
@@ -71,7 +72,7 @@ export function readingEntryContextArgs(
 				proposedLemma: request.reading.lemma,
 				readingKey,
 				surfaceKeys: request.ownedSurfaces.map((surface) =>
-					makeSurfaceId("de", surface),
+					makeSurfaceId(surface.language, surface),
 				),
 				explicitLemmaTargetKeys: request.relations.flatMap(
 					({ target }) =>
@@ -127,7 +128,10 @@ export function readingEntryContextArgs(
 				intent: request.intent,
 				lemmaKey: lemmaIdentityKey(request.reading.lemma),
 				readingKey,
-				surfaceKey: makeSurfaceId("de", request.surface),
+				surfaceKey: makeSurfaceId(
+					request.surface.language,
+					request.surface,
+				),
 			};
 		case "ensureReadingEntry":
 			return {

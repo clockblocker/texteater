@@ -79,8 +79,8 @@ function fakeDumgen(
 	result: GrammarResolution,
 	reading: ReadingResolution = { _tag: "New", emojiDescription: "🚶" },
 ) {
-	const inputs: ResolveGrammarInput[] = [];
-	const readingInputs: ResolveReadingInput[] = [];
+	const inputs: ResolveGrammarInput<"de" | "he">[] = [];
+	const readingInputs: ResolveReadingInput<"de" | "he">[] = [];
 	let built = 0;
 	const dumgen = (): ClickDumgen<never> => {
 		built++;

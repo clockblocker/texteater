@@ -1,7 +1,7 @@
 import { authoredReading } from "dumcorpus/inventories";
 import { routeOf } from "dumling";
 import { allowedComplementKinds, selectKnowledge } from "dumrel";
-import { parseGermanReading } from "../../server/operationalParsing";
+import { parseReading } from "../../server/operationalParsing";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
@@ -30,7 +30,7 @@ export async function scheduleValencyAccumulation(
 	const reading = await ctx.db.get(attestation.readingId);
 	const lemma = reading && (await ctx.db.get(reading.lemmaId));
 	if (!reading || !lemma) return;
-	const readingVal = parseGermanReading(readingValue(reading, lemma));
+	const readingVal = parseReading(readingValue(reading, lemma));
 	const selected = selectKnowledge({ route: routeOf(readingVal.lemma) });
 	if (
 		!selected.success ||

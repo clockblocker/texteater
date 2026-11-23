@@ -28,9 +28,10 @@ import {
 	UnsupportedKnowledgeLanguage,
 } from "../server/knowledgeRunErrors";
 import { asksSource } from "../server/knowledgeSource";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
 import type { GenerationInput } from "./knowledgeGeneration";
@@ -114,7 +115,7 @@ type KnowledgeRun = {
 /** What a claimed run asks for, built from its input before any model call. */
 type KnowledgePlan = {
 	readonly input: ClaimedInput;
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
 	readonly qualifiedKinds: ClaimedInput["authorization"]["qualifiedKinds"];
 	readonly request: ReturnType<typeof generationRequestFor>;
 	readonly requestedKinds: RequestedKinds;
@@ -125,11 +126,11 @@ type KnowledgePlan = {
 const planRun = Effect.fn("KnowledgeGeneration.planRun")(function* (
 	input: ClaimedInput,
 ) {
-	if (input.reading.lemma.language !== "de")
+	if (!isSupportedTargetLanguage(input.reading.lemma.language))
 		return yield* new UnsupportedKnowledgeLanguage({
 			language: input.reading.lemma.language,
 		});
-	const reading = parseGermanReading(input.reading);
+	const reading = parseReading(input.reading);
 	const { authorization } = input;
 	const qualifiedKinds = authorization.rollbackStopped
 		? []
@@ -331,7 +332,7 @@ const recordCatalogMiss = Effect.fn("KnowledgeGeneration.recordCatalogMiss")(
 		const miss = {
 			decision: "CatalogMiss" as const,
 			stage: "knowledge.produce",
-			route: `de/${family}/${kind}`,
+			route: `${reading.lemma.language}/${family}/${kind}`,
 			message,
 		};
 		yield* inspectedMutation(

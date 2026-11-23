@@ -26,7 +26,7 @@ import {
 import {
 	loadTargetedRelationProjections,
 	MAX_RELATIONS_PER_NOTE,
-	parseStoredGermanLemma,
+	parseStoredLemma,
 } from "./relationNeighborhood";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
@@ -148,7 +148,7 @@ export async function loadRelationProjections(
 			lemmaIdentityKey(projection.targetLemma),
 		);
 		if (!targetDoc || knowledge.targetKind === "reading") continue;
-		const target = parseStoredGermanLemma(targetDoc);
+		const target = parseStoredLemma(targetDoc);
 		resolved.push({
 			relation: projection.relation,
 			targetCanonicalForm: targetDoc.canonicalForm,
@@ -417,14 +417,14 @@ export async function loadGrammaticalAlternatives(
 		if (!source) return [];
 		lemmaDoc = await ctx.db.get(source.lemmaId);
 	}
-	if (!lemmaDoc) return [];
-	return reviewedAlternatives(parseStoredGermanLemma(lemmaDoc)).map(
-		({ feature, reading }) => ({
-			feature,
-			readingKey: readingIdentityKey(reading),
-			canonicalForm: reading.lemma.canonicalForm,
-		}),
-	);
+	if (!lemmaDoc || lemmaDoc.language !== "de") return [];
+	return reviewedAlternatives(
+		parseStoredLemma(lemmaDoc) as Dumling.Lemma<"de">,
+	).map(({ feature, reading }) => ({
+		feature,
+		readingKey: readingIdentityKey(reading),
+		canonicalForm: reading.lemma.canonicalForm,
+	}));
 }
 /**
  * The Paradigm Cells a learner can step to from a reviewed pillar pronoun or

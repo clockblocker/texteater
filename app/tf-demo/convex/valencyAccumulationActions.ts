@@ -10,7 +10,7 @@ import {
 	markSpanFailed,
 	recordFailedStep,
 } from "../server/inspectionCapture";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseAttestation, parseReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import {
@@ -71,7 +71,7 @@ const runValencyAccumulation = Effect.fn("Accumulate valency", { root: true })(
 			{ attestationId: args.attestationId },
 		);
 		if (!occurrence) return;
-		const reading = parseGermanReading(occurrence.reading);
+		const reading = parseReading(occurrence.reading);
 		const { encounter, attestation } = parseResolvedGrammar({
 			encounter: occurrence.encounter,
 			attestation: occurrence.attestation,
@@ -80,7 +80,7 @@ const runValencyAccumulation = Effect.fn("Accumulate valency", { root: true })(
 			accumulate({
 				encounter,
 				reading,
-				attestation,
+				attestation: parseAttestation(attestation),
 				valency: occurrence.valency,
 			}).pipe(Effect.provide(deploymentDumgen())),
 		);

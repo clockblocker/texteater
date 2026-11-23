@@ -1,12 +1,13 @@
 import { canonicalJson, isRecord } from "common-utils";
 import { authoredReading, selectAuthoredArticle } from "dumcorpus/inventories";
 import type { ReadingEntry } from "dumdict/planning";
+import type * as Dumling from "dumling/types";
 import type { MutationCtx } from "../_generated/server";
 import { type AnyRecord, requireRecord } from "../model/readingKnowledge";
 import { replaceAccumulatedKnowledge } from "../model/shadows";
 import { findReading, withoutSemanticRelationTargets } from "./storage";
 
-type GermanReadingEntry = ReadingEntry<"de">;
+type GermanReadingEntry = ReadingEntry<Dumling.Language>;
 
 /**
  * Completes reviewed component entries outside a planned commit, without

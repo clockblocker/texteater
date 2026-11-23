@@ -134,6 +134,7 @@ function apply(
 			return;
 		case "breakdown":
 			return applyBreakdown(knowledge, change);
+		case "hebrewParadigm":
 		case "transcription":
 		case "definition":
 		case "source":
@@ -263,6 +264,7 @@ type AtomicChange = Extract<
 	KnowledgeChange,
 	{
 		aspect:
+			| "hebrewParadigm"
 			| "transcription"
 			| "definition"
 			| "source"
@@ -303,6 +305,9 @@ function storeAtomic(
 	change: Exclude<AtomicChange, { kind: "Retract" }>,
 ): void {
 	switch (change.aspect) {
+		case "hebrewParadigm":
+			knowledge.hebrewParadigm = structuredClone(change.value);
+			return;
 		case "transcription":
 			knowledge.transcription = change.value;
 			return;

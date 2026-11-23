@@ -46,7 +46,7 @@ const lemmaTargetValidator = v.object({
 
 const surfaceTargetValidator = v.object({
 	kind: v.literal("Surface"),
-	language: v.literal("de"),
+	language: v.union(v.literal("de"), v.literal("he"), v.literal("en")),
 	normalizedSurface: v.string(),
 });
 
@@ -166,7 +166,7 @@ type RouteNoteTarget =
 	  }
 	| {
 			readonly kind: "Surface";
-			readonly language: "de";
+			readonly language: "de" | "he" | "en";
 			readonly normalizedSurface: string;
 			readonly activeAnalysisKey?: Id<"surfaces">;
 			readonly activeReadingId?: Id<"readings">;
@@ -203,7 +203,6 @@ async function loadAttestationRouteNote(
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) return null;
 	if (
-		occurrence.surface.language !== "de" ||
 		occurrence.surface.language !== occurrence.lemma.language ||
 		!isUnitReadingFamily(occurrence.lemma.family)
 	) {
@@ -235,7 +234,7 @@ async function loadAttestationRouteNote(
 		presented: presentAttestation(occurrence.publicAttestation),
 		surfaceTarget: {
 			kind: "Surface" as const,
-			language: "de" as const,
+			language: occurrence.surface.language,
 			normalizedSurface: occurrence.surface.normalizedSurface,
 		},
 		reading: {
@@ -255,7 +254,7 @@ async function loadAttestationRouteNote(
 
 async function loadSurfaceRouteNote(
 	ctx: QueryCtx,
-	language: "de",
+	language: "de" | "he" | "en",
 	normalizedSurface: string,
 	contextCursor?: string,
 	activeAnalysisKey?: Id<"surfaces">,
@@ -491,7 +490,7 @@ async function loadLemmaRouteNote(
 		formations,
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
-				surface.language === "de" && lemma.language === "de"
+				surface.language === lemma.language
 					? [
 							{
 								surfaceId: surface._id,
@@ -501,7 +500,7 @@ async function loadLemmaRouteNote(
 								kind: lemma.kind,
 								target: {
 									kind: "Surface" as const,
-									language: "de" as const,
+									language: surface.language,
 									normalizedSurface:
 										surface.normalizedSurface,
 								},

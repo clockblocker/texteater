@@ -13,7 +13,6 @@ import type * as Effect from "effect/Effect";
 import type {
 	Route,
 	SegmentedSentence,
-	SegmentLanguage,
 	Unit,
 } from "../segment/segmented-sentence.js";
 
@@ -22,8 +21,8 @@ import type {
  * texts it was found under. Only one found under the unit's own words, on
  * the unit's route, reaches the Canonical Form call, as a hint.
  */
-export type LemmaCandidate = {
-	readonly lemma: Dumling.Lemma<"de">;
+export type LemmaCandidate<L extends Dumling.Language = "de"> = {
+	readonly lemma: Dumling.Lemma<L>;
 	readonly foundUnder: readonly string[];
 };
 
@@ -33,15 +32,15 @@ export type NeighbourSentences = {
 	readonly after?: string;
 };
 
-export type ResolveGrammarInput = {
-	readonly language: SegmentLanguage;
+export type ResolveGrammarInput<L extends Dumling.Language = "de"> = {
+	readonly language: L;
 	/** Dumgen's own Segmented Sentence, as intake stored it; never a failed one. */
-	readonly sentence: SegmentedSentence;
+	readonly sentence: SegmentedSentence<L>;
 	/** The stored unit, as intake returned it; the clicked Segment stays with the host. */
-	readonly unit: Unit;
+	readonly unit: Unit<L>;
 	/** Read only for a pronoun form whose cell its referent decides (ADR 0044). */
 	readonly neighbours: NeighbourSentences;
-	readonly lemmaCandidates: readonly LemmaCandidate[];
+	readonly lemmaCandidates: readonly LemmaCandidate<L>[];
 	/**
 	 * Told once what jev judged of an open-route click, as soon as its
 	 * first request is answered and while Luna may still be writing the
@@ -80,10 +79,10 @@ export type JudgedGrammar = {
  * is never re-asked (ADR 0023). A Catalog Miss is a Closed Route whose
  * authored inventory lacks the unit (ADR 0021).
  */
-export type GrammarResolution =
+export type GrammarResolution<L extends Dumling.Language = "de"> =
 	| {
 			readonly _tag: "Resolved";
-			readonly attestation: Dumling.Attestation<"de">;
+			readonly attestation: Dumling.Attestation<L>;
 			/**
 			 * The Emoji Description Luna drafted, for `resolve.reading`'s
 			 * `drafted`: in the Canonical Form call, or, where code wrote the
@@ -97,7 +96,7 @@ export type GrammarResolution =
 	| { readonly _tag: "Unresolved" }
 	| {
 			readonly _tag: "CatalogMiss";
-			readonly route: Route;
+			readonly route: Route<L>;
 			readonly message: string;
 	  };
 
@@ -107,12 +106,12 @@ export type GrammarResolution =
  * Descriptions of the Lemma's stored Readings. The unit only marks the
  * target in the Sentence.
  */
-export type ResolveReadingInput = {
-	readonly attestation: Dumling.Attestation<"de">;
+export type ResolveReadingInput<L extends Dumling.Language = "de"> = {
+	readonly attestation: Dumling.Attestation<L>;
 	/** Dumgen's own Segmented Sentence, as intake stored it; never a failed one. */
-	readonly sentence: SegmentedSentence;
+	readonly sentence: SegmentedSentence<L>;
 	/** The stored unit the Attestation resolves. */
-	readonly unit: Unit;
+	readonly unit: Unit<L>;
 	/** The Emoji Descriptions of the Lemma's stored Readings, as stored. */
 	readonly candidates: readonly string[];
 	/**
@@ -146,11 +145,11 @@ export type ResolveReadingInput = {
  * (ADR 0021), or a Catalog Miss when a Closed Route's Lemma has no
  * authored Reading. tf-demo recognizes an authored Reading by its value.
  */
-export type ReadingResolution =
+export type ReadingResolution<L extends Dumling.Language = "de"> =
 	| { readonly _tag: "Reuse"; readonly emojiDescription: string }
 	| { readonly _tag: "New"; readonly emojiDescription: string }
 	| {
 			readonly _tag: "CatalogMiss";
-			readonly route: Route;
+			readonly route: Route<L>;
 			readonly message: string;
 	  };

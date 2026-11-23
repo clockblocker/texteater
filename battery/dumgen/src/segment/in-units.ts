@@ -49,8 +49,8 @@ import type {
 } from "./segmented-sentence.js";
 import { stitchedText } from "./stitched-text.js";
 
-export type InUnitsInput = {
-	readonly language: SegmentLanguage;
+export type InUnitsInput<L extends SegmentLanguage = SegmentLanguage> = {
+	readonly language: L;
 	/** As `splitText` gives them: non-blank Sentences, paragraph by paragraph. */
 	readonly paragraphs: readonly { readonly sentences: readonly string[] }[];
 };
@@ -59,17 +59,17 @@ export type InUnitsInput = {
  * One Sentence's segmentation, and what the trace records of it under the
  * index of each Sentence of the Text that reads it.
  */
-type Outcome = {
-	readonly segmented: SegmentedSentence;
+type Outcome<L extends SegmentLanguage = SegmentLanguage> = {
+	readonly segmented: SegmentedSentence<L>;
 	readonly report: (log: CallLog["Service"], sentence: number) => void;
 };
 
 /** A Sentence whose segmentation failed, marked so, with its reason in the trace. */
-const failedSentence = (
+const failedSentence = <L extends SegmentLanguage>(
 	failure: AskFailure,
 	segmentation: SentenceSegmentation,
 	unresolved: readonly number[] = [],
-): Outcome => ({
+): Outcome<L> => ({
 	segmented: {
 		text: segmentation.text,
 		segments: segmentation.segments,
@@ -99,21 +99,21 @@ function reportUnresolved(
 }
 
 /** One Sentence's body, its calls placed under its first index as the `CurrentSentence`. */
-const segmentSentence = Effect.fnUntraced(function* (
-	module: LanguageModule,
+const segmentSentence = Effect.fnUntraced(function* <L extends SegmentLanguage>(
+	module: LanguageModule<L>,
 	text: string,
-): Effect.fn.Return<Outcome, never, Jev | CallLog> {
+): Effect.fn.Return<Outcome<L>, never, Jev | CallLog> {
 	const ask = yield* stageAsk;
 	const cut = yield* Effect.result(module.segment.segments(text, ask));
 	if (Result.isFailure(cut))
-		return failedSentence(
+		return failedSentence<L>(
 			cut.failure,
 			module.segment.writtenSegments(text),
 		);
 	const { unresolved } = cut.success;
 	const units = yield* Effect.result(module.segment.units(cut.success, ask));
 	if (Result.isFailure(units))
-		return failedSentence(units.failure, cut.success, unresolved);
+		return failedSentence<L>(units.failure, cut.success, unresolved);
 	const { degraded } = units.success;
 	return {
 		segmented: {
@@ -143,9 +143,11 @@ const segmentSentence = Effect.fnUntraced(function* (
  * The body of `segment.inUnits`. A language with no module, or a blank
  * Sentence, is a Defect raised before anything is asked.
  */
-export const segmentText = Effect.fnUntraced(function* (
-	input: InUnitsInput,
-): Effect.fn.Return<SegmentedText, never, Jev | CallLog> {
+export const segmentText = Effect.fnUntraced(function* <
+	L extends SegmentLanguage,
+>(
+	input: InUnitsInput<L>,
+): Effect.fn.Return<SegmentedText<L>, never, Jev | CallLog> {
 	const module = languageModuleOf(yield* Languages, input.language);
 	if (module === undefined)
 		return yield* Effect.die(

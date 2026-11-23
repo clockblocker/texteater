@@ -91,6 +91,7 @@ export const knowledgeCoverageSchema = z
 		locutionType: coverageStatusSchema,
 		sayingType: coverageStatusSchema,
 		formulaRole: coverageStatusSchema,
+		hebrewParadigm: coverageStatusSchema,
 		paradigm: z
 			.strictObject(
 				Object.fromEntries(

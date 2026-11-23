@@ -10,7 +10,7 @@ import {
 	markSpanFailed,
 	recordFailedStep,
 } from "../server/inspectionCapture";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import {
@@ -83,7 +83,7 @@ const runTranslationAccumulation = Effect.fn("Accumulate translations", {
 		beginArgs,
 	);
 	if (!occurrence) return;
-	const reading = parseGermanReading(occurrence.reading);
+	const reading = parseReading(occurrence.reading);
 	const { encounter, attestation } = parseResolvedGrammar({
 		encounter: occurrence.encounter,
 		attestation: occurrence.attestation,

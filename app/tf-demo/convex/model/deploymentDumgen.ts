@@ -24,6 +24,7 @@ import * as Layer from "effect/Layer";
 import { INTAKE_NOT_CONFIGURED_MESSAGE } from "../../server/intake";
 import { joinedSentence, sentenceParts } from "../../server/longSentences";
 import { storedUnitOf } from "../../server/storedSegments";
+import type { SupportedTargetLanguage } from "../../shared/supported-target-language";
 import { env } from "../_generated/server";
 import { VisitorActionError } from "./convexEffect";
 
@@ -261,6 +262,7 @@ export const knowledgeDumgen: Layer.Layer<Jev | Luna> = Layer.suspend(() =>
  */
 export const resegment = Effect.fn("DeploymentDumgen.resegment")(function* (
 	stitchedText: string,
+	language: SupportedTargetLanguage = "de",
 ) {
 	yield* Effect.orDie(requireJev);
 	const sink = yield* TraceSink;
@@ -269,7 +271,7 @@ export const resegment = Effect.fn("DeploymentDumgen.resegment")(function* (
 	const parts = sentenceParts(stitchedText);
 	const text = yield* operations.segment
 		.inUnits({
-			language: "de",
+			language,
 			paragraphs: [{ sentences: [...parts.parts] }],
 		})
 		.pipe(

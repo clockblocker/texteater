@@ -46,7 +46,7 @@ export type ResolvedClickPersistence = {
 		readonly surfaceKey: string;
 		readonly lemmaKey: string;
 	};
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
 	readonly readingKey: string;
 	/** The dictionary plan is built where it commits: inside the host transaction. */
 	readonly readingDecision: ReadingResolution["decision"];
@@ -69,7 +69,7 @@ export type ResolvedClickPersistence = {
  */
 type CommitProgress = {
 	readonly readingAvailable?: {
-		readonly reading: Dumling.Reading<"de">;
+		readonly reading: Dumling.Reading<Dumling.Language>;
 		readonly readingResolution: ReadingResolution;
 	};
 	readonly succeeded?: {
@@ -81,7 +81,7 @@ type CommitProgress = {
 export type ReusableAttestation = {
 	readonly attestationId: string;
 	readonly grammatical: ResolvedGrammar;
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
 };
 
 export type UnresolvedClickCommit = {
@@ -141,7 +141,7 @@ export type ResolvedGrammatical = ResolvedGrammar;
 
 export type NonResolvedGrammatical = {
 	readonly decision: "Unresolved";
-	readonly language: "de";
+	readonly language: "de" | "he";
 };
 
 export type ResolveSegmentResult =
@@ -150,13 +150,13 @@ export type ResolveSegmentResult =
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Dumling.Reading<"de">;
+			readonly reading: Dumling.Reading<Dumling.Language>;
 			readonly reused: true;
 			readonly persisted: ReusedResolvedClickCommit;
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Dumling.Reading<"de">;
+			readonly reading: Dumling.Reading<Dumling.Language>;
 			readonly reused: true;
 			readonly persisted: LateResolvedClickCommit;
 	  }
@@ -167,7 +167,7 @@ export type ResolveSegmentResult =
 	| {
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
-			readonly reading: Dumling.Reading<"de">;
+			readonly reading: Dumling.Reading<Dumling.Language>;
 			readonly persisted: Extract<
 				ResolvedClickCommit,
 				{ status: "MembershipConflict" | "DictionaryConflict" }
@@ -176,7 +176,7 @@ export type ResolveSegmentResult =
 	| {
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
-			readonly reading: Dumling.Reading<"de">;
+			readonly reading: Dumling.Reading<Dumling.Language>;
 			readonly reused: boolean;
 			readonly persisted: Extract<
 				ResolvedClickCommit,
@@ -272,6 +272,6 @@ export type ResolutionCheckpoints = {
 	readonly grammatical?: ResolvedGrammatical;
 	readonly reading?: {
 		readonly resolution: ReadingResolution;
-		readonly reading: Dumling.Reading<"de">;
+		readonly reading: Dumling.Reading<Dumling.Language>;
 	};
 };

@@ -1,6 +1,9 @@
 import { type Scroll, splitScroll } from "dumgen";
 import * as Effect from "effect/Effect";
-import type { ScrollLanguage } from "../shared/supported-target-language";
+import {
+	isSupportedTargetLanguage,
+	type ScrollLanguage,
+} from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
 import { annotateInspectionStep } from "./inspectionCapture";
 import {
@@ -27,13 +30,15 @@ import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /** What a Visitor reads when a Scroll in another language is turned away. */
 export const GERMAN_ONLY_MESSAGE =
-	"tf-demo reads German Texts only for now. Support for other languages is planned.";
+	"tf-demo reads German and Hebrew Texts for now. Support for other languages is planned.";
 
 /** Why intake turns a Scroll in `language` away, or undefined for German. */
 export function unsupportedLanguageMessage(
 	language: ScrollLanguage,
 ): string | undefined {
-	return language === "de" ? undefined : GERMAN_ONLY_MESSAGE;
+	return isSupportedTargetLanguage(language)
+		? undefined
+		: GERMAN_ONLY_MESSAGE;
 }
 
 /** What a Visitor reads when the deployment has no TypeSafe key for intake. */
@@ -169,3 +174,5 @@ export function createIntake(options: {
 
 	return Object.freeze({ submitText });
 }
+
+export type { IntakeDumgen } from "./intakeAnalysis";

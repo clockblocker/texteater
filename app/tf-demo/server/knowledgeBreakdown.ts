@@ -9,6 +9,7 @@ import type {
 	KnowledgeFailure,
 	KnowledgeProduction,
 } from "./knowledgeProduction";
+import { parseGermanReading } from "./operationalParsing";
 
 /**
  * A Reading's Breakdown in a Knowledge run (ADR 0050, ADR 0051, Dumgen ADR
@@ -41,11 +42,15 @@ const BREAKDOWN_FAMILIES: ReadonlySet<string> = new Set([
  * so neither segmenter runs on it (ADR 0021).
  */
 export function asksBreakdown(
-	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	reading: { readonly lemma: Dumling.Lemma<Dumling.Language> },
 	options: { readonly topUpOnly: boolean; readonly knowledge: unknown },
 ): boolean {
 	const { lemma } = reading;
-	if (options.topUpOnly || !BREAKDOWN_FAMILIES.has(lemma.family))
+	if (
+		lemma.language !== "de" ||
+		options.topUpOnly ||
+		!BREAKDOWN_FAMILIES.has(lemma.family)
+	)
 		return false;
 	if (closedRoute(lemma) || authoredFor(lemma).length > 0) return false;
 	const stored = isRecord(options.knowledge) ? options.knowledge : {};
@@ -209,7 +214,7 @@ export const withBreakdown = Effect.fn("KnowledgeBreakdown.withBreakdown")(
 		segmenters: Segmenters<RS>,
 		produce: Effect.Effect<KnowledgeProduction, E, R>,
 		input: {
-			readonly reading: Dumling.Reading<"de">;
+			readonly reading: Dumling.Reading<Dumling.Language>;
 			readonly breakdown: boolean;
 			readonly sentence?: string;
 		},
@@ -217,11 +222,12 @@ export const withBreakdown = Effect.fn("KnowledgeBreakdown.withBreakdown")(
 			change: KnowledgeProduction["changes"][number],
 		) => Effect.Effect<boolean, E, R>,
 	): Effect.fn.Return<KnowledgeProduction, E, R | RS> {
-		if (!input.breakdown) return yield* produce;
+		if (input.reading.lemma.language !== "de" || !input.breakdown)
+			return yield* produce;
 		// A child fiber: it ends with this one, however this one ends.
 		const breakdown = yield* Effect.forkChild(
 			produceBreakdown(segmenters, {
-				reading: input.reading,
+				reading: parseGermanReading(input.reading),
 				...(input.sentence === undefined
 					? {}
 					: { sentence: input.sentence }),

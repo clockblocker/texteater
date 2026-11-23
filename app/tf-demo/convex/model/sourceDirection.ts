@@ -160,16 +160,18 @@ export async function backPointingSourceBase(
  */
 export async function withoutBackPointingSource<TChange>(
 	ctx: QueryCtx,
-	owner: { readonly reading: Dumling.Reading<"de">; readonly key: string },
+	owner: {
+		readonly reading: Dumling.Reading<Dumling.Language>;
+		readonly key: string;
+	},
+
 	changes: readonly TChange[],
 ): Promise<TChange[]> {
+	const lemma = owner.reading.lemma;
+	if (lemma.language !== "de") return [...changes];
 	const kept: TChange[] = [];
 	for (const change of changes) {
-		const base = await backPointingSourceBase(
-			ctx,
-			owner.reading.lemma,
-			change,
-		);
+		const base = await backPointingSourceBase(ctx, lemma, change);
 		if (!base) {
 			kept.push(change);
 			continue;

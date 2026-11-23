@@ -37,14 +37,28 @@ const moduleOf = Effect.fnUntraced(function* (
 	operation: string,
 	reading: Dumling.Reading,
 ) {
-	const module = languageModuleOf(yield* Languages, reading.lemma.language);
-	if (module === undefined)
+	const module =
+		reading.lemma.language === "de"
+			? languageModuleOf(yield* Languages, "de")
+			: undefined;
+	if (
+		module === undefined ||
+		!module.segment.constituents ||
+		!module.segment.morphemes
+	)
 		return yield* Effect.die(
 			Error(
 				`${operation} breaks German ("de") Readings down only, not ${JSON.stringify(reading.lemma.language)}`,
 			),
 		);
-	return module;
+	return {
+		...module,
+		segment: {
+			...module.segment,
+			constituents: module.segment.constituents,
+			morphemes: module.segment.morphemes,
+		},
+	};
 });
 
 /** The body of `segment.inConstituents`. */

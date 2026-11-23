@@ -10,6 +10,7 @@ export const READING_BLOCK_KIND_VALUES = [
 	"Translations",
 	"Relations",
 	"PersonalAnnotation",
+	"Paradigm",
 	"Breakdown",
 ] as const;
 

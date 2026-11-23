@@ -1,8 +1,5 @@
 import type { Infer } from "convex/values";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-} from "../../server/operationalParsing";
+import { parseLemma, parseReading } from "../../server/operationalParsing";
 import type { ResolutionContext } from "../../server/orchestrationPorts";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import type {
@@ -41,7 +38,7 @@ export function parsedResolutionContext(
 		...context,
 		lemmaCandidates: context.lemmaCandidates.map(
 			({ lemma, foundUnder }) => ({
-				lemma: parseGermanLemma(lemma),
+				lemma: parseLemma(lemma),
 				foundUnder,
 			}),
 		),
@@ -84,7 +81,7 @@ export function createResolutionSessionLifecycle(
 								reading: {
 									resolution:
 										input.checkpoints.reading.resolution,
-									reading: parseGermanReading(
+									reading: parseReading(
 										input.checkpoints.reading.reading,
 									),
 								},

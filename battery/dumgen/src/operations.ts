@@ -44,7 +44,10 @@ import type {
 	ProducedPiece,
 } from "./segment/breakdown-pieces.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
-import type { SegmentedText } from "./segment/segmented-sentence.js";
+import type {
+	SegmentedText,
+	SegmentLanguage,
+} from "./segment/segmented-sentence.js";
 import { translateSentence } from "./translate/sentence.js";
 import type { TranslateSentenceInput } from "./translate/types.js";
 
@@ -70,9 +73,9 @@ export const operations = {
 		 * `failed`, and the others are kept. Another language than German
 		 * or a blank Sentence is a Defect, raised before anything is asked.
 		 */
-		inUnits: (
-			input: InUnitsInput,
-		): Effect.Effect<SegmentedText, never, Jev> =>
+		inUnits: <L extends SegmentLanguage>(
+			input: InUnitsInput<L>,
+		): Effect.Effect<SegmentedText<L>, never, Jev> =>
 			runOperation("segment.inUnits", segmentText(input)),
 		/**
 		 * A Reading's Constituents, its immediate parts one level down
@@ -110,9 +113,9 @@ export const operations = {
 		 * German, a failed Sentence or a unit that is no unit of its
 		 * Sentence is a Defect.
 		 */
-		grammar: (
-			input: ResolveGrammarInput,
-		): Effect.Effect<GrammarResolution, ModelFailure, Jev | Luna> =>
+		grammar: <L extends SegmentLanguage>(
+			input: ResolveGrammarInput<L>,
+		): Effect.Effect<GrammarResolution<L>, ModelFailure, Jev | Luna> =>
 			runOperation("resolve.grammar", resolveGrammar(input)),
 		/**
 		 * The Reading a resolved click lands on (#859, ADR 0031): a stored
@@ -122,9 +125,9 @@ export const operations = {
 		 * their authored Reading. A click is all-or-nothing, as in grammar.
 		 * Bad input, a Foreign Attestation among it, is a Defect.
 		 */
-		reading: (
-			input: ResolveReadingInput,
-		): Effect.Effect<ReadingResolution, ModelFailure, Jev | Luna> =>
+		reading: <L extends SegmentLanguage>(
+			input: ResolveReadingInput<L>,
+		): Effect.Effect<ReadingResolution<L>, ModelFailure, Jev | Luna> =>
 			runOperation("resolve.reading", resolveReading(input)),
 	},
 	translate: {
@@ -161,9 +164,9 @@ export const operations = {
 		 * has them; its failure is the only error, and it interrupts the
 		 * rest. Bad input is a Defect.
 		 */
-		produce: <E = never>(
-			input: ProduceKnowledgeInput<E>,
-		): Effect.Effect<KnowledgeProduction, E, Jev | Luna> =>
+		produce: <E = never, L extends SegmentLanguage = "de">(
+			input: ProduceKnowledgeInput<E, L>,
+		): Effect.Effect<KnowledgeProduction<L>, E, Jev | Luna> =>
 			runOperation("knowledge.produce", produceKnowledge(input)),
 		/**
 		 * The translations one occurrence adds to a Reading that already
@@ -173,9 +176,9 @@ export const operations = {
 		 * Out comes a Contribute of those not stored yet per language, and
 		 * per-language failures, all values. Bad input is a Defect.
 		 */
-		accumulateTranslations: (
-			input: AccumulateTranslationsInput,
-		): Effect.Effect<TranslationAccumulation, never, Jev | Luna> =>
+		accumulateTranslations: <L extends SegmentLanguage>(
+			input: AccumulateTranslationsInput<L>,
+		): Effect.Effect<TranslationAccumulation<L>, never, Jev | Luna> =>
 			runOperation(
 				"knowledge.accumulateTranslations",
 				accumulateTranslations(input),
@@ -187,9 +190,9 @@ export const operations = {
 		 * does Luna extract the occurrence's concrete pattern. Returns both
 		 * any Contribute change and the Attestation's `realizedPattern`.
 		 */
-		accumulateValency: (
-			input: AccumulateValencyInput,
-		): Effect.Effect<ValencyAccumulation, never, Jev | Luna> =>
+		accumulateValency: <L extends SegmentLanguage>(
+			input: AccumulateValencyInput<L>,
+		): Effect.Effect<ValencyAccumulation<L>, never, Jev | Luna> =>
 			runOperation(
 				"knowledge.accumulateValency",
 				accumulateValency(input),

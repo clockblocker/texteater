@@ -23,6 +23,31 @@ export function parseUnitAs<
 	return parsed.chain.value as Dumling.Unit<U, L>;
 }
 
+export function parseLemma<L extends Dumling.Language = Dumling.Language>(
+	input: unknown,
+	language?: L,
+): Dumling.Lemma<L> {
+	return parseUnitAs(input, "Lemma", language);
+}
+export function parseReading<L extends Dumling.Language = Dumling.Language>(
+	input: unknown,
+	language?: L,
+): Dumling.Reading<L> {
+	return parseUnitAs(input, "Reading", language);
+}
+export function parseSurface<L extends Dumling.Language = Dumling.Language>(
+	input: unknown,
+	language?: L,
+): Dumling.Surface<L> {
+	return parseUnitAs(input, "Surface", language);
+}
+export function parseAttestation<L extends Dumling.Language = Dumling.Language>(
+	input: unknown,
+	language?: L,
+): Dumling.Attestation<L> {
+	return parseUnitAs(input, "Attestation", language);
+}
+
 export function parseGermanLemma(input: unknown): Dumling.Lemma<"de"> {
 	return parseUnitAs(input, "Lemma", "de");
 }

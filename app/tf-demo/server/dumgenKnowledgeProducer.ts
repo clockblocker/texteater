@@ -2,6 +2,11 @@ import { type Jev, type Luna, operations } from "dumgen";
 import * as Effect from "effect/Effect";
 import { type Segmenters, withBreakdown } from "./knowledgeBreakdown";
 import type { KnowledgeProducer } from "./knowledgeProduction";
+import {
+	parseAttestation,
+	parseGermanReading,
+	parseReading,
+} from "./operationalParsing";
 
 /** Dumgen's two segmenters (Dumgen ADR 0007), reaching jev alone. */
 const dumgenSegmenters: Segmenters<Jev> = {
@@ -29,27 +34,33 @@ export function dumgenKnowledgeProducer<E>(
 		function* (input, options) {
 			yield* Effect.orDie(ready);
 			const segments = input.encounter.sentence.segments;
+			const production = operations.knowledge.produce({
+				language: input.encounter.sentence.language,
+				reading: parseReading(
+					input.reading,
+					input.encounter.sentence.language,
+				),
+				attestation: parseAttestation(
+					input.attestation,
+					input.encounter.sentence.language,
+				),
+				sentence: {
+					segments: segments.map(({ kind, text }) => ({
+						kind,
+						text,
+					})),
+					target: [...input.encounter.target.memberSegmentIndices],
+				},
+				origin: input.origin,
+				request: input.request,
+				onContribution: options.onContribution,
+			});
+			if (input.reading.lemma.language !== "de") return yield* production;
 			return yield* withBreakdown(
 				dumgenSegmenters,
-				operations.knowledge.produce({
-					language: "de",
-					reading: input.reading,
-					attestation: input.attestation,
-					sentence: {
-						segments: segments.map(({ kind, text }) => ({
-							kind,
-							text,
-						})),
-						target: [
-							...input.encounter.target.memberSegmentIndices,
-						],
-					},
-					origin: input.origin,
-					request: input.request,
-					onContribution: options.onContribution,
-				}),
+				production,
 				{
-					reading: input.reading,
+					reading: parseGermanReading(input.reading),
 					breakdown: input.breakdown,
 					sentence: segments.map(({ text }) => text).join(""),
 				},

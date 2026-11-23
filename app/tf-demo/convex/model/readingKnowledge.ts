@@ -1,6 +1,6 @@
 import { isRecord } from "common-utils";
 import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
-import { parseGermanReading } from "../../server/operationalParsing";
+import { parseReading } from "../../server/operationalParsing";
 export type AnyRecord = Record<string, unknown>;
 
 export function requireRecord(value: unknown, context: string): AnyRecord {
@@ -30,7 +30,7 @@ export function applyTrustedReadingKnowledgeChange(
 	existingValue: unknown,
 	change: unknown,
 ): AnyRecord {
-	const source = parseGermanReading(sourceValue);
+	const source = parseReading(sourceValue);
 	const current = parseReadingKnowledge({
 		source,
 		knowledge: existingValue ?? {},

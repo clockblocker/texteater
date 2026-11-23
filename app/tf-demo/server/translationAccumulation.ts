@@ -8,6 +8,7 @@ import {
 import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { ClickEncounter } from "./clickResolution";
+import { parseAttestation, parseReading } from "./operationalParsing";
 
 /**
  * The translation accumulation port (ADR 0047): the model work that adds
@@ -19,11 +20,11 @@ import type { ClickEncounter } from "./clickResolution";
  */
 export type TranslationAccumulator<R = never> = (input: {
 	readonly encounter: ClickEncounter;
-	readonly reading: Dumling.Reading<"de">;
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 	/** The Reading's stored translations, by language, as the note holds them. */
-	readonly translations: AccumulateTranslationsInput["translations"];
-}) => Effect.Effect<TranslationAccumulation, never, R>;
+	readonly translations: AccumulateTranslationsInput<Dumling.Language>["translations"];
+}) => Effect.Effect<TranslationAccumulation<Dumling.Language>, never, R>;
 
 /**
  * The TranslationAccumulator whose model work is Dumgen's: the Encounter's
@@ -34,9 +35,12 @@ export const dumgenTranslationAccumulator: TranslationAccumulator<
 	Jev | Luna
 > = (input) =>
 	operations.knowledge.accumulateTranslations({
-		language: "de",
-		reading: input.reading,
-		attestation: input.attestation,
+		language: input.encounter.sentence.language,
+		reading: parseReading(input.reading, input.encounter.sentence.language),
+		attestation: parseAttestation(
+			input.attestation,
+			input.encounter.sentence.language,
+		),
 		sentence: {
 			segments: input.encounter.sentence.segments.map(
 				({ kind, text }) => ({ kind, text }),

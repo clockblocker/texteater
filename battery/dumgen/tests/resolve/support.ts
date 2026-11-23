@@ -24,15 +24,14 @@ import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 
 export const picked = (choice: string): Answer => ({
 	type: "choice",
-	choice,
 	confidence: 1,
+	choice,
 	probabilities: { [choice]: 1 },
 });
 
 export const nouled = (noul: number): Answer => ({
 	type: "noul",
 	noul,
-	confidence: 1,
 });
 
 type Sent = JevRequest & { readonly stage: string };

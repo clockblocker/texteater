@@ -322,7 +322,10 @@ describe("Resolution Session", () => {
 	test("projection exposes learner-safe fields only", () => {
 		const grammar = projectResolutionGrammar(grammaticalInput("Bank"));
 		const reading = projectResolutionReading(readingInput("🏦", "Bank"));
-		expect(grammar).toEqual(grammarProjection("Bank"));
+		expect(grammar).toEqual({
+			...grammarProjection("Bank"),
+			language: "de",
+		});
 		expect(reading).toEqual(readingProjection("🏦", "Bank"));
 		expect(JSON.stringify({ grammar, reading })).not.toContain("provider");
 		expect(JSON.stringify({ grammar, reading })).not.toContain("plan");

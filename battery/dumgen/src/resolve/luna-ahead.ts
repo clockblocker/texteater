@@ -17,6 +17,7 @@ import {
 	lunaRequestOf,
 	type OutputLimit,
 } from "../luna.js";
+import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import { canonicalStage } from "./de/canonical-form.js";
 import { emojiDescriptionStage } from "./reading.js";
 import type { ResolveGrammarInput } from "./types.js";
@@ -41,8 +42,8 @@ export type LunaRequestAhead = {
  * whose segmentation failed, a language with no module. A click sends at
  * most one such request. The `onJudged` of the input plays no part.
  */
-export const lunaRequestAhead = (
-	input: ResolveGrammarInput,
+export const lunaRequestAhead = <L extends SegmentLanguage>(
+	input: ResolveGrammarInput<L>,
 ): Effect.Effect<LunaRequestAhead | undefined> =>
 	Effect.gen(function* () {
 		const module = languageModuleOf(yield* Languages, input.language);

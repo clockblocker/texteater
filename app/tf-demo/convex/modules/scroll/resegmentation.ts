@@ -46,6 +46,17 @@ export async function storeResegmentation(
 	)
 		throw new Error("The new Segments do not spell the Sentence.");
 	assertSentenceUnits({ segments: args.segments, units: args.units });
+	if (
+		args.units.some(
+			({ route, variants }) =>
+				(route !== "Unresolved" &&
+					route.language !== sentence.language) ||
+				variants?.some(
+					(variant) => variant.language !== sentence.language,
+				),
+		)
+	)
+		throw new Error("A resegmented unit must use the Sentence's language.");
 	const rows = await loadStoredSegments(ctx, args.sentenceId);
 	const same =
 		rows.length === args.segments.length &&

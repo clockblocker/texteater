@@ -68,8 +68,8 @@ export async function projectSentenceViews(
 		sentences.map(async (sentence) => {
 			// A Plain Sentence, unprocessed ones included, has no Segments to load
 			// or encounter, so a long plain Scroll costs one read per Sentence.
-			const plain = isPlainSentence(sentence.language);
-			const [segments, encounteredSegmentIds] = plain
+			const unsupported = isPlainSentence(sentence.language);
+			const [segments, encounteredSegmentIds] = unsupported
 				? [[], new Set<Id<"segments">>()]
 				: await Promise.all([
 						loadStoredSegments(ctx, sentence._id),
@@ -86,6 +86,9 @@ export async function projectSentenceViews(
 					encounteredAttestationIds.add(attestationId);
 				}
 			}
+			const plain =
+				unsupported ||
+				(segments.length === 0 && !sentence.segmentationFailed);
 			return {
 				sentence,
 				plain,

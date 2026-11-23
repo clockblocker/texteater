@@ -3,6 +3,7 @@ import { type Infer, v } from "convex/values";
 import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
+import { parseGermanReading } from "../../../server/operationalParsing";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { findDefinitionText } from "../../model/definitionTexts";
@@ -263,7 +264,13 @@ export async function loadUnitReadingNote(
 			knowledge.source,
 			structuralReferencesResult.raw,
 		),
-		loadBreakdownView(ctx, readingValue, knowledge),
+		readingValue.lemma.language === "de"
+			? loadBreakdownView(
+					ctx,
+					parseGermanReading(readingValue),
+					knowledge,
+				)
+			: undefined,
 		projectDefinitionText(
 			ctx,
 			knowledge.definition,
@@ -456,7 +463,7 @@ export async function loadSourceContextPage(
 }
 
 type GermanUnitReading = Extract<
-	Dumling.Reading<"de">,
+	Dumling.Reading<Dumling.Language>,
 	{ lemma: { family: UnitReadingFamily } }
 >;
 
